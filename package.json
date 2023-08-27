@@ -19,7 +19,7 @@
   "dependencies": {
     "@rilata/project-configs": "gis-expert/rilata-project-configs",
     "jwt-decode": "^3.1.2",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
