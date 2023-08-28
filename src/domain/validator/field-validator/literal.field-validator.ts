@@ -9,7 +9,7 @@ import {
   BaseFieldValidator, BaseFieldValidionConfig,
   BaseTypeValidationConfig, FieldInternalValidationResult,
 } from './base.field-validator';
-import { ArrayValidationConfig, FieldValidationResult, ValidatableTypes } from './types';
+import { FieldValidatorConfig, FieldValidationResult, ValidatableTypes } from './types';
 import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { InferFailure } from '../../../common/result/types';
@@ -19,15 +19,14 @@ Extract<ValidatableTypes, 'string' | 'number' | 'boolean'>>;
 
 export type LiteralFieldValidationConfig<
   R extends boolean,
-  AC extends ArrayValidationConfig<boolean>,
+  AC extends FieldValidatorConfig<boolean>,
   TC extends LiteralTypeValidationConfig,
 > = BaseFieldValidionConfig<R, AC, TC> & { rules: BaseFieldValidationRule[] };
 
 export class LiteralFieldValidator<
   R extends boolean,
-  AC extends ArrayValidationConfig<boolean>,
-  TC extends LiteralTypeValidationConfig,
-> extends BaseFieldValidator<R, AC, TC> {
+  AC extends boolean,
+> extends BaseFieldValidator<R, AC> {
   protected clientRules: BaseFieldValidationRule[];
 
   constructor(config: LiteralFieldValidationConfig<R, AC, TC>) {

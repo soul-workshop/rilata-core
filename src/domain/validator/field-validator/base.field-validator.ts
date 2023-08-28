@@ -1,9 +1,9 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
-import { AssertionException } from '../../../common/exceptions';
 import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { Result } from '../../../common/result/types';
+import { AssertionException } from '../../../common/types';
 import { BaseFieldValidationRule } from '../field-rules/base.field-v-rule';
 import { CanBeEmptyFieldRule } from '../field-rules/default/can-be-empty.field-v-rule';
 import { IsArrayFieldRule } from '../field-rules/default/is-array.field-v-rule';
@@ -18,9 +18,8 @@ import { IsNumberArrayFieldRule } from '../field-rules/default/type/is-number-ar
 import { IsNumberFieldRule } from '../field-rules/default/type/is-number.field-v-rule';
 import { IsStringArrayFieldRule } from '../field-rules/default/type/is-string-array.field-v-rule';
 import { IsStringFieldRule } from '../field-rules/default/type/is-string.field-v-rule';
-import { FieldValidationRuleResultBehaviour as ValidBehaviour } from '../field-rules/types';
 import { FieldValidationErrors } from '../types';
-import { ArrayValidationConfig, FieldValidationResult, ValidatableTypes } from './types';
+import { FieldValidationResult, ValidatableTypes, IsArrayConfig } from './types';
 
 export type FieldInternalValidationResult = Result<
   {
@@ -30,30 +29,16 @@ export type FieldInternalValidationResult = Result<
   { break : boolean }
 >;
 
-export type BaseTypeValidationConfig<T extends ValidatableTypes> = {
-  type: T,
-}
-
-export type BaseFieldValidionConfig<
-  R extends boolean,
-  AC extends ArrayValidationConfig<boolean>,
-  TC extends BaseTypeValidationConfig<ValidatableTypes>,
-> = {
-  isRequired: R,
-  arrayConfig: AC,
-  typeConfig: TC,
-};
-
 export abstract class BaseFieldValidator<
-  R extends boolean,
-  AC extends ArrayValidationConfig<boolean>,
-  TC extends BaseTypeValidationConfig<ValidatableTypes>,
+  REQ extends boolean,
+  ARR extends boolean,
 > {
-  config: BaseFieldValidionConfig<R, AC, TC>;
+  protected abstract type: ValidatableTypes;
 
-  constructor(config: BaseFieldValidionConfig<R, AC, TC>) {
-    this.config = config;
-  }
+  constructor(
+    protected isRequired: REQ,
+    protected isArrayConfig: IsArrayConfig<ARR>,
+  ) {}
 
   validate(value: unknown): FieldValidationResult {
     const res = this.validateInternal(value);
@@ -75,7 +60,7 @@ export abstract class BaseFieldValidator<
       return errors.length > 0 ? failure({ break: true, errors }) : success({ break: true });
     }
 
-    if (this.config.arrayConfig.isArray) {
+    if (this.isArrayConfig.isArray) {
       const arrayCheckResult = this.validateRules(value, this.getArrayCheckRules());
       if (arrayCheckResult.isFailure()) {
         errors.push(...arrayCheckResult.value.errors);
@@ -109,20 +94,20 @@ export abstract class BaseFieldValidator<
     for (const rule of rules) {
       const ruleValidationResult = rule.validate(value);
 
-      if (ruleValidationResult.behaviour === ValidBehaviour.RunNextRule) {
+      if (ruleValidationResult.behaviour === 'RunNextRule') {
         continue;
       } else if (
-        ruleValidationResult.behaviour === ValidBehaviour.BreakFieldValidation
+        ruleValidationResult.behaviour === 'BreakFieldValidation'
       ) {
         shouldBreak = true;
         break;
       } else if (
-        ruleValidationResult.behaviour === ValidBehaviour.SaveErrorAndRunNextRule
+        ruleValidationResult.behaviour === 'SaveErrorAndRunNextRule'
       ) {
         errors.push(ruleValidationResult.fieldValidationError);
         continue;
       } else if (
-        ruleValidationResult.behaviour === ValidBehaviour.SaveErrorAndBreakFieldValidation
+        ruleValidationResult.behaviour === 'SaveErrorAndBreakFieldValidation'
       ) {
         errors.push(ruleValidationResult.fieldValidationError);
         shouldBreak = true;
@@ -142,7 +127,7 @@ export abstract class BaseFieldValidator<
 
     firstCheckRules.push(new NotNullFieldRule());
 
-    if (this.config.isRequired) {
+    if (this.isRequired) {
       firstCheckRules.push(new IsRequiredFieldRule());
     } else {
       firstCheckRules.push(new CanBeEmptyFieldRule());
@@ -153,11 +138,11 @@ export abstract class BaseFieldValidator<
   protected getArrayCheckRules(): BaseFieldValidationRule[] {
     const arrayCheckRules: BaseFieldValidationRule[] = [];
 
-    if (this.config.arrayConfig.isArray) { // просто для защиты типа для maxElementsCount
+    if (this.isArrayConfig.isArray) { // просто для защиты типа для maxElementsCount
       arrayCheckRules.push(new IsArrayFieldRule());
-      if (this.config.arrayConfig.maxElementsCount) {
+      if (this.isArrayConfig.maxElementsCount) {
         arrayCheckRules.push(
-          new MaxArrayElementsCountFieldRule(this.config.arrayConfig.maxElementsCount),
+          new MaxArrayElementsCountFieldRule(this.isArrayConfig.maxElementsCount),
         );
       }
     }
@@ -166,8 +151,8 @@ export abstract class BaseFieldValidator<
   }
 
   protected getTypeCheckRules(): BaseFieldValidationRule[] {
-    const { isArray } = this.config.arrayConfig;
-    switch (this.config.typeConfig.type) {
+    const { isArray } = this.isArrayConfig;
+    switch (this.type) {
       case 'boolean':
         return isArray ? [new IsBooleanArrayFieldRule()] : [new IsBooleanFieldRule()];
       case 'string':
@@ -177,7 +162,7 @@ export abstract class BaseFieldValidator<
       case 'dto':
         return isArray ? [new IsDTOArrayFieldRule()] : [new IsDTOFieldRule()];
       default:
-        throw new AssertionException(`Неизвестный тип передан в FieldValidator: ${this.config.typeConfig}`);
+        throw new AssertionException(`Определен неверный тип валидатора ${this.type}`);
     }
   }
 }

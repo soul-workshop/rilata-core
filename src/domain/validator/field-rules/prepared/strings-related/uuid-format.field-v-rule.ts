@@ -1,6 +1,6 @@
-import { AssertionException } from '../../../../../common/exceptions';
+import { AssertionException } from '../../../../../common/types';
 import { UUIDUtility } from '../../../../../common/utils/uuid/uuid-utility';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../../types';
+import { FieldValidationRuleResult } from '../../types';
 import { PreparedFieldValidationRule } from '../prepared.field-v-rule';
 
 export const uuidFormatRuleExplanation = 'StringMustBeInUUIDFormat';
@@ -12,10 +12,10 @@ export class UUIDFormatFieldRule extends PreparedFieldValidationRule {
     this.throwIfValueIsNotString(value);
     return UUIDUtility.isValidValue(value)
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndRunNextRule,
+        behaviour: 'SaveErrorAndRunNextRule',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],

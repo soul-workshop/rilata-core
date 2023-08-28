@@ -1,5 +1,5 @@
 import { dtoUtility } from '../../../../../common/utils/dto';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../../types';
+import { FieldValidationRuleResult } from '../../types';
 import { DefaultFieldValidationRule } from '../default.field-v-rule';
 
 export const isDTORuleExplanation = 'ValueMustBeDTO';
@@ -10,10 +10,10 @@ export class IsDTOFieldRule extends DefaultFieldValidationRule {
   validate(value: unknown): FieldValidationRuleResult {
     return dtoUtility.isDTO(value)
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndBreakFieldValidation,
+        behaviour: 'SaveErrorAndBreakFieldValidation',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],

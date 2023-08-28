@@ -1,4 +1,4 @@
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../../types';
+import { FieldValidationRuleResult } from '../../types';
 import { DefaultFieldValidationRule } from '../default.field-v-rule';
 
 export const isStringRuleExplanation = 'ValueMustBeString';
@@ -9,10 +9,10 @@ export class IsStringFieldRule extends DefaultFieldValidationRule {
   validate(value: unknown): FieldValidationRuleResult {
     return typeof value === 'string'
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndBreakFieldValidation,
+        behaviour: 'SaveErrorAndBreakFieldValidation',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],

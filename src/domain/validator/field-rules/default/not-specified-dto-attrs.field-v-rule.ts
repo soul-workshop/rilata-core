@@ -1,5 +1,5 @@
 import { ValidatableDTO } from '../../types';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../types';
+import { FieldValidationRuleResult } from '../types';
 import { DefaultFieldValidationRule } from './default.field-v-rule';
 
 export const notSpecifiedDTOArrayAttrsRuleExplanation = 'AttrsNotSpecifiedInValidatorMapAreForbidden';
@@ -19,10 +19,10 @@ export class NotSpecifiedDTOAttrsFieldRule extends DefaultFieldValidationRule {
       .filter((dtoKey) => !this.permittedKeys.includes(dtoKey));
     return forbiddenKeys.length === 0
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndBreakFieldValidation,
+        behaviour: 'SaveErrorAndBreakFieldValidation',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [

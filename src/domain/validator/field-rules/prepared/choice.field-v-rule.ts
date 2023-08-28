@@ -1,4 +1,4 @@
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../types';
+import { FieldValidationRuleResult } from '../types';
 import { PreparedFieldValidationRule } from './prepared.field-v-rule';
 
 export const choiceRuleExplanation = 'ValueMustBeFromChoices';
@@ -14,18 +14,18 @@ export class ChoiceFieldRule extends PreparedFieldValidationRule {
   }
 
   validate(value: unknown): FieldValidationRuleResult {
-    return !this.choices.includes(value)
+    return this.choices.includes(value)
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndRunNextRule,
+        behaviour: 'RunNextRule',
+      }
+      : {
+        behaviour: 'SaveErrorAndRunNextRule',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [
             { choices: JSON.stringify(this.choices) },
           ],
         },
-      }
-      : {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
       };
   }
 }

@@ -1,4 +1,4 @@
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../types';
+import { FieldValidationRuleResult } from '../types';
 import { DefaultFieldValidationRule } from './default.field-v-rule';
 
 export const isRequiredRuleExplanation = 'ValueIsRequired';
@@ -12,14 +12,14 @@ export class IsRequiredFieldRule extends DefaultFieldValidationRule {
       || (Array.isArray(value) && value.length === 0);
     return failureCases
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndBreakFieldValidation,
+        behaviour: 'SaveErrorAndBreakFieldValidation',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],
         },
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       };
   }
 }

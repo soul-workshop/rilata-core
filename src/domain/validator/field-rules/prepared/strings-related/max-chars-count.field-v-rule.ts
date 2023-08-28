@@ -1,5 +1,5 @@
-import { AssertionException } from '../../../../../common/exceptions';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../../types';
+import { AssertionException } from '../../../../../common/types';
+import { FieldValidationRuleResult } from '../../types';
 import { PreparedFieldValidationRule } from '../prepared.field-v-rule';
 
 export const maxCharsCountRuleExplanation = 'CharsMustBeLessCount';
@@ -18,7 +18,7 @@ export class MaxCharsCountFieldRule extends PreparedFieldValidationRule {
     this.throwIfValueIsNotString(value);
     return value.length > this.maxCharsCount
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndRunNextRule,
+        behaviour: 'SaveErrorAndRunNextRule',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [
@@ -27,7 +27,7 @@ export class MaxCharsCountFieldRule extends PreparedFieldValidationRule {
         },
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       };
   }
 

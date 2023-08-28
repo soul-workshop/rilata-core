@@ -1,5 +1,5 @@
-import { AssertionException } from '../../../../common/exceptions';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../types';
+import { AssertionException } from '../../../../common/types';
+import { FieldValidationRuleResult } from '../types';
 import { DefaultFieldValidationRule } from './default.field-v-rule';
 
 export const maxArrayElementsCountRuleExplanation = 'ArrayMustHasLessElementsCountRule';
@@ -18,7 +18,7 @@ export class MaxArrayElementsCountFieldRule extends DefaultFieldValidationRule {
     this.throwIfValueIsNotArray(value);
     return value.length > this.maxElementsCount
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndBreakFieldValidation,
+        behaviour: 'SaveErrorAndBreakFieldValidation',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [{
@@ -27,7 +27,7 @@ export class MaxArrayElementsCountFieldRule extends DefaultFieldValidationRule {
         },
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       };
   }
 

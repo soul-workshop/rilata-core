@@ -1,5 +1,5 @@
-import { AssertionException } from '../../../../common/exceptions';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../types';
+import { AssertionException } from '../../../../common/types';
+import { FieldValidationRuleResult } from '../types';
 import { CustomFieldValidationRule } from './custom.field-v-rule';
 
 export abstract class RegexFormatFieldRule extends CustomFieldValidationRule {
@@ -9,10 +9,10 @@ export abstract class RegexFormatFieldRule extends CustomFieldValidationRule {
     this.throwIfValueIsNotString(value);
     return this.regex.test(value)
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndRunNextRule,
+        behaviour: 'SaveErrorAndRunNextRule',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],

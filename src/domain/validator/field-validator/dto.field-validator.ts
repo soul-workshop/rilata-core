@@ -9,7 +9,7 @@ import {
   BaseFieldValidator, BaseFieldValidionConfig,
   BaseTypeValidationConfig, FieldInternalValidationResult,
 } from './base.field-validator';
-import { ArrayValidationConfig, ValidatableTypes } from './types';
+import { FieldValidatorConfig, ValidatableTypes } from './types';
 
 export type DTOKeysValidatorMap<DTO extends ValidatableDTO> = {
   [K in keyof DTO]-?: ValidatorMap<
@@ -25,14 +25,14 @@ type DTOTypeValidationConfig<DTO extends ValidatableDTO> = BaseTypeValidationCon
 
 type DTOFieldValidationConfig<
   R extends boolean,
-  AC extends ArrayValidationConfig<boolean>,
+  AC extends FieldValidatorConfig<boolean>,
   DTO extends ValidatableDTO,
   DTOC extends DTOTypeValidationConfig<DTO>
 > = BaseFieldValidionConfig<R, AC, DTOC>;
 
 export class DTOFieldValidator<
   R extends boolean,
-  AC extends ArrayValidationConfig<boolean>,
+  AC extends FieldValidatorConfig<boolean>,
   DTO extends ValidatableDTO,
   DTOC extends DTOTypeValidationConfig<DTO> = DTOTypeValidationConfig<DTO>
 > extends BaseFieldValidator<R, AC, DTOC> {

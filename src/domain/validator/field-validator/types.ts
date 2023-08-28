@@ -2,9 +2,9 @@ import { Result } from '../../../common/result/types';
 import {
   FieldValidationErrors, ValidatableDTO,
 } from '../types';
-import { BaseFieldValidator, BaseTypeValidationConfig } from './base.field-validator';
+import { BaseFieldValidator } from './base.field-validator';
 import { DTOFieldValidator } from './dto.field-validator';
-import { LiteralFieldValidationConfig, LiteralFieldValidator, LiteralTypeValidationConfig } from './literal.field-validator';
+import { LiteralFieldValidator } from './literal.field-validator';
 
 export type FieldValidationResult = Result<
   Record<number, FieldValidationErrors> | FieldValidationErrors,
@@ -13,7 +13,7 @@ export type FieldValidationResult = Result<
 
 export type ValidatableTypes = 'string' | 'number' | 'boolean' | 'dto';
 
-export type ArrayValidationConfig<ISARR extends boolean> = ISARR extends false
+export type IsArrayConfig<B extends boolean> = B extends false
   ? {
     isArray: false,
   }
@@ -24,24 +24,16 @@ export type ArrayValidationConfig<ISARR extends boolean> = ISARR extends false
 
 export type GeneralBaseFieldValidator = BaseFieldValidator<
   boolean,
-  ArrayValidationConfig<boolean>,
-  BaseTypeValidationConfig<ValidatableTypes>
+  boolean
 >;
 
 export type GeneralLiteralFieldValidator = LiteralFieldValidator<
   boolean,
-  ArrayValidationConfig<boolean>,
-  LiteralTypeValidationConfig
+  boolean
 >;
 
 export type GeneralDTOFieldValidator = DTOFieldValidator<
   boolean,
-  ArrayValidationConfig<boolean>,
-  ValidatableDTO
->;
-
-export type GeneralLiteralFieldValidationConfig = LiteralFieldValidationConfig<
   boolean,
-  ArrayValidationConfig<boolean>,
-  LiteralTypeValidationConfig
+  ValidatableDTO
 >;

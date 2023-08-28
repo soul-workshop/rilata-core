@@ -1,5 +1,5 @@
 import { dtoUtility } from '../../../../../common/utils/dto';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../../types';
+import { FieldValidationRuleResult } from '../../types';
 import { DefaultFieldValidationRule } from '../default.field-v-rule';
 
 export const isDTOArrayRuleExplanation = 'ValueMustBeArrayOfDTOs';
@@ -10,10 +10,10 @@ export class IsDTOArrayFieldRule extends DefaultFieldValidationRule {
   validate(value: Array<unknown>): FieldValidationRuleResult {
     return (value.every((elem) => dtoUtility.isDTO(elem)))
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndBreakFieldValidation,
+        behaviour: 'SaveErrorAndBreakFieldValidation',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],

@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { DTOFieldValidator } from '../field-validator/dto.field-validator';
 import { LiteralFieldValidator } from '../field-validator/literal.field-validator';
-import { ArrayValidationConfig } from '../field-validator/types';
+import { FieldValidatorConfig } from '../field-validator/types';
 import {
   ValidatableDTO, ValidatableLiteralType,
   ValidatableLiteralTypeArray, ValidatableType,
@@ -31,7 +31,7 @@ type DTOValidatorMap<
   VT extends ValidatableDTO,
   ISREQ extends boolean,
   ISARR extends boolean,
-> = DTOFieldValidator<ISREQ, ArrayValidationConfig<ISARR>, VT>;
+> = DTOFieldValidator<ISREQ, FieldValidatorConfig<ISARR>, VT>;
 
 export type LiteralTypeValidatorMap<
   VT extends ValidatableLiteralType,
@@ -39,7 +39,7 @@ export type LiteralTypeValidatorMap<
   ISARR extends boolean,
 > = LiteralFieldValidator<
   ISREQ,
-   ArrayValidationConfig<ISARR>,
+   FieldValidatorConfig<ISARR>,
    {
     type: VT extends string
       ? 'string'

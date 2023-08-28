@@ -1,4 +1,4 @@
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../types';
+import { FieldValidationRuleResult } from '../types';
 import { DefaultFieldValidationRule } from './default.field-v-rule';
 
 export const isArrayRuleExplanation = 'ValueMustBeArray';
@@ -9,10 +9,10 @@ export class IsArrayFieldRule extends DefaultFieldValidationRule {
   validate(value: unknown): FieldValidationRuleResult {
     return Array.isArray(value)
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndBreakFieldValidation,
+        behaviour: 'SaveErrorAndBreakFieldValidation',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],

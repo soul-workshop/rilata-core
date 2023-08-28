@@ -1,6 +1,6 @@
 import { validate } from 'email-validator';
-import { AssertionException } from '../../../../../common/exceptions';
-import { FieldValidationRuleResult, FieldValidationRuleResultBehaviour } from '../../types';
+import { AssertionException } from '../../../../../common/types';
+import { FieldValidationRuleResult } from '../../types';
 import { PreparedFieldValidationRule } from '../prepared.field-v-rule';
 
 export const emailFormatRuleExplanation = 'StringMustBeInEmailFormat';
@@ -12,10 +12,10 @@ export class EmailFormatFieldRule extends PreparedFieldValidationRule {
     this.throwIfValueIsNotString(value);
     return validate(value)
       ? {
-        behaviour: FieldValidationRuleResultBehaviour.RunNextRule,
+        behaviour: 'RunNextRule',
       }
       : {
-        behaviour: FieldValidationRuleResultBehaviour.SaveErrorAndRunNextRule,
+        behaviour: 'SaveErrorAndRunNextRule',
         fieldValidationError: {
           validationErrorName: this.ruleExplanation,
           validationErrorHint: [],
