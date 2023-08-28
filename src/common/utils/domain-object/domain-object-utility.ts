@@ -1,23 +1,24 @@
 import {
-  GeneralObjectData, ObjectAttrs, OutputObjectAttrs, OutputObjectData,
+  GeneralDOD, DomainAttrs, OutputDA, OutputDOD,
 } from '../../domain-object/types';
+import { GetDomainAttrsDotKeys } from '../../type-functions';
 import { dtoUtility } from '../dto';
 
 export class domainObjectUtility {
   static getOutputAttrs<
-    A extends ObjectAttrs,
-    EXC extends string[]
-  >(attrs: A, keys: EXC): OutputObjectAttrs<A, EXC> {
+    ATTRS extends DomainAttrs,
+    EXC extends GetDomainAttrsDotKeys<ATTRS>
+  >(attrs: ATTRS, keys: EXC): OutputDA<ATTRS, EXC> {
     return dtoUtility.excludeDeepAttrs(attrs, keys);
   }
 
   static getOutputData<
-    D extends GeneralObjectData,
-    EXC extends string[]
-  >(data: D, keys: EXC): OutputObjectData<D, EXC> {
+    DATA extends GeneralDOD,
+    EXC extends GetDomainAttrsDotKeys<DATA['attrs']>
+  >(data: DATA, keys: EXC): OutputDOD<DATA, EXC> {
     return {
       ...data,
       attrs: dtoUtility.excludeDeepAttrs(data.attrs, keys),
-    } as unknown as OutputObjectData<D, EXC>;
+    } as unknown as OutputDOD<DATA, EXC>;
   }
 }

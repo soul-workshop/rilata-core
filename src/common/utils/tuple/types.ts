@@ -25,3 +25,37 @@ export type RemoveFirstFromTuple<
 > = T['length'] extends 0
   ? never
   : (((...b: T) => void) extends (a: infer F, ...b: infer I) => void ? I : []);
+
+// credits goes to https://stackoverflow.com/a/50375286
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
+
+// Converts union to overloaded function
+type UnionToOvlds<U> = UnionToIntersection<
+  U extends any ? (f: U) => void : never
+>;
+
+type PopUnion<U> = UnionToOvlds<U> extends (a: infer A) => void ? A : never;
+
+type IsUnion<T> = [T] extends [UnionToIntersection<T>] ? false : true;
+
+// Finally me)
+export type UnionToArray<T, A extends unknown[] = []> = IsUnion<T> extends true
+  ? UnionToArray<Exclude<T, PopUnion<T>>, [PopUnion<T>, ...A]>
+  : [T, ...A];
+
+interface Person {
+  name: string;
+  age: number;
+  surname: string;
+  children: number;
+}
+
+type Result = UnionToArray<keyof Person>; // ["name", "age", "surname", "children"]
+
+const func = <T,>(): UnionToArray<keyof T> => null as any;
+
+const result = func<Person>(); // ["name", "age", "surname", "children"]

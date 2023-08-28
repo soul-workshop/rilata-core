@@ -31,8 +31,8 @@ export type NestedAttrsWithUndefined = Record<
 
 export type AttrName = string;
 
-export type IDType = string;
-export type UUIDType = string;
+export type IdType = string;
+export type UuidType = string;
 
 /** Имя атрибута через точечную нотацию */
 export type DeepAttr = string;
@@ -43,4 +43,4 @@ export type ConstructorReturnType<C extends Constructor<any>>
 = C extends Constructor<infer R> ? R : never;
 
 export type Timestamp = number;
-export type UserID = UUIDType;
+export type UserId = UuidType;

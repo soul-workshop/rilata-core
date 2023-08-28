@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-use-before-define */
+import { DomainAttrs } from './domain-object/types';
 import { DTO } from './dto';
+import { UnionToArray } from './utils/tuple/types';
 
 /**
  * По ключам REPLACEDKEYS заменяет значения атрибутов объекта OBJECT
@@ -63,10 +65,6 @@ export type ExtendDtoAttrs<
       : never;
 }
 
-export type UnionToTuple<U extends string, R extends any[] = []> = {
-  [S in U]: Exclude<U, S> extends never ? [...R, S] : UnionToTuple<Exclude<U, S>, [...R, S]>;
-}[U];
-
 export type Split<S extends string, D extends string> =
     string extends S ? string[] :
     S extends '' ? string[] :
@@ -82,14 +80,22 @@ export type ShiftArray<A extends Array<any>> = A extends [infer _, ...infer O] ?
 
 export type PopArray<A extends Array<any>> = A extends [...infer O, ...infer _] ? O : never;
 
+export type GetDomainAttrsDotKeys<ATTRS extends DomainAttrs> =
+  GetDtoKeysByDotNotation<ATTRS>
+  | GetDtoKeysByDotNotation<ATTRS>[]
+  | ReadonlyArray<GetDtoKeysByDotNotation<ATTRS>>
+
 /** Исключить из DTO атрибуты заданные в точечной нотации.
   Пример:
     1. ExcludeDeepAttrs<{a: {b: {c: string, f?: string}}, e: number}, 'a.b.c'>
     2. ExcludeDeepAttrs<{a: {b: {c: string, f?: string}}, e: number}, ['a.b.c', 'e']>
 */
-export type ExcludeDeepDtoAttrs<
-  D extends DTO, DOT_NOTATION extends GetDtoKeysByDotNotation<D> | GetDtoKeysByDotNotation<D>[]
-> = ExcludeDeepDotNotationAttrs<D, DOT_NOTATION extends Array<any> ? DOT_NOTATION : [DOT_NOTATION]>;
+export type ExcludeDeepDtoAttrs<D extends DTO, DOT_NOTATION extends GetDomainAttrsDotKeys<D>> =
+  DOT_NOTATION extends Array<any>
+    ? ExcludeDeepDotNotationAttrs<D, DOT_NOTATION>
+    : DOT_NOTATION extends ReadonlyArray<infer T>
+      ? ExcludeDeepDotNotationAttrs<D, UnionToArray<T>>
+      : ExcludeDeepDotNotationAttrs<D, [DOT_NOTATION]>
 
 /** Исключить из DTO | DTO[] атрибуты заданные в точечной нотации.
   Пример: ExcludeDeepAttrs<{a: {b: {c: string, f?: string}}, e: number}, ['a.b.c', 'e']>

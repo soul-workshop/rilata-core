@@ -1,9 +1,10 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-continue */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ObjectAttrs } from '../../domain-object/types';
 import { DTO } from '../../dto';
-import { ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDtoKeysByDotNotation } from '../../type-functions';
+import {
+  ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDomainAttrsDotKeys,
+} from '../../type-functions';
 import { DeepAttr } from '../../types';
 
 export class dtoUtility {
@@ -94,9 +95,9 @@ export class dtoUtility {
   *   атрибута 'name' в основном объекте и без атрибута 'number'
   *   во вложенном объекте 'phone'. */
   static excludeDeepAttrs<
-    A extends ObjectAttrs,
-    EXC extends string[]
-  >(obj: A, excludedAttrs: EXC): ExcludeDeepDtoAttrs<A, EXC> {
+    ATTRS extends DTO,
+    EXC extends GetDomainAttrsDotKeys<ATTRS>
+  >(obj: ATTRS, excludedAttrs: EXC): ExcludeDeepDtoAttrs<ATTRS, EXC> {
     const objCopy = this.deepCopy(obj);
     const attrs = Array.isArray(excludedAttrs) ? excludedAttrs : [excludedAttrs];
 
@@ -120,7 +121,7 @@ export class dtoUtility {
       deleteAttribute(objCopy, excludedAttr);
     });
 
-    return objCopy as ExcludeDeepDtoAttrs<A, EXC>;
+    return objCopy as ExcludeDeepDtoAttrs<ATTRS, EXC>;
   }
 
   /**
