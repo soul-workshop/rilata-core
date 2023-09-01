@@ -1,27 +1,7 @@
 /* eslint-disable no-use-before-define */
 
 import { Result } from '../../common/result/types';
-import { DomainErrorDOD } from '../domain-object-data/domain-objects';
 import { wholeValueValidationErrorKey } from './constants';
-
-type ValidatableDTOKeyValue = string | number | boolean | undefined | ValidatableDTO
-| string[] | number[] | boolean[] | ValidatableDTO[];
-
-export type ValidatableDTO = { [key: string]: ValidatableDTOKeyValue };
-
-export type ValidatableLiteralType = string | number | boolean;
-
-export type ValidatableLiteralTypeArray = string[] | number[] | boolean[];
-
-export type ValidatableType = ValidatableLiteralType | ValidatableLiteralTypeArray | ValidatableDTO
-  | ValidatableDTO[];
-
-export type FieldValidationError = {
-  validationErrorName: string,
-  validationErrorHint: Array<Record<string, ValidatableLiteralType | ValidatableLiteralTypeArray>>,
-}
-
-export type FieldValidationErrors = Array<FieldValidationError>;
 
 export type ValidationErrorAttrs<
   VT extends ValidatableType,

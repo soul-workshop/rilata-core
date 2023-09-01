@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { DTO } from './dto';
+import { DTO } from '../domain/dto';
 
 export type LiteralType = string | number | boolean | bigint;
 export type LiteralWithUndefined = LiteralType | undefined;
@@ -44,3 +44,5 @@ export type ConstructorReturnType<C extends Constructor<any>>
 
 export type Timestamp = number;
 export type UserId = UuidType;
+
+export class AssertionException extends Error {}

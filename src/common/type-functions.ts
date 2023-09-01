@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-use-before-define */
-import { DomainAttrs } from './domain-object/types';
-import { DTO } from './dto';
+import { DTO } from '../domain/dto';
 import { UnionToArray } from './utils/tuple/types';
 
 /**
@@ -65,10 +65,10 @@ export type ExtendDtoAttrs<
       : never;
 }
 
-export type Split<S extends string, D extends string> =
+export type SplitStringToArray<S extends string, D extends string> =
     string extends S ? string[] :
     S extends '' ? string[] :
-    S extends `${infer T}${D}${infer U}` ? [T, ...Split<U, D>] : [S];
+    S extends `${infer T}${D}${infer U}` ? [T, ...SplitStringToArray<U, D>] : [S];
 
 export type GetArrayType<A extends Array<any>> = A extends Array<infer T> ? T : never;
 
@@ -80,7 +80,7 @@ export type ShiftArray<A extends Array<any>> = A extends [infer _, ...infer O] ?
 
 export type PopArray<A extends Array<any>> = A extends [...infer O, ...infer _] ? O : never;
 
-export type GetDomainAttrsDotKeys<ATTRS extends DomainAttrs> =
+export type GetDomainAttrsDotKeys<ATTRS extends DTO> =
   GetDtoKeysByDotNotation<ATTRS>
   | GetDtoKeysByDotNotation<ATTRS>[]
   | ReadonlyArray<GetDtoKeysByDotNotation<ATTRS>>
@@ -93,16 +93,16 @@ export type GetDomainAttrsDotKeys<ATTRS extends DomainAttrs> =
 export type ExcludeDeepDtoAttrs<D extends DTO, DOT_NOTATION extends GetDomainAttrsDotKeys<D>> =
   DOT_NOTATION extends Array<any>
     ? ExcludeDeepDotNotationAttrs<D, DOT_NOTATION>
-    : DOT_NOTATION extends ReadonlyArray<infer T>
-      ? ExcludeDeepDotNotationAttrs<D, UnionToArray<T>>
-      : ExcludeDeepDotNotationAttrs<D, [DOT_NOTATION]>
+    : DOT_NOTATION extends ReadonlyArray<infer TUPLE_TYPE>
+      ? ExcludeDeepDotNotationAttrs<D, UnionToArray<TUPLE_TYPE>>
+      : ExcludeDeepDotNotationAttrs<D, UnionToArray<DOT_NOTATION>>
 
 /** Исключить из DTO | DTO[] атрибуты заданные в точечной нотации.
   Пример: ExcludeDeepAttrs<{a: {b: {c: string, f?: string}}, e: number}, ['a.b.c', 'e']>
 */
 export type ExcludeDeepDotNotationAttrs<TYPE, DOT_NOTATION extends unknown[]> =
   DOT_NOTATION extends [infer FIRST, ...infer OTHERS]
-    ? ExcludeDeepAttrs<TYPE, Split<FIRST & string, '.'>> extends infer DEEPED
+    ? ExcludeDeepAttrs<TYPE, SplitStringToArray<FIRST & string, '.'>> extends infer DEEPED
       ? OTHERS extends []
         ? DEEPED
         : ExcludeDeepDotNotationAttrs<DEEPED, OTHERS>

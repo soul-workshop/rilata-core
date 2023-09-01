@@ -3,7 +3,7 @@ export interface Logger {
   info(log: string): Promise<void>
 
   /** Не критичные предупреждения */
-  prompt(log: string): Promise<void>
+  wrong(log: string): Promise<void>
 
   /** Утверждения, если условие ложно, то запишется fatalError */
   assert(condition: boolean, log: string, logAttrs?: unknown): Promise<void>
