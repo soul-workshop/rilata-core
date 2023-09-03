@@ -15,6 +15,7 @@ import { IsNumberTypeRule } from '../../validator/rules/type-rules/is-number-typ
 import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-type.t-rule';
 import { GeneralValidationRule, LiteralDataType } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
+import { CannootBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import {
   ArrayFieldErrors, FieldErrors,
   FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType, LiteralFieldErrors,
@@ -24,11 +25,19 @@ import {
 export abstract class FieldValidator<
   REQ extends boolean, IS_ARR extends boolean, DATA_TYPE extends LiteralDataType | DTO
 > {
+  static WHOLE_VALUE_VALIDATION_ERROR_KEY = '___whole_value_validation_error___';
+
   protected attrName!: string;
 
   protected logger!: Logger;
 
-  abstract validateValue(value: unknown): FieldValidatorResult
+  protected abstract validateValue(value: unknown): FieldValidatorResult
+
+  protected nullableRules: ValidationRule<'nullable' | 'assert', DATA_TYPE>[];
+
+  protected typeCheckRules: ValidationRule<'type', DATA_TYPE>[];
+
+  protected arrayAssertionRules: ValidationRule<'assert', DATA_TYPE>[];
 
   constructor(
     protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
@@ -45,11 +54,18 @@ export abstract class FieldValidator<
         )
       ) throw new AssertionException(`not valid arrayConfig: min=${min}, max=${max}`);
     }
+
+    this.nullableRules = this.getNullableRules();
+    this.typeCheckRules = this.getTypeCheckRules();
+    this.arrayAssertionRules = this.arrayConfig.isArray ? this.getArrayAssertionRules() : [];
   }
 
   init(attrName: string, logger: Logger): void {
     this.attrName = attrName;
     this.logger = logger;
+    [this.nullableRules, this.typeCheckRules, this.arrayAssertionRules].forEach(
+      (rules) => rules.forEach((rule) => rule.init(logger)),
+    );
   }
 
   validate(value: unknown): FieldValidatorResult {
@@ -85,7 +101,7 @@ export abstract class FieldValidator<
   }
 
   /** предварительные проверки на нулевое значение, тип данных */
-  protected preValidateValue(
+  protected validateOnNullableAntType(
     value: unknown,
   ): RulesValidatedAnswer {
     let errors: LiteralFieldErrors = [];
@@ -112,7 +128,7 @@ export abstract class FieldValidator<
 
   protected getNullableRules(): ValidationRule<'nullable', unknown>[] | ValidationRule<'assert', unknown>[] {
     return this.isRequired
-      ? [new CannotBeNullableAssertionRule()]
+      ? [new CannotBeNullableAssertionRule(), new CannootBeEmptyStringAssertionRule()]
       : [new CanBeNullableRule()];
   }
 

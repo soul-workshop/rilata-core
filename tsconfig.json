@@ -6,6 +6,7 @@
   },
   "include": [
     "src/**/*",
+    "tests/**/*",
     "jest.setup-file.ts",
     "node_modules/@rilata/**/*",
   ],

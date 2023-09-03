@@ -1,12 +1,10 @@
-import { v4 as UUIDV4 } from 'uuid';
-import { AssertionException } from '../../exceptions';
-import { UuidType } from '../../types';
+import { AssertionException, UuidType } from '../../types';
 
 export class UUIDUtility {
   private static uuidRegex = '^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$';
 
   static getNewUUIDValue(): UuidType {
-    return UUIDV4();
+    return crypto.randomUUID();
   }
 
   static isValidValue(value?: unknown): boolean {

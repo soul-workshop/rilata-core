@@ -11,13 +11,13 @@ describe('UUIDUtility class test', () => {
   });
 
   test('test isValidValue method, is valid case', () => {
-    expect(UUIDUtility.isValidValue(correctUUID)).toBe(true);
-    expect(UUIDUtility.isValidValue(uuid)).toBe(true);
+    expect(UUIDUtility.isUUID(correctUUID)).toBe(true);
+    expect(UUIDUtility.isUUID(uuid)).toBe(true);
   });
 
   test('test isValidValue method, not valid value case', () => {
-    expect(UUIDUtility.isValidValue(incorrectUUID)).toBe(false);
-    expect(UUIDUtility.isValidValue(undefined)).toBe(false);
+    expect(UUIDUtility.isUUID(incorrectUUID)).toBe(false);
+    expect(UUIDUtility.isUUID(undefined)).toBe(false);
   });
 
   test('test cleanValue, validValue case', () => {

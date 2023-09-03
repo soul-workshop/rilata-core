@@ -1,3 +1,4 @@
+import { Logger } from '../../../common/logger/logger';
 import {
   RuleType, RuleDataType, GetRuleAnswer, RuleError, GetFailBehaviourString,
   GetSuccessBehaviourString, RuleHint, GetFailRuleAnswer, GetSuccessRuleAnswer,
@@ -29,6 +30,12 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
       ruleHint: { min: 5, max: 10 },
     } */
   abstract requirement: string;
+
+  protected logger!: Logger;
+
+  init(logger: Logger): void {
+    this.logger = logger;
+  }
 
   /** Возвращает соответствует ли значение правилам валидации */
   abstract validate(value: VT): GetRuleAnswer<RT>;

@@ -3,6 +3,6 @@ const unitJestConfig = require('@rilata/project-configs/src/base-configs/contrac
 module.exports = {
   ...unitJestConfig,
   transformIgnorePatterns: [
-    "node_modules/(?!(.*(@rilata)))/"
+    "node_modules/(?!(.*(@rilata|@anthill|@anthill-subjects|@orderly-anthill|thread-chat-bot)))/"
   ],
 };

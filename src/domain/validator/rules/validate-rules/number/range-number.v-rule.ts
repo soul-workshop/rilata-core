@@ -1,11 +1,12 @@
 import { ValidationRuleAnswer } from '../../types';
-import { NumberValidationRule } from './number.v-rule';
+import { ValidationRule } from '../../validation-rule';
 
-export class MustBeInRangeNumberValidationRule extends NumberValidationRule {
+export class RangeNumberValidationRule extends ValidationRule<'validate', number> {
   requirement = 'Число должно быть в диапозоне от {{min}} до {{max}}';
 
-  constructor(private min: number, private max: number) {
+  constructor(private min: number, private max: number, requirement?: string) {
     super();
+    if (requirement !== undefined) this.requirement = requirement;
   }
 
   validate(value: number): ValidationRuleAnswer {

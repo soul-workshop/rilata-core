@@ -2,7 +2,7 @@ import { ValidationRuleAnswer } from '../../types';
 import { ValidationRule } from '../../validation-rule';
 
 export class EqualCharsCountValidationRule extends ValidationRule<'validate', string> {
-  requirement = 'Строка должна быть равна {{count}}';
+  requirement = 'Строка должна быть равна {{count}}, сейчас {{current}}';
 
   constructor(private charsCount: number) {
     super();
@@ -10,7 +10,7 @@ export class EqualCharsCountValidationRule extends ValidationRule<'validate', st
 
   validate(value: string): ValidationRuleAnswer {
     return value.length !== this.charsCount
-      ? this.returnFail('SaveErrorAndRunNextRule', { minCount: this.charsCount })
+      ? this.returnFail('SaveErrorAndRunNextRule', { count: this.charsCount, current: value.length })
       : this.returnSuccess('RunNextRule');
   }
 }

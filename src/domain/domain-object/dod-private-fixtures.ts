@@ -6,7 +6,7 @@ import { ErrorDOD, EventDOD } from './types';
 export namespace DODPrivateFixtures {
   export type PhoneAttrs = {
     number: string,
-    type: 'mobile' | 'work',
+    type: string, // 'mobile' | 'work'
     noOutField: string,
   };
 
@@ -44,7 +44,8 @@ export namespace DODPrivateFixtures {
     id: string,
     name: string,
     lastName: string,
-    birthday: string,
+    birthday: number,
+    age: number,
     contacts: PersonContactsAttrs,
   };
 
@@ -52,7 +53,8 @@ export namespace DODPrivateFixtures {
     id: '1',
     name: 'Nur',
     lastName: 'Ama',
-    birthday: '1979-01-17',
+    birthday: new Date('1979-01-17').getTime(),
+    age: 42,
     contacts: personContactAttrs,
   };
 

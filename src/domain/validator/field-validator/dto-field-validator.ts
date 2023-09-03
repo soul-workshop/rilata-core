@@ -27,8 +27,8 @@ export class DtoFieldValidator<
     });
   }
 
-  validateValue(value: unknown): FieldValidatorResult {
-    const preValidateAnswer = this.preValidateValue(value);
+  protected validateValue(value: unknown): FieldValidatorResult {
+    const preValidateAnswer = this.validateOnNullableAntType(value);
     if (preValidateAnswer.break) {
       return preValidateAnswer.isValidValue
         ? success(true)
@@ -38,7 +38,7 @@ export class DtoFieldValidator<
     let errors: DtoFieldErrors = {};
     Object.entries(this.dtoMap).forEach(([attrName, validator]) => {
       if (validator instanceof FieldValidator) {
-        const result = validator.validateValue((value as DTO_TYPE)[attrName]);
+        const result = validator.validate((value as DTO_TYPE)[attrName]);
         if (result.isFailure()) {
           errors = { ...errors, ...result.value };
         }
