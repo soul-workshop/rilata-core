@@ -12,5 +12,5 @@ export interface Logger {
   error(log: string, logAttrs?: unknown): never
 
   /** Фатальные ошибки, которые ловятся обработчиком на верхнем уровне */
-  fatalError(log: string, logAttrs?: unknown): never
+  fatalError(log: string, logAttrs?: unknown): Promise<void>
 }

@@ -1,5 +1,5 @@
 import { Logger } from '../../common/logger/logger';
-import { DomainAttrs, GeneralEventDOD } from '../domain-object-data/types';
+import { DomainAttrs, GeneralEventDod } from '../domain-object-data/types';
 
 export abstract class EventHandler {
   protected logger!: Logger;
@@ -8,5 +8,5 @@ export abstract class EventHandler {
     this.logger = logger;
   }
 
-  abstract handle(aggregateAttrs: DomainAttrs, event: GeneralEventDOD): void
+  abstract handle(aggregateAttrs: DomainAttrs, event: GeneralEventDod): void
 }

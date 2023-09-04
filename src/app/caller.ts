@@ -18,3 +18,5 @@ export type ModuleCaller = {
 };
 
 export type Caller = ModuleCaller | AnonymousUser | DomainUser;
+
+export type CallerType = Caller['type'];

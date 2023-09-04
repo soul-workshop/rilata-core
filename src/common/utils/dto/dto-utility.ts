@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-continue */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DTO } from '../../dto';
+import { DTO } from '../../../domain/dto';
 import {
-  ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDomainAttrsDotKeys,
+  ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDtoKeysByDotNotation,
 } from '../../type-functions';
 import { DeepAttr } from '../../types';
 
@@ -96,12 +96,12 @@ export class dtoUtility {
   *   во вложенном объекте 'phone'. */
   static excludeDeepAttrs<
     ATTRS extends DTO,
-    EXC extends GetDomainAttrsDotKeys<ATTRS>
+    EXC extends GetDtoKeysByDotNotation<ATTRS> | GetDtoKeysByDotNotation<ATTRS>[]
   >(obj: ATTRS, excludedAttrs: EXC): ExcludeDeepDtoAttrs<ATTRS, EXC> {
     const objCopy = this.deepCopy(obj);
     const attrs = Array.isArray(excludedAttrs) ? excludedAttrs : [excludedAttrs];
 
-    const deleteAttribute = (dto: DTO, attributePath: string): void => {
+    const deepDelete = (dto: DTO, attributePath: string): void => {
       const attributePathAsArray = attributePath.split('.');
 
       attributePathAsArray.forEach((levelAttr: string, idx: number): void => {
@@ -118,10 +118,10 @@ export class dtoUtility {
     };
 
     attrs.forEach((excludedAttr: string) => {
-      deleteAttribute(objCopy, excludedAttr);
+      deepDelete(objCopy, excludedAttr);
     });
 
-    return objCopy as ExcludeDeepDtoAttrs<ATTRS, EXC>;
+    return objCopy as unknown as ExcludeDeepDtoAttrs<ATTRS, EXC>;
   }
 
   /**

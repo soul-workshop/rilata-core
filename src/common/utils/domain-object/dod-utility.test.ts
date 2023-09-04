@@ -3,9 +3,9 @@ import { AggregateVersion } from '../../../domain/domain-object-data/domain-obje
 import { GetDODMeta } from '../../../domain/domain-object-data/types';
 import { dtoUtility } from '../dto';
 import { UUIDUtility } from '../uuid/uuid-utility';
-import { DODUtility } from './dod-utility';
+import { dodUtility } from './dod-utility';
 
-const sut = DODUtility;
+const sut = dodUtility;
 
 describe('test DODUtility class', () => {
   describe('получение экспортной (на выход) DOD', () => {

@@ -1,3 +1,5 @@
+export type LocaleHint = Record<string, unknown>;
+
 /** Текст для пользователя с переменными переданными в hint.
   В тексте можно указывать значения "переменных" в формате {{hintKey}}.
   Сделано для поддержки перевода в будущем.
@@ -8,5 +10,5 @@
 */
 export type Locale = {
   text: string,
-  hint?: Record<string, unknown>,
+  hint: LocaleHint,
 }

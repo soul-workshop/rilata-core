@@ -25,7 +25,7 @@ const a = {
     d: [5],
   }
 }
-const b: GetDirtyDTOKeys<typeof a> //  'a | a.b | a.b.c' | 'a.d'
+const b: GetDtoKeysByDotNotation<typeof a> //  'a | a.b | a.b.c' | 'a.d'
 */
 export type GetDtoKeysByDotNotation<ObjectType extends DTO> =
 {[Key in keyof ObjectType & string]: NonNullable<ObjectType[Key]> extends Array<infer T>
@@ -122,9 +122,9 @@ export type ExcludeDeepAttrs<TYPE, ATTRS extends unknown[]> =
             ? Omit<TYPE, FIRST>
             : ExcludeDeepAttrs<TYPE[FIRST], OTHERS> extends infer DEEP
               ? DEEP extends string
-                ? Omit<TYPE, FIRST>
+                ? Omit<TYPE, FIRST> // следующие ключи не валидные
                 : Omit<TYPE, FIRST> & Record<FIRST, DEEP>
               : never
           : `${FIRST extends string ? FIRST : 'FIRST'} not key is D`
         : never
-      : `${TYPE extends string ? TYPE : 'TYPE'} is literal value`
+      : `${TYPE extends string ? TYPE : 'TYPE'} is literal`

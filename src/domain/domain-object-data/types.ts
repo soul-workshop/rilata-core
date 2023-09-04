@@ -1,6 +1,7 @@
-import { ExcludeDeepDtoAttrs, GetDtoKeysByDotNotation } from '../../common/type-functions';
+import { ExcludeDeepDtoAttrs, GetDomainAttrsDotKeys } from '../../common/type-functions';
 import { IdType, UuidType } from '../../common/types';
 import { DTO } from '../dto';
+import { Locale } from '../locale';
 
 /** Domain Object Data */
 export type DomainAttrs = DTO;
@@ -13,7 +14,7 @@ export type ObjectType = 'value-object' | 'entity' | 'aggregate';
 
 export type DomainType = 'domain-object' | 'event' | 'error';
 
-export type ErrorType = 'domain-error' | 'app-error' | 'validation-error';
+export type ErrorType = 'domain-error' | 'app-error';
 
 export type MutationType = 'read-model-object' | 'command-model-object';
 
@@ -24,6 +25,7 @@ export type DomainMeta = {
   domainType?: DomainType,
   errorType?: ErrorType,
   mutationType?: MutationType,
+  noOutput?: GetDomainAttrsDotKeys<DTO>,
 }
 
 export type Actions = Record<string, boolean>;
@@ -38,55 +40,57 @@ export type DomainObjectData<
   actions?: A,
 }
 
-export type GeneralDOD = DomainObjectData<DomainAttrs>;
+export type GeneralDod = DomainObjectData<DomainAttrs>;
 
-export type DomainFullData<D extends GeneralDOD> = {
+export type DomainFullData<D extends GeneralDod> = {
   classActions?: Actions,
   instances: D[],
 }
 
-export type GeneralDFD = DomainFullData<GeneralDOD>;
+export type GeneralDFD = DomainFullData<GeneralDod>;
 
-export type ErrorDOD<
-  ATTRS extends DomainAttrs,
+export type ErrorDod<
+  LOCALE extends Locale,
   NAME extends string,
   TYPE extends ErrorType = 'domain-error'
 > = {
-  attrs: ATTRS,
+  locale: LOCALE,
   name: NAME,
   domainType: 'error',
   errorType: TYPE,
 }
 
-export type GeneralErrorDOD = ErrorDOD<DomainAttrs, string, ErrorType>;
+export type GeneralErrorDod = ErrorDod<Locale, string, ErrorType>;
 
-export type EventDOD<ATTRS extends DomainAttrs, NAME extends string> = {
+export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
   attrs: ATTRS,
   name: NAME,
   domainType: 'event',
   eventId: UuidType,
 }
 
-export type CommandDOD<ATTRS extends DomainAttrs, NAME extends string> = {
+export type GeneralEventDod = EventDod<DomainAttrs, string>;
+
+export type CommandDod<ATTRS extends DomainAttrs, NAME extends string> = {
   attrs: ATTRS,
   name: NAME,
   domainType: 'domain-command' | 'usecase-command',
   commandId: UuidType,
 }
 
-export type GeneralEventDOD = EventDOD<DomainAttrs, string>;
+export type GeneralCommandDod = CommandDod<DTO, string>;
 
-export type GetDomainAttrs<D extends GeneralDOD> =
+export type GetDomainAttrs<D extends GeneralDod> =
   D extends DomainObjectData<infer A> ? A : never;
 
 export type OutputDA<
   ATTRS extends DomainAttrs,
-  EXC extends GetDtoKeysByDotNotation<ATTRS> | GetDtoKeysByDotNotation<ATTRS>[]
+  EXC extends GetDomainAttrsDotKeys<ATTRS>
 > = ExcludeDeepDtoAttrs<ATTRS, EXC>;
 
 export type OutputDOD<
   DATA extends DomainObjectData<DomainAttrs>,
-  EXC extends GetDtoKeysByDotNotation<DATA['attrs']> | GetDtoKeysByDotNotation<DATA['attrs']>[] | ReadonlyArray<GetDtoKeysByDotNotation<DATA['attrs']>>
+  EXC extends GetDomainAttrsDotKeys<DATA['attrs']>
 > = ExcludeDeepDtoAttrs<DATA['attrs'], EXC> extends infer ATTRS
   ? ATTRS extends DTO
     ? DomainObjectData<
