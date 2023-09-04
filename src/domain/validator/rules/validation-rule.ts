@@ -1,7 +1,7 @@
 import { Logger } from '../../../common/logger/logger';
 import {
   RuleType, RuleDataType, GetRuleAnswer, RuleError, GetFailBehaviourString,
-  GetSuccessBehaviourString, RuleHint, GetFailRuleAnswer, GetSuccessRuleAnswer,
+  GetSuccessBehaviourString, GetFailRuleAnswer, GetSuccessRuleAnswer,
 } from './types';
 
 /** Класс для правил валидации.
@@ -43,8 +43,8 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
   /** возвращает текстовое сообщение для пользователя по переданной ошибке.
     Сделана такая сложность, для поддержки перевода на другие языки. */
   static rawToMessage(ruleErr: RuleError): string {
-    const tuples = [['_', ruleErr.requirement]].concat(
-      Object.entries(ruleErr.ruleHint).map(([key, value]) => [key, String(value)]),
+    const tuples = [['_', ruleErr.text]].concat(
+      Object.entries(ruleErr.hint).map(([key, value]) => [key, String(value)]),
     );
 
     return tuples.reduce(
@@ -60,11 +60,11 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
   /** Возвращает неуспешный ответ */
   protected returnFail(
     behaviour: GetFailBehaviourString<RT>,
-    hint: RuleHint = {},
+    hint: Record<string, unknown> = {},
   ): GetFailRuleAnswer<RT> {
     return {
       behaviour,
-      ruleError: { requirement: this.requirement, ruleHint: hint },
+      ruleError: { text: this.requirement, hint },
     } as GetFailRuleAnswer<RT>;
   }
 

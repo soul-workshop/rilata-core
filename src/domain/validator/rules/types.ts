@@ -1,3 +1,4 @@
+import { Locale } from '../../locale';
 import { ValidationRule } from './validation-rule';
 
 export type RuleType = 'nullable' |'type' | 'assert' | 'validate';
@@ -8,12 +9,7 @@ export type RuleDataType = LiteralDataType | unknown;
 
 export type GeneralValidationRule = ValidationRule<RuleType, RuleDataType>;
 
-export type RuleHint = Record<string, unknown>;
-
-export type RuleError = {
-  requirement: string,
-  ruleHint: RuleHint,
-}
+export type RuleError = Locale
 
 export type RunNextRule = { behaviour: 'RunNextRule' };
 
