@@ -13,13 +13,12 @@ import { IsBooleanTypeRule } from '../../validator/rules/type-rules/is-boolean-t
 import { IsDTOTypeRule } from '../../validator/rules/type-rules/is-dto-type.t-rule';
 import { IsNumberTypeRule } from '../../validator/rules/type-rules/is-number-type.t-rule';
 import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-type.t-rule';
-import { GeneralValidationRule, LiteralDataType } from '../../validator/rules/types';
+import { GeneralValidationRule, LiteralDataType, RuleError } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannootBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import {
-  ArrayFieldErrors, FieldErrors,
-  FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType, LiteralFieldErrors,
-  RulesValidatedAnswer,
+  FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType,
+  ArrayFieldErrors, RulesValidatedAnswer,
 } from './types';
 
 export abstract class FieldValidator<
@@ -97,14 +96,14 @@ export abstract class FieldValidator<
 
     return Object.keys(arrErrors).length > 0
       ? this.getFailResult(arrErrors)
-      : success(true);
+      : success(undefined);
   }
 
   /** предварительные проверки на нулевое значение, тип данных */
   protected validateOnNullableAntType(
     value: unknown,
   ): RulesValidatedAnswer {
-    let errors: LiteralFieldErrors = [];
+    let errors: RuleError[] = [];
     let lastAnswer: RulesValidatedAnswer;
 
     function getAnswer(): RulesValidatedAnswer {
@@ -122,7 +121,7 @@ export abstract class FieldValidator<
     return getAnswer();
   }
 
-  protected getFailResult(errors: FieldErrors | ArrayFieldErrors): FieldValidatorResult {
+  protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
     return failure({ [this.attrName]: errors });
   }
 
@@ -162,7 +161,7 @@ export abstract class FieldValidator<
     value: unknown,
     rules: GeneralValidationRule[],
   ): RulesValidatedAnswer {
-    const errors: LiteralFieldErrors = [];
+    const errors: RuleError[] = [];
     let shouldBreak = false;
 
     // eslint-disable-next-line no-restricted-syntax

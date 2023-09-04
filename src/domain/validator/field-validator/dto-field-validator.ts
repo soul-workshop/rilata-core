@@ -31,7 +31,7 @@ export class DtoFieldValidator<
     const preValidateAnswer = this.validateOnNullableAntType(value);
     if (preValidateAnswer.break) {
       return preValidateAnswer.isValidValue
-        ? success(true)
+        ? success(undefined)
         : this.getFailResult(preValidateAnswer.errors);
     }
 
@@ -47,6 +47,6 @@ export class DtoFieldValidator<
 
     return Object.keys(errors).length > 0
       ? failure(errors)
-      : success(true);
+      : success(undefined);
   }
 }

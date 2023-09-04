@@ -40,7 +40,7 @@ export class LiteralFieldValidator<
     const preValidateAnswer = this.validateOnNullableAntType(value);
     if (preValidateAnswer.break) {
       return preValidateAnswer.isValidValue
-        ? success(true)
+        ? success(undefined)
         : this.getFailResult(preValidateAnswer.errors);
     }
 
@@ -50,7 +50,7 @@ export class LiteralFieldValidator<
     );
     const validateAnswer = this.validateByRules(leadedValue, this.validateRules);
     return validateAnswer.isValidValue
-      ? success(true)
+      ? success(undefined)
       : this.getFailResult(validateAnswer.errors);
   }
 }
