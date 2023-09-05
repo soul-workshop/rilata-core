@@ -1,4 +1,5 @@
 import { Logger } from '../../../common/logger/logger';
+import { LocaleHint } from '../../locale';
 import {
   RuleType, RuleDataType, GetRuleAnswer, RuleError, GetFailBehaviourString,
   GetSuccessBehaviourString, RuleHint, GetFailRuleAnswer, GetSuccessRuleAnswer,
@@ -60,7 +61,7 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
   /** Возвращает неуспешный ответ */
   protected returnFail(
     behaviour: GetFailBehaviourString<RT>,
-    hint: RuleHint = {},
+    hint: LocaleHint = {},
   ): GetFailRuleAnswer<RT> {
     return {
       behaviour,
