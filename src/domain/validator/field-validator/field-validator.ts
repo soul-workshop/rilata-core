@@ -15,7 +15,7 @@ import { IsNumberTypeRule } from '../../validator/rules/type-rules/is-number-typ
 import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-type.t-rule';
 import { GeneralValidationRule, LiteralDataType, RuleError } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
-import { CannootBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
+import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import {
   FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType,
   ArrayFieldErrors, RulesValidatedAnswer,
@@ -127,7 +127,7 @@ export abstract class FieldValidator<
 
   protected getNullableRules(): ValidationRule<'nullable', unknown>[] | ValidationRule<'assert', unknown>[] {
     return this.isRequired
-      ? [new CannotBeNullableAssertionRule(), new CannootBeEmptyStringAssertionRule()]
+      ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]
       : [new CanBeNullableRule()];
   }
 

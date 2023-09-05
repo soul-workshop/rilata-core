@@ -18,6 +18,8 @@ export type ErrorType = 'domain-error' | 'app-error';
 
 export type MutationType = 'read-model-object' | 'command-model-object';
 
+export type CommandType = 'domain-command' | 'usecase-command';
+
 export type DomainMeta = {
   name: string,
   version?: number,
@@ -71,14 +73,14 @@ export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
 
 export type GeneralEventDod = EventDod<DomainAttrs, string>;
 
-export type CommandDod<ATTRS extends DomainAttrs, NAME extends string> = {
+export type CommandDod<ATTRS extends DomainAttrs, NAME extends string, TYPE extends CommandType> = {
   attrs: ATTRS,
   name: NAME,
-  domainType: 'domain-command' | 'usecase-command',
-  commandId: UuidType,
+  domainType: TYPE,
+  commandId?: UuidType,
 }
 
-export type GeneralCommandDod = CommandDod<DTO, string>;
+export type GeneralCommandDod = CommandDod<DTO, string, CommandType>;
 
 export type GetDomainAttrs<D extends GeneralDod> =
   D extends DomainObjectData<infer A> ? A : never;

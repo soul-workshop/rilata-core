@@ -60,7 +60,7 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
   /** Возвращает неуспешный ответ */
   protected returnFail(
     behaviour: GetFailBehaviourString<RT>,
-    hint: Record<string, unknown> = {},
+    hint: RuleHint = {},
   ): GetFailRuleAnswer<RT> {
     return {
       behaviour,
