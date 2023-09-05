@@ -1,14 +1,10 @@
 import { Logger } from '../../common/logger/logger';
 import { GetArrayType } from '../../common/type-functions';
 import { DomainObjectData } from '../domain-object-data/types';
-import { AggregateRootParams } from './types';
-import { EventHandler } from './event-handler';
-import { Constructor } from '../../common/types';
+import { GeneralAggregateRootParams } from './types';
 
 /** Корневой объект - т.е имеет уникальную глобальную идентификацию */
-export abstract class AggregateRoot<PARAMS extends AggregateRootParams> {
-  protected abstract eventHandlerCtors: Constructor<EventHandler>[];
-
+export abstract class AggregateRoot<PARAMS extends GeneralAggregateRootParams> {
   protected abstract getMeta(): PARAMS['meta'];
 
   /** Коротктое доменное имя объекта.
@@ -17,18 +13,12 @@ export abstract class AggregateRoot<PARAMS extends AggregateRootParams> {
 
   protected logger!: Logger;
 
-  protected version!: number;
-
   private domainEvents: PARAMS['events'] = [];
 
-  constructor(protected attrs: PARAMS['attrs']) {}
+  constructor(protected attrs: PARAMS['attrs'], protected version: number) {}
 
   init(logger: Logger): void {
     this.logger = logger;
-  }
-
-  setVersion(version: number): void {
-    this.version = version;
   }
 
   getId(): string {
@@ -39,13 +29,10 @@ export abstract class AggregateRoot<PARAMS extends AggregateRootParams> {
     return {
       attrs: this.attrs,
       meta: this.getMeta(),
-    }
+    };
   }
 
   getVersion(): number {
-    if (this.version === undefined) {
-      this.logger.error(`invalid call getVersion method, to ${this.toString()}`, this);
-    }
     return this.version;
   }
 

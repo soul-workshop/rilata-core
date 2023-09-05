@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { domainObjectUtility } from '../../common/utils/domain-object/domain-object-utility';
-import { ErrorDOD, EventDOD } from './types';
+import { ErrorDod, EventDod } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace DODPrivateFixtures {
@@ -91,7 +91,7 @@ export namespace DODPrivateFixtures {
     ['contacts.noOutField', 'contacts.email.noOutField', 'contacts.phones.noOutField'],
   );
 
-  export type PersonNotExitsErrorDOD = ErrorDOD<{ personId: string }, 'PersonNotExistError'>;
+  export type PersonNotExitsErrorDOD = ErrorDod<{ personId: string }, 'PersonNotExistError'>;
 
-  export type PersonEmailAddedEventDOD = EventDOD<PersonAttrs, 'PersonEmailAddedEvent'>;
+  export type PersonEmailAddedEventDOD = EventDod<PersonAttrs, 'PersonEmailAddedEvent'>;
 }

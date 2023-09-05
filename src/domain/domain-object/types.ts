@@ -1,10 +1,18 @@
-import { DomainMeta, GeneralEventDOD, IdDomainAttrs } from '../domain-object-data/types';
+import { DomainMeta, GeneralEventDod, IdDomainAttrs } from '../domain-object-data/types';
 import { AggregateRoot } from './aggregate-root';
 
-export type AggregateRootParams = {
-  attrs: IdDomainAttrs,
-  meta: DomainMeta,
-  events: GeneralEventDOD[],
+export type AggregateRootParams<
+  ATTRS extends IdDomainAttrs,
+  META extends DomainMeta,
+  EVENTS extends GeneralEventDod[]
+> = {
+  attrs: ATTRS,
+  meta: META,
+  events: EVENTS,
 }
 
-export type GeneralAggregateRoot = AggregateRoot<AggregateRootParams>;
+export type GeneralAggregateRootParams = AggregateRootParams<
+  IdDomainAttrs, DomainMeta, GeneralEventDod[]
+>;
+
+export type GeneralAggregateRoot = AggregateRoot<GeneralAggregateRootParams>;
