@@ -25,20 +25,18 @@ export type UseCaseBaseErrors =
 
 export type UseCaseParams<
   IN, // что входит в useCase,
-  SUCCESS_OUT, // ответ в случае успеха
-  CALLER extends CallerType[],
+  SUCCESS_OUT, // ответ клиенту в случае успеха
   ERRORS extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENT, // публикуемые доменные события
 > = {
   in: IN,
   successOut: SUCCESS_OUT,
-  caller: CALLER,
   errors: ERRORS,
   event?: EVENT,
 }
 
 export type GeneralUcParams = UseCaseParams<
-  unknown, unknown, CallerType[], GeneralErrorDod, GeneralEventDod
+  unknown, unknown, GeneralErrorDod, GeneralEventDod
 >;
 
 export type CommandUseCaseParams<

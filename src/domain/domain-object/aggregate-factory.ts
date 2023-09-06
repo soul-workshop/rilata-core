@@ -1,9 +1,9 @@
 import { Logger } from '../../common/logger/logger';
 import { DTO } from '../dto';
 import { AggregateRoot } from './aggregate-root';
-import { AggregateRootParams, GeneralAggregateRoot } from './types';
+import { GeneralAggregateRoot, GeneralAggregateRootParams } from './types';
 
-export abstract class AggregateFactory<PARAMS extends AggregateRootParams> {
+export abstract class AggregateFactory<PARAMS extends GeneralAggregateRootParams> {
   abstract aggregateCtor: typeof AggregateRoot<PARAMS>
 
   protected logger!: Logger;
