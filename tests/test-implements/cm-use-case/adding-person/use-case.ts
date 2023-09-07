@@ -1,15 +1,25 @@
 import { ClassActionable } from '../../../../src/app/use-case/actionable/class-actionable';
 import { CommandUseCase } from '../../../../src/app/use-case/command-use-case';
 import { GetUcOptions, GetUcResult } from '../../../../src/app/use-case/types';
+import { StrictEqualFieldValidator } from '../../../../src/domain/validator/field-validator/prepared-fields/string/strict-equal';
+import { CommandValidatorMap } from '../../../../src/domain/validator/field-validator/types';
 import { PersonParams } from '../../domain-data/person/params';
-import { AddingPersonUCParams } from './params';
-import { addingPersonCommandVMap } from './v-map';
+import { personAttrsVMap } from '../../domain-data/person/v-map';
+import { AddingPersonUCCommand, AddingPersonUCParams } from './params';
 
-export class AddingPersonUC extends CommandUseCase<PersonParams, AddingPersonUCParams>
+export class AddingPersonUC extends CommandUseCase<AddingPersonUCParams>
   implements ClassActionable<PersonParams, 'addPerson'> {
   protected supportedCallers = ['DomainUser'] as const;
 
-  protected validatorMap = addingPersonCommandVMap;
+  protected validatorMap: CommandValidatorMap<AddingPersonUCCommand> = {
+    attrs: {
+      govPersonId: personAttrsVMap.govPersonId,
+      name: personAttrsVMap.name,
+      lastName: personAttrsVMap.lastName,
+      patronomic: personAttrsVMap.patronomic,
+    },
+    name: new StrictEqualFieldValidator('AddingPersonCommand'),
+  };
 
   actionType: 'class' = 'class';
 
@@ -22,6 +32,12 @@ export class AddingPersonUC extends CommandUseCase<PersonParams, AddingPersonUCP
   }
 
   protected runDomain(
+    options: GetUcOptions<AddingPersonUCParams>,
+  ): Promise<GetUcResult<AddingPersonUCParams>> {
+    throw new Error('Method not implemented.');
+  }
+
+  protected checkPersmissions(
     options: GetUcOptions<AddingPersonUCParams>,
   ): Promise<GetUcResult<AddingPersonUCParams>> {
     throw new Error('Method not implemented.');

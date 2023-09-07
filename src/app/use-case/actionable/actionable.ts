@@ -1,15 +1,9 @@
-import { GeneralARDParams } from '../../../domain/domain-object-data/aggregate-data-types';
-import { GetARParamsActionNames, GetARParamsAggregateName, GetARParmasActionType } from '../../../domain/domain-object-data/type-functions';
+import { ActionType } from './types';
 
-export interface Actionable<
-  AR_PARAMS extends GeneralARDParams,
-  AC_NAME extends GetARParamsActionNames<AR_PARAMS>,
-> {
-  actionType: GetARParmasActionType<AR_PARAMS>
+export interface Actionable {
+  actionType: ActionType
 
-  aggregateName: GetARParamsAggregateName<AR_PARAMS>;
+  actionName: string;
 
-  actionName: AC_NAME;
-
-  getAction(userId: string, ...args: unknown[]): Promise<Record<AC_NAME, boolean>>
+  getAction(userId: string, ...args: unknown[]): Promise<Record<string, boolean>>
 }

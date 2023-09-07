@@ -2,12 +2,12 @@ import { Logger } from '../../common/logger/logger';
 import { GetARParamsActionNames } from '../../domain/domain-object-data/type-functions';
 import { AggregateRoot } from '../../domain/domain-object/aggregate-root';
 import { GetARParams } from '../../domain/domain-object/types';
-import { GeneralUseCase } from '../use-case/types';
+import { GeneraQuerylUseCase } from '../use-case/types';
 
 export abstract class Module {
   abstract getName(): string;
 
-  abstract useCases: GeneralUseCase[];
+  abstract useCases: GeneraQuerylUseCase[];
 
   protected logger!: Logger;
 

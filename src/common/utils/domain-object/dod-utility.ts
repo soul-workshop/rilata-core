@@ -1,28 +1,32 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GeneralErrorDod } from '../../../domain/domain-object-data/types';
+import { ErrorDod } from '../../../domain/domain-object-data/common-types';
 import { LocaleHint } from '../../../domain/locale';
 
 /** Утилита для работы с объектами DomainObjectData */
 class DodUtility {
-  getDomainError(name: string, errText: string, hint?: LocaleHint): GeneralErrorDod {
+  getDomainError<
+    N extends string, TXT extends string, HINT extends LocaleHint
+  >(name: N, text: TXT, hint?: HINT): ErrorDod<{ text: TXT, hint: HINT }, N, 'domain-error'> {
     return {
       name,
       locale: {
-        text: errText,
-        hint: hint ?? {},
+        text,
+        hint: hint ?? {} as HINT,
       },
       errorType: 'domain-error',
       domainType: 'error',
     };
   }
 
-  getAppError(name: string, errText: string, hint?: LocaleHint): GeneralErrorDod {
+  getAppError<
+    N extends string, TXT extends string, HINT extends LocaleHint
+  >(name: N, text: TXT, hint?: HINT): ErrorDod<{ text: TXT, hint: HINT }, N, 'app-error'> {
     return {
       name,
       locale: {
-        text: errText,
-        hint: hint ?? {},
+        text,
+        hint: hint ?? {} as HINT,
       },
       errorType: 'app-error',
       domainType: 'error',
