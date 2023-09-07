@@ -1,9 +1,11 @@
 /* eslint-disable no-use-before-define */
 import { Result } from '../../../common/result/types';
+import { GeneralCommandDod } from '../../domain-object-data/common-types';
 import { DTO } from '../../dto';
 import { LiteralDataType, RuleError } from '../../validator/rules/types';
 import { DtoFieldValidator } from './dto-field-validator';
 import { LiteralFieldValidator } from './literal-field-validator';
+import { StrictEqualFieldValidator } from './prepared-fields/string/strict-equal';
 
 export type GetArrayConfig<B extends boolean> = B extends false
   ? {
@@ -62,10 +64,15 @@ type GetValidator<REQ extends boolean, IS_ARR extends boolean, TYPE> =
 
 export type ValidatorMap<DTO_TYPE extends DTO> = {
   [KEY in keyof DTO_TYPE]-?: undefined extends DTO_TYPE[KEY]
-    ? DTO_TYPE[KEY] extends Array<infer ARR_TYPE>
-      ? GetValidator<false, true, ARR_TYPE>
-      : GetValidator<false, false, DTO_TYPE[KEY]>
-    : DTO_TYPE[KEY] extends Array<infer ARR_TYPE>
-      ? GetValidator<true, true, ARR_TYPE>
-      : GetValidator<true, false, DTO_TYPE[KEY]>
+    ? NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
+      ? GetValidator<false, true, NonNullable<ARR_TYPE>>
+      : GetValidator<false, false, NonNullable<DTO_TYPE[KEY]>>
+    : NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
+      ? GetValidator<true, true, NonNullable<ARR_TYPE>>
+      : GetValidator<true, false, NonNullable<DTO_TYPE[KEY]>>
+}
+
+export type CommandValidatorMap<CMD extends GeneralCommandDod> = {
+  attrs: ValidatorMap<CMD['attrs']>,
+  name: StrictEqualFieldValidator<CMD['name']>,
 }

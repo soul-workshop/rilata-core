@@ -1,4 +1,4 @@
-import { UUIDFormatValidationRule } from '../../../rules/prepared-rules/string/uuid-format.v-rule';
+import { UUIDFormatValidationRule } from '../../../rules/validate-rules/string/uuid-format.v-rule';
 import { LiteralFieldValidator } from '../../literal-field-validator';
 
 export class UuidField extends LiteralFieldValidator<true, false, string> {

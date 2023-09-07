@@ -1,4 +1,5 @@
 import { Locale } from '../../locale';
+import { LeadRule } from './lead-rule';
 import { ValidationRule } from './validation-rule';
 
 export type RuleType = 'nullable' |'type' | 'assert' | 'validate';
@@ -8,6 +9,8 @@ export type LiteralDataType = string | number | boolean;
 export type RuleDataType = LiteralDataType | unknown;
 
 export type GeneralValidationRule = ValidationRule<RuleType, RuleDataType>;
+
+export type GeneralLeadRule = LeadRule<LiteralDataType>;
 
 export type RuleError = Locale
 
