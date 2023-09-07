@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-import { DODPrivateFixtures as DodFixtures } from '../../../../src/domain/domain-object/dod-private-fixtures';
 import { LiteralFieldValidator } from '../../../../src/domain/validator/field-validator/literal-field-validator';
 import { RegexFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/regex.field-v-rule';
 import { EqualCharsCountValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/equal-chars-count.v-rule';
@@ -11,6 +10,7 @@ import { IsTimeStampValidationRule } from '../../../../src/domain/validator/rule
 import { ValidatorMap } from '../../../../src/domain/validator/field-validator/types';
 import { DtoFieldValidator } from '../../../../src/domain/validator/field-validator/dto-field-validator';
 import { Logger } from '../../../../src/common/logger/logger';
+import { DODPrivateFixtures as DodFixtures } from '../../../../src/domain/domain-object-data/dod-private-fixtures';
 
 export namespace FieldValidatorPrivateFixtures {
   export const phoneAttrsValidatorMap: ValidatorMap<DodFixtures.PhoneAttrs> = {
@@ -98,7 +98,7 @@ export namespace FieldValidatorTestMocksPrivateFixtures {
       throw new Error('Method not implemented.');
     }
 
-    wrong(log: string): Promise<void> {
+    warning(log: string): Promise<void> {
       throw new Error('Method not implemented.');
     }
 

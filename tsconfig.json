@@ -1,5 +1,5 @@
 {
-  "extends": "@rilata/project-configs/src/base-configs/contracts/tsconfig.json",
+  "extends": "nurgeo-project-configs/src/base-configs/contracts/tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
     "noErrorTruncation": true,
@@ -8,10 +8,5 @@
     "src/**/*",
     "tests/**/*",
     "jest.setup-file.ts",
-    "node_modules/@rilata/**/*",
   ],
-  "exclude": [
-    "node_modules/@rilata/**/frontend/**/*",
-    "node_modules/@rilata/**/components/**/*",
-  ]
 }
