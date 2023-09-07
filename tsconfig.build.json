@@ -2,11 +2,8 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*",
-    "node_modules/@rilata/**/*",
   ],
   "exclude": [
-    "node_modules/@rilata/**/frontend/**/*",
-    "node_modules/@rilata/**/components/**/*",
     "**/*test.ts"
   ]
 }

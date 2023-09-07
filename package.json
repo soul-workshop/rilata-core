@@ -1,11 +1,11 @@
 {
-  "name": "@rilata2",
+  "name": "rilata2",
   "version": "0.0.0",
   "description": "",
   "author": "GIS Expert",
   "license": "ISC",
   "private": true,
-  "repository": "git@github.com:gis-expert/rilata-common-core.git",
+  "repository": "git@github.com:NurGeo/rilata2.git",
   "scripts": {
     "build": "pnpm tsc",
     "tslint": "pnpm tsc --noEmit",
@@ -17,7 +17,7 @@
     "test:all": "pnpm jest -c jest.all-config.js --runInBand"
   },
   "dependencies": {
-    "@rilata/project-configs": "gis-expert/rilata-project-configs",
+    "nurgeo-project-configs": "NurGeo/project-config",
     "email-validator": "^2.0.4",
     "jwt-decode": "^3.1.2",
     "reflect-metadata": "^0.1.13"
@@ -30,7 +30,6 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.0.0",
-    "eslint-plugin-namespace-fixtures": "gis-expert/eslint-plugin-namespace-fixtures",
     "jest": "^27.4.7",
     "ts-jest": "^27.1.3",
     "typescript": "~4.8.2"
