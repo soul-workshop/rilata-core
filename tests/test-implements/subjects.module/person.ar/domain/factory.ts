@@ -1,13 +1,12 @@
 import { AggregateFactory } from '../../../../../src/domain/domain-object/aggregate-factory';
-import { GeneralAggregateRoot } from '../../../../../src/domain/domain-object/types';
-import { PersonParams } from '../object-data/person-params';
-import { AddingPersonCommand, PersonAddedEvent } from '../use-cases/adding-person/use-case-params';
+import { GeneralAR } from '../../../../../src/domain/domain-object/types';
+import { AddingPersonDomainCommand, PersonAddedEvent, PersonParams } from '../domain-data/person-params';
 import { PersonAR } from './aggregate';
 
 export class PersonArFactory extends AggregateFactory<PersonParams> {
   aggregateCtor = PersonAR;
 
-  create(command: AddingPersonCommand): PersonAR {
+  create(command: AddingPersonDomainCommand): PersonAR {
     const personAttrs = {
       id: crypto.randomUUID(),
       ...command.attrs,
@@ -26,7 +25,7 @@ export class PersonArFactory extends AggregateFactory<PersonParams> {
     return person;
   }
 
-  restore(...args: unknown[]): GeneralAggregateRoot {
+  restore(...args: unknown[]): GeneralAR {
     throw new Error('Method not implemented.');
   }
 }

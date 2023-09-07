@@ -1,5 +1,5 @@
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
-import { PersonMeta, PersonParams } from '../object-data/person-params';
+import { PersonMeta, PersonParams } from '../domain-data/person-params';
 
 export class PersonAR extends AggregateRoot<PersonParams> {
   protected getMeta(): PersonMeta {
