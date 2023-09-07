@@ -2,7 +2,7 @@ import { Locale } from '../../domain/locale';
 import { PermissionDeniedError } from './types';
 
 export const permissionDeniedError: PermissionDeniedError<Locale> = {
-  attrs: {
+  locale: {
     text: 'Действие не доступно',
     hint: {},
   },
@@ -12,7 +12,7 @@ export const permissionDeniedError: PermissionDeniedError<Locale> = {
 };
 
 export const authPermissionDeniedError: PermissionDeniedError<Locale> = {
-  attrs: {
+  locale: {
     text: 'Действие доступно только для аутентифицированных пользователей.',
     hint: {},
   },

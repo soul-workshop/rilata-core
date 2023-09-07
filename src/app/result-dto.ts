@@ -1,4 +1,7 @@
-export type ResultDTO<PL> = {
-  status: boolean,
-  payload: PL,
+export type ResultDTO<FAIL, SUCCESS> = {
+  success: false,
+  payload: FAIL,
+} | {
+  success: true,
+  payload: SUCCESS,
 };

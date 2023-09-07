@@ -1,7 +1,7 @@
 import { UseCase } from './use-case';
 import { GeneralCommandUcParams, GetUcResult, ValidationError } from './types';
-import { ValidatorMap } from '../../domain/validator/field-validator/types';
-import { Caller } from '../caller';
+import { CommandValidatorMap } from '../../domain/validator/field-validator/types';
+import { Caller, CallerType } from '../caller';
 import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
 import { Result } from '../../common/result/types';
@@ -11,9 +11,9 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 export abstract class CommandUseCase<
   UC_PARAMS extends GeneralCommandUcParams
 > extends UseCase<UC_PARAMS> {
-  protected abstract supportedCallers: UC_PARAMS['caller'];
+  protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
-  protected abstract validatorMap: ValidatorMap<UC_PARAMS['in']>;
+  protected abstract validatorMap: CommandValidatorMap<UC_PARAMS['input']>;
 
   protected checkCallerPermission(caller: Caller): GetUcResult<UC_PARAMS> {
     if (this.supportedCallers.includes(caller.type)) return success(undefined);
@@ -26,10 +26,10 @@ export abstract class CommandUseCase<
     return failure(err);
   }
 
-  protected checkValidations(input: UC_PARAMS['in']): Result<ValidationError, undefined> {
+  protected checkValidations(input: UC_PARAMS['input']): Result<ValidationError, undefined> {
     // @ts-ignore
     const validator = new DtoFieldValidator('dto', true, { isArray: false }, this.validatorMap);
-    validator.init(input.name, this.logger);
+    validator.init(input.in.name);
     const result = validator.validate(input);
 
     if (result.isFailure()) {

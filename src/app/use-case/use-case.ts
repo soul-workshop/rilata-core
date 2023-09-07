@@ -5,13 +5,14 @@ import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Caller } from '../caller';
+import { ActionType, GeneralInstanceActionable } from './actionable/types';
 import {
   GeneralUcParams, GetUcOptions, GetUcResult, ValidationError,
 } from './types';
 
-export abstract class UseCase<
-  UC_PARAMS extends GeneralUcParams
-> {
+export abstract class UseCase<UC_PARAMS extends GeneralUcParams> {
+  abstract actionType: ActionType;
+
   /** выполнение доменной логики */
   protected abstract runDomain(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>>
 
@@ -36,6 +37,14 @@ export abstract class UseCase<
       const err = dodUtility.getAppError('InternalError', 'Извините, на сервере произошла ошибка');
       return failure(err);
     }
+  }
+
+  isInstanceActionable(): this is GeneralInstanceActionable {
+    return this.actionType === 'instance';
+  }
+
+  isClassActionable(): this is GeneralInstanceActionable {
+    return this.actionType === 'class';
   }
 
   /**
@@ -67,7 +76,7 @@ export abstract class UseCase<
   }
 
   /** првоерка валидации входных данных */
-  protected checkValidations(_input: UC_PARAMS['in'], ..._args: unknown[]): Result<ValidationError, undefined> {
+  protected checkValidations(_input: UC_PARAMS['input'], ..._args: unknown[]): Result<ValidationError, undefined> {
     return success(undefined);
   }
 }

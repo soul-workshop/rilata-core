@@ -1,9 +1,9 @@
-import { DomainAttrs } from '../domain-object-data/types';
-import { GeneralAggregateRoot } from './types';
+import { DomainAttrs } from '../domain-object-data/common-types';
+import { GeneralAR } from './types';
 
 /** Доменный объект, обычно часть агрегата */
 export abstract class DomainObject<ATTRS extends DomainAttrs> {
-  constructor(protected attrs: ATTRS, protected aggregate: GeneralAggregateRoot) {}
+  constructor(protected attrs: ATTRS, protected aggregate: GeneralAR) {}
 
   /** Коротктое доменное имя объекта.
     Обычно используется для идентификации пользователем объекта в списке */

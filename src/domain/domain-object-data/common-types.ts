@@ -1,14 +1,13 @@
 import { ExcludeDeepDtoAttrs, GetDomainAttrsDotKeys } from '../../common/type-functions';
-import { IdType, UuidType } from '../../common/types';
+import { UuidType } from '../../common/types';
 import { DTO } from '../dto';
 import { Locale } from '../locale';
+import { GeneralARDTransfer } from './aggregate-types';
+
+type Name = string;
 
 /** Domain Object Data */
 export type DomainAttrs = DTO;
-
-export type IdDomainAttrs = {
-  id: IdType,
-}
 
 export type ObjectType = 'value-object' | 'entity' | 'aggregate';
 
@@ -30,27 +29,6 @@ export type DomainMeta = {
   noOutput?: GetDomainAttrsDotKeys<DTO>,
 }
 
-export type Actions = Record<string, boolean>;
-
-export type DomainObjectData<
-  D extends DomainAttrs,
-  M extends DomainMeta = DomainMeta,
-  A extends Actions = Actions,
-> = {
-  attrs: D,
-  meta?: M,
-  actions?: A,
-}
-
-export type GeneralDod = DomainObjectData<DomainAttrs>;
-
-export type DomainFullData<D extends GeneralDod> = {
-  classActions?: Actions,
-  instances: D[],
-}
-
-export type GeneralDFD = DomainFullData<GeneralDod>;
-
 export type ErrorDod<
   LOCALE extends Locale,
   NAME extends string,
@@ -62,7 +40,7 @@ export type ErrorDod<
   errorType: TYPE,
 }
 
-export type GeneralErrorDod = ErrorDod<Locale, string, ErrorType>;
+export type GeneralErrorDod = ErrorDod<Locale, Name, ErrorType>;
 
 export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
   attrs: ATTRS,
@@ -71,7 +49,7 @@ export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
   eventId: UuidType,
 }
 
-export type GeneralEventDod = EventDod<DomainAttrs, string>;
+export type GeneralEventDod = EventDod<DomainAttrs, Name>;
 
 export type CommandDod<ATTRS extends DomainAttrs, NAME extends string, TYPE extends CommandType> = {
   attrs: ATTRS,
@@ -82,7 +60,7 @@ export type CommandDod<ATTRS extends DomainAttrs, NAME extends string, TYPE exte
 
 export type GeneralCommandDod = CommandDod<DTO, string, CommandType>;
 
-export type GetDomainAttrs<D extends GeneralDod> =
+export type GetDomainAttrs<D extends GeneralARDTransfer> =
   D extends DomainObjectData<infer A> ? A : never;
 
 export type OutputDA<

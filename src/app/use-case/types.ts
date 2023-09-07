@@ -1,10 +1,10 @@
 import { Result } from '../../common/result/types';
 import {
   ErrorDod, GeneralCommandDod, GeneralErrorDod, GeneralEventDod,
-} from '../../domain/domain-object-data/types';
+} from '../../domain/domain-object-data/common-types';
 import { DTO } from '../../domain/dto';
 import { Locale } from '../../domain/locale';
-import { Caller, CallerType } from '../caller';
+import { Caller } from '../caller';
 import { DtoFieldErrors } from '../../domain/validator/field-validator/types';
 
 export type ValidationError = {
@@ -24,37 +24,44 @@ export type UseCaseBaseErrors =
   PermissionDeniedError<Locale> | InternalError<Locale> | ValidationError;
 
 export type UseCaseParams<
-  IN, // что входит в useCase,
+  AC_NAME extends string, // имя action
+  INPUT, // что входит в useCase,
   SUCCESS_OUT, // ответ клиенту в случае успеха
-  ERRORS extends GeneralErrorDod, // доменные ошибки при выполнении запроса
-  EVENT, // публикуемые доменные события
+  FAIL_OUT, // возвращаемый ответ в случау не успеха
+  EVENTS extends unknown[] = [], // публикуемые доменные события
 > = {
-  in: IN,
+  actionName: AC_NAME,
+  input: INPUT,
   successOut: SUCCESS_OUT,
-  errors: ERRORS,
-  event?: EVENT,
+  errors: FAIL_OUT,
+  events?: EVENTS,
 }
 
 export type GeneralUcParams = UseCaseParams<
-  unknown, unknown, GeneralErrorDod, GeneralEventDod
+  string, unknown, unknown, unknown, unknown[]
 >;
 
+export type UseCaseOptions = {
+  in: GeneralCommandDod,
+  caller: Caller,
+}
+
 export type CommandUseCaseParams<
-  IN extends GeneralCommandDod, // что входит в useCase,
+  AC_NAME extends string, // имя action
+  INPUT extends UseCaseOptions, // что входит в useCase,
   SUCCESS_OUT, // ответ в случае успеха
-  CALLER extends CallerType[],
-  ERRORS extends GeneralErrorDod, // доменные ошибки при выполнении запроса
-  EVENT extends GeneralEventDod, // публикуемые доменные события
+  FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
+  EVENTS extends GeneralEventDod[], // публикуемые доменные события
 > = {
-  in: IN,
+  actionName: AC_NAME,
+  input: INPUT,
   successOut: SUCCESS_OUT,
-  caller: CALLER,
-  errors: ERRORS,
-  event: EVENT,
+  errors: FAIL_OUT,
+  events: EVENTS,
 }
 
 export type GeneralCommandUcParams = CommandUseCaseParams<
-  GeneralCommandDod, unknown, CallerType[], GeneralErrorDod, GeneralEventDod
+  string, UseCaseOptions, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
 export type GetDTO<IN> = IN extends DTO ? IN : never;
@@ -70,6 +77,6 @@ export type GetUcErrorsResult<P extends GeneralUcParams> =
   Result<P['errors'] | UseCaseBaseErrors, never>
 
 export type GetUcOptions<P extends GeneralUcParams> = {
-  in: P['in'],
+  in: P['input'],
   caller: Caller,
 }
