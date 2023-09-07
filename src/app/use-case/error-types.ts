@@ -11,6 +11,8 @@ export type ValidationError = {
 
 export type BadRequestError<L extends Locale> = ErrorDod<L, 'BadRequest', 'app-error'>;
 
+export type NotFoundError<L extends Locale> = ErrorDod<L, 'NotFound', 'app-error'>;
+
 export type PermissionDeniedError<LOCALE extends Locale> =
   ErrorDod<LOCALE, 'Permission denied', 'domain-error'>;
 

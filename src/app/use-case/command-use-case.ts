@@ -7,7 +7,7 @@ import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
-import { badRequestError } from './constants';
+import { badRequestError, badRequestInvalidCommandNameError } from './constants';
 import { Locale } from '../../domain/locale';
 import { QueryUseCase } from './query-use-case';
 
@@ -52,9 +52,9 @@ export abstract class CommandUseCase<
   protected checkValidations(input: UC_PARAMS['input']): Result<ValidationError | BadRequestError<Locale>, undefined> {
     const cmdNameValidateResult = this.validatorMap.name.validate(input.in.name);
     if (cmdNameValidateResult.isFailure()) {
-      return failure(badRequestError);
+      return failure(badRequestInvalidCommandNameError);
     }
-    validator.init(input.in.name, this.logger);
+    this.validatorMap.init(input.in.name, this.logger);
     const result = validator.validate(input);
 
     if (result.isFailure()) {

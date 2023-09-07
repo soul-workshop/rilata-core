@@ -1,5 +1,5 @@
 import { Locale } from '../../domain/locale';
-import { BadRequestError, InternalError, PermissionDeniedError } from './types';
+import { BadRequestError, InternalError, NotFoundError, PermissionDeniedError } from './error-types';
 
 export const badRequestError: BadRequestError<Locale> = {
   locale: {
@@ -7,6 +7,26 @@ export const badRequestError: BadRequestError<Locale> = {
     hint: {},
   },
   name: 'BadRequest',
+  errorType: 'app-error',
+  domainType: 'error',
+};
+
+export const badRequestInvalidCommandNameError: BadRequestError<Locale> = {
+  locale: {
+    text: 'Bad request, invalid command name',
+    hint: {},
+  },
+  name: 'BadRequest',
+  errorType: 'app-error',
+  domainType: 'error',
+};
+
+export const notFoundError: NotFoundError<Locale> = {
+  locale: {
+    text: 'Page not found',
+    hint: {},
+  },
+  name: 'NotFound',
   errorType: 'app-error',
   domainType: 'error',
 };
