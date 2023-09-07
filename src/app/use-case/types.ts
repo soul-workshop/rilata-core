@@ -14,6 +14,8 @@ export type ValidationError = {
   errorType: 'app-error',
 }
 
+export type CommandNameNotValidError = ErrorDod<Locale, 'CommandNameNotValidError', 'app-error'>;
+
 export type PermissionDeniedError<LOCALE extends Locale> =
   ErrorDod<LOCALE, 'permission-denied', 'domain-error'>;
 
@@ -21,7 +23,10 @@ export type InternalError<LOCALE extends Locale> =
   ErrorDod<LOCALE, 'internal-error', 'app-error'>;
 
 export type UseCaseBaseErrors =
-  PermissionDeniedError<Locale> | InternalError<Locale> | ValidationError;
+  CommandNameNotValidError
+  | PermissionDeniedError<Locale>
+  | InternalError<Locale>
+  | ValidationError;
 
 export type UseCaseParams<
   AC_NAME extends string, // имя action

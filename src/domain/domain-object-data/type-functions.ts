@@ -1,16 +1,21 @@
-import { GeneralARDParams } from './aggregate-types';
+import { GeneralARDParams } from './aggregate-data-types';
 import { EventDod } from './common-types';
 
-export type GetDomainEvents<AR_PARAMS extends GeneralARDParams> =
+export type GetARParamsAttrs<AR_PARAMS extends GeneralARDParams> = AR_PARAMS['attrs'];
+
+export type GetARParamsEvents<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS['actions']['events']
 
-export type GetDomainEventNames<AR_PARAMS extends GeneralARDParams> =
+export type GetARParamsEventNames<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS['actions']['events'] extends EventDod<infer _, infer NAME>
     ? NAME
     : never
 
-export type GetARName<AR_PARAMS extends GeneralARDParams> =
+export type GetARParamsAggregateName<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS['meta']['name']
 
-export type GetARActionNames<AR_PARAMS extends GeneralARDParams> =
+export type GetARParamsActionNames<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS['actions']['name']
+
+export type GetARParmasActionType<AR_PARAMS extends GeneralARDParams> =
+  AR_PARAMS['actions']['type']

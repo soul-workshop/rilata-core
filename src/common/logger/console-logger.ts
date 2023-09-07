@@ -2,7 +2,7 @@
 import { Logger } from './logger';
 
 export class ConsoleLogger implements Logger {
-  options: Intl.DateTimeFormatOptions = {
+  timeFormat: Intl.DateTimeFormatOptions = {
     dateStyle: 'short',
     timeStyle: 'short',
     hourCycle: 'h24',
@@ -30,7 +30,7 @@ export class ConsoleLogger implements Logger {
   }
 
   private makeLogString(type: string, log: string): string {
-    const dateTime = new Date().toLocaleString(undefined, this.options);
+    const dateTime = new Date().toLocaleString(undefined, this.timeFormat);
     return `${type}-${dateTime}: ${log}`;
   }
 

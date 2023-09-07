@@ -1,4 +1,4 @@
-import { GeneralARDParams } from '../../../domain/domain-object-data/aggregate-types';
+import { GeneralARDParams } from '../../../domain/domain-object-data/aggregate-data-types';
 import { ClassActionable } from './class-actionable';
 import { InstanceActionable } from './instance-actionable';
 

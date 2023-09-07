@@ -4,14 +4,24 @@ import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
+import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
+import { GetARParamsActionNames, GetARParamsAggregateName, GetARParmasActionType } from '../../domain/domain-object-data/type-functions';
 import { Caller } from '../caller';
-import { ActionType, GeneralInstanceActionable } from './actionable/types';
+import { GeneralInstanceActionable } from './actionable/types';
 import {
   GeneralUcParams, GetUcOptions, GetUcResult, ValidationError,
 } from './types';
+import { Actionable } from './actionable/actionable';
 
-export abstract class UseCase<UC_PARAMS extends GeneralUcParams> {
-  abstract actionType: ActionType;
+export abstract class UseCase<AR_PARAMS extends GeneralARDParams, UC_PARAMS extends GeneralUcParams>
+implements Actionable< AR_PARAMS, GetARParamsActionNames<AR_PARAMS> > {
+  abstract actionType: GetARParmasActionType<AR_PARAMS>;
+
+  abstract aggregateName: GetARParamsAggregateName<AR_PARAMS>;
+
+  abstract actionName: GetARParamsActionNames<AR_PARAMS>;
+
+  abstract getAction(...args: unknown[]): Record<GetARParamsActionNames<AR_PARAMS>, boolean>;
 
   /** выполнение доменной логики */
   protected abstract runDomain(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>>

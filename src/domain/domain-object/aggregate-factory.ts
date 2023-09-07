@@ -1,4 +1,4 @@
-import { GeneralARDParams } from '../domain-object-data/aggregate-types';
+import { GeneralARDParams } from '../domain-object-data/aggregate-data-types';
 import { DTO } from '../dto';
 import { AggregateRoot } from './aggregate-root';
 import { GeneralAR } from './types';

@@ -1,5 +1,5 @@
-import { AggregateRootDataTransfer, GeneralARDParams } from '../domain-object-data/aggregate-types';
-import { GetDomainEvents } from '../domain-object-data/type-functions';
+import { AggregateRootDataTransfer, GeneralARDParams } from '../domain-object-data/aggregate-data-types';
+import { GetARParamsEvents } from '../domain-object-data/type-functions';
 
 /** Корневой объект - т.е имеет уникальную глобальную идентификацию */
 export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
@@ -13,7 +13,7 @@ export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
 
   protected abstract version: number;
 
-  private domainEvents: GetDomainEvents<PARAMS>[] = [];
+  private domainEvents: GetARParamsEvents<PARAMS>[] = [];
 
   getId(): string {
     return this.attrs.id;
@@ -35,11 +35,11 @@ export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
     return `${this.constructor.name} aggregate root: id-${this.getId()}`;
   }
 
-  registerDomainEvent(event: GetDomainEvents<PARAMS>): void {
+  registerDomainEvent(event: GetARParamsEvents<PARAMS>): void {
     this.domainEvents.push(event);
   }
 
-  getDomainEvents(): GetDomainEvents<PARAMS>[] {
+  getDomainEvents(): GetARParamsEvents<PARAMS>[] {
     return this.domainEvents;
   }
 

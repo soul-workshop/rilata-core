@@ -2,7 +2,7 @@ import { ExcludeDeepDtoAttrs, GetDomainAttrsDotKeys } from '../../common/type-fu
 import { UuidType } from '../../common/types';
 import { DTO } from '../dto';
 import { Locale } from '../locale';
-import { GeneralARDTransfer } from './aggregate-types';
+import { AggregateRootDataTransfer, GeneralARDTransfer } from './aggregate-data-types';
 
 type Name = string;
 
@@ -61,7 +61,7 @@ export type CommandDod<ATTRS extends DomainAttrs, NAME extends string, TYPE exte
 export type GeneralCommandDod = CommandDod<DTO, string, CommandType>;
 
 export type GetDomainAttrs<D extends GeneralARDTransfer> =
-  D extends DomainObjectData<infer A> ? A : never;
+  D extends AggregateRootDataTransfer<infer A, infer _> ? A : never;
 
 export type OutputDA<
   ATTRS extends DomainAttrs,
@@ -69,11 +69,11 @@ export type OutputDA<
 > = ExcludeDeepDtoAttrs<ATTRS, EXC>;
 
 export type OutputDOD<
-  DATA extends DomainObjectData<DomainAttrs>,
+  DATA extends AggregateRootDataTransfer<DomainAttrs, DomainMeta>,
   EXC extends GetDomainAttrsDotKeys<DATA['attrs']>
 > = ExcludeDeepDtoAttrs<DATA['attrs'], EXC> extends infer ATTRS
   ? ATTRS extends DTO
-    ? DomainObjectData<
+    ? AggregateRootDataTransfer<
         ATTRS,
         NonNullable<DATA['meta']>,
         NonNullable<DATA['actions']>

@@ -28,14 +28,15 @@ export class UnitOfWork {
    * @throws {AssertionException, OptimisticLockVersionMismatchError}
    */
   async commit(): Promise<void> {
-    await this.resolver.getDataBase().commit();
-
-    // Вызываем callbacks после коммита для публикации событии
-    await Promise.all(
-      this.afterCommitCallbacks.map(
-        (cb) => cb(),
-      ),
-    );
+    throw Error('not implement');
+    // await this.resolver.getDataBase().commit();
+    //
+    // // Вызываем callbacks после коммита для публикации событии
+    // await Promise.all(
+    //   this.afterCommitCallbacks.map(
+    //     (cb) => cb(),
+    //   ),
+    // );
   }
 
   /**
@@ -43,7 +44,8 @@ export class UnitOfWork {
    * @throws {AssertionException}
    */
   async rollback(): Promise<void> {
-    await this.resolver.getDataBase().rollback();
+    throw Error('not implement');
+    // await this.resolver.getDataBase().rollback();
   }
 
   registerAfterCommitCallbacks(cb: AfterCommitCallback): void {
@@ -51,6 +53,7 @@ export class UnitOfWork {
   }
 
   async startTransaction(): Promise<void> {
-    await this.resolver.getDataBase().startTransaction();
+    throw Error('not implement');
+    // await this.resolver.getDataBase().startTransaction();
   }
 }

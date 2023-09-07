@@ -37,7 +37,7 @@ export type UserActions = Record<string, boolean>;
 /** формат агрегата для передачи данных  */
 export type AggregateRootDataTransfer<
   D extends DomainAttrs,
-  M extends DomainMeta = DomainMeta,
+  M extends DomainMeta,
   A extends UserActions = UserActions,
 > = {
   attrs: D,
@@ -45,7 +45,7 @@ export type AggregateRootDataTransfer<
   actions?: A,
 }
 
-export type GeneralARDTransfer = AggregateRootDataTransfer<DomainAttrs>;
+export type GeneralARDTransfer = AggregateRootDataTransfer<DomainAttrs, DomainMeta>;
 
 /** передача всех данных об агрегате */
 export type FullAggregateRootDataTransfer<D extends GeneralARDTransfer> = {
