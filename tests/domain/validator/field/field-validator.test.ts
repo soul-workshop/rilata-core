@@ -45,7 +45,7 @@ describe('number validator with range value rule', () => {
       expect(Array.isArray(dtoErrors.ageField)).toBe(true);
       expect((dtoErrors.ageField as RuleError[]).length).toBe(1);
       const expectedError = 'Возраст должен быть между 18 и 65';
-      const recievedString = ValidationRule.rawToMessage(dtoErrors.ageField[0]);
+      const recievedString = ValidationRule.rawToMessage((dtoErrors.ageField as RuleError[])[0]);
       expect(recievedString).toBe(expectedError);
     });
   });
