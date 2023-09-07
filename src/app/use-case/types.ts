@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { Result } from '../../common/result/types';
 import {
   ErrorDod, GeneralCommandDod, GeneralErrorDod, GeneralEventDod,
@@ -6,6 +7,10 @@ import { DTO } from '../../domain/dto';
 import { Locale } from '../../domain/locale';
 import { Caller } from '../caller';
 import { DtoFieldErrors } from '../../domain/validator/field-validator/types';
+import { UseCase } from './use-case';
+import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
+
+export type GeneralUseCase = UseCase<GeneralARDParams, GeneralUcParams>;
 
 export type ValidationError = {
   errors: DtoFieldErrors,
@@ -29,13 +34,11 @@ export type UseCaseBaseErrors =
   | ValidationError;
 
 export type UseCaseParams<
-  AC_NAME extends string, // имя action
   INPUT, // что входит в useCase,
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT, // возвращаемый ответ в случау не успеха
   EVENTS extends unknown[] = [], // публикуемые доменные события
 > = {
-  actionName: AC_NAME,
   input: INPUT,
   successOut: SUCCESS_OUT,
   errors: FAIL_OUT,
@@ -43,7 +46,7 @@ export type UseCaseParams<
 }
 
 export type GeneralUcParams = UseCaseParams<
-  string, unknown, unknown, unknown, unknown[]
+  unknown, unknown, unknown, unknown[]
 >;
 
 export type UseCaseOptions = {
@@ -52,13 +55,11 @@ export type UseCaseOptions = {
 }
 
 export type CommandUseCaseParams<
-  AC_NAME extends string, // имя action
   INPUT extends UseCaseOptions, // что входит в useCase,
   SUCCESS_OUT, // ответ в случае успеха
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENTS extends GeneralEventDod[], // публикуемые доменные события
 > = {
-  actionName: AC_NAME,
   input: INPUT,
   successOut: SUCCESS_OUT,
   errors: FAIL_OUT,
@@ -66,7 +67,7 @@ export type CommandUseCaseParams<
 }
 
 export type GeneralCommandUcParams = CommandUseCaseParams<
-  string, UseCaseOptions, unknown, GeneralErrorDod, GeneralEventDod[]
+  UseCaseOptions, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
 export type GetDTO<IN> = IN extends DTO ? IN : never;

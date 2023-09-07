@@ -1,6 +1,6 @@
-import { Caller } from '../../../../../src/app/caller';
-import { ErrorDod, EventDod } from '../../../../../src/domain/domain-object-data/types';
-import { AggregateRootParams } from '../../../../../src/domain/domain-object/types';
+import { Caller } from '../../../../src/app/caller';
+import { ActionParams, AggregateRootDataParams } from '../../../../src/domain/domain-object-data/aggregate-data-types';
+import { ErrorDod, EventDod } from '../../../../src/domain/domain-object-data/common-types';
 
 export type PersonAttrs = {
   id: string,
@@ -21,7 +21,7 @@ export type AddingPersonOptions = {
   caller: Caller,
 }
 
-export type PersonExistsError = ErrorDod<
+export type PersonDoesNotExistsError = ErrorDod<
   {text: 'Человек с данным ИИН уже добавлен в систему', hint: Record<never, unknown>},
   'PersonExistsError'
 >;
@@ -34,6 +34,10 @@ export type PersonAddedEvent = EventDod<PersonAttrs, 'PersonAddedEvent'>;
 
 export type PersonEvents = [PersonAddedEvent];
 
-export type PersonParams = AggregateRootParams<
-  PersonAttrs, PersonMeta, PersonClassActions, PersonInstanceActions, PersonEvents
+export type AddPersonActionParams = ActionParams<
+  'addPerson', 'class', AddingPersonDomainCommand, PersonDoesNotExistsError, PersonAddedEvent
+>
+
+export type PersonParams = AggregateRootDataParams<
+  PersonAttrs, PersonMeta, AddPersonActionParams
 >;

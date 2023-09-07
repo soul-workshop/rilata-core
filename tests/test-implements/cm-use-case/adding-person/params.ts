@@ -1,15 +1,23 @@
-import { UseCaseOptions } from '../../../../../../src/app/use-case-types';
-import { CommandUseCaseParams } from '../../../../../../src/app/use-case/types';
-import { Result } from '../../../../../../src/common/result/types';
-import { AddingPersonDomainCommand, PersonAddedEvent, PersonExistsError } from '../../domain-data/person-params';
+import { Caller } from '../../../../src/app/caller';
+import { CommandUseCaseParams, UseCaseOptions } from '../../../../src/app/use-case/types';
+import { Result } from '../../../../src/common/result/types';
+import { UseCaseCommandDod } from '../../../../src/domain/domain-object-data/common-types';
+import { AddingPersonDomainCommand, PersonAddedEvent, PersonDoesNotExistsError } from '../../domain-data/person/params';
+
+export type AddingPersonUCCommand = UseCaseCommandDod<AddingPersonDomainCommand, 'AddPersonCommand'>;
+
+export type AddingPersonInputOptions = {
+  in: AddingPersonUCCommand,
+  caller: Caller,
+}
 
 export type AddingPersonUCParams = CommandUseCaseParams<
-  AddingPersonDomainCommand,
-  string, // id,
-  PersonExistsError,
-  PersonAddedEvent
+  AddingPersonInputOptions,
+  string,
+  PersonDoesNotExistsError,
+  PersonAddedEvent[]
 >;
 
 export type AddingPersonOptions = UseCaseOptions
 
-export type AddingPersonResult = Result<PersonExistsError, string>;
+export type AddingPersonResult = Result<PersonDoesNotExistsError, string>;

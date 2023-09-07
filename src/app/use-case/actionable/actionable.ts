@@ -11,5 +11,5 @@ export interface Actionable<
 
   actionName: AC_NAME;
 
-  getAction(...args: unknown[]): Record<AC_NAME, boolean>
+  getAction(userId: string, ...args: unknown[]): Promise<Record<AC_NAME, boolean>>
 }

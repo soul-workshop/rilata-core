@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { Result } from '../../../common/result/types';
-import { GeneralCommandDod } from '../../domain-object-data/types';
+import { GeneralCommandDod } from '../../domain-object-data/common-types';
 import { DTO } from '../../dto';
 import { LiteralDataType, RuleError } from '../../validator/rules/types';
 import { DtoFieldValidator } from './dto-field-validator';

@@ -21,7 +21,10 @@ implements Actionable< AR_PARAMS, GetARParamsActionNames<AR_PARAMS> > {
 
   abstract actionName: GetARParamsActionNames<AR_PARAMS>;
 
-  abstract getAction(...args: unknown[]): Record<GetARParamsActionNames<AR_PARAMS>, boolean>;
+  abstract getAction(
+    userId: string,
+    ...args: unknown[]
+  ): Promise<Record<GetARParamsActionNames<AR_PARAMS>, boolean>>;
 
   /** выполнение доменной логики */
   protected abstract runDomain(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>>

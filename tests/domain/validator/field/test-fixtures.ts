@@ -10,7 +10,7 @@ import { IsTimeStampValidationRule } from '../../../../src/domain/validator/rule
 import { ValidatorMap } from '../../../../src/domain/validator/field-validator/types';
 import { DtoFieldValidator } from '../../../../src/domain/validator/field-validator/dto-field-validator';
 import { Logger } from '../../../../src/common/logger/logger';
-import { DODPrivateFixtures as DodFixtures } from '../../../../src/domain/domain-object-data/dod-private-fixtures';
+import { DODPrivateFixtures as DodFixtures } from '../../../dod-private-fixtures';
 
 export namespace FieldValidatorPrivateFixtures {
   export const phoneAttrsValidatorMap: ValidatorMap<DodFixtures.PhoneAttrs> = {
