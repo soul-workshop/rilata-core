@@ -72,7 +72,5 @@ export type ValidatorMap<DTO_TYPE extends DTO> = {
       : GetValidator<true, false, NonNullable<DTO_TYPE[KEY]>>
 }
 
-export type CommandValidatorMap<CMD extends GeneralCommandDod> = {
-  attrs: ValidatorMap<CMD['attrs']>,
-  name: StrictEqualFieldValidator<CMD['name']>,
-}
+export type CommandValidatorMap<CMD extends GeneralCommandDod> =
+  Record<CMD['name'], DtoFieldValidator<true, false, CMD['attrs']>>;

@@ -1,15 +1,18 @@
 import {
-  BadRequestError, GeneralCommandUcParams, GetUcOptions, GetUcResult, ValidationError,
+  GeneralCommandUcParams, GetUcOptions, GetUcResult,
 } from './types';
-import { CommandValidatorMap } from '../../domain/validator/field-validator/types';
+import { CommandValidatorMap, DtoFieldErrors } from '../../domain/validator/field-validator/types';
 import { Caller, CallerType } from '../caller';
 import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
-import { badRequestError, badRequestInvalidCommandNameError } from './constants';
+import { badRequestInvalidCommandNameError } from './constants';
 import { Locale } from '../../domain/locale';
 import { QueryUseCase } from './query-use-case';
+import { BadRequestError, ValidationError } from './error-types';
+import { DTO } from '../../domain/dto';
+import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 
 export abstract class CommandUseCase<
   UC_PARAMS extends GeneralCommandUcParams,
@@ -49,13 +52,15 @@ export abstract class CommandUseCase<
     return failure(err);
   }
 
-  protected checkValidations(input: UC_PARAMS['input']): Result<ValidationError | BadRequestError<Locale>, undefined> {
-    const cmdNameValidateResult = this.validatorMap.name.validate(input.in.name);
-    if (cmdNameValidateResult.isFailure()) {
+  protected checkValidations(
+    input: UC_PARAMS['input'],
+  ): Result<ValidationError | BadRequestError<Locale>, undefined> {
+    const validator = Object.getOwnPropertyDescriptor(this.validatorMap, input.in.name);
+    if (!validator) {
       return failure(badRequestInvalidCommandNameError);
     }
-    this.validatorMap.init(input.in.name, this.logger);
-    const result = validator.validate(input);
+    // eslint-disable-next-line max-len
+    const result = (validator as DtoFieldValidator<true, boolean, DTO>).validate(input.in.name, input.in.attrs);
 
     if (result.isFailure()) {
       const err: ValidationError = {

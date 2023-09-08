@@ -1,6 +1,5 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
-import { Logger } from '../../../common/logger/logger';
 import { success } from '../../../common/result/success';
 import { LeadRule } from '../../validator/rules/lead-rule';
 import { LiteralDataType } from '../../validator/rules/types';
@@ -21,11 +20,6 @@ export class LiteralFieldValidator<
     super(dataType, isRequired, arrayConfig);
   }
 
-  init(attrName: string, logger: Logger): void {
-    super.init(attrName, logger);
-    this.validateRules.forEach((rule) => rule.init(logger));
-  }
-
   /** предварительная проверка на типы данных и нулевые значения или утверждения
     1. В начале проверяется проверка нулевых значений, (undefined, null).
       Эти проверки выполняются правилами возвращаемыми с метода getNullableRules().
@@ -36,12 +30,12 @@ export class LiteralFieldValidator<
     4. Наконец проверка валидации (переданных в конструкторе). Провал проверки
       обычно не завершает процесс проверок, а идет накопление ошибок.
   */
-  protected validateValue(value: unknown): FieldValidatorResult {
+  protected validateValue(attrName: string, value: unknown): FieldValidatorResult {
     const preValidateAnswer = this.validateOnNullableAntType(value);
     if (preValidateAnswer.break) {
       return preValidateAnswer.isValidValue
         ? success(undefined)
-        : this.getFailResult(preValidateAnswer.errors);
+        : this.getFailResult(attrName, preValidateAnswer.errors);
     }
 
     const leadedValue = this.leadRules.reduce(
@@ -51,6 +45,6 @@ export class LiteralFieldValidator<
     const validateAnswer = this.validateByRules(leadedValue, this.validateRules);
     return validateAnswer.isValidValue
       ? success(undefined)
-      : this.getFailResult(validateAnswer.errors);
+      : this.getFailResult(attrName, validateAnswer.errors);
   }
 }

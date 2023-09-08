@@ -1,4 +1,3 @@
-import { Logger } from '../../../common/logger/logger';
 import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { DTO } from '../../dto';
@@ -19,26 +18,18 @@ export class DtoFieldValidator<
     super(dataType, required, arrayConfig);
   }
 
-  init(attrName: string, logger: Logger): void {
-    super.init(attrName, logger);
-    Object.entries(this.dtoMap).forEach(([childAttrName, validator]) => {
-      if (validator instanceof FieldValidator) validator.init(childAttrName, logger);
-      else this.logger.error('not valid validator map', this.dtoMap);
-    });
-  }
-
-  protected validateValue(value: unknown): FieldValidatorResult {
+  protected validateValue(attrName: string, value: unknown): FieldValidatorResult {
     const preValidateAnswer = this.validateOnNullableAntType(value);
     if (preValidateAnswer.break) {
       return preValidateAnswer.isValidValue
         ? success(undefined)
-        : this.getFailResult(preValidateAnswer.errors);
+        : this.getFailResult(attrName, preValidateAnswer.errors);
     }
 
     let errors: DtoFieldErrors = {};
-    Object.entries(this.dtoMap).forEach(([attrName, validator]) => {
+    Object.entries(this.dtoMap).forEach(([dtoAttrName, validator]) => {
       if (validator instanceof FieldValidator) {
-        const result = validator.validate((value as DTO_TYPE)[attrName]);
+        const result = validator.validate(attrName, (value as DTO_TYPE)[dtoAttrName]);
         if (result.isFailure()) {
           errors = { ...errors, ...result.value };
         }

@@ -1,25 +1,15 @@
 import { ClassActionable } from '../../../../src/app/use-case/actionable/class-actionable';
 import { CommandUseCase } from '../../../../src/app/use-case/command-use-case';
 import { GetUcOptions, GetUcResult } from '../../../../src/app/use-case/types';
-import { StrictEqualFieldValidator } from '../../../../src/domain/validator/field-validator/prepared-fields/string/strict-equal';
-import { CommandValidatorMap } from '../../../../src/domain/validator/field-validator/types';
 import { PersonParams } from '../../domain-data/person/params';
-import { personAttrsVMap } from '../../domain-data/person/v-map';
-import { AddingPersonUCCommand, AddingPersonUCParams } from './params';
+import { AddingPersonUCParams } from './params';
+import { addPersonVMap } from './v-map';
 
 export class AddingPersonUC extends CommandUseCase<AddingPersonUCParams>
   implements ClassActionable<PersonParams, 'addPerson'> {
   protected supportedCallers = ['DomainUser'] as const;
 
-  protected validatorMap: CommandValidatorMap<AddingPersonUCCommand> = {
-    attrs: {
-      govPersonId: personAttrsVMap.govPersonId,
-      name: personAttrsVMap.name,
-      lastName: personAttrsVMap.lastName,
-      patronomic: personAttrsVMap.patronomic,
-    },
-    name: new StrictEqualFieldValidator('AddingPersonCommand'),
-  };
+  protected validatorMap = addPersonVMap;
 
   actionType: 'class' = 'class';
 
