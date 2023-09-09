@@ -1,5 +1,5 @@
-import { DtoFieldValidator } from '../../../../src/domain/validator/field-validator/dto-field-validator';
-import { CommandValidatorMap, ValidatorMap } from '../../../../src/domain/validator/field-validator/types';
+import { DtoFieldValidator } from '../../../../../src/domain/validator/field-validator/dto-field-validator';
+import { CommandValidatorMap, ValidatorMap } from '../../../../../src/domain/validator/field-validator/types';
 import { AddingPersonDomainCommand } from '../../domain-data/person/add-person.a-params';
 import { personAttrsVMap } from '../../domain-data/person/v-map';
 import { AddingPersonUCCommand } from './params';

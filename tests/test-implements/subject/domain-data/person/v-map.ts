@@ -1,12 +1,12 @@
-import { DtoFieldValidator } from '../../../../src/domain/validator/field-validator/dto-field-validator';
-import { LiteralFieldValidator } from '../../../../src/domain/validator/field-validator/literal-field-validator';
-import { CannotEmptyStringField } from '../../../../src/domain/validator/field-validator/prepared-fields/string/cannot-empty-string';
-import { StringChoiceFieldValidator } from '../../../../src/domain/validator/field-validator/prepared-fields/string/choice';
-import { UuidField } from '../../../../src/domain/validator/field-validator/prepared-fields/string/uuid-field';
-import { ValidatorMap } from '../../../../src/domain/validator/field-validator/types';
-import { TrimStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim';
-import { EmailFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/email-format.field-v-rule';
-import { RegexFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/regex.field-v-rule';
+import { DtoFieldValidator } from '../../../../../src/domain/validator/field-validator/dto-field-validator';
+import { LiteralFieldValidator } from '../../../../../src/domain/validator/field-validator/literal-field-validator';
+import { CannotEmptyStringField } from '../../../../../src/domain/validator/field-validator/prepared-fields/string/cannot-empty-string';
+import { StringChoiceFieldValidator } from '../../../../../src/domain/validator/field-validator/prepared-fields/string/choice';
+import { UuidField } from '../../../../../src/domain/validator/field-validator/prepared-fields/string/uuid-field';
+import { ValidatorMap } from '../../../../../src/domain/validator/field-validator/types';
+import { TrimStringLeadRule } from '../../../../../src/domain/validator/rules/lead-rules/string/trim';
+import { EmailFormatValidationRule } from '../../../../../src/domain/validator/rules/validate-rules/string/email-format.field-v-rule';
+import { RegexFormatValidationRule } from '../../../../../src/domain/validator/rules/validate-rules/string/regex.field-v-rule';
 import { PhoneNumberFieldValidator } from './field-validators';
 import {
   ContactsAttrs, EmailAttrs, PersonAttrs, PhoneAttrs,
@@ -34,5 +34,5 @@ export const personAttrsVMap: ValidatorMap<PersonAttrs> = {
   name: new CannotEmptyStringField(true, [], [new TrimStringLeadRule()]),
   lastName: new CannotEmptyStringField(true, [], [new TrimStringLeadRule()]),
   patronomic: new CannotEmptyStringField(false, [], [new TrimStringLeadRule()]),
-  contacts: new DtoFieldValidator('dto', false, { isArray: false }, contactsVMap),
+  contacts: new DtoFieldValidator('dto', true, { isArray: false }, contactsVMap),
 };

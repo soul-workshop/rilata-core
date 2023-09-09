@@ -1,8 +1,8 @@
-import { ActionParams } from '../../../../src/domain/domain-object-data/aggregate-data-types';
-import { EventDod } from '../../../../src/domain/domain-object-data/common-types';
+import { ActionParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
+import { EventDod } from '../../../../../src/domain/domain-object-data/common-types';
 import { PersonAttrs, PhoneAttrs } from './params';
 
-export type AddingPhonesDomainCommand = {
+export type AddPhonesDomainCommand = {
   phones: PhoneAttrs[],
 };
 
@@ -14,5 +14,5 @@ type PersonPhonesAddedEventAttrs = {
 export type PersonPhonesAddedEvent = EventDod<PersonPhonesAddedEventAttrs, 'PersonPhoneAddedEvent'>;
 
 export type AddPhoneActionParams = ActionParams<
-  'addPhone', 'instance', AddingPhonesDomainCommand, never, PersonPhonesAddedEvent[]
+  'addPhone', 'instance', AddPhonesDomainCommand, never, PersonPhonesAddedEvent[]
 >

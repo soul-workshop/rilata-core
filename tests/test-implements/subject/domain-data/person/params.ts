@@ -1,4 +1,5 @@
-import { AggregateRootDataParams } from '../../../../src/domain/domain-object-data/aggregate-data-types';
+import { AggregateRootDataParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
+import { DomainMeta } from '../../../../../src/domain/domain-object-data/common-types';
 import { AddPersonActionParams } from './add-person.a-params';
 import { AddPhoneActionParams } from './add-phones.a-params';
 
@@ -24,12 +25,10 @@ export type PersonAttrs = {
   name: string,
   lastName: string,
   patronomic?: string,
-  contacts?: ContactsAttrs,
+  contacts: ContactsAttrs,
 }
 
-export type PersonMeta = {
-  name: 'PersonAR',
-}
+export type PersonMeta = DomainMeta<'PersonAR'>;
 
 export type PersonParams = AggregateRootDataParams<
   PersonAttrs, PersonMeta, AddPersonActionParams | AddPhoneActionParams

@@ -1,6 +1,6 @@
-import { ClassActionable } from '../../../../src/app/use-case/actionable/class-actionable';
-import { CommandUseCase } from '../../../../src/app/use-case/command-use-case';
-import { GetUcOptions, GetUcResult } from '../../../../src/app/use-case/types';
+import { ClassActionable } from '../../../../../src/app/use-case/actionable/class-actionable';
+import { CommandUseCase } from '../../../../../src/app/use-case/command-use-case';
+import { GetUcOptions, GetUcResult } from '../../../../../src/app/use-case/types';
 import { PersonParams } from '../../domain-data/person/params';
 import { AddingPersonUCParams } from './params';
 import { addPersonVMap } from './v-map';

@@ -1,3 +1,4 @@
+import { Caller } from '../../app/caller';
 import { ExcludeDeepDtoAttrs, GetDomainAttrsDotKeys } from '../../common/type-functions';
 import { UuidType } from '../../common/types';
 import { DTO } from '../dto';
@@ -15,17 +16,19 @@ export type DomainType = 'domain-object' | 'event' | 'error';
 
 export type ErrorType = 'domain-error' | 'app-error';
 
-export type MutationType = 'read-model-object' | 'command-model-object';
-
-export type DomainMeta = {
-  name: string,
+export type DomainMeta<
+  NAME extends string,
+  D_TYPE extends DomainType = 'domain-object',
+  O_TYPE extends ObjectType = 'aggregate',
+> = {
+  name: NAME,
+  domainType: D_TYPE,
+  objectType: O_TYPE,
   version?: number,
-  objectType?: ObjectType,
-  domainType?: DomainType,
-  errorType?: ErrorType,
-  mutationType?: MutationType,
-  noOutput?: GetDomainAttrsDotKeys<DTO>,
+  noOutput?: GetDomainAttrsDotKeys<DTO>[],
 }
+
+export type GeneralDomainMeta = DomainMeta<string, DomainType, ObjectType>;
 
 export type ErrorDod<
   LOCALE extends Locale,
@@ -45,6 +48,7 @@ export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
   name: NAME,
   domainType: 'event',
   eventId: UuidType,
+  caller: Caller,
 }
 
 export type GeneralEventDod = EventDod<DomainAttrs, Name>;
@@ -66,7 +70,7 @@ export type OutputDA<
 > = ExcludeDeepDtoAttrs<ATTRS, EXC>;
 
 export type OutputDOD<
-  DATA extends AggregateRootDataTransfer<DomainAttrs, DomainMeta>,
+  DATA extends AggregateRootDataTransfer<DomainAttrs, GeneralDomainMeta>,
   EXC extends GetDomainAttrsDotKeys<DATA['attrs']>
 > = ExcludeDeepDtoAttrs<DATA['attrs'], EXC> extends infer ATTRS
   ? ATTRS extends DTO

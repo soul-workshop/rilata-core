@@ -1,5 +1,5 @@
-import { ActionParams } from '../../../../src/domain/domain-object-data/aggregate-data-types';
-import { ErrorDod, EventDod } from '../../../../src/domain/domain-object-data/common-types';
+import { ActionParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
+import { ErrorDod, EventDod } from '../../../../../src/domain/domain-object-data/common-types';
 import { PersonAttrs } from './params';
 
 export type AddingPersonDomainCommand = Omit<PersonAttrs, 'id' | 'contacts'>;
