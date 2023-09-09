@@ -1,3 +1,5 @@
+import { Caller } from '../../../../../src/app/caller';
+import { UUIDUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { AddPhonesDomainCommand, PersonPhonesAddedEvent } from '../../domain-data/person/add-phones.a-params';
 import { PersonAttrs, PersonMeta, PersonParams } from '../../domain-data/person/params';
@@ -23,9 +25,15 @@ export class Person extends AggregateRoot<PersonParams> {
     return `${this.attrs.lastName} ${this.attrs.name[0].toUpperCase}.${patronomic}`;
   }
 
-  addPhone(userId: string, addPhone: AddPhonesDomainCommand): void {
+  addPhone(caller: Caller, addPhone: AddPhonesDomainCommand): void {
     const event: PersonPhonesAddedEvent = {
-
+      caller,
+      name: 'PersonPhoneAddedEvent',
+      attrs: {
+        addedPhones: addPhone.phones,
+        aRoot: this.attrs,
+      },
+      eventId: UUIDUtility.
     }
   }
 }

@@ -17,18 +17,22 @@ export type DomainType = 'domain-object' | 'event' | 'error';
 export type ErrorType = 'domain-error' | 'app-error';
 
 export type DomainMeta<
+  ATTRS extends DomainAttrs,
   NAME extends string,
+  NO_OUT extends GetDomainAttrsDotKeys<ATTRS>,
   D_TYPE extends DomainType = 'domain-object',
   O_TYPE extends ObjectType = 'aggregate',
 > = {
   name: NAME,
   domainType: D_TYPE,
   objectType: O_TYPE,
-  version?: number,
-  noOutput?: GetDomainAttrsDotKeys<DTO>[],
+  noOutput?: NO_OUT,
+  // version?: number,
 }
 
-export type GeneralDomainMeta = DomainMeta<string, DomainType, ObjectType>;
+export type GeneralDomainMeta = DomainMeta<
+  DomainAttrs, string, GetDomainAttrsDotKeys<DomainAttrs>, DomainType, ObjectType
+>;
 
 export type ErrorDod<
   LOCALE extends Locale,

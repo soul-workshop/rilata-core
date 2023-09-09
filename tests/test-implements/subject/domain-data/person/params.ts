@@ -28,7 +28,7 @@ export type PersonAttrs = {
   contacts: ContactsAttrs,
 }
 
-export type PersonMeta = DomainMeta<'PersonAR'>;
+export type PersonMeta = DomainMeta<PersonAttrs, 'PersonAR', []>;
 
 export type PersonParams = AggregateRootDataParams<
   PersonAttrs, PersonMeta, AddPersonActionParams | AddPhoneActionParams

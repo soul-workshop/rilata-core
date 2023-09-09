@@ -1,4 +1,4 @@
-import { DomainMeta, DomainAttrs } from './common-types';
+import { DomainAttrs, GeneralDomainMeta } from './common-types';
 
 export type ActionType = 'class' | 'instance';
 
@@ -20,7 +20,7 @@ export type GeneralActionParams = ActionParams<
 /** полное описание доменного агрегата */
 export type AggregateRootDataParams<
   ATTRS extends DomainAttrs,
-  META extends DomainMeta,
+  META extends GeneralDomainMeta,
   ACTIONS extends GeneralActionParams,
 > = {
   attrs: ATTRS,
@@ -29,7 +29,7 @@ export type AggregateRootDataParams<
 }
 
 export type GeneralARDParams = AggregateRootDataParams<
-  DomainAttrs, DomainMeta, GeneralActionParams
+  DomainAttrs, GeneralDomainMeta, GeneralActionParams
 >;
 
 export type UserActions = Record<string, boolean>;
@@ -37,7 +37,7 @@ export type UserActions = Record<string, boolean>;
 /** формат агрегата для передачи данных  */
 export type AggregateRootDataTransfer<
   D extends DomainAttrs,
-  M extends DomainMeta,
+  M extends GeneralDomainMeta,
   A extends UserActions = UserActions,
 > = {
   attrs: D,
@@ -45,7 +45,7 @@ export type AggregateRootDataTransfer<
   actions?: A,
 }
 
-export type GeneralARDTransfer = AggregateRootDataTransfer<DomainAttrs, DomainMeta>;
+export type GeneralARDTransfer = AggregateRootDataTransfer<DomainAttrs, GeneralDomainMeta>;
 
 /** передача всех данных об агрегате */
 export type FullAggregateRootDataTransfer<D extends GeneralARDTransfer> = {
