@@ -7,8 +7,10 @@ export type EmployeerAttrs = {
   personId: UuidType,
 }
 
-export type EmployeerMeta = DomainMeta<EmployeerAttrs, 'EmployeerAR', []>;
+export type EmployeerMeta = DomainMeta<'EmployeerAR'>;
 
 export type EmployeerParams = AggregateRootDataParams<
   EmployeerAttrs, EmployeerMeta, never
 >;
+
+export type OutputEmployeerAttrs = EmployeerAttrs;

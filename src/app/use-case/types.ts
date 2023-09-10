@@ -1,11 +1,22 @@
 import { Result } from '../../common/result/types';
+import { GetArrayType } from '../../common/type-functions';
 import {
   GeneralCommandDod, GeneralErrorDod, GeneralEventDod,
 } from '../../domain/domain-object-data/common-types';
 import { Caller } from '../caller';
-import { ModuleType } from '../module/types';
 import { UseCaseBaseErrors } from './error-types';
 import { QueryUseCase } from './query-use-case';
+
+export type ModuleType = 'command-module' | 'read-module' | 'module';
+
+export type AppEventType = 'command-event' | 'read-module' | 'event';
+
+export type GetAppEventDod<EVENTS extends GeneralEventDod[], M_TYPE extends ModuleType> =
+  M_TYPE extends 'command-module'
+    ? Array<GetArrayType<EVENTS> & { event: 'command-event' }>
+    : M_TYPE extends 'read-module'
+      ? Array<GetArrayType<EVENTS> & { event: 'read-event' }>
+      : EVENTS
 
 export type QueryUseCaseParams<
   MODULE_TYPE extends ModuleType, // тип модуля к которому относится данный UC
@@ -23,14 +34,14 @@ export type GeneralQueryUcParams = QueryUseCaseParams<ModuleType, unknown, unkno
 
 export type GeneraQuerylUseCase = QueryUseCase<GeneralQueryUcParams>;
 
-export type UseCaseOptions = {
+export type CommandUCOptions = {
   in: GeneralCommandDod,
   caller: Caller,
 }
 
 export type CommandUseCaseParams<
   MODULE_TYPE extends ModuleType, // тип модуля к которому относится данный UC
-  INPUT extends UseCaseOptions, // что входит в useCase,
+  INPUT extends CommandUCOptions, // что входит в useCase,
   SUCCESS_OUT, // ответ в случае успеха
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENTS extends GeneralEventDod[], // публикуемые доменные события
@@ -43,7 +54,7 @@ export type CommandUseCaseParams<
 }
 
 export type GeneralCommandUcParams = CommandUseCaseParams<
-  ModuleType, UseCaseOptions, unknown, GeneralErrorDod, GeneralEventDod[]
+  ModuleType, CommandUCOptions, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
 export type GetUcResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> = Result<

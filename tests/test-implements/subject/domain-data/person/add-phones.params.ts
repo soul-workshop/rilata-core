@@ -1,5 +1,6 @@
 import { ActionParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
 import { EventDod } from '../../../../../src/domain/domain-object-data/common-types';
+import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../company/role-errors';
 import { PersonAttrs, PhoneAttrs } from './params';
 
 export type AddPhonesDomainCommand = {
@@ -14,5 +15,10 @@ type PersonPhonesAddedEventAttrs = {
 export type PersonPhonesAddedEvent = EventDod<PersonPhonesAddedEventAttrs, 'PersonPhoneAddedEvent'>;
 
 export type AddPhoneActionParams = ActionParams<
-  'addPhone', 'instance', AddPhonesDomainCommand, never, PersonPhonesAddedEvent[]
+  'addPhone',
+  'instance',
+  AddPhonesDomainCommand,
+  undefined,
+  AllowedOnlyEmployeerError | AllowedOnlyStaffManagersError,
+  PersonPhonesAddedEvent[]
 >

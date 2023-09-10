@@ -1,9 +1,9 @@
 import { AssertionException, UuidType } from '../../types';
 
-export class UUIDUtility {
+class UUIDUtility {
   private uuidRegex = '^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$';
 
-  getNewUUIDValue(): UuidType {
+  getNewUUID(): UuidType {
     return crypto.randomUUID();
   }
 
@@ -20,3 +20,5 @@ export class UUIDUtility {
     );
   }
 }
+
+export const uuidUtility = new UUIDUtility();

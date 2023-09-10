@@ -17,9 +17,9 @@
     "test:all": "pnpm jest -c jest.all-config.js --runInBand"
   },
   "dependencies": {
-    "nurgeo-project-configs": "NurGeo/project-config",
     "email-validator": "^2.0.4",
     "jwt-decode": "^3.1.2",
+    "nurgeo-project-configs": "github:NurGeo/project-config",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {

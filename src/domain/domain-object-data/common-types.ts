@@ -17,22 +17,17 @@ export type DomainType = 'domain-object' | 'event' | 'error';
 export type ErrorType = 'domain-error' | 'app-error';
 
 export type DomainMeta<
-  ATTRS extends DomainAttrs,
   NAME extends string,
-  NO_OUT extends GetDomainAttrsDotKeys<ATTRS>,
   D_TYPE extends DomainType = 'domain-object',
   O_TYPE extends ObjectType = 'aggregate',
 > = {
   name: NAME,
   domainType: D_TYPE,
   objectType: O_TYPE,
-  noOutput?: NO_OUT,
   // version?: number,
 }
 
-export type GeneralDomainMeta = DomainMeta<
-  DomainAttrs, string, GetDomainAttrsDotKeys<DomainAttrs>, DomainType, ObjectType
->;
+export type GeneralDomainMeta = DomainMeta<string, DomainType, ObjectType>;
 
 export type ErrorDod<
   LOCALE extends Locale,
@@ -72,16 +67,16 @@ export type OutputDA<
   ATTRS extends DomainAttrs,
   EXC extends GetDomainAttrsDotKeys<ATTRS>
 > = ExcludeDeepDtoAttrs<ATTRS, EXC>;
-
-export type OutputDOD<
-  DATA extends AggregateRootDataTransfer<DomainAttrs, GeneralDomainMeta>,
-  EXC extends GetDomainAttrsDotKeys<DATA['attrs']>
-> = ExcludeDeepDtoAttrs<DATA['attrs'], EXC> extends infer ATTRS
-  ? ATTRS extends DTO
-    ? AggregateRootDataTransfer<
-        ATTRS,
-        NonNullable<DATA['meta']>,
-        NonNullable<DATA['actions']>
-      >
-    : ATTRS
-  : never
+//
+// export type OutputDOD<
+//   DATA extends GeneralARDTransfer,
+//   EXC extends GetDomainAttrsDotKeys<DATA['attrs']>
+// > = ExcludeDeepDtoAttrs<DATA['attrs'], EXC> extends infer ATTRS
+//   ? ATTRS extends DTO
+//     ? AggregateRootDataTransfer<
+//         ATTRS,
+//         NonNullable<DATA['meta']>,
+//         NonNullable<DATA['actions']>
+//       >
+//     : ATTRS
+//   : never

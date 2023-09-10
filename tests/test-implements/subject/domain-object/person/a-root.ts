@@ -1,8 +1,16 @@
 import { Caller } from '../../../../../src/app/caller';
-import { UUIDUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
+import { failure, Failure } from '../../../../../src/common/result/failure';
+import { success } from '../../../../../src/common/result/success';
+import { callerUtility } from '../../../../../src/common/utils/caller/caller-utility';
+import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
+import { DomainResult } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
-import { AddPhonesDomainCommand, PersonPhonesAddedEvent } from '../../domain-data/person/add-phones.a-params';
+import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
+import { AddPersonActionParams } from '../../domain-data/person/add-person.params';
+import { AddPhoneActionParams, PersonPhonesAddedEvent } from '../../domain-data/person/add-phones.params';
 import { PersonAttrs, PersonMeta, PersonParams } from '../../domain-data/person/params';
+import { ComapanyAR } from '../company/a-root';
 
 export class Person extends AggregateRoot<PersonParams> {
   constructor(protected attrs: PersonAttrs, protected version: number) {
@@ -25,15 +33,46 @@ export class Person extends AggregateRoot<PersonParams> {
     return `${this.attrs.lastName} ${this.attrs.name[0].toUpperCase}.${patronomic}`;
   }
 
-  addPhone(caller: Caller, addPhone: AddPhonesDomainCommand): void {
-    const event: PersonPhonesAddedEvent = {
-      caller,
-      name: 'PersonPhoneAddedEvent',
-      attrs: {
+  addPhone(
+    caller: Caller,
+    company: ComapanyAR,
+    addPhone: AddPhoneActionParams['command'],
+  ): DomainResult<AddPhoneActionParams> {
+    const preconditionsResult = this.addPhonePreconditions(caller, company);
+    if (preconditionsResult.isFailure()) return preconditionsResult;
+
+    addPhone.phones.forEach((phone) => this.attrs.contacts.phones.push(phone));
+
+    const event = dodUtility.getEventByType<PersonPhonesAddedEvent>(
+      'PersonPhoneAddedEvent',
+      {
         addedPhones: addPhone.phones,
         aRoot: this.attrs,
       },
-      eventId: UUIDUtility.
+      caller,
+    );
+    this.registerDomainEvent([event]);
+    return success(undefined);
+  }
+
+  addPhonePreconditions(caller: Caller, company: ComapanyAR): DomainResult<AddPersonActionParams> {
+    const userId = callerUtility.getUserId(caller);
+    if (company.isEmployeer(userId) === false) {
+      const err = dodUtility.getDomainErrorByType<AllowedOnlyEmployeerError>(
+        'Permission denied',
+        'Действие доступно только для работников компании',
+        {},
+      );
+      return failure(err);
     }
+    if (company.isStaffmanager(userId) === false) {
+      const err = dodUtility.getDomainErrorByType<AllowedOnlyStaffManagersError>(
+        'Permission denied',
+        'Действие доступно только для менеджеров компании',
+        {},
+      );
+      return failure(err);
+    }
+    return success(undefined);
   }
 }

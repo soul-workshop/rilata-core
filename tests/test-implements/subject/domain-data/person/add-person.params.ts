@@ -1,5 +1,6 @@
-import { ActionParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
+import { ActionParams, DomainResult } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
 import { ErrorDod, EventDod } from '../../../../../src/domain/domain-object-data/common-types';
+import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../company/role-errors';
 import { PersonAttrs } from './params';
 
 export type AddingPersonDomainCommand = Omit<PersonAttrs, 'id' | 'contacts'>;
@@ -18,5 +19,12 @@ type PersonAddedEventAttrs = {
 export type PersonAddedEvent = EventDod<PersonAddedEventAttrs, 'PersonAddedEvent'>;
 
 export type AddPersonActionParams = ActionParams<
-  'addPerson', 'class', AddingPersonDomainCommand, never, PersonAddedEvent[]
+  'addPerson',
+  'class',
+  AddingPersonDomainCommand,
+  undefined,
+  AllowedOnlyEmployeerError | AllowedOnlyStaffManagersError,
+  PersonAddedEvent[]
 >
+
+export type AddPersonResult = DomainResult<AddPersonActionParams>;
