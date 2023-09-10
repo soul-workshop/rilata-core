@@ -5,7 +5,6 @@ import { DTO } from '../../dto';
 import { LiteralDataType, RuleError } from '../../validator/rules/types';
 import { DtoFieldValidator } from './dto-field-validator';
 import { LiteralFieldValidator } from './literal-field-validator';
-import { StrictEqualFieldValidator } from './prepared-fields/string/strict-equal';
 
 export type GetArrayConfig<B extends boolean> = B extends false
   ? {
