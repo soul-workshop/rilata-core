@@ -1,12 +1,15 @@
 {
-  "extends": "nurgeo-project-configs/src/base-configs/contracts/tsconfig.json",
   "compilerOptions": {
+    "target": "esnext",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "nodeNext",
     "outDir": "./dist",
     "noErrorTruncation": true,
+    "types": [ "bun-types" ],
   },
   "include": [
     "src/**/*",
     "tests/**/*",
-    "jest.setup-file.ts",
   ],
 }
