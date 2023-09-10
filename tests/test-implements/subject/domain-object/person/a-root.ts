@@ -1,9 +1,8 @@
 import { Caller } from '../../../../../src/app/caller';
-import { failure, Failure } from '../../../../../src/common/result/failure';
+import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { callerUtility } from '../../../../../src/common/utils/caller/caller-utility';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
-import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
 import { DomainResult } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
@@ -12,7 +11,7 @@ import { AddPhoneActionParams, PersonPhonesAddedEvent } from '../../domain-data/
 import { PersonAttrs, PersonMeta, PersonParams } from '../../domain-data/person/params';
 import { ComapanyAR } from '../company/a-root';
 
-export class Person extends AggregateRoot<PersonParams> {
+export class PersonAR extends AggregateRoot<PersonParams> {
   constructor(protected attrs: PersonAttrs, protected version: number) {
     super();
   }
@@ -51,7 +50,7 @@ export class Person extends AggregateRoot<PersonParams> {
       },
       caller,
     );
-    this.registerDomainEvent([event]);
+    this.registerDomainEvent(event);
     return success(undefined);
   }
 

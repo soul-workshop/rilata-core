@@ -4,7 +4,9 @@ import { EventDod } from './common-types';
 export type GetARParamsAttrs<AR_PARAMS extends GeneralARDParams> = AR_PARAMS['attrs'];
 
 export type GetARParamsEvents<AR_PARAMS extends GeneralARDParams> =
-  AR_PARAMS['actions']['events']
+  AR_PARAMS['actions']['events'] extends Array<infer ARR_TYPE>
+    ? ARR_TYPE
+    : AR_PARAMS['actions']['events'];
 
 export type GetARParamsEventNames<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS['actions']['events'] extends EventDod<infer _, infer NAME>

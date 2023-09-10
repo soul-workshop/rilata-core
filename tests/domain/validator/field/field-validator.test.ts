@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'bun:test';
 import { DtoFieldErrors } from '../../../../src/domain/validator/field-validator/types';
 import { RuleError } from '../../../../src/domain/validator/rules/types';
 import { ValidationRule } from '../../../../src/domain/validator/rules/validation-rule';

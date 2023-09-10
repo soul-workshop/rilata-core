@@ -2,6 +2,8 @@
 import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
+import { Locale } from '../../domain/locale';
+import { InternalError } from './error-types';
 import { GeneralQueryUcParams, GetUcOptions, GetUcResult } from './types';
 import { UseCase } from './use-case';
 
@@ -19,7 +21,11 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams> exten
         throw e;
       }
       this.logger.fatalError('server internal error', options);
-      const err = dodUtility.getAppError('InternalError', 'Извините, на сервере произошла ошибка');
+      const err = dodUtility.getAppErrorByType<InternalError<Locale>>(
+        'Internal error',
+        'Извините, на сервере произошла ошибка',
+        {},
+      );
       return failure(err);
     }
   }

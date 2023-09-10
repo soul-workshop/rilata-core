@@ -1,7 +1,7 @@
 import {
   GeneralCommandUcParams, GetUcOptions, GetUcResult,
 } from './types';
-import { CommandValidatorMap, DtoFieldErrors } from '../../domain/validator/field-validator/types';
+import { CommandValidatorMap } from '../../domain/validator/field-validator/types';
 import { Caller, CallerType } from '../caller';
 import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
@@ -10,7 +10,7 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { badRequestInvalidCommandNameError } from './constants';
 import { Locale } from '../../domain/locale';
 import { QueryUseCase } from './query-use-case';
-import { BadRequestError, ValidationError } from './error-types';
+import { BadRequestError, PermissionDeniedError, ValidationError } from './error-types';
 import { DTO } from '../../domain/dto';
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 
@@ -44,8 +44,8 @@ export abstract class CommandUseCase<
   protected checkCallerPermission(caller: Caller): GetUcResult<UC_PARAMS> {
     if (this.supportedCallers.includes(caller.type)) return success(undefined);
 
-    const err = dodUtility.getDomainError(
-      'permission-denied',
+    const err = dodUtility.getDomainErrorByType<PermissionDeniedError<Locale>>(
+      'Permission denied',
       'Действие не доступно',
       { allowedOnlyFor: this.supportedCallers },
     );
