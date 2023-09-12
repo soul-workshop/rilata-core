@@ -12,9 +12,7 @@ describe('IsStringTypeRule', () => {
   
     test('fail, received value equal not empty string', () => {
       const rule = new IsStringTypeRule();
-      const result = rule.validate(5); 
       const valuesToCheck = [3, [2, 3]];
-      
       valuesToCheck.forEach((value) => {
         const validationResult = rule.validate(value);
         expect(validationResult).toEqual({

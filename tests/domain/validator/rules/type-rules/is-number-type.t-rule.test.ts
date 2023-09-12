@@ -12,9 +12,7 @@ describe('IsNumberTypeRule', () => {
 
   test('fail, received value equal not empty number', () => {
     const rule = new IsNumberTypeRule();
-    const result = rule.validate('not a number'); // Здесь 'not a number' - это не число
     const valuesToCheck = ['not a number', ' ', '4', ['2', '3']];
-    
     valuesToCheck.forEach((value) => {
       const validationResult = rule.validate(value);
       expect(validationResult).toEqual({
