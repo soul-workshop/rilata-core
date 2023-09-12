@@ -15,7 +15,7 @@ describe('Number must be less than or equal to', () => {
     expect(result).toEqual({ behaviour: 'RunNextRule' });
   });
 
-  test('failure, initialization with a number greater than a large number', () => {
+  test('failure, initialization with a number greater than a  large number', () => {
     const sut = new MaxNumberValidationRule(maxAllowedNumber);
     const result = sut.validate(33);
 
