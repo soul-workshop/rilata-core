@@ -1,7 +1,7 @@
 import { ValidationRuleAnswer } from '../../types';
-import { NumberValidationRule } from './number.v-rule';
+import { ValidationRule } from '../../validation-rule';
 
-export class MinNumberValidationRule extends NumberValidationRule {
+export class MinNumberValidationRule extends ValidationRule<'validate', number> {
   requirement = 'Число должно быть больше или равно {{min}}';
 
   constructor(private minNumber: number) {
