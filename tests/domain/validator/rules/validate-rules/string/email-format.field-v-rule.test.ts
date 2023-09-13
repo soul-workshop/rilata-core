@@ -8,7 +8,15 @@ describe('The string must match the email format', () => {
     expect(result).toEqual({ behaviour: 'RunNextRule' });
   });
 
-  test('success, received string type value', () => {
-    
+  test('fail, the received value does not correspond to the email form', () => {
+    const sut = new EmailFormatValidationRule();
+    const result = sut.validate('example-email,com');
+    expect(result).toEqual({
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: {},
+        text: 'Строка не соответствует формату электронной почты',
+      },
+    });
   });
 });
