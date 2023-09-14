@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { CannotBeEmptyStringValidationRule } from '../../../../../../src/domain/validator/rules/assert-rules/cannot-be-empty-string.a-rule';
-// requirement = 'Значение должно быть не пустой строкой';
+
 describe('can not empty string rule tests', () => {
   test('success, received value equal string', () => {
     const sut = new CannotBeEmptyStringValidationRule();
