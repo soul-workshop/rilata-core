@@ -3,9 +3,9 @@ import { CannotBeNullableAssertionRule } from '../../../../../../src/domain/vali
 
 describe('can not be nullable  rule tests', () => {
   test('success, received value not equal undefined or null', () => {
+    const sut = new CannotBeNullableAssertionRule();
     const diffTypes = ['s', 5, true, ['5'], { a: 5 }];
     diffTypes.forEach((type) => {
-      const sut = new CannotBeNullableAssertionRule();
       const result = sut.validate(type);
       expect(result).toEqual({
         behaviour: 'RunNextRule',
@@ -14,9 +14,9 @@ describe('can not be nullable  rule tests', () => {
   });
 
   test('fail, received value equal null or undefined', () => {
+    const sut = new CannotBeNullableAssertionRule();
     const diffTypes = [undefined, null];
     diffTypes.forEach((type) => {
-      const sut = new CannotBeNullableAssertionRule();
       const result = sut.validate(type);
       expect(result).toEqual({
         behaviour: 'SaveErrorAndBreakValidation',

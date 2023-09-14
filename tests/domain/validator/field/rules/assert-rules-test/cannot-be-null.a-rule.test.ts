@@ -9,12 +9,12 @@ describe('can not be null  rule tests', () => {
       behaviour: 'SaveErrorAndBreakValidation',
       ruleError: {
         hint: {},
-        text: 'Значение не может иметь значение null',
+        text: 'Значение не может быть равным null',
       },
     });
   });
 
-  test('success, received value equal undefined', () => {
+  test('success, undefined is a valid value', () => {
     const sut = new CannotBeNullValidationRule();
     const result = sut.validate(undefined);
     expect(result).toEqual({
@@ -23,9 +23,9 @@ describe('can not be null  rule tests', () => {
   });
 
   test('success, received value not equal null', () => {
+    const sut = new CannotBeNullValidationRule();
     const diffTypes = ['s', 5, true, ['5'], { a: 5 }];
     diffTypes.forEach((type) => {
-      const sut = new CannotBeNullValidationRule();
       const result = sut.validate(type);
       expect(result).toEqual({
         behaviour: 'RunNextRule',
