@@ -7,12 +7,11 @@ import { AddingPersonDomainCommand, PersonAddedEvent, PersonAlreadyExistsError }
 export type AddingPersonUCCommand = UseCaseCommandDod<AddingPersonDomainCommand, 'AddPersonCommand'>;
 
 export type AddingPersonInputOptions = {
-  in: AddingPersonUCCommand,
+  command: AddingPersonUCCommand,
   caller: Caller,
 }
 
 export type AddingPersonUCParams = CommandUseCaseParams<
-  'command-module',
   AddingPersonInputOptions,
   string,
   PersonAlreadyExistsError | AllowedOnlyEmployeerError | AllowedOnlyStaffManagersError,

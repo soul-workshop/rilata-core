@@ -1,9 +1,9 @@
 import { ActionType } from './types';
 
 export interface Actionable {
-  actionType: ActionType
+  readonly actionType: ActionType
 
-  actionName: string;
+  readonly actionName: string;
 
-  getAction(userId: string, ...args: unknown[]): Promise<Record<string, boolean>>
+  actionIsAvailable(userId: string, ...args: unknown[]): Promise<boolean>
 }

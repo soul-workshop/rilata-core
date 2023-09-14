@@ -4,13 +4,12 @@ import { Actionable } from './actionable';
 
 export interface ClassActionable<
   AR_PARAMS extends GeneralARDParams,
-  AC_NAME extends GetARParamsActionNames<AR_PARAMS>,
 > extends Actionable {
-  actionType: GetARParmasActionType<AR_PARAMS>;
+  readonly actionType: GetARParmasActionType<AR_PARAMS>;
 
-  aggregateName: GetARParamsAggregateName<AR_PARAMS>;
+  readonly aggregateName: GetARParamsAggregateName<AR_PARAMS>;
 
-  actionName: AC_NAME;
+  readonly actionName: GetARParamsActionNames<AR_PARAMS>;
 
-  getAction(userId: string): Promise<Record<AC_NAME, boolean>>
+  actionIsAvailable(userId: string): Promise<boolean>
 }
