@@ -3,8 +3,8 @@ import { MinCharsCountValidationRule } from '../../../../../../src/domain/valida
 
 describe('Line length should not be greater than', () => {
   const value = '123456';
-  const equalValue = '01234';
-  const lessValue = '012';
+  const equalValue = '12345';
+  const lessValue = '123';
   test('failure, string length greater than minimum string length', () => {
     const sut = new MinCharsCountValidationRule(5);
     const result = sut.validate(value);
