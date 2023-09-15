@@ -29,4 +29,16 @@ describe('Number must be in the range', () => {
       },
     });
   });
+  test('failure, the resulting value is less than the minimum value', () => {
+    const sut = new RangeNumberValidationRule(18, 64);
+    const result = sut.validate(17);
+
+    expect(result).toEqual({
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: { max: 64, min: 18 },
+        text: 'Число должно быть в диапозоне от {{min}} до {{max}}',
+      },
+    });
+  });
 });
