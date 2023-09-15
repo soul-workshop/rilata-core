@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { MathFloorLeadRule } from '../../../../../src/domain/validator/rules/lead-rules/number/math-floor.v-rule';
 
-describe('MathFloorLeadRule', () => {
+describe('MathFloorLeadRule tests', () => {
   test('should round down the number', () => {
     const sut = new MathFloorLeadRule();
     const result = sut.lead(5.8);
