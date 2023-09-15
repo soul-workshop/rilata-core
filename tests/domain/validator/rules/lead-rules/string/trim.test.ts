@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { TrimStringLeadRule } from '../../../../../../src/domain/validator/rules/lead-rules/string/trim';
 
-describe('TrimStringLeadRule', () => {
+describe('TrimStringLeadRule test', () => {
   test('should trim a string based on trimSymbols', () => {
     const trimSymbols = ' \t\v';
     const trimRule = new TrimStringLeadRule(trimSymbols);

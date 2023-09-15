@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { TrimStartStringLeadRule } from '../../../../../../src/domain/validator/rules/lead-rules/string/trim-start.l-rule';
 
-describe('TrimStartStringLeadRule', () => {
+describe('TrimStartStringLeadRule test', () => {
   test('should trim leading characters correctly', () => {
     const rule = new TrimStartStringLeadRule(' \t');
     expect(rule.lead('  abc')).toBe('abc');
