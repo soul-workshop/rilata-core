@@ -3,7 +3,7 @@ import { StringChoiceValidationRule } from '../../../../../../src/domain/validat
 
 describe('Value must be one of the list results', () => {
   test('success, value is in the list', () => {
-    const sut = new StringChoiceValidationRule(['Sagyndyk', 'Islyam', 21, 'Uralsk', false]);
+    const sut = new StringChoiceValidationRule(['Sagyndyk', 'Islyam']);
     const result = sut.validate('Sagyndyk');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
@@ -11,7 +11,7 @@ describe('Value must be one of the list results', () => {
   });
 
   test('failure, value is not in the list', () => {
-    const sut = new StringChoiceValidationRule(['Sagyndyk', 'Islyam', 21, 'Uralsk', false]);
+    const sut = new StringChoiceValidationRule(['Sagyndyk', 'Islyam']);
     const result = sut.validate('Renat');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
@@ -20,9 +20,6 @@ describe('Value must be one of the list results', () => {
           choices: [
             'Sagyndyk',
             'Islyam',
-            21,
-            'Uralsk',
-            false,
           ],
         },
         text: 'Значение должно быть одним из значений списка',
