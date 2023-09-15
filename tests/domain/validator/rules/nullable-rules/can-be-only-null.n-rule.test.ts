@@ -2,14 +2,12 @@ import { describe, expect, test } from 'bun:test';
 import { CanBeNullValidationRule } from '../../../../../src/domain/validator/rules/nullable-rules/can-be-only-null.n-rule';
 
 describe('CanBeNullableRule', () => {
-  test('success, reseived value equal null', () => {
+  test('success, received value equal null', () => {
+    const value = null;
     const rule = new CanBeNullValidationRule();
-    const valuesToCheck = [null];
-    valuesToCheck.forEach((value) => {
-      const validationResult = rule.validate(value);
-      expect(validationResult).toEqual({
-        behaviour: 'BreakValidation',
-      });
+    const validationResult = rule.validate(value);
+    expect(validationResult).toEqual({
+      behaviour: 'BreakValidation',
     });
   });
 

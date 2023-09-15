@@ -1,15 +1,13 @@
 import { describe, expect, test } from 'bun:test';
 import { CanBeUndefinedValidationRule } from '../../../../../src/domain/validator/rules/nullable-rules/can-be-only-undefined.n-rule';
 
-describe('CanBeNullableRule', () => {
-  test('success, reseived value equal undefined', () => {
+describe('CanBeNullableRule tests', () => {
+  test('success, received value equal null', () => {
+    const value = undefined;
     const rule = new CanBeUndefinedValidationRule();
-    const valuesToCheck = [undefined];
-    valuesToCheck.forEach((value) => {
-      const validationResult = rule.validate(value);
-      expect(validationResult).toEqual({
-        behaviour: 'BreakValidation',
-      });
+    const validationResult = rule.validate(value);
+    expect(validationResult).toEqual({
+      behaviour: 'BreakValidation',
     });
   });
 
