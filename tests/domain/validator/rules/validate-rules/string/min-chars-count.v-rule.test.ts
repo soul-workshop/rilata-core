@@ -2,12 +2,9 @@ import { describe, expect, test } from 'bun:test';
 import { MinCharsCountValidationRule } from '../../../../../../src/domain/validator/rules/validate-rules/string/min-chars-count.v-rule';
 
 describe('Line length should not be greater than', () => {
-  const value = '123456';
-  const equalValue = '12345';
-  const lessValue = '123';
   test('failure, string length greater than minimum string length', () => {
     const sut = new MinCharsCountValidationRule(5);
-    const result = sut.validate(value);
+    const result = sut.validate('hello, how a u?');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
@@ -15,7 +12,7 @@ describe('Line length should not be greater than', () => {
 
   test('failure, string length equals minimum string length', () => {
     const sut = new MinCharsCountValidationRule(5);
-    const result = sut.validate(equalValue);
+    const result = sut.validate('hello');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
@@ -23,7 +20,7 @@ describe('Line length should not be greater than', () => {
 
   test('success, string length must not be less than minimum string length', () => {
     const sut = new MinCharsCountValidationRule(5);
-    const result = sut.validate(lessValue);
+    const result = sut.validate('hola');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {

@@ -1,8 +1,48 @@
 import { describe, expect, test } from 'bun:test';
 import { RegexFormatValidationRule } from '../../../../../../src/domain/validator/rules/validate-rules/string/regex.field-v-rule';
 
-describe('Line length should not be greater than', () => {
-  test('failure, string length greater than minimum string length', () => {
-    
+describe('Validating strings using regular expressions', () => {
+  test('Text must end with world', () => {
+    const sut = new RegexFormatValidationRule(/world$/, 'Текст должен заканчиваться на слово world');
+    const result = sut.validate('Hello world');
+    expect(result).toEqual({
+      behaviour: 'RunNextRule',
+    });
+  });
+  test('success ИИН is valid', () => {
+    const sut = new RegexFormatValidationRule(/^[0-9]\d{11}$/, 'Введите ИИН (12 цифр) ');
+    const result = sut.validate('010625530759');
+    expect(result).toEqual({
+      behaviour: 'RunNextRule',
+    });
+  });
+  test('failure ИИН is not valid', () => {
+    const sut = new RegexFormatValidationRule(/^[0-9]\d{11}$/, 'Введите ИИН (12 цифр) ');
+    const result = sut.validate('0106255307');
+    expect(result).toEqual({
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: {},
+        text: 'Введите ИИН (12 цифр) ',
+      },
+    });
+  });
+  test('success, correct phone number entered', () => {
+    const sut = new RegexFormatValidationRule(/^\+\d{1,3} \d{3} \d{3} \d{4}$/, 'Введите номер в формате +7 702 777 7777');
+    const result = sut.validate('+7 702 950 7304');
+    expect(result).toEqual({
+      behaviour: 'RunNextRule',
+    });
+  });
+  test('failure, incorrect phone number entered', () => {
+    const sut = new RegexFormatValidationRule(/^\+\d{1,3} \d{3} \d{3} \d{2}$/, 'Введите номер в формате +7 702 777 7777');
+    const result = sut.validate('+7 709507 73224');
+    expect(result).toEqual({
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: {},
+        text: 'Введите номер в формате +7 702 777 7777',
+      },
+    });
   });
 });

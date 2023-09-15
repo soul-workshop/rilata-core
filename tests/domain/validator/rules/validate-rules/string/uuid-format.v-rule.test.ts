@@ -3,17 +3,15 @@ import { UUIDFormatValidationRule } from '../../../../../../src/domain/validator
 
 describe('Value must match the UUID format', () => {
   test('success, test with correct uuid', () => {
-    const uuid = 'd092833c-4bc7-405d-976e-912511fa85e3';
     const sut = new UUIDFormatValidationRule();
-    const result = sut.validate(uuid);
+    const result = sut.validate('d092833c-4bc7-405d-976e-912511fa85e3');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
   });
   test('test with wrong uuid', () => {
-    const uuid = 'd09233c-4c7-405d-976e-9125fa85e3';
     const sut = new UUIDFormatValidationRule();
-    const result = sut.validate(uuid);
+    const result = sut.validate('d09233c-4c7-405d-976e-9125fa85e3');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
