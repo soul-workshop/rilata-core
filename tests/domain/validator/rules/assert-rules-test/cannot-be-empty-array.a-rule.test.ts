@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { CannotBeEmptyArrayAssertionRule } from '../../../../../../src/domain/validator/rules/assert-rules/cannot-be-empty-array.a-rule';
+import { CannotBeEmptyArrayAssertionRule } from '../../../../../src/domain/validator/rules/assert-rules/cannot-be-empty-array.a-rule';
 
 describe('can not empty array rule tests', () => {
   test('success, received value not empty array', () => {

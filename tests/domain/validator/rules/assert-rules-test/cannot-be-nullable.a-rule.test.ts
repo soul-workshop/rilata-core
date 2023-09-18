@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { CannotBeNullableAssertionRule } from '../../../../../../src/domain/validator/rules/assert-rules/cannot-be-nullable.a-rule';
+import { CannotBeNullableAssertionRule } from '../../../../../src/domain/validator/rules/assert-rules/cannot-be-nullable.a-rule';
 
 describe('can not be nullable  rule tests', () => {
   test('success, received value not equal undefined or null', () => {

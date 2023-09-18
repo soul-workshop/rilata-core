@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { MaxArrayElementsCountAssertionRule } from '../../../../../../src/domain/validator/rules/assert-rules/max-array-elements-count.a-rule';
+import { MaxArrayElementsCountAssertionRule } from '../../../../../src/domain/validator/rules/assert-rules/max-array-elements-count.a-rule';
 
 describe('max array elements count rule', () => {
   describe('max array elements  can be  0', () => {

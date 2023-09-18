@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-import { MinArrayElementsCountAssertionRule } from '../../../../../../src/domain/validator/rules/assert-rules/min-array-elements-count.a-rule';
+import { MinArrayElementsCountAssertionRule } from '../../../../../src/domain/validator/rules/assert-rules/min-array-elements-count.a-rule';
 
 describe('min array elements count rule', () => {
   describe('min array elements can be 0', () => {

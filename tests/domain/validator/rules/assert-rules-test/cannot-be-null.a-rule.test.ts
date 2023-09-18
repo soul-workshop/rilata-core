@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { CannotBeNullValidationRule } from '../../../../../../src/domain/validator/rules/assert-rules/cannot-be-null.a-rule';
+import { CannotBeNullValidationRule } from '../../../../../src/domain/validator/rules/assert-rules/cannot-be-null.a-rule';
 
 describe('can not be null  rule tests', () => {
   test('fail, received value equal null', () => {
