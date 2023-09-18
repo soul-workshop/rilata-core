@@ -62,13 +62,15 @@ type GetValidator<REQ extends boolean, IS_ARR extends boolean, TYPE> =
       : never
 
 export type ValidatorMap<DTO_TYPE extends DTO> = {
-  [KEY in keyof DTO_TYPE]-?: undefined extends DTO_TYPE[KEY]
-    ? NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
-      ? GetValidator<false, true, NonNullable<ARR_TYPE>>
-      : GetValidator<false, false, NonNullable<DTO_TYPE[KEY]>>
-    : NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
-      ? GetValidator<true, true, NonNullable<ARR_TYPE>>
-      : GetValidator<true, false, NonNullable<DTO_TYPE[KEY]>>
+  [KEY in keyof DTO_TYPE]-?: unknown extends DTO_TYPE[KEY]
+    ? LiteralFieldValidator<boolean, boolean, unknown>
+    : undefined extends DTO_TYPE[KEY]
+      ? NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
+        ? GetValidator<false, true, NonNullable<ARR_TYPE>>
+        : GetValidator<false, false, NonNullable<DTO_TYPE[KEY]>>
+      : NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
+        ? GetValidator<true, true, NonNullable<ARR_TYPE>>
+        : GetValidator<true, false, NonNullable<DTO_TYPE[KEY]>>
 }
 
 export type CommandValidatorMap<CMD extends GeneralCommandDod> =

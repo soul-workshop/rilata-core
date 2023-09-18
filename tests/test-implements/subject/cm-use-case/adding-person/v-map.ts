@@ -4,7 +4,7 @@ import { AddingPersonDomainCommand } from '../../domain-data/person/add-person.p
 import { personAttrsVMap } from '../../domain-data/person/v-map';
 import { AddingPersonUCCommand } from './params';
 
-const addPersonAttrsVMap: ValidatorMap<AddingPersonDomainCommand> = {
+export const addPersonAttrsVMap: ValidatorMap<AddingPersonDomainCommand> = {
   govPersonId: personAttrsVMap.govPersonId,
   name: personAttrsVMap.name,
   lastName: personAttrsVMap.lastName,

@@ -6,18 +6,18 @@ import { AddingPersonUCParams } from './params';
 import { addPersonVMap } from './v-map';
 
 export class AddingPersonUC extends CommandUseCase<AddingPersonUCParams>
-  implements ClassActionable<PersonParams, 'addPerson'> {
+  implements ClassActionable<PersonParams> {
   protected supportedCallers = ['DomainUser'] as const;
 
   protected validatorMap = addPersonVMap;
 
-  actionType: 'class' = 'class';
+  actionType = 'class' as const;
 
-  aggregateName: 'PersonAR' = 'PersonAR';
+  aggregateName = 'PersonAR' as const;
 
-  actionName: 'addPerson' = 'addPerson';
+  actionName = 'addPerson' as const;
 
-  getAction(userId: string): Promise<Record<'addPerson', boolean>> {
+  actionIsAvailable(userId: string): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 

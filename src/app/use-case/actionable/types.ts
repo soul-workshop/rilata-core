@@ -4,6 +4,6 @@ import { InstanceActionable } from './instance-actionable';
 
 export type ActionType = 'class' | 'instance';
 
-export type GeneralInstanceActionable = InstanceActionable<GeneralARDParams, string>;
+export type GeneralInstanceActionable = InstanceActionable<GeneralARDParams>;
 
-export type GeneralClassActionable = ClassActionable<GeneralARDParams, string>;
+export type GeneralClassActionable = ClassActionable<GeneralARDParams>;

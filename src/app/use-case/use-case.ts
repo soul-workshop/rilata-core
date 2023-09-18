@@ -1,18 +1,21 @@
-import { Logger } from '../../common/logger/logger';
 import { ActionType, GeneralInstanceActionable } from './actionable/types';
 import { Actionable } from './actionable/actionable';
+import { ModuleResolver } from '../../conf/module-resolver';
+import { Logger } from '../../common/logger/logger';
 
 export abstract class UseCase implements Actionable {
-  abstract actionType: ActionType;
+  readonly abstract actionType: ActionType;
 
-  abstract actionName: string;
+  readonly abstract actionName: string;
 
-  abstract getAction(userId: string, ...args: unknown[]): Promise<Record<string, boolean>>;
+  abstract actionIsAvailable(userId: string, ...args: unknown[]): Promise<boolean>;
+
+  protected moduleResolver!: ModuleResolver;
 
   protected logger!: Logger;
 
-  init(logger: Logger): void {
-    this.logger = logger;
+  init(moduleResolver: ModuleResolver): void {
+    this.moduleResolver = moduleResolver;
   }
 
   abstract execute(...args: unknown[]): Promise<unknown>

@@ -19,7 +19,7 @@ export abstract class CommandUseCase<
 > extends QueryUseCase<UC_PARAMS> {
   protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
-  protected abstract validatorMap: CommandValidatorMap<UC_PARAMS['input']['in']>;
+  protected abstract validatorMap: CommandValidatorMap<UC_PARAMS['inputOptions']['command']>;
 
   /** проверка доменных разрешений */
   // eslint-disable-next-line max-len
@@ -35,7 +35,7 @@ export abstract class CommandUseCase<
     const checkCallerResult = this.checkCallerPermission(options.caller);
     if (checkCallerResult.isFailure()) return checkCallerResult;
 
-    const validationResult = this.checkValidations(options.in);
+    const validationResult = this.checkValidations(options);
     if (validationResult.isFailure()) return validationResult;
 
     return this.checkPersmissions(options);
@@ -53,14 +53,14 @@ export abstract class CommandUseCase<
   }
 
   protected checkValidations(
-    input: UC_PARAMS['input'],
+    input: GetUcOptions<UC_PARAMS>,
   ): Result<ValidationError | BadRequestError<Locale>, undefined> {
-    const validator = Object.getOwnPropertyDescriptor(this.validatorMap, input.in.name);
+    const validator = Object.getOwnPropertyDescriptor(this.validatorMap, input.command.name);
     if (!validator) {
       return failure(badRequestInvalidCommandNameError);
     }
     // eslint-disable-next-line max-len
-    const result = (validator as DtoFieldValidator<true, boolean, DTO>).validate(input.in.name, input.in.attrs);
+    const result = (validator as DtoFieldValidator<true, boolean, DTO>).validate(input.command.name, input.command.attrs);
 
     if (result.isFailure()) {
       const err: ValidationError = {
