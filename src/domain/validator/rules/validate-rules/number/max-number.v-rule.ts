@@ -1,7 +1,7 @@
 import { ValidationRuleAnswer } from '../../types';
-import { NumberValidationRule } from './number.v-rule';
+import { ValidationRule } from '../../validation-rule';
 
-export class MaxNumberValidationRule extends NumberValidationRule {
+export class MaxNumberValidationRule extends ValidationRule<'validate', number> {
   requirement = 'Число должно быть меньше или равно {{max}}';
 
   constructor(private maxNumber: number) {
