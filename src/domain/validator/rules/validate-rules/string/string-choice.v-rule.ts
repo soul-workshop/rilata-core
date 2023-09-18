@@ -4,7 +4,7 @@ import { ValidationRule } from '../../validation-rule';
 export class StringChoiceValidationRule extends ValidationRule<'validate', string> {
   requirement = 'Значение должно быть одним из значений списка';
 
-  constructor(private choices: unknown[]) {
+  constructor(private choices: string[]) {
     super();
   }
 
