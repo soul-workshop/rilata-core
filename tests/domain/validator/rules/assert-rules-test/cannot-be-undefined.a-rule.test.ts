@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { CannotBeUndefinedValidationRule } from '../../../../../../src/domain/validator/rules/assert-rules/cannot-be-undefined.a-rule';
+import { CannotBeUndefinedValidationRule } from '../../../../../src/domain/validator/rules/assert-rules/cannot-be-undefined.a-rule';
 
 describe('can not be null  rule tests', () => {
   test('fail, received value equal undefined', () => {
