@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { CannotBeEmptyStringValidationRule } from '../../../../../../src/domain/validator/rules/assert-rules/cannot-be-empty-string.a-rule';
+import { CannotBeEmptyStringValidationRule } from '../../../../../src/domain/validator/rules/assert-rules/cannot-be-empty-string.a-rule';
 
 describe('can not empty string rule tests', () => {
   test('success, received value equal string', () => {
