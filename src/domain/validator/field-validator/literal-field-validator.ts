@@ -8,16 +8,20 @@ import { FieldValidator } from './field-validator';
 import { GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult } from './types';
 
 export class LiteralFieldValidator<
-  REQ extends boolean, IS_ARR extends boolean, DATA_TYPE extends LiteralDataType
-> extends FieldValidator<REQ, IS_ARR, DATA_TYPE> {
+  NAME extends string,
+  REQ extends boolean,
+  IS_ARR extends boolean,
+  DATA_TYPE extends LiteralDataType
+> extends FieldValidator<NAME, REQ, IS_ARR, DATA_TYPE> {
   constructor(
+    attrName: NAME,
     protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
     isRequired: REQ,
     arrayConfig: GetArrayConfig<IS_ARR>,
     protected validateRules: ValidationRule<'validate', DATA_TYPE>[],
     protected leadRules: LeadRule<DATA_TYPE>[] = [],
   ) {
-    super(dataType, isRequired, arrayConfig);
+    super(attrName, dataType, isRequired, arrayConfig);
   }
 
   /** предварительная проверка на типы данных и нулевые значения или утверждения
@@ -30,12 +34,12 @@ export class LiteralFieldValidator<
     4. Наконец проверка валидации (переданных в конструкторе). Провал проверки
       обычно не завершает процесс проверок, а идет накопление ошибок.
   */
-  protected validateValue(attrName: string, value: unknown): FieldValidatorResult {
+  protected validateValue(value: unknown): FieldValidatorResult {
     const preValidateAnswer = this.validateOnNullableAntType(value);
     if (preValidateAnswer.break) {
       return preValidateAnswer.isValidValue
         ? success(undefined)
-        : this.getFailResult(attrName, preValidateAnswer.errors);
+        : this.getFailResult(preValidateAnswer.errors);
     }
 
     const leadedValue = this.leadRules.reduce(
@@ -45,6 +49,6 @@ export class LiteralFieldValidator<
     const validateAnswer = this.validateByRules(leadedValue, this.validateRules);
     return validateAnswer.isValidValue
       ? success(undefined)
-      : this.getFailResult(attrName, validateAnswer.errors);
+      : this.getFailResult(validateAnswer.errors);
   }
 }

@@ -21,11 +21,14 @@ import {
 } from './types';
 
 export abstract class FieldValidator<
-  REQ extends boolean, IS_ARR extends boolean, DATA_TYPE extends LiteralDataType | DTO
+  NAME extends string,
+  REQ extends boolean,
+  IS_ARR extends boolean,
+  DATA_TYPE extends LiteralDataType | DTO
 > {
   static WHOLE_VALUE_VALIDATION_ERROR_KEY = '___whole_value_validation_error___';
 
-  protected abstract validateValue(attrName: string, value: unknown): FieldValidatorResult
+  protected abstract validateValue(value: unknown): FieldValidatorResult
 
   protected nullableRules: ValidationRule<'nullable' | 'assert', DATA_TYPE>[];
 
@@ -34,6 +37,7 @@ export abstract class FieldValidator<
   protected arrayAssertionRules: ValidationRule<'assert', DATA_TYPE>[];
 
   constructor(
+    protected attrName: NAME,
     protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
     protected isRequired: REQ,
     protected arrayConfig: GetArrayConfig<IS_ARR>,
@@ -54,14 +58,14 @@ export abstract class FieldValidator<
     this.arrayAssertionRules = this.arrayConfig.isArray ? this.getArrayAssertionRules() : [];
   }
 
-  validate(attrName: string, value: unknown): FieldValidatorResult {
+  validate(value: unknown): FieldValidatorResult {
     return this.arrayConfig.isArray
-      ? this.validateArray(attrName, value)
-      : this.validateValue(attrName, value);
+      ? this.validateArray(value)
+      : this.validateValue(value);
   }
 
   /** проверка массива данных */
-  protected validateArray(attrName: string, unknownValue: unknown): FieldValidatorResult {
+  protected validateArray(unknownValue: unknown): FieldValidatorResult {
     function unknownValueToArray(): unknown[] {
       if (Array.isArray(unknownValue)) return unknownValue;
       throw new AssertionException('array assertion rules not missed a mistake');
@@ -69,20 +73,20 @@ export abstract class FieldValidator<
 
     const arrayAssertAnswer = this.validateByRules(unknownValue, this.getArrayAssertionRules());
     if (arrayAssertAnswer.isValidValue === false) {
-      return this.getFailResult(attrName, arrayAssertAnswer.errors);
+      return this.getFailResult(arrayAssertAnswer.errors);
     }
 
     const values = unknownValueToArray();
     const arrErrors: ArrayFieldErrors = {};
     for (let i = 0; i < values.length; i += 1) {
-      const itemResult = this.validateValue(attrName, values[i]);
+      const itemResult = this.validateValue(values[i]);
       if (itemResult.isFailure()) {
         arrErrors[i] = itemResult.value;
       }
     }
 
     return Object.keys(arrErrors).length > 0
-      ? this.getFailResult(attrName, arrErrors)
+      ? this.getFailResult(arrErrors)
       : success(undefined);
   }
 
@@ -109,10 +113,9 @@ export abstract class FieldValidator<
   }
 
   protected getFailResult(
-    attrName: string,
     errors: RuleError[] | ArrayFieldErrors,
   ): FieldValidatorResult {
-    return failure({ [attrName]: errors });
+    return failure({ [this.attrName]: errors });
   }
 
   protected getNullableRules(): ValidationRule<'nullable', unknown>[] | ValidationRule<'assert', unknown>[] {

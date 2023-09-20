@@ -1,9 +1,10 @@
 import { UUIDFormatValidationRule } from '../../../rules/validate-rules/string/uuid-format.v-rule';
 import { LiteralFieldValidator } from '../../literal-field-validator';
 
-export class UuidField extends LiteralFieldValidator<true, false, string> {
-  constructor() {
+export class UuidField<N extends string> extends LiteralFieldValidator<N, true, false, string> {
+  constructor(attrName: N) {
     super(
+      attrName,
       'string',
       true,
       { isArray: false },

@@ -5,16 +5,16 @@ import { ValidationRule } from '../../../../src/domain/validator/rules/validatio
 import { FieldValidatorPrivateFixtures as FieldValidatorFixtures } from './test-fixtures';
 
 describe('number validator with range value rule', () => {
-  const sut = new FieldValidatorFixtures.PersonIsWorkAgeFieldValidator('man');
+  const sut = new FieldValidatorFixtures.PersonIsWorkAgeFieldValidator('ageField', 'man');
 
   describe('base validate tests', () => {
     test('success case', () => {
-      const answer = sut.validate('ageField', 25);
+      const answer = sut.validate(25);
       expect(answer.isSuccess()).toBe(true);
     });
 
     test('fail, value less a min requirement', () => {
-      const result = sut.validate('ageField', 15);
+      const result = sut.validate(15);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
         ageField: [{
@@ -25,7 +25,7 @@ describe('number validator with range value rule', () => {
     });
 
     test('fail, value is required', () => {
-      const result = sut.validate('ageField', undefined);
+      const result = sut.validate(undefined);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
         ageField: [{
@@ -38,7 +38,7 @@ describe('number validator with range value rule', () => {
 
   describe('test comppile error text by rule hint', () => {
     test('success compiled by two parameter', () => {
-      const result = sut.validate('ageField', 15);
+      const result = sut.validate(15);
       expect(result.isFailure()).toBe(true);
       const dtoErrors = result.value as DtoFieldErrors;
       expect(Array.isArray(dtoErrors.ageField)).toBe(true);
@@ -54,7 +54,7 @@ describe('dto validator tests', () => {
   const sut = new FieldValidatorFixtures.AddPersonCommandValidator();
 
   test('success dto validate', () => {
-    const result = sut.validate('ageField', FieldValidatorFixtures.addPersonCommand);
+    const result = sut.validate(FieldValidatorFixtures.addPersonCommand);
     expect(result.isSuccess()).toBe(true);
     expect(result.value).toBe(undefined);
   });
@@ -63,7 +63,7 @@ describe('dto validator tests', () => {
     const validatedData = FieldValidatorFixtures.addPersonCommand;
     const phone = validatedData.contacts.phones[0];
     phone.number = `\t${phone.number} `;
-    const result = sut.validate('ageField', validatedData);
+    const result = sut.validate(validatedData);
     expect(result.isSuccess()).toBe(true);
   });
 });

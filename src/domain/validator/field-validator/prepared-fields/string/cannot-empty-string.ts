@@ -4,14 +4,16 @@ import { ValidationRule } from '../../../rules/validation-rule';
 import { LiteralFieldValidator } from '../../literal-field-validator';
 
 export class CannotEmptyStringField<
-  REQ extends boolean
-> extends LiteralFieldValidator<REQ, false, string> {
+  NAME extends string, REQ extends boolean
+> extends LiteralFieldValidator<NAME, REQ, false, string> {
   constructor(
+    attrName: NAME,
     required: REQ,
     protected validateRules: ValidationRule<'validate', string>[],
     protected leadRules: LeadRule<string>[] = [],
   ) {
     super(
+      attrName,
       'string',
       required,
       { isArray: false },

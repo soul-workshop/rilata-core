@@ -60,7 +60,7 @@ export abstract class CommandUseCase<
       return failure(badRequestInvalidCommandNameError);
     }
     // eslint-disable-next-line max-len
-    const result = (validator as DtoFieldValidator<true, boolean, DTO>).validate(input.command.name, input.command.attrs);
+    const result = validator.validate(input.command.attrs);
 
     if (result.isFailure()) {
       const err: ValidationError = {

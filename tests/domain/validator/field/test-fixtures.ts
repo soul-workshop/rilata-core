@@ -15,6 +15,7 @@ import { DODPrivateFixtures as DodFixtures } from '../../../dod-private-fixtures
 export namespace FieldValidatorPrivateFixtures {
   export const phoneAttrsValidatorMap: ValidatorMap<DodFixtures.PhoneAttrs> = {
     number: new LiteralFieldValidator(
+      'number',
       'string',
       true,
       { isArray: false },
@@ -28,13 +29,14 @@ export namespace FieldValidatorPrivateFixtures {
       [new TrimStringLeadRule()],
     ),
     type: new LiteralFieldValidator(
+      'type',
       'string',
       true,
       { isArray: false },
       [new StringChoiceValidationRule(['mobile', 'work'])],
       [new TrimStringLeadRule()],
     ),
-    noOutField: new LiteralFieldValidator('string', true, { isArray: false }, []),
+    noOutField: new LiteralFieldValidator('noOutField', 'string', true, { isArray: false }, []),
   };
 
   const MIN_AGE = 18;
@@ -42,20 +44,21 @@ export namespace FieldValidatorPrivateFixtures {
   const WOMAN_MAX_AGE = 63;
 
   export const emailAttrsValidatorMap: ValidatorMap<DodFixtures.EmailAttrs> = {
-    value: new LiteralFieldValidator('string', true, { isArray: false }, []),
-    noOutField: new LiteralFieldValidator('string', true, { isArray: false }, []),
+    value: new LiteralFieldValidator('value', 'string', true, { isArray: false }, []),
+    noOutField: new LiteralFieldValidator('noOutField', 'string', true, { isArray: false }, []),
   };
 
   export const contactAttrsValidatormap: ValidatorMap<DodFixtures.PersonContactsAttrs> = {
-    address: new LiteralFieldValidator('string', true, { isArray: false }, []),
-    phones: new DtoFieldValidator('dto', true, { isArray: true, mustBeFilled: true }, phoneAttrsValidatorMap),
-    email: new DtoFieldValidator('dto', true, { isArray: false }, emailAttrsValidatorMap),
-    noOutField: new LiteralFieldValidator('string', true, { isArray: false }, []),
+    address: new LiteralFieldValidator('address', 'string', true, { isArray: false }, []),
+    phones: new DtoFieldValidator('phones', 'dto', true, { isArray: true, mustBeFilled: true }, phoneAttrsValidatorMap),
+    email: new DtoFieldValidator('email', 'dto', true, { isArray: false }, emailAttrsValidatorMap),
+    noOutField: new LiteralFieldValidator('noOutField', 'string', true, { isArray: false }, []),
   };
 
-  export class PersonIsWorkAgeFieldValidator extends LiteralFieldValidator<true, false, number> {
-    constructor(personSex: 'man' | 'woman', required?: true) {
-      super('number', required ?? true, { isArray: false }, [
+  export class PersonIsWorkAgeFieldValidator<NAME extends string>
+    extends LiteralFieldValidator<NAME, true, false, number> {
+    constructor(attrName: NAME, personSex: 'man' | 'woman', required?: true) {
+      super(attrName, 'number', required ?? true, { isArray: false }, [
         new RangeNumberValidationRule(
           MIN_AGE,
           personSex === 'man' ? MAN_MAX_AGE : WOMAN_MAX_AGE,
@@ -66,12 +69,12 @@ export namespace FieldValidatorPrivateFixtures {
   }
 
   export const personAttrsValidatrorMap: ValidatorMap<DodFixtures.PersonAttrs> = {
-    id: new LiteralFieldValidator('string', true, { isArray: false }, [new UUIDFormatValidationRule()]),
-    name: new LiteralFieldValidator('string', true, { isArray: false }, []),
-    lastName: new LiteralFieldValidator('string', true, { isArray: false }, []),
-    birthday: new LiteralFieldValidator('number', true, { isArray: false }, [new IsTimeStampValidationRule()]),
-    age: new PersonIsWorkAgeFieldValidator('man'),
-    contacts: new DtoFieldValidator('dto', true, { isArray: false }, contactAttrsValidatormap),
+    id: new LiteralFieldValidator('id', 'string', true, { isArray: false }, [new UUIDFormatValidationRule()]),
+    name: new LiteralFieldValidator('name', 'string', true, { isArray: false }, []),
+    lastName: new LiteralFieldValidator('lastName', 'string', true, { isArray: false }, []),
+    birthday: new LiteralFieldValidator('birthday', 'number', true, { isArray: false }, [new IsTimeStampValidationRule()]),
+    age: new PersonIsWorkAgeFieldValidator('age', 'man'),
+    contacts: new DtoFieldValidator('contacts', 'dto', true, { isArray: false }, contactAttrsValidatormap),
   };
 
   export class AddPersonCommandValidator extends DtoFieldValidator<true, false, AddPersonCommand> {

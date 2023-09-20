@@ -37,9 +37,10 @@ export type RulesValidatedAnswer<ARR extends boolean = false> = {
     errors?: never, // чтобы было проще тестировать
   };
 
-export type GeneralDtoFieldValidator = DtoFieldValidator<boolean, boolean, DTO>;
+export type GeneralDtoFieldValidator = DtoFieldValidator<string, boolean, boolean, DTO>;
 
 export type GeneralLiteralFieldValidator = LiteralFieldValidator<
+  string,
   boolean,
   boolean,
   LiteralDataType
@@ -54,24 +55,24 @@ export type GetFieldValidatorDataType<DATA_TYPE extends LiteralDataType | DTO> =
         ? 'number'
         : 'boolean'
 
-type GetValidator<REQ extends boolean, IS_ARR extends boolean, TYPE> =
+type GetValidator<NAME extends string, REQ extends boolean, IS_ARR extends boolean, TYPE> =
   TYPE extends DTO
-    ? DtoFieldValidator<REQ, IS_ARR, TYPE>
+    ? DtoFieldValidator<NAME, REQ, IS_ARR, TYPE>
     : TYPE extends LiteralDataType
-      ? LiteralFieldValidator<REQ, IS_ARR, TYPE>
+      ? LiteralFieldValidator<NAME, REQ, IS_ARR, TYPE>
       : never
 
 export type ValidatorMap<DTO_TYPE extends DTO> = {
-  [KEY in keyof DTO_TYPE]-?: unknown extends DTO_TYPE[KEY]
-    ? LiteralFieldValidator<boolean, boolean, unknown>
+  [KEY in keyof DTO_TYPE & string]-?: unknown extends DTO_TYPE[KEY]
+    ? LiteralFieldValidator<KEY, boolean, boolean, unknown>
     : undefined extends DTO_TYPE[KEY]
       ? NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
-        ? GetValidator<false, true, NonNullable<ARR_TYPE>>
-        : GetValidator<false, false, NonNullable<DTO_TYPE[KEY]>>
+        ? GetValidator<KEY, false, true, NonNullable<ARR_TYPE>>
+        : GetValidator<KEY, false, false, NonNullable<DTO_TYPE[KEY]>>
       : NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
-        ? GetValidator<true, true, NonNullable<ARR_TYPE>>
-        : GetValidator<true, false, NonNullable<DTO_TYPE[KEY]>>
+        ? GetValidator<KEY, true, true, NonNullable<ARR_TYPE>>
+        : GetValidator<KEY, true, false, NonNullable<DTO_TYPE[KEY]>>
 }
 
 export type CommandValidatorMap<CMD extends GeneralCommandDod> =
-  Record<CMD['name'], DtoFieldValidator<true, false, CMD['attrs']>>;
+  DtoFieldValidator<CMD['name'], true, false, CMD['attrs']>;
