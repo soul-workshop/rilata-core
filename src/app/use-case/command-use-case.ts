@@ -55,12 +55,7 @@ export abstract class CommandUseCase<
   protected checkValidations(
     input: GetUcOptions<UC_PARAMS>,
   ): Result<ValidationError | BadRequestError<Locale>, undefined> {
-    const validator = Object.getOwnPropertyDescriptor(this.validatorMap, input.command.name);
-    if (!validator) {
-      return failure(badRequestInvalidCommandNameError);
-    }
-    // eslint-disable-next-line max-len
-    const result = validator.validate(input.command.attrs);
+    const result = this.validatorMap.validate(input.command.attrs);
 
     if (result.isFailure()) {
       const err: ValidationError = {

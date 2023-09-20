@@ -13,26 +13,26 @@ import {
 } from './params';
 
 const phoneVMap: ValidatorMap<PhoneAttrs> = {
-  number: new PhoneNumberFieldValidator<true, false>(true, { isArray: false }, []),
-  type: new StringChoiceFieldValidator<true, false>(true, { isArray: false }, ['mobile', 'work', 'home']),
+  number: new PhoneNumberFieldValidator<'number', true, false>('number', true, { isArray: false }, []),
+  type: new StringChoiceFieldValidator<'type', true, false>('type', true, { isArray: false }, ['mobile', 'work', 'home']),
 };
 
 const emailVMap: ValidatorMap<EmailAttrs> = {
-  email: new LiteralFieldValidator('string', true, { isArray: false }, [new EmailFormatValidationRule()]),
-  type: new StringChoiceFieldValidator<true, false>(true, { isArray: false }, ['corporate', 'private']),
+  email: new LiteralFieldValidator('email', 'string', true, { isArray: false }, [new EmailFormatValidationRule()]),
+  type: new StringChoiceFieldValidator<'type', true, false>('type', true, { isArray: false }, ['corporate', 'private']),
 };
 
 const contactsVMap: ValidatorMap<ContactsAttrs> = {
-  phones: new DtoFieldValidator('dto', true, { isArray: true, mustBeFilled: true }, phoneVMap),
-  email: new DtoFieldValidator('dto', false, { isArray: true }, emailVMap),
-  address: new CannotEmptyStringField(false, []),
+  phones: new DtoFieldValidator('phones', 'dto', true, { isArray: true, mustBeFilled: true }, phoneVMap),
+  email: new DtoFieldValidator('email', 'dto', false, { isArray: true }, emailVMap),
+  address: new CannotEmptyStringField('address', false, []),
 };
 
 export const personAttrsVMap: ValidatorMap<PersonAttrs> = {
-  id: new UuidField(),
-  govPersonId: new CannotEmptyStringField(true, [new RegexFormatValidationRule(/^[0-9]{12}$/, 'ИИН должен содержать только 12 цифровых символов.')]),
-  name: new CannotEmptyStringField(true, [], [new TrimStringLeadRule()]),
-  lastName: new CannotEmptyStringField(true, [], [new TrimStringLeadRule()]),
-  patronomic: new CannotEmptyStringField(false, [], [new TrimStringLeadRule()]),
-  contacts: new DtoFieldValidator('dto', true, { isArray: false }, contactsVMap),
+  id: new UuidField('id'),
+  govPersonId: new CannotEmptyStringField('govPersonId', true, [new RegexFormatValidationRule(/^[0-9]{12}$/, 'ИИН должен содержать только 12 цифровых символов.')]),
+  name: new CannotEmptyStringField('name', true, [], [new TrimStringLeadRule()]),
+  lastName: new CannotEmptyStringField('lastName', true, [], [new TrimStringLeadRule()]),
+  patronomic: new CannotEmptyStringField('patronomic', false, [], [new TrimStringLeadRule()]),
+  contacts: new DtoFieldValidator('contacts', 'dto', true, { isArray: false }, contactsVMap),
 };

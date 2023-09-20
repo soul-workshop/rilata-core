@@ -11,6 +11,4 @@ export const addPersonAttrsVMap: ValidatorMap<AddingPersonDomainCommand> = {
   patronomic: personAttrsVMap.patronomic,
 };
 
-export const addPersonVMap: CommandValidatorMap<AddingPersonUCCommand> = {
-  AddPersonCommand: new DtoFieldValidator('dto', true, { isArray: false }, addPersonAttrsVMap),
-};
+export const addPersonVMap: CommandValidatorMap<AddingPersonUCCommand> = new DtoFieldValidator('AddPersonCommand', 'dto', true, { isArray: false }, addPersonAttrsVMap);

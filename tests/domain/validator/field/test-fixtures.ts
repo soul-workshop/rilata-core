@@ -77,9 +77,11 @@ export namespace FieldValidatorPrivateFixtures {
     contacts: new DtoFieldValidator('contacts', 'dto', true, { isArray: false }, contactAttrsValidatormap),
   };
 
-  export class AddPersonCommandValidator extends DtoFieldValidator<true, false, AddPersonCommand> {
+  export class AddPersonCommandValidator extends DtoFieldValidator<
+    'AddPersonCommand', true, false, AddPersonCommand
+  > {
     constructor() {
-      super('dto', true, { isArray: false }, personAttrsValidatrorMap);
+      super('AddPersonCommand', 'dto', true, { isArray: false }, personAttrsValidatrorMap);
     }
   }
 

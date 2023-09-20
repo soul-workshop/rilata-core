@@ -6,15 +6,17 @@ import { GeneralValidationRule } from '../../../../../src/domain/validator/rules
 import { RegexFormatValidationRule } from '../../../../../src/domain/validator/rules/validate-rules/string/regex.field-v-rule';
 
 export class PhoneNumberFieldValidator<
-  REQ extends boolean, IS_ARR extends boolean,
-> extends LiteralFieldValidator<REQ, IS_ARR, string> {
+  NAME extends string, REQ extends boolean, IS_ARR extends boolean,
+> extends LiteralFieldValidator<NAME, REQ, IS_ARR, string> {
   constructor(
+    attrName: NAME,
     required: REQ,
     isArray: GetArrayConfig<IS_ARR>,
     vRules: GeneralValidationRule[],
     lRules: LeadRule<string>[] = [],
   ) {
     super(
+      attrName,
       'string',
       required,
       isArray,
