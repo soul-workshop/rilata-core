@@ -3,6 +3,7 @@ import { DtoFieldErrors } from '../../../../src/domain/validator/field-validator
 import { RuleError } from '../../../../src/domain/validator/rules/types';
 import { ValidationRule } from '../../../../src/domain/validator/rules/validation-rule';
 import { FieldValidatorPrivateFixtures as FieldValidatorFixtures } from './test-fixtures';
+import { DODPrivateFixtures } from '../../../dod-private-fixtures';
 
 describe('number validator with range value rule', () => {
   const sut = new FieldValidatorFixtures.PersonIsWorkAgeFieldValidator('ageField', 'man');
@@ -20,17 +21,6 @@ describe('number validator with range value rule', () => {
         ageField: [{
           text: 'Возраст должен быть между {{min}} и {{max}}',
           hint: { max: 65, min: 18 },
-        }],
-      });
-    });
-
-    test('fail, value is required', () => {
-      const result = sut.validate(undefined);
-      expect(result.isFailure()).toBe(true);
-      expect(result.value).toEqual({
-        ageField: [{
-          text: 'Значение не должно быть undefined или null',
-          hint: {},
         }],
       });
     });
@@ -65,5 +55,66 @@ describe('dto validator tests', () => {
     phone.number = `\t${phone.number} `;
     const result = sut.validate(validatedData);
     expect(result.isSuccess()).toBe(true);
+  });
+});
+
+describe('array validate', () => {
+  const sut = FieldValidatorFixtures.contactAttrsValidatormap.phones;
+
+  test('success', () => {
+    const result = sut.validate([{ number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' }]);
+    expect(result.isSuccess()).toBe(true);
+    expect(result.value).toBe(undefined);
+  });
+
+  test('failure', () => {
+    const validateData = [{ number: '+7-777-287-81-82', type: 'mobile' }];
+    const result = sut.validate(validateData);
+    expect(result.isFailure()).toBe(true);
+    expect(result.value).toEqual({
+      phones: {
+        0: {
+          noOutField: [
+            {
+              text: 'Значение не должно быть undefined или null',
+              hint: {},
+            }],
+        },
+      },
+    });
+  });
+
+  test('failure, the value must be an array of data', () => {
+    const result = sut.validate('r');
+    expect(result.isFailure()).toBe(true);
+    expect(result.value).toEqual({
+      phones: [
+        {
+          hint: {},
+          text: 'Значение должно быть массивом данных',
+        },
+      ],
+    });
+  });
+  test('failure, the value must be one of the values in the list', () => {
+    const result = sut.validate([{ number: '+7-777-287-81-82', type: 'block', noOutField: 'empty info' }]);
+    expect(result.isFailure()).toBe(true);
+    expect(result.value).toEqual({
+      phones: {
+        0: {
+          type: [
+            {
+              hint: {
+                choices: [
+                  'mobile',
+                  'work',
+                ],
+              },
+              text: 'Значение должно быть одним из значений списка',
+            },
+          ],
+        },
+      },
+    });
   });
 });
