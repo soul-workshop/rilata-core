@@ -25,7 +25,7 @@ describe('Tests with the settings of the array itself.', () => {
       expect(result.value).toEqual(undefined);
     });
 
-    test('failure, passed an invalid array', () => {
+    test('failure, the value must be an object', () => {
       const result = sut.validate([
         { number: '+7-777-287-81-82', type: 'work', noOutField: 'empty info' },
         '1',
@@ -44,7 +44,7 @@ describe('Tests with the settings of the array itself.', () => {
         },
       });
     });
-    test('failure, passed undefined', () => {
+    test('failure, the value must be an array of data', () => {
       const result = sut.validate(undefined);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
@@ -94,7 +94,7 @@ describe('Tests with the settings of the array itself.', () => {
         },
       });
     });
-    test('failure, passed undefined', () => {
+    test('failure, the value must be an array of data', () => {
       const result = sut.validate(undefined);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
@@ -110,7 +110,7 @@ describe('Tests with the settings of the array itself.', () => {
 
   describe('array must be filled', () => {
     const sut = new DtoFieldValidator('phones', 'dto', true, { isArray: true, mustBeFilled: true }, FieldValidatorFixtures.phoneAttrsValidatorMap);
-    test('failure, passed an empty array', () => {
+    test('failure, the value must be a non-empty data array', () => {
       const result = sut.validate([]);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
@@ -132,7 +132,7 @@ describe('Tests with the settings of the array itself.', () => {
       expect(result.value).toEqual(undefined);
     });
 
-    test('failure, passed a non-empty array with a non-valid value', () => {
+    test('failure, the value must be an object', () => {
       const result = sut.validate([
         { number: '+7-777-287-81-82', type: 'work', noOutField: 'empty info' },
         '1',
@@ -206,7 +206,7 @@ describe('Tests with the settings of the array itself.', () => {
       expect(result.value).toEqual(undefined);
     });
 
-    test('failure, passed undefined', () => {
+    test('failure, the value must be an array of data', () => {
       const result = sut.validate(undefined);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
@@ -261,7 +261,7 @@ describe('Tests with the settings of the array itself.', () => {
       });
     });
 
-    test('failure, passed undefined', () => {
+    test('failure, the value must be an array of data', () => {
       const result = sut.validate(undefined);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
@@ -271,6 +271,173 @@ describe('Tests with the settings of the array itself.', () => {
             hint: {},
           },
         ],
+      });
+    });
+  });
+
+  describe('array where one of the values is not valid', () => {
+    const sut = FieldValidatorFixtures.contactAttrsValidatormap.phones;
+    test('The number must be a string value', () => {
+      const result = sut.validate([{ number: '1', type: 'mobile', noOutField: 'empty info' }]);
+      expect(result.isFailure()).toBe(true);
+      expect(result.value).toEqual({
+        phones: {
+          0: {
+            number: [
+              {
+                text: 'Строка должна соответствовать формату: "+7-###-##-##"',
+                hint: {},
+              }, {
+                text: 'Строка должна быть равна {{count}}, сейчас {{current}}',
+                hint: {
+                  count: 16,
+                  current: 1,
+                },
+              },
+            ],
+          },
+        },
+      });
+    });
+
+    test('The number must be a string value ', () => {
+      const valuesToTest = [true, 1, { a: 2 }, [1]];
+      valuesToTest.forEach((value) => {
+        const result = sut.validate([{ number: value, type: 'mobile', noOutField: 'empty info' }]);
+        expect(result.isFailure()).toBe(true);
+        expect(result.value).toEqual({
+          phones: {
+            0: {
+              number: [
+                {
+                  text: 'Значение должно быть строковым значением',
+                  hint: {},
+                },
+              ],
+            },
+          },
+        });
+      });
+    });
+
+    test('The number must not be undefined or null', () => {
+      const valuesToTest = [null, undefined];
+      valuesToTest.forEach((value) => {
+        const result = sut.validate([{ number: value, type: 'mobile', noOutField: 'empty info' }]);
+        expect(result.isFailure()).toBe(true);
+        expect(result.value).toEqual({
+          phones: {
+            0: {
+              number: [
+                {
+                  text: 'Значение не должно быть undefined или null',
+                  hint: {},
+                },
+              ],
+            },
+          },
+        });
+      });
+    });
+
+    test('The type must be a string value ', () => {
+      const valuesToTest = [true, 1, { a: 2 }, [1]];
+      valuesToTest.forEach((value) => {
+        const result = sut.validate([{ number: '+7-555-879-11-02', type: value, noOutField: 'empty info' }]);
+        expect(result.isFailure()).toBe(true);
+        expect(result.value).toEqual({
+          phones: {
+            0: {
+              type: [
+                {
+                  text: 'Значение должно быть строковым значением',
+                  hint: {},
+                },
+              ],
+            },
+          },
+        });
+      });
+    });
+
+    test('The type must not be undefined or null', () => {
+      const valuesToTest = [null, undefined];
+      valuesToTest.forEach((value) => {
+        const result = sut.validate([{ number: '+7-555-879-11-02', type: value, noOutField: 'empty info' }]);
+        expect(result.isFailure()).toBe(true);
+        expect(result.value).toEqual({
+          phones: {
+            0: {
+              type: [
+                {
+                  text: 'Значение не должно быть undefined или null',
+                  hint: {},
+                },
+              ],
+            },
+          },
+        });
+      });
+    });
+
+    test('The type  must be one of the values in the list', () => {
+      const result = sut.validate([{ number: '+7-555-879-11-02', type: 'phone', noOutField: 'empty info' }]);
+      expect(result.isFailure()).toBe(true);
+      expect(result.value).toEqual(
+        {
+          phones: {
+            0: {
+              type: [
+                {
+                  text: 'Значение должно быть одним из значений списка',
+                  hint: {
+                    choices: ['mobile', 'work'],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      );
+    });
+
+    test('The noOutField must be a string value ', () => {
+      const valuesToTest = [true, 1, { a: 2 }, [1]];
+      valuesToTest.forEach((value) => {
+        const result = sut.validate([{ number: '+7-555-879-11-02', type: 'mobile', noOutField: value }]);
+        expect(result.isFailure()).toBe(true);
+        expect(result.value).toEqual({
+          phones: {
+            0: {
+              noOutField: [
+                {
+                  text: 'Значение должно быть строковым значением',
+                  hint: {},
+                },
+              ],
+            },
+          },
+        });
+      });
+    });
+
+    test('The noOutField must not be undefined or null', () => {
+      const valuesToTest = [null, undefined];
+      valuesToTest.forEach((value) => {
+        const result = sut.validate([{ number: '+7-555-879-11-02', type: 'mobile', noOutField: value }]);
+        expect(result.isFailure()).toBe(true);
+        expect(result.value).toEqual({
+          phones: {
+            0: {
+              noOutField: [
+                {
+                  text: 'Значение не должно быть undefined или null',
+                  hint: {},
+                },
+              ],
+            },
+          },
+        });
       });
     });
   });
