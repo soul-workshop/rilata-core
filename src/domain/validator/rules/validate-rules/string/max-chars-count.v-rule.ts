@@ -9,7 +9,7 @@ export class MaxCharsCountValidationRule extends ValidationRule<'validate', stri
   }
 
   validate(value: string): ValidationRuleAnswer {
-    return value.length > this.maxCharsCount
+    return value.length >= this.maxCharsCount
       ? this.returnFail('SaveErrorAndRunNextRule', { maxCount: this.maxCharsCount })
       : this.returnSuccess('RunNextRule');
   }
