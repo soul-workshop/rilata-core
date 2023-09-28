@@ -44,6 +44,40 @@ describe('Tests with the settings of the array itself.', () => {
         },
       });
     });
+
+    test('failure, the value must be an object', () => {
+      const result = sut.validate([
+        { number: '+7-777-287-81-82', type: 'work', noOutField: 'empty info' },
+        { number: '+7-555-879-11-0215', type: 2, noOutField: 'info' },
+      ]);
+      expect(result.isFailure()).toBe(true);
+      expect(result.value).toEqual({
+        phones: {
+          1: {
+            number: [
+              {
+                text: 'Строка должна соответствовать формату: "+7-###-##-##"',
+                hint: {},
+              },
+              {
+                hint: {
+                  count: 16,
+                  current: 18,
+                },
+                text: 'Строка должна быть равна {{count}}, сейчас {{current}}',
+              },
+            ],
+            type: [
+              {
+                hint: {},
+                text: 'Значение должно быть строковым значением',
+              },
+            ],
+          },
+        },
+      });
+    });
+
     test('failure, the value must be an array of data', () => {
       const result = sut.validate(undefined);
       expect(result.isFailure()).toBe(true);
