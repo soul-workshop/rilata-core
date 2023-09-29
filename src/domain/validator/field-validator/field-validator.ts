@@ -30,7 +30,6 @@ export abstract class FieldValidator<
   protected abstract validateValue(value: unknown): FieldValidatorResult
 
   protected abstract getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult
-
   constructor(
     protected attrName: NAME,
     protected isRequired: REQ,

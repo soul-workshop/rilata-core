@@ -3,6 +3,9 @@ import { success } from '../../../common/result/success';
 import { LeadRule } from '../../validator/rules/lead-rule';
 import { LiteralDataType, RuleError } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
+import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
+import { CannotBeNullableAssertionRule } from '../rules/assert-rules/cannot-be-nullable.a-rule';
+import { CanBeNullableRule } from '../rules/nullable-rules/can-be-nullable.n-rule';
 import { FieldValidator } from './field-validator';
 import {
   GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult, ArrayFieldErrors,
@@ -41,5 +44,10 @@ export class LiteralFieldValidator<
 
   protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
     return failure({ [this.attrName]: errors });
+  }
+
+  protected getRequiredRules(): ValidationRule<'assert', unknown>[] {
+    if (this.dataType !== 'string') return super.getRequiredRules();
+    return [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()];
   }
 }
