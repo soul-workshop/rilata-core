@@ -18,13 +18,13 @@ const phoneVMap: ValidatorMap<PhoneAttrs> = {
 };
 
 const emailVMap: ValidatorMap<EmailAttrs> = {
-  email: new LiteralFieldValidator('email', 'string', true, { isArray: false }, [new EmailFormatValidationRule()]),
+  email: new LiteralFieldValidator('email', true, { isArray: false }, 'string', [new EmailFormatValidationRule()]),
   type: new StringChoiceFieldValidator<'type', true, false>('type', true, { isArray: false }, ['corporate', 'private']),
 };
 
 const contactsVMap: ValidatorMap<ContactsAttrs> = {
-  phones: new DtoFieldValidator('phones', 'dto', true, { isArray: true, mustBeFilled: true }, phoneVMap),
-  email: new DtoFieldValidator('email', 'dto', false, { isArray: true }, emailVMap),
+  phones: new DtoFieldValidator('phones', true, { isArray: true, mustBeFilled: true }, 'dto', phoneVMap),
+  email: new DtoFieldValidator('email', false, { isArray: true }, 'dto', emailVMap),
   address: new CannotEmptyStringField('address', false, []),
 };
 
@@ -34,5 +34,5 @@ export const personAttrsVMap: ValidatorMap<PersonAttrs> = {
   name: new CannotEmptyStringField('name', true, [], [new TrimStringLeadRule()]),
   lastName: new CannotEmptyStringField('lastName', true, [], [new TrimStringLeadRule()]),
   patronomic: new CannotEmptyStringField('patronomic', false, [], [new TrimStringLeadRule()]),
-  contacts: new DtoFieldValidator('contacts', 'dto', true, { isArray: false }, contactsVMap),
+  contacts: new DtoFieldValidator('contacts', true, { isArray: false }, 'dto', contactsVMap),
 };
