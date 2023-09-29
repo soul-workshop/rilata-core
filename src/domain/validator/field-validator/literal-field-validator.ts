@@ -4,6 +4,9 @@ import { success } from '../../../common/result/success';
 import { LeadRule } from '../../validator/rules/lead-rule';
 import { LiteralDataType } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
+import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
+import { CannotBeNullableAssertionRule } from '../rules/assert-rules/cannot-be-nullable.a-rule';
+import { CanBeNullableRule } from '../rules/nullable-rules/can-be-nullable.n-rule';
 import { FieldValidator } from './field-validator';
 import { GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult } from './types';
 
@@ -50,5 +53,13 @@ export class LiteralFieldValidator<
     return validateAnswer.isValidValue
       ? success(undefined)
       : this.getFailResult(validateAnswer.errors);
+  }
+  protected getNullableRules(): ValidationRule<'nullable', unknown>[] | ValidationRule<'assert', unknown>[] {
+    if (this.dataType !== 'string') {
+      return super.getNullableRules();
+    }
+    return this.isRequired
+      ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]
+      : [new CanBeNullableRule()];
   }
 }

@@ -30,12 +30,6 @@ export abstract class FieldValidator<
 
   protected abstract validateValue(value: unknown): FieldValidatorResult
 
-  protected nullableRules: ValidationRule<'nullable' | 'assert', DATA_TYPE>[];
-
-  protected typeCheckRules: ValidationRule<'type', DATA_TYPE>[];
-
-  protected arrayAssertionRules: ValidationRule<'assert', DATA_TYPE>[];
-
   constructor(
     protected attrName: NAME,
     protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
@@ -52,10 +46,6 @@ export abstract class FieldValidator<
         )
       ) throw new AssertionException(`not valid arrayConfig: min=${min}, max=${max}`);
     }
-
-    this.nullableRules = this.getNullableRules();
-    this.typeCheckRules = this.getTypeCheckRules();
-    this.arrayAssertionRules = this.arrayConfig.isArray ? this.getArrayAssertionRules() : [];
   }
 
   validate(value: unknown): FieldValidatorResult {
@@ -120,7 +110,7 @@ export abstract class FieldValidator<
 
   protected getNullableRules(): ValidationRule<'nullable', unknown>[] | ValidationRule<'assert', unknown>[] {
     return this.isRequired
-      ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]
+      ? [new CannotBeNullableAssertionRule()]
       : [new CanBeNullableRule()];
   }
 
