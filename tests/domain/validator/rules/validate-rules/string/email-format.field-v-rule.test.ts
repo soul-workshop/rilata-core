@@ -8,7 +8,7 @@ describe('String must match the email format', () => {
     expect(result).toEqual({ behaviour: 'RunNextRule' });
   });
 
-  test('failure, the received value does not correspond to the email form', () => {
+  test('failure, when there is no dog in email format', () => {
     const sut = new EmailFormatValidationRule();
     const result = sut.validate('example-email.com');
     expect(result).toEqual({
@@ -19,9 +19,9 @@ describe('String must match the email format', () => {
       },
     });
   });
-  test('failure, the received value does not correspond to the email form', () => {
+  test('failure, no email domain', () => {
     const sut = new EmailFormatValidationRule();
-    const result = sut.validate('example-email!com');
+    const result = sut.validate('example@emailcom');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
@@ -30,9 +30,9 @@ describe('String must match the email format', () => {
       },
     });
   });
-  test('failure, the received value does not correspond to the email form', () => {
+  test('failure, special characters are not accepted in the email title', () => {
     const sut = new EmailFormatValidationRule();
-    const result = sut.validate('example-email@');
+    const result = sut.validate(';example@email.com');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {

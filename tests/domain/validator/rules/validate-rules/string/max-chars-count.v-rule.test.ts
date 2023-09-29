@@ -11,15 +11,11 @@ describe('Line length should not be greater than', () => {
     });
   });
 
-  test('failure, string length equals maximum string length', () => {
+  test('success, string length equals maximum string length', () => {
     const sut = new MaxCharsCountValidationRule(5);
     const result = sut.validate('hello');
     expect(result).toEqual({
-      behaviour: 'SaveErrorAndRunNextRule',
-      ruleError: {
-        hint: { maxCount: 5 },
-        text: 'Строка должна быть не больше {{maxCount}}',
-      },
+      behaviour: 'RunNextRule',
     });
   });
 
@@ -30,7 +26,7 @@ describe('Line length should not be greater than', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { maxCount: 10 },
-        text: 'Строка должна быть не больше {{maxCount}}',
+        text: 'Длина строки должна быть не больше {{maxCount}}',
       },
     });
   });

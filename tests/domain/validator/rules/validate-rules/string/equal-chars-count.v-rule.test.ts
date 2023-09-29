@@ -16,6 +16,18 @@ describe('Length of the string must be equal to', () => {
     });
   });
 
+  test('success, string length more', () => {
+    const sut = new EqualCharsCountValidationRule(5);
+    const result = sut.validate('hhheeeellllooo');
+    expect(result).toEqual({
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: { count: 5, current: 'hhheeeellllooo'.length },
+        text: 'Длина строки должна быть равна {{count}}, сейчас {{current}}',
+      },
+    });
+  });
+
   test('failure, string equals count', () => {
     const sut = new EqualCharsCountValidationRule(5);
     const result = sut.validate(value);
