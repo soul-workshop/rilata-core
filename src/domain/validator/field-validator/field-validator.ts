@@ -1,4 +1,3 @@
-import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { AssertionException } from '../../../common/types';
 import { DTO } from '../../dto';
@@ -30,6 +29,7 @@ export abstract class FieldValidator<
   protected abstract validateValue(value: unknown): FieldValidatorResult
 
   protected abstract getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult
+
   constructor(
     protected attrName: NAME,
     protected isRequired: REQ,
