@@ -17,9 +17,9 @@ export class PhoneNumberFieldValidator<
   ) {
     super(
       attrName,
-      'string',
       required,
       isArray,
+      'string',
       [
         new RegexFormatValidationRule(
           /^\+7-\d{3}-\d{3}-\d{2}-\d{2}$/,
