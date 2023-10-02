@@ -14,6 +14,8 @@ export class DtoFieldValidator<
   IS_ARR extends boolean,
   DTO_TYPE extends DTO
 > extends FieldValidator<NAME, REQ, IS_ARR, DTO_TYPE> {
+  static WHOLE_VALUE_VALIDATION_ERROR_KEY = '___whole_value_validation_error___';
+
   constructor(
     attrName: NAME,
     required: REQ,
@@ -26,7 +28,7 @@ export class DtoFieldValidator<
 
   protected validateValue(value: unknown): FieldValidatorResult {
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
-    if (typeAnswer.isValidValue === false) this.getFailResult(typeAnswer.errors);
+    if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
     let errors: DtoFieldErrors = {};
     Object.entries(this.dtoMap).forEach(([dtoAttrName, validator]) => {
@@ -44,6 +46,6 @@ export class DtoFieldValidator<
   }
 
   protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
-    return failure({ [FieldValidator.WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
+    return failure({ [DtoFieldValidator.WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
   }
 }
