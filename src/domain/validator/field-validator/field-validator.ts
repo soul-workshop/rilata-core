@@ -24,8 +24,6 @@ export abstract class FieldValidator<
   IS_ARR extends boolean,
   DATA_TYPE extends LiteralDataType | DTO
 > {
-  static WHOLE_VALUE_VALIDATION_ERROR_KEY = '___whole_value_validation_error___';
-
   protected abstract validateValue(value: unknown): FieldValidatorResult
 
   protected abstract getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult
@@ -89,17 +87,13 @@ export abstract class FieldValidator<
 
   /** предварительные проверки на нулевое значение (undefined, null) */
   protected validateNullableValue(value: unknown): RulesValidatedAnswer {
+    return this.validateByRules(value, this.getRequiredOrNullableRules());
+  }
+
+  protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
     return this.isRequired
-      ? this.validateByRules(value, this.getRequiredRules())
-      : this.validateByRules(value, this.getNullableRules());
-  }
-
-  protected getRequiredRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
-    return [new CannotBeNullableAssertionRule()];
-  }
-
-  protected getNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
-    return [new CanBeNullableRule()];
+      ? [new CannotBeNullableAssertionRule()]
+      : [new CanBeNullableRule()];
   }
 
   protected getTypeCheckRules(): ValidationRule<'type', unknown>[] {

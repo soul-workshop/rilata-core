@@ -281,7 +281,7 @@ describe('litteral test array', () => {
 
     describe('validate value is requied but not null', () => {
       class Cannotbe extends LiteralFieldValidator<'roles', true, true, string> {
-        protected getRequiredRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+        protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()];
         }
       }
@@ -327,8 +327,8 @@ describe('litteral test array', () => {
     test('успех, пришло undefined, null', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
-      const valuesToTest = [null, undefined];
-      valuesToTest.forEach((value) => {
+      const valueTest = [null, undefined];
+      valueTest.forEach((value) => {
         const res = sut.validate(value);
         expect(res.isSuccess()).toBe(true);
         expect(res.value).toBe(undefined);
@@ -378,7 +378,7 @@ describe('litteral test array', () => {
 
     describe('validate value is requied but not null', () => {
       class Cannotbe extends LiteralFieldValidator<'roles', false, true, string> {
-        protected getNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+        protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeNullValidationRule(), new CanBeUndefinedValidationRule()];
         }
       }
@@ -521,7 +521,7 @@ describe('dto_tests', () => {
 
     describe('cannot-be-undefined: ', () => {
       class Cannotbe extends DtoFieldValidator< 'phones', true, true, DTO> {
-        protected getRequiredRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+        protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()];
         }
       }
@@ -756,7 +756,7 @@ describe('dto_tests', () => {
 
     describe('can-be-undefined', () => {
       class Cannotbe extends DtoFieldValidator< 'phones', false, true, DTO> {
-        protected getNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+        protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeNullValidationRule(), new CanBeUndefinedValidationRule()];
         }
       }

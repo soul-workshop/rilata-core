@@ -14,6 +14,8 @@ export class DtoFieldValidator<
   IS_ARR extends boolean,
   DTO_TYPE extends DTO
 > extends FieldValidator<NAME, REQ, IS_ARR, DTO_TYPE> {
+  static WHOLE_VALUE_VALIDATION_ERROR_KEY = '___whole_value_validation_error___';
+
   constructor(
     attrName: NAME,
     required: REQ,
@@ -44,6 +46,6 @@ export class DtoFieldValidator<
   }
 
   protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
-    return failure({ [FieldValidator.WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
+    return failure({ [DtoFieldValidator.WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
   }
 }
