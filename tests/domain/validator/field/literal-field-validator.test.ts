@@ -246,6 +246,46 @@ import { CanBeNullValidationRule } from '../../../../src/domain/validator/rules/
       });
     });
   });
+  describe('isNotArray_tests, isRequired_tests', () => {
+    const types: [GetFieldValidatorDataType<LiteralDataType>, unknown][] = [
+      ['number', -Infinity],
+      ['number', Infinity]
+    ];
+    
+    types.forEach((type) => {
+      describe('Валидированная значение обязательна', () => {
+  
+        test('Успех, на валидацию пришло явное значение', () => {
+          const sut = new LiteralFieldValidator('fieldName', true, { isArray: false },type[0], []);
+          const result = sut.validate(type[1]);
+          expect(result.isFailure()).toBe(true);
+          expect(result.value).toEqual({
+            fieldName: [
+              {
+                text: "Значение не должно быть Infinity или -Infinity",
+                hint: {}
+              }
+            ]
+          })
+        });
+      });
+    });
+  });
+  describe('Валидированная значение обязательна', () => {
+    test('Успех, на валидацию пришло явное значение', () => {
+      const sut = new LiteralFieldValidator('fieldName', true, { isArray: false },'number', []);
+      const result = sut.validate(NaN);
+      expect(result.isFailure()).toBe(true);
+      expect(result.value).toEqual({
+        fieldName: [
+          {
+            text: "Значение не должно быть NaN",
+            hint: {}
+          },
+        ]
+      });
+  });
+});
 });
 
 
@@ -428,6 +468,48 @@ describe('isNotArray_tests, isNotRequired_tests', () => {
       const sut = new LiteralFieldValidator('fieldName',  false, { isArray: false }, 'string', [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()]);
       const result = sut.validate(null);
       expect(result.isSuccess()).toBe(true);
+    });
+  });
+
+  describe('isNotArray_tests, isRequired_tests', () => {
+    const types: [GetFieldValidatorDataType<LiteralDataType>, unknown][] = [
+      ['number', -Infinity],
+      ['number', Infinity]
+    ];
+    
+    types.forEach((type) => {
+      describe('Валидированная значение обязательна', () => {
+  
+        test('Успех, на валидацию пришло явное значение', () => {
+          const sut = new LiteralFieldValidator('fieldName', false, { isArray: false },type[0], []);
+          const result = sut.validate(type[1]);
+          expect(result.isFailure()).toBe(true);
+          expect(result.value).toEqual({
+            fieldName: [
+              {
+                text: "Значение не должно быть Infinity или -Infinity",
+                hint: {}
+              },
+            ]
+          });
+        });
+      });
+    });
+  });
+
+  describe('Валидированная значение обязательна', () => {
+      test('Успех, на валидацию пришло явное значение', () => {
+        const sut = new LiteralFieldValidator('fieldName', false, { isArray: false },'number', []);
+        const result = sut.validate(NaN);
+        expect(result.isFailure()).toBe(true);
+        expect(result.value).toEqual({
+          fieldName: [
+            {
+              text: "Значение не должно быть NaN",
+              hint: {}
+            },
+          ]
+        });
     });
   });
 });
