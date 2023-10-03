@@ -45,8 +45,8 @@ export class LiteralFieldValidator<
     return failure({ [this.attrName]: errors });
   }
 
-  protected getRequiredRules(): ValidationRule<'assert', unknown>[] {
-    if (this.dataType !== 'string') return super.getRequiredRules();
+  protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+    if (this.dataType !== 'string') return super.getRequiredOrNullableRules();
     return [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()];
   }
 }
