@@ -26,7 +26,7 @@ export class DtoFieldValidator<
 
   protected validateValue(value: unknown): FieldValidatorResult {
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
-    if (typeAnswer.isValidValue === false) this.getFailResult(typeAnswer.errors);
+    if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
     let errors: DtoFieldErrors = {};
     Object.entries(this.dtoMap).forEach(([dtoAttrName, validator]) => {

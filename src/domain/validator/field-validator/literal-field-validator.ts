@@ -29,7 +29,7 @@ export class LiteralFieldValidator<
 
   protected validateValue(value: unknown): FieldValidatorResult {
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
-    if (typeAnswer.isValidValue === false) this.getFailResult(typeAnswer.errors);
+    if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
     const leadedValue = this.leadRules.reduce(
       (newValue, leadRule) => leadRule.lead(newValue as DATA_TYPE),
