@@ -139,12 +139,12 @@ import { CanBeNullValidationRule } from '../../../../src/domain/validator/rules/
   /*delayu peredelat*/
   describe('Валидированная значение обязательна',()=>{
     test('Успех сработало приведение значения lead-rule',()=>{
-      const sut = new LiteralFieldValidator('fieldName',  true, { isArray: false }, 'string', [],[new TrimEndStringLeadRule()]);
+      const sut = new LiteralFieldValidator('fieldName',  true, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)],[new TrimEndStringLeadRule()]);
       const result = sut.validate('Absolute   ');
       expect(result.isSuccess()).toBe(true);
     });
     test('Успех сработало приведение значения двух lead-rule',()=>{
-      const sut = new LiteralFieldValidator('fieldName',  true, { isArray: false }, 'string', [],[new TrimStartStringLeadRule(), new TrimEndStringLeadRule()]);
+      const sut = new LiteralFieldValidator('fieldName',  true, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)],[new TrimStartStringLeadRule(), new TrimEndStringLeadRule()]);
       const values = ['Absolute  ', '  Absolute', ' Absolute  '];
       values.forEach((value) => {
         const result = sut.validate(value);
@@ -160,7 +160,7 @@ import { CanBeNullValidationRule } from '../../../../src/domain/validator/rules/
       expect(result.value).toEqual({
         fieldName: [
           {
-            text: "Строка должна быть не больше {{maxCount}}",
+            text: "Длина строки должна быть не больше {{maxCount}}",
             hint: {
               maxCount: 8
             }
@@ -378,12 +378,12 @@ describe('isNotArray_tests, isNotRequired_tests', () => {
   /*delayu*/
   describe('Валидированная значение обязательна',()=>{
     test('Успех сработало приведение значения lead-rule',()=>{
-      const sut = new LiteralFieldValidator('fieldName',  false, { isArray: false }, 'string', [],[new TrimStringLeadRule()]);
+      const sut = new LiteralFieldValidator('fieldName',  false, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)],[new TrimStringLeadRule()]);
       const result = sut.validate('  Absolute  ');
       expect(result.isSuccess()).toBe(true);
     });
     test('Успех сработало приведение значения двух lead-rule',()=>{
-      const sut = new LiteralFieldValidator('fieldName',  false, { isArray: false }, 'string', [],[new TrimStartStringLeadRule(), new TrimEndStringLeadRule()]);
+      const sut = new LiteralFieldValidator('fieldName',  false, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)],[new TrimStartStringLeadRule(), new TrimEndStringLeadRule()]);
       const values = ['Absolute  ', '  Absolute', ' Absolute  '];
       values.forEach((value) => {
         const result = sut.validate(value);
@@ -399,7 +399,7 @@ describe('isNotArray_tests, isNotRequired_tests', () => {
       expect(result.value).toEqual({
         fieldName: [
           {
-            text: "Строка должна быть не больше {{maxCount}}",
+            text: "Длина строки должна быть не больше {{maxCount}}",
             hint: {
               maxCount: 8
             }
