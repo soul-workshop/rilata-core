@@ -5,9 +5,9 @@ export class UuidField<N extends string> extends LiteralFieldValidator<N, true, 
   constructor(attrName: N) {
     super(
       attrName,
-      'string',
       true,
       { isArray: false },
+      'string',
       [new UUIDFormatValidationRule()],
     );
   }

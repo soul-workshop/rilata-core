@@ -1,14 +1,15 @@
-/* eslint-disable no-continue */
-/* eslint-disable no-restricted-syntax */
+import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { LeadRule } from '../../validator/rules/lead-rule';
-import { LiteralDataType } from '../../validator/rules/types';
+import { LiteralDataType, RuleError } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import { CannotBeNullableAssertionRule } from '../rules/assert-rules/cannot-be-nullable.a-rule';
 import { CanBeNullableRule } from '../rules/nullable-rules/can-be-nullable.n-rule';
 import { FieldValidator } from './field-validator';
-import { GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult } from './types';
+import {
+  GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult, ArrayFieldErrors,
+} from './types';
 
 export class LiteralFieldValidator<
   NAME extends string,
@@ -18,32 +19,18 @@ export class LiteralFieldValidator<
 > extends FieldValidator<NAME, REQ, IS_ARR, DATA_TYPE> {
   constructor(
     attrName: NAME,
-    protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
     isRequired: REQ,
     arrayConfig: GetArrayConfig<IS_ARR>,
+    protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
     protected validateRules: ValidationRule<'validate', DATA_TYPE>[],
     protected leadRules: LeadRule<DATA_TYPE>[] = [],
   ) {
-    super(attrName, dataType, isRequired, arrayConfig);
+    super(attrName, isRequired, arrayConfig, dataType);
   }
 
-  /** предварительная проверка на типы данных и нулевые значения или утверждения
-    1. В начале проверяется проверка нулевых значений, (undefined, null).
-      Эти проверки выполняются правилами возвращаемыми с метода getNullableRules().
-        a. nullable-rule могут завершить поток проверки с валидным ответом.
-        b. assert-rule завершают поток проверки с ошибкой.
-    2. Проверка типа. Провал проверки также завершает процесс проверки.
-    3. Приведение значения не могут вызвать ошибку, но могут изменить значение value.
-    4. Наконец проверка валидации (переданных в конструкторе). Провал проверки
-      обычно не завершает процесс проверок, а идет накопление ошибок.
-  */
   protected validateValue(value: unknown): FieldValidatorResult {
-    const preValidateAnswer = this.validateOnNullableAntType(value);
-    if (preValidateAnswer.break) {
-      return preValidateAnswer.isValidValue
-        ? success(undefined)
-        : this.getFailResult(preValidateAnswer.errors);
-    }
+    const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
+    if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
     const leadedValue = this.leadRules.reduce(
       (newValue, leadRule) => leadRule.lead(newValue as DATA_TYPE),
@@ -54,10 +41,13 @@ export class LiteralFieldValidator<
       ? success(undefined)
       : this.getFailResult(validateAnswer.errors);
   }
-  protected getNullableRules(): ValidationRule<'nullable', unknown>[] | ValidationRule<'assert', unknown>[] {
-    if (this.dataType !== 'string') {
-      return super.getNullableRules();
-    }
+
+  protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
+    return failure({ [this.attrName]: errors });
+  }
+
+  protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+    if (this.dataType !== 'string') return super.getRequiredOrNullableRules();
     return this.isRequired
       ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]
       : [new CanBeNullableRule()];
