@@ -20,7 +20,6 @@ describe('Number must be in the range', () => {
   test('failure, the resulting value is greater than the maximum value', () => {
     const sut = new RangeNumberValidationRule(18, 64);
     const result = sut.validate(65);
-
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
@@ -32,7 +31,6 @@ describe('Number must be in the range', () => {
   test('failure, the resulting value is less than the minimum value', () => {
     const sut = new RangeNumberValidationRule(18, 64);
     const result = sut.validate(17);
-
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {

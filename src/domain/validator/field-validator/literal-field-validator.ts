@@ -49,7 +49,7 @@ export class LiteralFieldValidator<
   protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
     if (this.dataType !== 'string') return super.getRequiredOrNullableRules();
     return this.isRequired
-      ? [new CannotBeNullableAssertionRule(),new CannotBeEmptyStringAssertionRule()]
+      ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]
       : [new CanBeNullableRule()];
   }
 }

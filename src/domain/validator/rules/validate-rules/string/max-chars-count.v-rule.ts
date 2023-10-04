@@ -2,7 +2,7 @@ import { ValidationRuleAnswer } from '../../types';
 import { ValidationRule } from '../../validation-rule';
 
 export class MaxCharsCountValidationRule extends ValidationRule<'validate', string> {
-  requirement = 'Строка должна быть не больше {{maxCount}}';
+  requirement = 'Длина строки должна быть не больше {{maxCount}}';
 
   constructor(private maxCharsCount: number) {
     super();
