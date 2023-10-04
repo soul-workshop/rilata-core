@@ -14,9 +14,9 @@ export class CannotEmptyStringField<
   ) {
     super(
       attrName,
-      'string',
       required,
       { isArray: false },
+      'string',
       [new CannotBeEmptyStringAssertionRule(), ...validateRules],
       leadRules,
     );

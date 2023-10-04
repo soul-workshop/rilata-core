@@ -112,6 +112,7 @@ type AttrsInfo = {
   label: string,
   attributeDescription: string,
   placeHolder?: string,
+  default?: string,
   choice?: unknown[],
   additional?: unknown,
 }

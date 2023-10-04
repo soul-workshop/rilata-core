@@ -1,9 +1,11 @@
 import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { DTO } from '../../dto';
+import { RuleError } from '../rules/types';
 import { FieldValidator } from './field-validator';
 import {
-  DtoFieldErrors, FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType, ValidatorMap,
+  ArrayFieldErrors, DtoFieldErrors, FieldValidatorResult, GetArrayConfig,
+  GetFieldValidatorDataType, ValidatorMap,
 } from './types';
 
 export class DtoFieldValidator<
@@ -12,23 +14,21 @@ export class DtoFieldValidator<
   IS_ARR extends boolean,
   DTO_TYPE extends DTO
 > extends FieldValidator<NAME, REQ, IS_ARR, DTO_TYPE> {
+  static WHOLE_VALUE_VALIDATION_ERROR_KEY = '___whole_value_validation_error___';
+
   constructor(
     attrName: NAME,
-    dataType: GetFieldValidatorDataType<DTO_TYPE>,
     required: REQ,
     arrayConfig: GetArrayConfig<IS_ARR>,
+    dataType: GetFieldValidatorDataType<DTO_TYPE>,
     protected dtoMap: ValidatorMap<DTO_TYPE>,
   ) {
-    super(attrName, dataType, required, arrayConfig);
+    super(attrName, required, arrayConfig, dataType);
   }
 
   protected validateValue(value: unknown): FieldValidatorResult {
-    const preValidateAnswer = this.validateOnNullableAntType(value);
-    if (preValidateAnswer.break) {
-      return preValidateAnswer.isValidValue
-        ? success(undefined)
-        : this.getFailResult(preValidateAnswer.errors);
-    }
+    const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
+    if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
     let errors: DtoFieldErrors = {};
     Object.entries(this.dtoMap).forEach(([dtoAttrName, validator]) => {
@@ -43,5 +43,9 @@ export class DtoFieldValidator<
     return Object.keys(errors).length > 0
       ? failure(errors)
       : success(undefined);
+  }
+
+  protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
+    return failure({ [DtoFieldValidator.WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
   }
 }

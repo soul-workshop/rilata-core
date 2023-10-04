@@ -1,4 +1,3 @@
-import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { AssertionException } from '../../../common/types';
 import { DTO } from '../../dto';
@@ -14,7 +13,6 @@ import { IsNumberTypeRule } from '../../validator/rules/type-rules/is-number-typ
 import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-type.t-rule';
 import { GeneralValidationRule, LiteralDataType, RuleError } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
-import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import {
   FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType,
   ArrayFieldErrors, RulesValidatedAnswer,
@@ -26,21 +24,15 @@ export abstract class FieldValidator<
   IS_ARR extends boolean,
   DATA_TYPE extends LiteralDataType | DTO
 > {
-  static WHOLE_VALUE_VALIDATION_ERROR_KEY = '___whole_value_validation_error___';
-
   protected abstract validateValue(value: unknown): FieldValidatorResult
 
-  protected nullableRules: ValidationRule<'nullable' | 'assert', DATA_TYPE>[];
-
-  protected typeCheckRules: ValidationRule<'type', DATA_TYPE>[];
-
-  protected arrayAssertionRules: ValidationRule<'assert', DATA_TYPE>[];
+  protected abstract getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult
 
   constructor(
     protected attrName: NAME,
-    protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
     protected isRequired: REQ,
     protected arrayConfig: GetArrayConfig<IS_ARR>,
+    protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
   ) {
     if (arrayConfig.isArray) {
       const [min, max] = [arrayConfig.minElementsCount, arrayConfig.maxElementsCount];
@@ -52,13 +44,16 @@ export abstract class FieldValidator<
         )
       ) throw new AssertionException(`not valid arrayConfig: min=${min}, max=${max}`);
     }
-
-    this.nullableRules = this.getNullableRules();
-    this.typeCheckRules = this.getTypeCheckRules();
-    this.arrayAssertionRules = this.arrayConfig.isArray ? this.getArrayAssertionRules() : [];
   }
 
   validate(value: unknown): FieldValidatorResult {
+    const nullableAnswer = this.validateNullableValue(value);
+    if (nullableAnswer.break) { // received nullable (undefined, null)
+      return nullableAnswer.isValidValue
+        ? success(undefined) // isRequired === false, nullable is valid value
+        : this.getFailResult(nullableAnswer.errors); // isRequired, nullable is not valid value;
+    }
+
     return this.arrayConfig.isArray
       ? this.validateArray(value)
       : this.validateValue(value);
@@ -90,37 +85,14 @@ export abstract class FieldValidator<
       : success(undefined);
   }
 
-  /** предварительные проверки на нулевое значение, тип данных */
-  protected validateOnNullableAntType(
-    value: unknown,
-  ): RulesValidatedAnswer {
-    let errors: RuleError[] = [];
-    let lastAnswer: RulesValidatedAnswer;
-
-    function getAnswer(): RulesValidatedAnswer {
-      return errors.length > 0
-        ? { isValidValue: false, break: lastAnswer.break, errors }
-        : { isValidValue: true, break: lastAnswer.break };
-    }
-
-    lastAnswer = this.validateByRules(value, this.getNullableRules());
-    if (!lastAnswer.isValidValue) errors = [...errors, ...lastAnswer.errors];
-    if (lastAnswer.break) return getAnswer();
-
-    lastAnswer = this.validateByRules(value, this.getTypeCheckRules());
-    if (!lastAnswer.isValidValue) errors = [...errors, ...lastAnswer.errors];
-    return getAnswer();
+  /** предварительные проверки на нулевое значение (undefined, null) */
+  protected validateNullableValue(value: unknown): RulesValidatedAnswer {
+    return this.validateByRules(value, this.getRequiredOrNullableRules());
   }
 
-  protected getFailResult(
-    errors: RuleError[] | ArrayFieldErrors,
-  ): FieldValidatorResult {
-    return failure({ [this.attrName]: errors });
-  }
-
-  protected getNullableRules(): ValidationRule<'nullable', unknown>[] | ValidationRule<'assert', unknown>[] {
+  protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
     return this.isRequired
-      ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]
+      ? [new CannotBeNullableAssertionRule()]
       : [new CanBeNullableRule()];
   }
 
