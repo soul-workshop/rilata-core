@@ -154,26 +154,30 @@ describe('Валидированное значение обязательно',
   });
 
   describe('Получаем undefined или null', () => {
+    class Cannotbe extends LiteralFieldValidator<'fieldName', true, false, string> {
+      protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+        return [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()];
+      }
+    }
+
+    const sut = new Cannotbe(
+      'fieldName',
+      true,
+      { isArray: false },
+      'string',
+      [
+        new MaxCharsCountValidationRule(8),
+      ],
+    );
     test('Успех, пришло валидное значение', () => {
-      const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()]);
       const result = sut.validate('Absolute');
       expect(result.isSuccess()).toBe(true);
     });
-    test('Провал, пришло undefined', () => {
-      const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()]);
-      const result = sut.validate(undefined);
-      expect(result.isFailure()).toBe(true);
-      expect(result.value).toEqual({
-        fieldName: [
-          {
-            text: 'Значение не должно быть undefined или null',
-            hint: {},
-          },
-        ],
-      });
+    test('Успех, пришло null', () => {
+      const result = sut.validate(null);
+      expect(result.isSuccess()).toBe(true);
     });
     test('Провал, пришло не валидное значение', () => {
-      const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()]);
       const result = sut.validate(true);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
@@ -185,14 +189,13 @@ describe('Валидированное значение обязательно',
         ],
       });
     });
-    test('Провал, пришло null', () => {
-      const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()]);
-      const result = sut.validate(null);
+    test('Провал, пришло undefined', () => {
+      const result = sut.validate(undefined);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
         fieldName: [
           {
-            text: 'Значение не должно быть undefined или null',
+            text: 'Значение не должно быть undefined',
             hint: {},
           },
         ],
@@ -217,6 +220,7 @@ describe('Валидированное значение обязательно',
         });
       });
     });
+
     test('Провал, пришло NaN', () => {
       const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'number', []);
       const result = sut.validate(NaN);
@@ -370,8 +374,6 @@ describe('Валидированное значение необязательн
       'string',
       [
         new MaxCharsCountValidationRule(8),
-        new CanBeUndefinedValidationRule(),
-        new CannotBeNullValidationRule(),
       ],
     );
     test('успех, пришло валидное значение', () => {

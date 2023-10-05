@@ -100,7 +100,7 @@ export abstract class FieldValidator<
 
   protected getTypeCheckRules(): ValidationRule<'type', unknown>[] {
     if (this.dataType === 'dto') return [new IsDTOTypeRule()];
-    if (this.dataType === 'number') return [new IsNumberTypeRule(),new CannotBeInfinityRule(), new CannotBeNanRule()];
+    if (this.dataType === 'number') return [new IsNumberTypeRule(), new CannotBeInfinityRule(), new CannotBeNanRule()];
     if (this.dataType === 'boolean') return [new IsBooleanTypeRule()];
     return [new IsStringTypeRule()];
   }
