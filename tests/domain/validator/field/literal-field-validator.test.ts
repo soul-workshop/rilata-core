@@ -1,9 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { DtoFieldValidator } from '../../../../src/domain/validator/field-validator/dto-field-validator';
 import { LiteralFieldValidator } from '../../../../src/domain/validator/field-validator/literal-field-validator';
 import { GetFieldValidatorDataType } from '../../../../src/domain/validator/field-validator/types';
 import { LiteralDataType } from '../../../../src/domain/validator/rules/types';
-import { FieldValidatorPrivateFixtures, FieldValidatorTestMocksPrivateFixtures } from './test-fixtures';
 import { TrimStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim';
 import { TrimEndStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim-end.l-rule';
 import { TrimStartStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim-start.l-rule';
@@ -24,10 +22,10 @@ describe('Валидированное значение обязательно',
     ['boolean', false],
   ];
 
-  types.forEach(([dataType, value]) => {
+  types.forEach(([dataType, dataValue]) => {
     test('Успех, на валидацию пришло явное значение', () => {
       const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, dataType, []);
-      const result = sut.validate(value);
+      const result = sut.validate(dataValue);
       expect(result.isSuccess()).toBe(true);
     });
 
@@ -241,10 +239,10 @@ describe('Валидированное значение необязательн
     ['string', 't'],
     ['boolean', false],
   ];
-  types.forEach(([dataType, value]) => {
+  types.forEach(([dataType, dataValue]) => {
     test('Успех, на валидацию пришло валидное значение', () => {
       const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, dataType, []);
-      const result = sut.validate(value);
+      const result = sut.validate(dataValue);
       expect(result.isSuccess()).toBe(true);
     });
 
@@ -283,27 +281,6 @@ describe('Валидированное значение необязательн
       fieldName: [
         {
           text: 'Значение должно быть булевым',
-          hint: {},
-        },
-      ],
-    });
-  });
-
-  const sut = new DtoFieldValidator('email', false, { isArray: false }, 'dto', FieldValidatorPrivateFixtures.emailAttrsValidatorMap);
-  const nullValues = [undefined, null];
-  test('Провал, пришло undefined или null', () => {
-    nullValues.forEach((value) => {
-      const result = sut.validate(value);
-      expect(result.isSuccess()).toBe(true);
-    });
-  });
-  test('Провал, пришло пустая строка', () => {
-    const result = sut.validate('');
-    expect(result.isFailure()).toBe(true);
-    expect(result.value).toEqual({
-      ___whole_value_validation_error___: [
-        {
-          text: 'Значение должно быть объектом',
           hint: {},
         },
       ],
