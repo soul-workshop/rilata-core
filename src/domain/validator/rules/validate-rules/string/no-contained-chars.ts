@@ -12,7 +12,9 @@ export class NoContainedCharsValidationRule extends ValidationRule <'validate', 
   validate(value: string): ValidationRuleAnswer {
     // eslint-disable-next-line no-restricted-syntax
     for (const char of this.noChars) {
-      if (value.includes(char)) { return this.returnFail('SaveErrorAndRunNextRule'); }
+      if (value.includes(char)) {
+        return this.returnFail('SaveErrorAndRunNextRule', { noChars: this.noChars });
+      }
     } return this.returnSuccess('RunNextRule');
   }
 }

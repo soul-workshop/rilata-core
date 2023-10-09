@@ -44,7 +44,7 @@ describe('String must not be equal to value', () => {
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
-        hint: {},
+        hint: { noChars: '1234567890' },
         text: 'Строка не должна содержать символы {{noChars}}',
       },
     });
