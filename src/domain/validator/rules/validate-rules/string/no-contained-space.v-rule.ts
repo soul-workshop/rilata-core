@@ -1,13 +1,13 @@
 import { ValidationRuleAnswer } from '../../types';
-import { ValidationRule } from '../../validation-rule';
+import { RegexFormatValidationRule } from './regex.field-v-rule';
 
-export class NoContanedSpaseValidationRule extends ValidationRule <'validate', string> {
-  requirement = 'Не должно быть пробелов';
-
-  private spase = /\s+/g;
+export class NoContanedSpaсeValidationRule extends RegexFormatValidationRule {
+  constructor() {
+    super(/\s+/g, 'Не должно быть пробелов');
+  }
 
   validate(value: string): ValidationRuleAnswer {
-    return this.spase.test(value)
+    return this.regex.test(value)
       ? this.returnFail('SaveErrorAndRunNextRule')
       : this.returnSuccess('RunNextRule');
   }

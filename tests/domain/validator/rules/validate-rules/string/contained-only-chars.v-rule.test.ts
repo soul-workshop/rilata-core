@@ -3,8 +3,8 @@ import { ContainedOnlyCharsValidationRule } from '../../../../../../src/domain/v
 
 describe('String must be equal to value', () => {
   test('success, string equal value', () => {
-    const sut = new ContainedOnlyCharsValidationRule('123456789');
-    const result = sut.validate('123456789');
+    const sut = new ContainedOnlyCharsValidationRule('572741945712987');
+    const result = sut.validate('572741945712987');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
@@ -36,7 +36,7 @@ describe('String must be equal to value', () => {
 
   test('failure, string is not equal value', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
-    const result = sut.validate('bom mood');
+    const result = sut.validate('bod');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {

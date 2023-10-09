@@ -4,37 +4,37 @@ import { NoContainedCharsValidationRule } from '../../../../../../src/domain/val
 describe('String must not be equal to value', () => {
   test('success, the string does not contain illegal characters', () => {
     const sut = new NoContainedCharsValidationRule('5678');
-    const result = sut.validate('123490');
+    const result = sut.validate('12349042901');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
   });
 
   test('success, the string does not contain illegal characters', () => {
-    const sut = new NoContainedCharsValidationRule('@');
+    const sut = new NoContainedCharsValidationRule('#!&?');
     const result = sut.validate('petrop076gmail.com');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
   });
 
-  test('success, the string does not contain illegal characters', () => {
-    const sut = new NoContainedCharsValidationRule('1234567890');
-    const result = sut.validate('no one number');
-    expect(result).toEqual({
-      behaviour: 'RunNextRule',
-    });
-  });
-
   test('failure, string contains invalid characters', () => {
-    const sut = new NoContainedCharsValidationRule('@');
-    const result = sut.validate('petrop076@gmail.com');
+    const sut = new NoContainedCharsValidationRule('#!&?');
+    const result = sut.validate('petrop#!!076@gmail.com');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
-        hint: {},
-        text: 'Строка не должна содержать {{noChars}}',
+        hint: { noChars: '#!&?' },
+        text: 'Строка не должна содержать символы {{noChars}}',
       },
+    });
+  });
+
+  test('success, the string does not contain illegal characters', () => {
+    const sut = new NoContainedCharsValidationRule('1234567890');
+    const result = sut.validate('without any digit string');
+    expect(result).toEqual({
+      behaviour: 'RunNextRule',
     });
   });
 
@@ -45,7 +45,7 @@ describe('String must not be equal to value', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
-        text: 'Строка не должна содержать {{noChars}}',
+        text: 'Строка не должна содержать символы {{noChars}}',
       },
     });
   });

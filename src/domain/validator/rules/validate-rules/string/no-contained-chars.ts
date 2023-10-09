@@ -2,10 +2,11 @@ import { ValidationRuleAnswer } from '../../types';
 import { ValidationRule } from '../../validation-rule';
 
 export class NoContainedCharsValidationRule extends ValidationRule <'validate', string> {
-  requirement = 'Строка не должна содержать {{noChars}}';
+  requirement = 'Строка не должна содержать символы {{noChars}}';
 
-  constructor(private noChars: string) {
+  constructor(private noChars: string, requirement?: string) {
     super();
+    if (requirement) this.requirement = requirement;
   }
 
   validate(value: string): ValidationRuleAnswer {
