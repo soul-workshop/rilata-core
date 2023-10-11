@@ -13,8 +13,8 @@ import { CannotBeNullValidationRule } from '../../../../src/domain/validator/rul
 import { CanBeUndefinedValidationRule } from '../../../../src/domain/validator/rules/nullable-rules/can-be-only-undefined.n-rule';
 import { DTO } from '../../../../src/domain/dto';
 
-describe('litteral test array', () => {
-  describe('isRequired_tests', () => {
+describe('тесты литерального валидатора принимающего массив данных', () => {
+  describe('Валидированное значение обязательно', () => {
     test(' успех, пришло валидное значение', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
@@ -52,15 +52,19 @@ describe('litteral test array', () => {
     test(' провал, пришло не массив', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
-      const res = sut.validate(1);
+      const res = sut.validate(['admin ']);
       expect(res.isFailure()).toBe(true);
       expect(res.value).toEqual({
-        roles: [
-          {
-            text: 'Значение должно быть массивом данных',
-            hint: {},
-          },
-        ],
+        roles: {
+          0: [
+            {
+              text: 'Значение должно быть одним из значений списка',
+              hint: {
+                choices: ['admin', 'staffManager', 'officeChieff', 'saleManager'],
+              },
+            },
+          ],
+        },
       });
     });
 
@@ -69,25 +73,7 @@ describe('litteral test array', () => {
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin', 'officeChieff ']);
       expect(res.isFailure()).toBe(true);
-      expect(res.value).toEqual({
-        roles: {
-          1: {
-            roles: [
-              {
-                hint: {
-                  choices: [
-                    'admin',
-                    'staffManager',
-                    'officeChieff',
-                    'saleManager',
-                  ],
-                },
-                text: 'Значение должно быть одним из значений списка',
-              },
-            ],
-          },
-        },
-      });
+      expect(res.value).toEqual(undefined);
     });
 
     test('провал, несоотвествие типа одного из элементов', () => {
@@ -100,8 +86,8 @@ describe('litteral test array', () => {
           1: {
             roles: [
               {
-                hint: {},
                 text: 'Значение должно быть строковым значением',
+                hint: {},
               },
             ],
           },
@@ -109,8 +95,8 @@ describe('litteral test array', () => {
       });
     });
 
-    describe('array_configure tests', () => {
-      describe('mustBeFilled', () => {
+    describe('конфигурация литерального валидатора принимающего массив данных', () => {
+      describe('массив должен быть заполнен', () => {
         test('успех, пришло заполненный массив', () => {
           const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, mustBeFilled: true }, 'string', [new StringChoiceValidationRule(roles)]);
@@ -150,7 +136,7 @@ describe('litteral test array', () => {
         });
       });
 
-      describe('maxElementsCount', () => {
+      describe('максимальное количество элементов массива', () => {
         test(' успех, пришел пустой массив', () => {
           const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, maxElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
@@ -209,7 +195,7 @@ describe('litteral test array', () => {
         });
       });
 
-      describe('minElementsCount', () => {
+      describe('минимальное количество элементов массива', () => {
         test(' успех, количество элементов больше минимального', () => {
           const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, minElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
@@ -279,7 +265,7 @@ describe('litteral test array', () => {
       });
     });
 
-    describe('validate value is requied but not null', () => {
+    describe('массив должен быть обязательным, разрешено для null', () => {
       class Cannotbe extends LiteralFieldValidator<'roles', true, true, string> {
         protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()];
@@ -287,7 +273,6 @@ describe('litteral test array', () => {
       }
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new Cannotbe('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
-
       test('успех, пришло валидное значение', () => {
         const res = sut.validate(['admin']);
         expect(res.isSuccess()).toBe(true);
@@ -315,7 +300,7 @@ describe('litteral test array', () => {
     });
   });
 
-  describe('isNotRequired_tests', () => {
+  describe('Валидированное значение не обязательно', () => {
     test('успех, пришло валидное значение', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
@@ -357,26 +342,24 @@ describe('litteral test array', () => {
       expect(res.isFailure()).toBe(true);
       expect(res.value).toEqual({
         roles: {
-          1: {
-            roles: [
-              {
-                hint: {
-                  choices: [
-                    'admin',
-                    'staffManager',
-                    'officeChieff',
-                    'saleManager',
-                  ],
-                },
-                text: 'Значение должно быть одним из значений списка',
+          1: [
+            {
+              hint: {
+                choices: [
+                  'admin',
+                  'staffManager',
+                  'officeChieff',
+                  'saleManager',
+                ],
               },
-            ],
-          },
+              text: 'Значение должно быть одним из значений списка',
+            },
+          ],
         },
       });
     });
 
-    describe('validate value is requied but not null', () => {
+    describe('массив должен быть обязательным, кроме undefined', () => {
       class Cannotbe extends LiteralFieldValidator<'roles', false, true, string> {
         protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeNullValidationRule(), new CanBeUndefinedValidationRule()];
@@ -413,8 +396,8 @@ describe('litteral test array', () => {
   });
 });
 
-describe('dto_tests', () => {
-  describe('isRequired_tests', () => {
+describe('тесты объектного валидатора, принимающего массив данных', () => {
+  describe('Валидированное значение обязательно', () => {
     const sut = new DtoFieldValidator('phones', true, { isArray: true }, 'dto', FieldValidatorFixtures.phoneAttrsValidatorMap);
 
     test('успех, пришло валидное значение', () => {
