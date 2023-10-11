@@ -4,7 +4,7 @@ import { OnlyLitinicOrCyrillicCharsValidationRule } from '../../../../../../src/
 describe('The string must contain only Cyrillic and Latin alphabet', () => {
   const sut = new OnlyLitinicOrCyrillicCharsValidationRule();
   test('success, there are no prohibited languages in the string', () => {
-    const result = sut.validate('Латиница');
+    const result = sut.validate('Latinic');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
@@ -20,7 +20,11 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
   test('success, numbers allowed', () => {
     const result = sut.validate('1234567890');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: {},
+        text: 'В строке может быть только латиница и кирилица',
+      },
     });
   });
 

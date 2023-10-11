@@ -18,6 +18,14 @@ describe('String must not be equal to value', () => {
     });
   });
 
+  test('success, the string does not contain illegal characters', () => {
+    const sut = new NoContainedCharsValidationRule('1234567890');
+    const result = sut.validate('without any digit string');
+    expect(result).toEqual({
+      behaviour: 'RunNextRule',
+    });
+  });
+
   test('failure, string contains invalid characters', () => {
     const sut = new NoContainedCharsValidationRule('#!&?');
     const result = sut.validate('petrop#!!076@gmail.com');
@@ -27,14 +35,6 @@ describe('String must not be equal to value', () => {
         hint: { noChars: '#!&?' },
         text: 'Строка не должна содержать символы {{noChars}}',
       },
-    });
-  });
-
-  test('success, the string does not contain illegal characters', () => {
-    const sut = new NoContainedCharsValidationRule('1234567890');
-    const result = sut.validate('without any digit string');
-    expect(result).toEqual({
-      behaviour: 'RunNextRule',
     });
   });
 

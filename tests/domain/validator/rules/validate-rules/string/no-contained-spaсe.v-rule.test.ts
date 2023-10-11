@@ -10,6 +10,13 @@ describe('There should be no spaces in the string', () => {
     });
   });
 
+  test('success, new line is valid', () => {
+    const result = sut.validate('string\nWithTab');
+    expect(result).toEqual({
+      behaviour: 'RunNextRule',
+    });
+  });
+
   test('failed, string contains spaces', () => {
     const result = sut.validate('String have spaces');
     expect(result).toEqual({
@@ -18,13 +25,6 @@ describe('There should be no spaces in the string', () => {
         hint: {},
         text: 'Не должно быть пробелов',
       },
-    });
-  });
-
-  test('success, new line is valid', () => {
-    const result = sut.validate('string\nWithTab');
-    expect(result).toEqual({
-      behaviour: 'RunNextRule',
     });
   });
 
