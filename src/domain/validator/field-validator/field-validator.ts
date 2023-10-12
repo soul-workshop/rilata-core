@@ -14,6 +14,8 @@ import { IsNumberTypeRule } from '../../validator/rules/type-rules/is-number-typ
 import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-type.t-rule';
 import { GeneralValidationRule, LiteralDataType, RuleError } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
+import { CannotBeInfinityRule } from '../rules/assert-rules/cannot-be-infinity.a-rule';
+import { CannotBeNanRule } from '../rules/assert-rules/cannot-be-nan.a-rule';
 import {
   GetArrayConfig, GetFieldValidatorDataType,
   RulesValidatedAnswer, RuleErrors, FieldResult, FullFieldResult,
@@ -102,7 +104,7 @@ export abstract class FieldValidator<
 
   protected getTypeCheckRules(): ValidationRule<'type', unknown>[] {
     if (this.dataType === 'dto') return [new IsDTOTypeRule()];
-    if (this.dataType === 'number') return [new IsNumberTypeRule()];
+    if (this.dataType === 'number') return [new IsNumberTypeRule(), new CannotBeInfinityRule(), new CannotBeNanRule()];
     if (this.dataType === 'boolean') return [new IsBooleanTypeRule()];
     return [new IsStringTypeRule()];
   }
