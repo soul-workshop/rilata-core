@@ -1,9 +1,9 @@
 import { ErrorDod } from '../../domain/domain-object-data/common-types';
 import { Locale } from '../../domain/locale';
-import { DtoFieldErrors } from '../../domain/validator/field-validator/types';
+import { DtoFieldValidatorErrors } from '../../domain/validator/field-validator/types';
 
 export type ValidationError = {
-  errors: DtoFieldErrors,
+  errors: DtoFieldValidatorErrors,
   name: 'validation-error',
   domainType: 'error',
   errorType: 'app-error',
