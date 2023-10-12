@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { TextStrictEqualValidationRule } from '../../../../../../src/domain/validator/rules/validate-rules/string/text-strict-equal.v-rule';
 
-describe('String must not be equal to value {{strictString}}', () => {
+describe('String Equality Checks', () => {
   test('success, value is {{strictString}}', () => {
     const sut = new TextStrictEqualValidationRule('aaabbb');
     const result = sut.validate('aaabbb');
