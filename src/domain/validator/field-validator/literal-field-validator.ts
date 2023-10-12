@@ -1,13 +1,13 @@
 import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { LeadRule } from '../../validator/rules/lead-rule';
-import { LiteralDataType, RuleError } from '../../validator/rules/types';
+import { LiteralDataType } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import { CannotBeNullableAssertionRule } from '../rules/assert-rules/cannot-be-nullable.a-rule';
 import { FieldValidator } from './field-validator';
 import {
-  GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult, ArrayFieldErrors,
+  GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult, RuleErrors,
 } from './types';
 
 export class LiteralFieldValidator<
@@ -41,7 +41,7 @@ export class LiteralFieldValidator<
       : this.getFailResult(validateAnswer.errors);
   }
 
-  protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
+  protected getFailResult(errors: RuleErrors): FieldValidatorResult {
     return failure({ [this.attrName]: errors });
   }
 

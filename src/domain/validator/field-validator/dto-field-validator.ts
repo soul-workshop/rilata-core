@@ -1,11 +1,10 @@
 import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { DTO } from '../../dto';
-import { RuleError } from '../rules/types';
 import { FieldValidator } from './field-validator';
 import {
-  ArrayFieldErrors, DtoFieldErrors, FieldValidatorResult, GetArrayConfig,
-  GetFieldValidatorDataType, ValidatorMap,
+  FieldValidatorErrors, FieldValidatorResult, GetArrayConfig,
+  GetFieldValidatorDataType, RuleErrors, ValidatorMap,
 } from './types';
 
 export class DtoFieldValidator<
@@ -30,12 +29,14 @@ export class DtoFieldValidator<
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
     if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
-    let errors: DtoFieldErrors = {};
+    let errors = {};
     Object.entries(this.dtoMap).forEach(([dtoAttrName, validator]) => {
       if (validator instanceof FieldValidator) {
         const result = validator.validate((value as DTO_TYPE)[dtoAttrName]);
         if (result.isFailure()) {
-          errors = { ...errors, ...result.value };
+          errors = (
+            { ...errors, ...result.value }
+          );
         }
       }
     });
@@ -45,7 +46,7 @@ export class DtoFieldValidator<
       : success(undefined);
   }
 
-  protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
+  protected getFailResult(errors: FieldValidatorErrors | RuleErrors): FieldValidatorResult {
     return failure({ [DtoFieldValidator.WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
   }
 }

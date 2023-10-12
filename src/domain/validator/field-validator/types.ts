@@ -19,18 +19,43 @@ export type GetArrayConfig<B extends boolean> = B extends false
 
 type AttrName = string;
 
-export type DtoFieldErrors = { [s: AttrName]: DtoFieldErrors | ArrayFieldErrors | RuleError[]};
-
 type ArrayItemIndex = number;
 
-export type ArrayFieldErrors = Record<ArrayItemIndex, DtoFieldErrors>;
+export type RuleErrors = RuleError[];
 
-export type FieldValidatorResult = Result<DtoFieldErrors, undefined>;
+export type LiteralFieldValidatorErrors = { [s: AttrName]: RuleErrors };
 
-export type RulesValidatedAnswer<ARR extends boolean = false> = {
+export type ArrayLiteralFieldValidatorErrors = {
+  [i: ArrayItemIndex]: LiteralFieldValidatorErrors | RuleErrors;
+};
+
+export type DtoFieldValidatorErrors = {
+ [s: AttrName]: DtoFieldValidatorErrors | LiteralFieldValidatorErrors;
+};
+
+export type ArrayDtoFieldValidatorErrors = {
+ [s: ArrayItemIndex]: DtoFieldValidatorErrors | RuleErrors;
+};
+
+export type FieldValidatorErrors =
+  LiteralFieldValidatorErrors
+  | DtoFieldValidatorErrors
+
+export type FieldValidatorResult = Result<FieldValidatorErrors, undefined>;
+
+export type ArrayFieldValidatorErrors =
+  ArrayLiteralFieldValidatorErrors
+  | ArrayDtoFieldValidatorErrors;
+
+export type ArrayFieldValidatorResult = Result<ArrayFieldValidatorErrors, undefined>;
+
+export type FullFieldValidatorResult =
+  Result<FieldValidatorErrors | ArrayFieldValidatorErrors, undefined>;
+
+export type RulesValidatedAnswer = {
     isValidValue: false,
     break: boolean,
-    errors: ARR extends true ? ArrayFieldErrors : RuleError[],
+    errors: RuleErrors,
   } | {
     isValidValue: true,
     break: boolean,
