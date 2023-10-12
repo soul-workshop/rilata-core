@@ -26,23 +26,6 @@ export class DtoFieldValidator<
     super(attrName, required, arrayConfig, dataType);
   }
 
-  validate(value: unknown): FullFieldResult {
-    const result = super.validate(value);
-    const dtoWholeKey = DtoFieldValidator.DTO_WHOLE_VALUE_VALIDATION_ERROR_KEY;
-    const arrayWholeKey = FieldValidator.ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY;
-    if (
-      this.arrayConfig.isArray
-      && result.isFailure()
-      && (result.value as FieldErrors)[dtoWholeKey]
-    ) {
-      const { ___dto_whole_value_validation_error___, ...others } = (result.value as FieldErrors);
-      return failure(
-        { ...others, [arrayWholeKey]: ___dto_whole_value_validation_error___ },
-      );
-    }
-    return result;
-  }
-
   protected validateValue(value: unknown): FullFieldResult {
     if (this.arrayConfig.isArray === false) {
       const nullableAnswer = this.validateNullableValue(value);
