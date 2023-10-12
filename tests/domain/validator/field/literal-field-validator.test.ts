@@ -123,7 +123,7 @@ describe('Валидированное значение обязательно',
     });
   });
 
-  test('Провал, пришло не валидное значение для нескольких правил', () => {
+  test('Провал, пришло не валидное значение', () => {
     const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new MinCharsCountValidationRule(3)]);
     const result = sut.validate('AG');
     expect(result.isFailure()).toBe(true);
@@ -139,8 +139,8 @@ describe('Валидированное значение обязательно',
     });
   });
 
-  test('Провал, пришло не валидное значение', () => {
-    const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new UUIDFormatValidationRule()]);
+  test('Провал, пришло не валидное значение для нескольких правил', () => {
+    const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new MinCharsCountValidationRule(8), new UUIDFormatValidationRule()]);
     const result = sut.validate('550e8400-e29b-41d4-a716-44665544000');
     expect(result.isFailure()).toBe(true);
     expect(result.value).toEqual({
@@ -153,14 +153,14 @@ describe('Валидированное значение обязательно',
     });
   });
 
-  describe('Получаем undefined или null', () => {
-    class Cannotbe extends LiteralFieldValidator<'fieldName', true, false, string> {
+  describe('Получаемое значение может быть null но не может быть undefined', () => {
+    class CannotbeUndefinedCanbeNull extends LiteralFieldValidator<'fieldName', true, false, string> {
       protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
         return [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()];
       }
     }
 
-    const sut = new Cannotbe(
+    const sut = new CannotbeUndefinedCanbeNull(
       'fieldName',
       true,
       { isArray: false },
@@ -178,13 +178,13 @@ describe('Валидированное значение обязательно',
       expect(result.isSuccess()).toBe(true);
     });
     test('Провал, пришло не валидное значение', () => {
-      const result = sut.validate(true);
+      const result = sut.validate('Absolute??');
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
         fieldName: [
           {
-            text: 'Значение должно быть строковым значением',
-            hint: {},
+            text: 'Длина строки должна быть не больше {{maxCount}}',
+            hint: { maxCount: 8 },
           },
         ],
       });
@@ -204,10 +204,10 @@ describe('Валидированное значение обязательно',
   });
 
   describe('Получаем Infinity и NaN', () => {
+    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'number', []);
     const infinityValues = [-Infinity, Infinity];
     infinityValues.forEach((value) => {
       test('Провал, пришло Infinity', () => {
-        const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'number', []);
         const result = sut.validate(value);
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
@@ -305,69 +305,65 @@ describe('Валидированное значение необязательн
   });
   test('Провал, пришло не валидное значение', () => {
     const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)]);
-    const values = ['Absolute ', 'Absolute  '];
-    values.forEach((value) => {
-      const result = sut.validate(value);
-      expect(result.isFailure()).toBe(true);
-      expect(result.value).toEqual({
-        fieldName: [
-          {
-            text: 'Длина строки должна быть не больше {{maxCount}}',
-            hint: {
-              maxCount: 8,
-            },
-          },
-        ],
-      });
-    });
-  });
-  test('Провал, пришло не валидное значение для нескольких правил', () => {
-    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'string', [new MaxCharsCountValidationRule(1), new MinCharsCountValidationRule(3)]);
-    const result = sut.validate('AG');
+    const value = 'Absolute?';
+    const result = sut.validate(value);
     expect(result.isFailure()).toBe(true);
     expect(result.value).toEqual({
       fieldName: [
         {
           text: 'Длина строки должна быть не больше {{maxCount}}',
           hint: {
-            maxCount: 1,
-          },
-        }, {
-          text: 'Строка должна быть не меньше {{minCount}}',
-          hint: {
-            minCount: 3,
+            maxCount: 8,
           },
         },
       ],
     });
   });
-  test('Провал, пришло не валидное значение для нескольких правил T', () => {
-    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'string', [new MinCharsCountValidationRule(3), new CannotBeEmptyStringValidationRule()]);
-    const result = sut.validate('');
+  test('Провал, пришло не валидное значение для нескольких правил', () => {
+    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8), new UUIDFormatValidationRule()]);
+    const result = sut.validate('Absolute??');
+    expect(result.isFailure()).toBe(true);
+    expect(result.value).toEqual({
+      fieldName: [
+        {
+          text: 'Длина строки должна быть не больше {{maxCount}}',
+          hint: {
+            maxCount: 8,
+          },
+        }, {
+          text: 'Значение должно соответствовать формату UUID',
+          hint: {},
+        },
+      ],
+    });
+  });
+  test('Провал, пришло не валидное значение для нескольких правил', () => {
+    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'string', [new MinCharsCountValidationRule(9), new UUIDFormatValidationRule()]);
+    const result = sut.validate('Absolute');
     expect(result.isFailure()).toBe(true);
     expect(result.value).toEqual({
       fieldName: [
         {
           text: 'Строка должна быть не меньше {{minCount}}',
           hint: {
-            minCount: 3,
+            minCount: 9,
           },
         }, {
-          text: 'Значение должно быть не пустой строкой',
+          text: 'Значение должно соответствовать формату UUID',
           hint: {},
         },
       ],
     });
   });
 
-  describe('Значение не обязательно, null невалидное значение', () => {
-    class Cannotbe extends LiteralFieldValidator<'fieldName', false, false, string> {
+  describe('Значение не может быть undefined', () => {
+    class CannotbeUndefinedCanbeNull extends LiteralFieldValidator<'fieldName', false, false, string> {
       protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
         return [new CanBeUndefinedValidationRule(), new CannotBeNullValidationRule()];
       }
     }
 
-    const sut = new Cannotbe(
+    const sut = new CannotbeUndefinedCanbeNull(
       'fieldName',
       false,
       { isArray: false },
