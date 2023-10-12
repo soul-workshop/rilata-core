@@ -22,11 +22,15 @@ describe('String must not be equal to value {{strictString}}', () => {
     });
   });
 
-  test('success, value is {{strictString}}', () => {
+  test('failure, value not equal to {{strictString}}', () => {
     const sut = new TextStrictEqualValidationRule('aaabbb');
     const result = sut.validate('aaa-bbb');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: {},
+        text: 'Значение должно быть {{strictString}}',
+      },
     });
   });
 });
