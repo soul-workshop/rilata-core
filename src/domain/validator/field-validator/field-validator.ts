@@ -49,13 +49,6 @@ export abstract class FieldValidator<
   }
 
   validate(value: unknown): FullFieldResult {
-    const nullableAnswer = this.validateNullableValue(value);
-    if (nullableAnswer.break) {
-      return nullableAnswer.isValidValue
-        ? success(undefined)
-        : this.getFailResult(nullableAnswer.errors);
-    }
-
     return this.arrayConfig.isArray
       ? this.validateArray(value)
       : this.validateValue(value);
@@ -66,6 +59,13 @@ export abstract class FieldValidator<
     function unknownValueToArray(): unknown[] {
       if (Array.isArray(unknownValue)) return unknownValue;
       throw new AssertionException('array assertion rules not missed a mistake');
+    }
+
+    const nullableAnswer = this.validateNullableValue(unknownValue);
+    if (nullableAnswer.break) {
+      return nullableAnswer.isValidValue
+        ? success(undefined)
+        : this.getArrayFailResult(nullableAnswer.errors);
     }
 
     const arrayAssertAnswer = this.validateByRules(unknownValue, this.getArrayAssertionRules());
@@ -156,5 +156,9 @@ export abstract class FieldValidator<
 
   protected getFailResult(errors: RuleErrors | FieldErrors): FieldResult {
     return failure({ [this.attrName]: errors });
+  }
+
+  protected getArrayFailResult(errors: RuleErrors | FieldErrors): FieldResult {
+    return failure({ [FieldValidator.ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
   }
 }

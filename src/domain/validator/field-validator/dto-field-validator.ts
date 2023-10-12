@@ -44,6 +44,15 @@ export class DtoFieldValidator<
   }
 
   protected validateValue(value: unknown): FullFieldResult {
+    if (this.arrayConfig.isArray === false) {
+      const nullableAnswer = this.validateNullableValue(value);
+      if (nullableAnswer.break) {
+        return nullableAnswer.isValidValue
+          ? success(undefined)
+          : this.getFailResult(nullableAnswer.errors);
+      }
+    }
+
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
     if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
