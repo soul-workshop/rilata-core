@@ -1,6 +1,4 @@
 import { describe, expect, test } from 'bun:test';
-import { DtoFieldErrors } from '../../../../src/domain/validator/field-validator/types';
-import { RuleError } from '../../../../src/domain/validator/rules/types';
 import { ValidationRule } from '../../../../src/domain/validator/rules/validation-rule';
 import { FieldValidatorPrivateFixtures as FieldValidatorFixtures } from './test-fixtures';
 import { DtoFieldValidator } from '../../../../src/domain/validator/field-validator/dto-field-validator';
@@ -23,12 +21,28 @@ describe('тесты литерального валидатора приним�
       expect(res.value).toBe(undefined);
     });
 
+    test(' успех, пришло валидное значение', () => {
+      const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
+      const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
+      const res = sut.validate(['admin', 'staffManager']);
+      expect(res.isSuccess()).toBe(true);
+      expect(res.value).toBe(undefined);
+    });
+
     test('успех, приведение значений работает для элементов массива', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)], [new TrimEndStringLeadRule()]);
       const res = sut.validate(['admin  ']);
       expect(res.isSuccess()).toBe(true);
       expect(res.value).toBe(undefined);
+    });
+
+    test(' успех, пришло пустой массив', () => {
+      const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
+      const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
+      const res = sut.validate([]);
+      expect(res.isSuccess()).toBe(true);
+      expect(res.value).toEqual(undefined);
     });
 
     test(' провал, пришло undefined, null', () => {
@@ -39,7 +53,7 @@ describe('тесты литерального валидатора приним�
         const res = sut.validate(value);
         expect(res.isFailure()).toBe(true);
         expect(res.value).toEqual({
-          roles: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined или null',
               hint: {},
@@ -52,11 +66,26 @@ describe('тесты литерального валидатора приним�
     test(' провал, пришло не массив', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
-      const res = sut.validate(['admin ']);
+      const res = sut.validate('admin');
       expect(res.isFailure()).toBe(true);
       expect(res.value).toEqual({
-        roles: {
-          0: [
+        ___array_whole_value_validation_error___: [
+          {
+            text: 'Значение должно быть массивом данных',
+            hint: {},
+          },
+        ],
+      });
+    });
+
+    test(' провал, один из элементов в массиве не валидно', () => {
+      const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
+      const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
+      const res = sut.validate(['admin', 'officeChieff ']);
+      expect(res.isFailure()).toBe(true);
+      expect(res.value).toEqual({
+        1: {
+          roles: [
             {
               text: 'Значение должно быть одним из значений списка',
               hint: {
@@ -68,29 +97,19 @@ describe('тесты литерального валидатора приним�
       });
     });
 
-    test(' провал, один из элементов в массиве не валидно', () => {
-      const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
-      const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
-      const res = sut.validate(['admin', 'officeChieff ']);
-      expect(res.isFailure()).toBe(true);
-      expect(res.value).toEqual(undefined);
-    });
-
     test('провал, несоотвествие типа одного из элементов', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin', 1]);
       expect(res.isFailure()).toBe(true);
       expect(res.value).toEqual({
-        roles: {
-          1: {
-            roles: [
-              {
-                text: 'Значение должно быть строковым значением',
-                hint: {},
-              },
-            ],
-          },
+        1: {
+          roles: [
+            {
+              text: 'Значение должно быть строковым значением',
+              hint: {},
+            },
+          ],
         },
       });
     });
@@ -111,7 +130,7 @@ describe('тесты литерального валидатора приним�
           const res = sut.validate([]);
           expect(res.isFailure()).toBe(true);
           expect(res.value).toEqual({
-            roles: [
+            ___array_whole_value_validation_error___: [
               {
                 text: 'Значение должно быть не пустым массивом данных',
                 hint: {},
@@ -126,7 +145,7 @@ describe('тесты литерального валидатора приним�
           const res = sut.validate(undefined);
           expect(res.isFailure()).toBe(true);
           expect(res.value).toEqual({
-            roles: [
+            ___array_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined или null',
                 hint: {},
@@ -167,7 +186,7 @@ describe('тесты литерального валидатора приним�
           const res = sut.validate(['admin', 'staffManager', 'officeChieff']);
           expect(res.isFailure()).toBe(true);
           expect(res.value).toEqual({
-            roles: [
+            ___array_whole_value_validation_error___: [
               {
                 text: 'Максимальное количество элементов может быть {{max}}, сейчас {{currentCount}}',
                 hint: {
@@ -185,7 +204,7 @@ describe('тесты литерального валидатора приним�
           const res = sut.validate(undefined);
           expect(res.isFailure()).toBe(true);
           expect(res.value).toEqual({
-            roles: [
+            ___array_whole_value_validation_error___: [
               {
                 hint: {},
                 text: 'Значение не должно быть undefined или null',
@@ -218,7 +237,7 @@ describe('тесты литерального валидатора приним�
           const res = sut.validate([]);
           expect(res.isFailure()).toBe(true);
           expect(res.value).toEqual({
-            roles: [
+            ___array_whole_value_validation_error___: [
               {
                 text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
                 hint: {
@@ -236,7 +255,7 @@ describe('тесты литерального валидатора приним�
           const res = sut.validate(['admin']);
           expect(res.isFailure()).toBe(true);
           expect(res.value).toEqual({
-            roles: [
+            ___array_whole_value_validation_error___: [
               {
                 text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
                 hint: {
@@ -254,7 +273,7 @@ describe('тесты литерального валидатора приним�
           const res = sut.validate(undefined);
           expect(res.isFailure()).toBe(true);
           expect(res.value).toEqual({
-            roles: [
+            ___array_whole_value_validation_error___: [
               {
                 hint: {},
                 text: 'Значение не должно быть undefined или null',
@@ -266,13 +285,13 @@ describe('тесты литерального валидатора приним�
     });
 
     describe('массив должен быть обязательным, разрешено для null', () => {
-      class Cannotbe extends LiteralFieldValidator<'roles', true, true, string> {
+      class CanNotBeUndefined extends LiteralFieldValidator<'roles', true, true, string> {
         protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()];
         }
       }
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
-      const sut = new Cannotbe('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
+      const sut = new CanNotBeUndefined('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       test('успех, пришло валидное значение', () => {
         const res = sut.validate(['admin']);
         expect(res.isSuccess()).toBe(true);
@@ -289,7 +308,7 @@ describe('тесты литерального валидатора приним�
         const res = sut.validate(undefined);
         expect(res.isFailure()).toBe(true);
         expect(res.value).toEqual({
-          roles: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined',
               hint: {},
@@ -309,7 +328,7 @@ describe('тесты литерального валидатора приним�
       expect(res.value).toBe(undefined);
     });
 
-    test('успех, пришло undefined, null', () => {
+    test('успех, пришло undefined, null1', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const valueTest = [null, undefined];
@@ -323,10 +342,10 @@ describe('тесты литерального валидатора приним�
     test(' провал, пришло не массив', () => {
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
-      const res = sut.validate(1);
+      const res = sut.validate('admin');
       expect(res.isFailure()).toBe(true);
       expect(res.value).toEqual({
-        roles: [
+        ___array_whole_value_validation_error___: [
           {
             text: 'Значение должно быть массивом данных',
             hint: {},
@@ -341,32 +360,27 @@ describe('тесты литерального валидатора приним�
       const res = sut.validate(['admin', 'invaildAdmin']);
       expect(res.isFailure()).toBe(true);
       expect(res.value).toEqual({
-        roles: {
-          1: [
+        1: {
+          roles: [
             {
-              hint: {
-                choices: [
-                  'admin',
-                  'staffManager',
-                  'officeChieff',
-                  'saleManager',
-                ],
-              },
               text: 'Значение должно быть одним из значений списка',
+              hint: {
+                choices: ['admin', 'staffManager', 'officeChieff', 'saleManager'],
+              },
             },
           ],
         },
       });
     });
 
-    describe('массив должен быть обязательным, кроме undefined', () => {
-      class Cannotbe extends LiteralFieldValidator<'roles', false, true, string> {
+    describe('массив может быть необязательным, но он не может быть null', () => {
+      class CanNotBeNull extends LiteralFieldValidator<'roles', false, true, string> {
         protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeNullValidationRule(), new CanBeUndefinedValidationRule()];
         }
       }
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
-      const sut = new Cannotbe('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
+      const sut = new CanNotBeNull('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
 
       test('успех, пришло валидное значение', () => {
         const res = sut.validate(['admin']);
@@ -384,7 +398,7 @@ describe('тесты литерального валидатора приним�
         const res = sut.validate(null);
         expect(res.isFailure()).toBe(true);
         expect(res.value).toEqual({
-          roles: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение не может быть равным null',
               hint: {},
@@ -415,7 +429,7 @@ describe('тесты объектного валидатора, принимаю
         const res = sut.validate(value);
         expect(res.isFailure()).toBe(true);
         expect(res.value).toEqual({
-          ___whole_value_validation_error___: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined или null',
               hint: {},
@@ -425,11 +439,11 @@ describe('тесты объектного валидатора, принимаю
       });
     });
 
-    test('провал, пришло не массив', () => {
-      const result = sut.validate(1);
+    test('провал, пришло не массив валидного объекта', () => {
+      const result = sut.validate({ number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' });
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: [
+        ___array_whole_value_validation_error___: [
           {
             text: 'Значение должно быть массивом данных',
             hint: {},
@@ -440,16 +454,18 @@ describe('тесты объектного валидатора, принимаю
 
     test('провал, один из элементов в массиве имеет неправильный атрибут', () => {
       const result = sut.validate([
-        { number: '+7-777-287-81-82', type: 1, noOutField: 'empty info' },
+        { number: '+7-777-287-81-82', type: 'job', noOutField: 'empty info' },
       ]);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: {
-          0: {
+        0: {
+          phones: {
             type: [
               {
-                hint: {},
-                text: 'Значение должно быть строковым значением',
+                text: 'Значение должно быть одним из значений списка',
+                hint: {
+                  choices: ['mobile', 'work'],
+                },
               },
             ],
           },
@@ -459,22 +475,37 @@ describe('тесты объектного валидатора, принимаю
 
     test(' провал, несколько элементов в массиве имеет один или несколько неправильных атрибутов', () => {
       const result = sut.validate([
-        { number: '85-777-287-81-82', type: 1, noOutField: 'empty info' },
+        { number: '85-777-287-81-82', type: 'job', noOutField: 'empty info' },
+        { number: '+7-777-287-81-82', type: 'home', noOutField: 'empty info' },
       ]);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: {
-          0: {
+        0: {
+          phones: {
             number: [
               {
-                hint: {},
                 text: 'Строка должна соответствовать формату: "+7-###-##-##"',
+                hint: {},
               },
             ],
             type: [
               {
-                hint: {},
-                text: 'Значение должно быть строковым значением',
+                text: 'Значение должно быть одним из значений списка',
+                hint: {
+                  choices: ['mobile', 'work'],
+                },
+              },
+            ],
+          },
+        },
+        1: {
+          phones: {
+            type: [
+              {
+                text: 'Значение должно быть одним из значений списка',
+                hint: {
+                  choices: ['mobile', 'work'],
+                },
               },
             ],
           },
@@ -489,26 +520,24 @@ describe('тесты объектного валидатора, принимаю
       ]);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: {
-          1: {
-            ___whole_value_validation_error___: [
-              {
-                text: 'Значение должно быть объектом',
-                hint: {},
-              },
-            ],
-          },
+        1: {
+          ___dto_whole_value_validation_error___: [
+            {
+              text: 'Значение должно быть объектом',
+              hint: {},
+            },
+          ],
         },
       });
     });
 
-    describe('cannot-be-undefined: ', () => {
-      class Cannotbe extends DtoFieldValidator< 'phones', true, true, DTO> {
+    describe('массив должен быть обязательным, разрешено для null', () => {
+      class CanNotBeUndefined extends DtoFieldValidator< 'phones', true, true, DTO> {
         protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeUndefinedValidationRule(), new CanBeNullValidationRule()];
         }
       }
-      const sutCanBe = new Cannotbe('phones', true, { isArray: true }, 'dto', FieldValidatorFixtures.phoneAttrsValidatorMap);
+      const sutCanBe = new CanNotBeUndefined('phones', true, { isArray: true }, 'dto', FieldValidatorFixtures.phoneAttrsValidatorMap);
 
       test('успех, пришло валидное значение', () => {
         const result = sutCanBe.validate([
@@ -529,7 +558,7 @@ describe('тесты объектного валидатора, принимаю
         const result = sutCanBe.validate(undefined);
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined',
               hint: {},
@@ -538,11 +567,11 @@ describe('тесты объектного валидатора, принимаю
         });
       });
 
-      test('провал, пришло не массив', () => {
-        const result = sutCanBe.validate(1);
+      test('провал, пришло не массив валидного объекта', () => {
+        const result = sutCanBe.validate({ number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' });
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение должно быть массивом данных',
               hint: {},
@@ -558,8 +587,8 @@ describe('тесты объектного валидатора, принимаю
         ]);
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: {
-            1: {
+          1: {
+            phones: {
               type: [
                 {
                   text: 'Значение должно быть одним из значений списка',
@@ -580,22 +609,20 @@ describe('тесты объектного валидатора, принимаю
         ]);
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: {
-            1: {
-              ___whole_value_validation_error___: [
-                {
-                  text: 'Значение должно быть объектом',
-                  hint: {},
-                },
-              ],
-            },
+          1: {
+            ___dto_whole_value_validation_error___: [
+              {
+                text: 'Значение должно быть объектом',
+                hint: {},
+              },
+            ],
           },
         });
       });
     });
   });
 
-  describe('isNotRequired_tests', () => {
+  describe('Валидированное значение не обязательно', () => {
     const sut = new DtoFieldValidator('phones', false, { isArray: true }, 'dto', FieldValidatorFixtures.phoneAttrsValidatorMap);
     test('успех, пришло валидное значение', () => {
       const result = sut.validate([
@@ -616,10 +643,10 @@ describe('тесты объектного валидатора, принимаю
     });
 
     test('провал, пришел не массив', () => {
-      const result = sut.validate(12);
+      const result = sut.validate({ number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' });
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: [
+        ___array_whole_value_validation_error___: [
           {
             text: 'Значение должно быть массивом данных',
             hint: {},
@@ -635,8 +662,8 @@ describe('тесты объектного валидатора, принимаю
       ]);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: {
-          0: {
+        0: {
+          phones: {
             type: [
               {
                 text: 'Значение должно быть одним из значений списка',
@@ -657,8 +684,8 @@ describe('тесты объектного валидатора, принимаю
       ]);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: {
-          0: {
+        0: {
+          phones: {
             number: [
               {
                 text: 'Строка должна соответствовать формату: "+7-###-##-##"',
@@ -692,8 +719,8 @@ describe('тесты объектного валидатора, принимаю
       ]);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        ___whole_value_validation_error___: {
-          0: {
+        0: {
+          phones: {
             number: [
               {
                 text: 'Строка должна соответствовать формату: "+7-###-##-##"',
@@ -707,7 +734,9 @@ describe('тесты объектного валидатора, принимаю
               },
             ],
           },
-          1: {
+        },
+        1: {
+          phones: {
             type: [
               {
                 text: 'Значение должно быть одним из значений списка',
@@ -717,7 +746,9 @@ describe('тесты объектного валидатора, принимаю
               },
             ],
           },
-          2: {
+        },
+        2: {
+          phones: {
             type: [
               {
                 text: 'Значение должно быть одним из значений списка',
@@ -737,13 +768,13 @@ describe('тесты объектного валидатора, принимаю
       });
     });
 
-    describe('can-be-undefined', () => {
-      class Cannotbe extends DtoFieldValidator< 'phones', false, true, DTO> {
+    describe('массив может быть необязательным, но он не может быть null', () => {
+      class CanNotBeNull extends DtoFieldValidator< 'phones', false, true, DTO> {
         protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
           return [new CannotBeNullValidationRule(), new CanBeUndefinedValidationRule()];
         }
       }
-      const sutCanBe = new Cannotbe('phones', false, { isArray: true }, 'dto', FieldValidatorFixtures.phoneAttrsValidatorMap);
+      const sutCanBe = new CanNotBeNull('phones', false, { isArray: true }, 'dto', FieldValidatorFixtures.phoneAttrsValidatorMap);
 
       test('успех, пришло валидное значение', () => {
         const result = sutCanBe.validate([
@@ -764,7 +795,7 @@ describe('тесты объектного валидатора, принимаю
         const result = sutCanBe.validate(null);
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение не может быть равным null',
               hint: {},
@@ -773,11 +804,11 @@ describe('тесты объектного валидатора, принимаю
         });
       });
 
-      test('провал, пришло не массив', () => {
-        const result = sutCanBe.validate(1);
+      test('провал, пришло не массив валидного объекта', () => {
+        const result = sutCanBe.validate({ number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' });
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: [
+          ___array_whole_value_validation_error___: [
             {
               text: 'Значение должно быть массивом данных',
               hint: {},
@@ -788,16 +819,19 @@ describe('тесты объектного валидатора, принимаю
 
       test('провал, один из элементов в массиве имеет неправильный атрибут', () => {
         const result = sut.validate([
-          { number: '+7-777-287-81-82', type: 1, noOutField: 'empty info' },
+          { number: '+7-777-287-81-82', type: 'home', noOutField: 'empty info' },
+          { number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' },
         ]);
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: {
-            0: {
+          0: {
+            phones: {
               type: [
                 {
-                  hint: {},
-                  text: 'Значение должно быть строковым значением',
+                  text: 'Значение должно быть одним из значений списка',
+                  hint: {
+                    choices: ['mobile', 'work'],
+                  },
                 },
               ],
             },
@@ -812,15 +846,13 @@ describe('тесты объектного валидатора, принимаю
         ]);
         expect(result.isFailure()).toBe(true);
         expect(result.value).toEqual({
-          ___whole_value_validation_error___: {
-            1: {
-              ___whole_value_validation_error___: [
-                {
-                  text: 'Значение должно быть объектом',
-                  hint: {},
-                },
-              ],
-            },
+          1: {
+            ___dto_whole_value_validation_error___: [
+              {
+                text: 'Значение должно быть объектом',
+                hint: {},
+              },
+            ],
           },
         });
       });
