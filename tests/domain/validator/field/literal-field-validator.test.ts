@@ -213,7 +213,7 @@ describe('Валидированное значение обязательно',
         expect(result.value).toEqual({
           fieldName: [
             {
-              text: 'Значение не должно быть Infinity или -Infinity',
+              text: 'Значение не может быть Infinity или -Infinity',
               hint: {},
             },
           ],
@@ -228,7 +228,7 @@ describe('Валидированное значение обязательно',
       expect(result.value).toEqual({
         fieldName: [
           {
-            text: 'Значение не должно быть NaN',
+            text: 'Значение не может быть NaN',
             hint: {},
           },
         ],
@@ -416,7 +416,7 @@ describe('Валидированное значение необязательн
         expect(result.value).toEqual({
           fieldName: [
             {
-              text: 'Значение не должно быть Infinity или -Infinity',
+              text: 'Значение не может быть Infinity или -Infinity',
               hint: {},
             },
           ],
@@ -430,7 +430,7 @@ describe('Валидированное значение необязательн
       expect(result.value).toEqual({
         fieldName: [
           {
-            text: 'Значение не должно быть NaN',
+            text: 'Значение не может быть NaN',
             hint: {},
           },
         ],

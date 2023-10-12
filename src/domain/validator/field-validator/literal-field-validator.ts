@@ -5,6 +5,7 @@ import { LiteralDataType } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import { CannotBeNullableAssertionRule } from '../rules/assert-rules/cannot-be-nullable.a-rule';
+import { CanBeNullableRule } from '../rules/nullable-rules/can-be-nullable.n-rule';
 import { FieldValidator } from './field-validator';
 import {
   FieldResult, GetArrayConfig, GetFieldValidatorDataType, RuleErrors,
@@ -52,6 +53,8 @@ export class LiteralFieldValidator<
 
   protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
     if (this.dataType !== 'string') return super.getRequiredOrNullableRules();
-    return [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()];
+    return this.isRequired
+      ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]
+      : [new CanBeNullableRule()];
   }
 }
