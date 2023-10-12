@@ -23,34 +23,15 @@ type ArrayItemIndex = number;
 
 export type RuleErrors = RuleError[];
 
-export type LiteralFieldValidatorErrors = { [s: AttrName]: RuleErrors };
+export type FieldErrors = { [s: AttrName]: RuleErrors | FieldErrors};
 
-export type ArrayLiteralFieldValidatorErrors = {
-  [i: ArrayItemIndex]: LiteralFieldValidatorErrors | RuleErrors;
-};
+export type ArrayFieldErrors = { [i: ArrayItemIndex]: RuleErrors | FieldErrors }
 
-export type DtoFieldValidatorErrors = {
- [s: AttrName]: DtoFieldValidatorErrors | LiteralFieldValidatorErrors;
-};
+export type FieldResult = Result<FieldErrors, undefined>;
 
-export type ArrayDtoFieldValidatorErrors = {
- [s: ArrayItemIndex]: DtoFieldValidatorErrors | RuleErrors;
-};
+export type ArrayFieldResult = Result<ArrayFieldErrors, undefined>;
 
-export type FieldValidatorErrors =
-  LiteralFieldValidatorErrors
-  | DtoFieldValidatorErrors
-
-export type FieldValidatorResult = Result<FieldValidatorErrors, undefined>;
-
-export type ArrayFieldValidatorErrors =
-  ArrayLiteralFieldValidatorErrors
-  | ArrayDtoFieldValidatorErrors;
-
-export type ArrayFieldValidatorResult = Result<ArrayFieldValidatorErrors, undefined>;
-
-export type FullFieldValidatorResult =
-  Result<FieldValidatorErrors | ArrayFieldValidatorErrors, undefined>;
+export type FullFieldResult = Result<FieldErrors | ArrayFieldErrors, undefined>;
 
 export type RulesValidatedAnswer = {
     isValidValue: false,

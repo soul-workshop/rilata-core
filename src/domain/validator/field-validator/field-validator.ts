@@ -15,9 +15,9 @@ import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-typ
 import { GeneralValidationRule, LiteralDataType, RuleError } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import {
-  FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType,
-  ArrayFieldValidatorErrors, RulesValidatedAnswer, FieldValidatorErrors,
-  RuleErrors, ArrayFieldValidatorResult, FullFieldValidatorResult,
+  GetArrayConfig, GetFieldValidatorDataType,
+  RulesValidatedAnswer, RuleErrors, FieldResult, FullFieldResult,
+  ArrayFieldResult, ArrayFieldErrors, FieldErrors,
 } from './types';
 
 export abstract class FieldValidator<
@@ -26,11 +26,9 @@ export abstract class FieldValidator<
   IS_ARR extends boolean,
   DATA_TYPE extends LiteralDataType | DTO
 > {
-  static ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY = -1;
+  static ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY = '___array_whole_value_validation_error___';
 
-  protected abstract validateValue(value: unknown): FieldValidatorResult
-
-  protected abstract getFailResult(errors: FieldValidatorErrors | RuleErrors): FieldValidatorResult
+  protected abstract validateValue(value: unknown): FieldResult
 
   constructor(
     protected attrName: NAME,
@@ -50,7 +48,7 @@ export abstract class FieldValidator<
     }
   }
 
-  validate(value: unknown): FullFieldValidatorResult {
+  validate(value: unknown): FullFieldResult {
     const nullableAnswer = this.validateNullableValue(value);
     if (nullableAnswer.break) {
       return nullableAnswer.isValidValue
@@ -64,7 +62,7 @@ export abstract class FieldValidator<
   }
 
   /** проверка массива данных */
-  protected validateArray(unknownValue: unknown): ArrayFieldValidatorResult {
+  protected validateArray(unknownValue: unknown): ArrayFieldResult {
     function unknownValueToArray(): unknown[] {
       if (Array.isArray(unknownValue)) return unknownValue;
       throw new AssertionException('array assertion rules not missed a mistake');
@@ -78,7 +76,7 @@ export abstract class FieldValidator<
     }
 
     const values = unknownValueToArray();
-    const arrErrors: ArrayFieldValidatorErrors = {};
+    const arrErrors: ArrayFieldErrors = {};
     for (let i = 0; i < values.length; i += 1) {
       const itemResult = this.validateValue(values[i]);
       if (itemResult.isFailure()) {
@@ -154,5 +152,9 @@ export abstract class FieldValidator<
     return errors.length > 0
       ? { isValidValue: false, errors, break: shouldBreak }
       : { isValidValue: true, break: shouldBreak };
+  }
+
+  protected getFailResult(errors: RuleErrors | FieldErrors): FieldResult {
+    return failure({ [this.attrName]: errors });
   }
 }

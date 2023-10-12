@@ -7,7 +7,7 @@ import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-b
 import { CannotBeNullableAssertionRule } from '../rules/assert-rules/cannot-be-nullable.a-rule';
 import { FieldValidator } from './field-validator';
 import {
-  GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult, RuleErrors,
+  FieldResult, GetArrayConfig, GetFieldValidatorDataType, RuleErrors,
 } from './types';
 
 export class LiteralFieldValidator<
@@ -27,7 +27,7 @@ export class LiteralFieldValidator<
     super(attrName, isRequired, arrayConfig, dataType);
   }
 
-  protected validateValue(value: unknown): FieldValidatorResult {
+  protected validateValue(value: unknown): FieldResult {
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
     if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
@@ -39,10 +39,6 @@ export class LiteralFieldValidator<
     return validateAnswer.isValidValue
       ? success(undefined)
       : this.getFailResult(validateAnswer.errors);
-  }
-
-  protected getFailResult(errors: RuleErrors): FieldValidatorResult {
-    return failure({ [this.attrName]: errors });
   }
 
   protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
