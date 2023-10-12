@@ -1,3 +1,4 @@
+import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { AssertionException } from '../../../common/types';
 import { DTO } from '../../dto';
@@ -16,8 +17,9 @@ import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannotBeInfinityRule } from '../rules/assert-rules/cannot-be-infinity.a-rule';
 import { CannotBeNanRule } from '../rules/assert-rules/cannot-be-nan.a-rule';
 import {
-  FieldValidatorResult, GetArrayConfig, GetFieldValidatorDataType,
-  ArrayFieldErrors, RulesValidatedAnswer,
+  GetArrayConfig, GetFieldValidatorDataType,
+  RulesValidatedAnswer, RuleErrors, FieldResult, FullFieldResult,
+  ArrayFieldResult, ArrayFieldErrors, FieldErrors,
 } from './types';
 
 export abstract class FieldValidator<
@@ -26,9 +28,9 @@ export abstract class FieldValidator<
   IS_ARR extends boolean,
   DATA_TYPE extends LiteralDataType | DTO
 > {
-  protected abstract validateValue(value: unknown): FieldValidatorResult
+  static ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY = '___array_whole_value_validation_error___';
 
-  protected abstract getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult
+  protected abstract validateValue(value: unknown): FieldResult
 
   constructor(
     protected attrName: NAME,
@@ -48,29 +50,31 @@ export abstract class FieldValidator<
     }
   }
 
-  validate(value: unknown): FieldValidatorResult {
-    const nullableAnswer = this.validateNullableValue(value);
-    if (nullableAnswer.break) { // received nullable (undefined, null)
-      return nullableAnswer.isValidValue
-        ? success(undefined) // isRequired === false, nullable is valid value
-        : this.getFailResult(nullableAnswer.errors); // isRequired, nullable is not valid value;
-    }
-
+  validate(value: unknown): FullFieldResult {
     return this.arrayConfig.isArray
       ? this.validateArray(value)
       : this.validateValue(value);
   }
 
   /** проверка массива данных */
-  protected validateArray(unknownValue: unknown): FieldValidatorResult {
+  protected validateArray(unknownValue: unknown): ArrayFieldResult {
     function unknownValueToArray(): unknown[] {
       if (Array.isArray(unknownValue)) return unknownValue;
       throw new AssertionException('array assertion rules not missed a mistake');
     }
 
+    const nullableAnswer = this.validateNullableValue(unknownValue);
+    if (nullableAnswer.break) {
+      return nullableAnswer.isValidValue
+        ? success(undefined)
+        : this.getArrayFailResult(nullableAnswer.errors);
+    }
+
     const arrayAssertAnswer = this.validateByRules(unknownValue, this.getArrayAssertionRules());
     if (arrayAssertAnswer.isValidValue === false) {
-      return this.getFailResult(arrayAssertAnswer.errors);
+      return failure(
+        { [FieldValidator.ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY]: arrayAssertAnswer.errors },
+      );
     }
 
     const values = unknownValueToArray();
@@ -83,7 +87,7 @@ export abstract class FieldValidator<
     }
 
     return Object.keys(arrErrors).length > 0
-      ? this.getFailResult(arrErrors)
+      ? failure(arrErrors)
       : success(undefined);
   }
 
@@ -150,5 +154,13 @@ export abstract class FieldValidator<
     return errors.length > 0
       ? { isValidValue: false, errors, break: shouldBreak }
       : { isValidValue: true, break: shouldBreak };
+  }
+
+  protected getFailResult(errors: RuleErrors | FieldErrors): FieldResult {
+    return failure({ [this.attrName]: errors });
+  }
+
+  protected getArrayFailResult(errors: RuleErrors | FieldErrors): FieldResult {
+    return failure({ [FieldValidator.ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
   }
 }
