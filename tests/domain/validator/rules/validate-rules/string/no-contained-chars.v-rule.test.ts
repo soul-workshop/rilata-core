@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'bun:test';
-import { NoContainedCharsValidationRule } from '../../../../../../src/domain/validator/rules/validate-rules/string/no-contained-chars';
+import { NoContainedCharsValidationRule } from '../../../../../../src/domain/validator/rules/validate-rules/string/no-contained-chars..v-rule';
 
 describe('String must not be equal to value', () => {
   test('success, the string does not contain illegal characters', () => {
     const sut = new NoContainedCharsValidationRule('5678');
-    const result = sut.validate('12349042901');
+    const result = sut.validate('123490');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
@@ -28,7 +28,7 @@ describe('String must not be equal to value', () => {
 
   test('failure, string contains invalid characters', () => {
     const sut = new NoContainedCharsValidationRule('#!&?');
-    const result = sut.validate('petrop#!!076@gmail.com');
+    const result = sut.validate('petrop#076@gmail.com');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
@@ -46,6 +46,18 @@ describe('String must not be equal to value', () => {
       ruleError: {
         hint: { noChars: '1234567890' },
         text: 'Строка не должна содержать символы {{noChars}}',
+      },
+    });
+  });
+
+  test('failure, string contains invalid characters', () => {
+    const sut = new NoContainedCharsValidationRule(' ', 'Строка не должна содержать пробел');
+    const result = sut.validate('1 number have');
+    expect(result).toEqual({
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: { noChars: ' ' },
+        text: 'Строка не должна содержать пробел',
       },
     });
   });

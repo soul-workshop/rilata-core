@@ -10,10 +10,25 @@ describe('There should be no spaces in the string', () => {
     });
   });
 
-  test('success, new line is valid', () => {
-    const result = sut.validate('string\nWithTab');
+  test('failed, line contains Enter', () => {
+    const result = sut.validate(`string${String.fromCharCode(10)}WithNewLine`);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: {},
+        text: 'Не должно быть пробелов',
+      },
+    });
+  });
+
+  test('failed, line contains vertical tab', () => {
+    const result = sut.validate(`string${String.fromCharCode(11)}WithNewLine`);
+    expect(result).toEqual({
+      behaviour: 'SaveErrorAndRunNextRule',
+      ruleError: {
+        hint: {},
+        text: 'Не должно быть пробелов',
+      },
     });
   });
 

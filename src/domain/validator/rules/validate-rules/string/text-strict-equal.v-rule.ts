@@ -2,7 +2,7 @@ import { ValidationRuleAnswer } from '../../types';
 import { ValidationRule } from '../../validation-rule';
 
 export class TextStrictEqualValidationRule extends ValidationRule<'validate', string> {
-  requirement = 'Значение должно быть {{strictString}}';
+  requirement = 'Строка должна быть строго равна "{{strictString}}"';
 
   constructor(private strictString: string) {
     super();
@@ -11,6 +11,6 @@ export class TextStrictEqualValidationRule extends ValidationRule<'validate', st
   validate(value: string): ValidationRuleAnswer {
     return this.strictString === value
       ? this.returnSuccess('RunNextRule')
-      : this.returnFail('SaveErrorAndRunNextRule');
+      : this.returnFail('SaveErrorAndRunNextRule', { strictString: this.strictString });
   }
 }

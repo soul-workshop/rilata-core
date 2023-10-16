@@ -11,13 +11,13 @@ describe('String Equality Checks', () => {
   });
 
   test('failure, value not equal to {{strictString}}', () => {
-    const sut = new TextStrictEqualValidationRule('aaabbb');
+    const sut = new TextStrictEqualValidationRule('Aaabbb');
     const result = sut.validate('bbbaaa');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
-        hint: {},
-        text: 'Значение должно быть {{strictString}}',
+        hint: { strictString: 'Aaabbb' },
+        text: 'Строка должна быть строго равна "{{strictString}}"',
       },
     });
   });
@@ -28,8 +28,8 @@ describe('String Equality Checks', () => {
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
-        hint: {},
-        text: 'Значение должно быть {{strictString}}',
+        hint: { strictString: 'aaabbb' },
+        text: 'Строка должна быть строго равна "{{strictString}}"',
       },
     });
   });
