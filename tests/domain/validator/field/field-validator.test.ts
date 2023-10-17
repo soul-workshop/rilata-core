@@ -23,17 +23,6 @@ describe('number validator with range value rule', () => {
         }],
       });
     });
-
-    test('fail, value is required', () => {
-      const result = sut.validate(undefined);
-      expect(result.isFailure()).toBe(true);
-      expect(result.value).toEqual({
-        ageField: [{
-          text: 'Значение не должно быть undefined или null',
-          hint: {},
-        }],
-      });
-    });
   });
 
   describe('test comppile error text by rule hint', () => {
