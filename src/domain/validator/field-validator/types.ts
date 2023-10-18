@@ -19,18 +19,24 @@ export type GetArrayConfig<B extends boolean> = B extends false
 
 type AttrName = string;
 
-export type DtoFieldErrors = { [s: AttrName]: DtoFieldErrors | ArrayFieldErrors | RuleError[]};
-
 type ArrayItemIndex = number;
 
-export type ArrayFieldErrors = Record<ArrayItemIndex, DtoFieldErrors>;
+export type RuleErrors = RuleError[];
 
-export type FieldValidatorResult = Result<DtoFieldErrors, undefined>;
+export type FieldErrors = { [s: AttrName]: RuleErrors | FieldErrors};
 
-export type RulesValidatedAnswer<ARR extends boolean = false> = {
+export type ArrayFieldErrors = { [i: ArrayItemIndex]: RuleErrors | FieldErrors }
+
+export type FieldResult = Result<FieldErrors, undefined>;
+
+export type ArrayFieldResult = Result<ArrayFieldErrors, undefined>;
+
+export type FullFieldResult = Result<FieldErrors | ArrayFieldErrors, undefined>;
+
+export type RulesValidatedAnswer = {
     isValidValue: false,
     break: boolean,
-    errors: ARR extends true ? ArrayFieldErrors : RuleError[],
+    errors: RuleErrors,
   } | {
     isValidValue: true,
     break: boolean,

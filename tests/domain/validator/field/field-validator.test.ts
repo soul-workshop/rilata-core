@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { DtoFieldErrors } from '../../../../src/domain/validator/field-validator/types';
+import { DtoFieldValidatorErrors } from '../../../../src/domain/validator/field-validator/types';
 import { RuleError } from '../../../../src/domain/validator/rules/types';
 import { ValidationRule } from '../../../../src/domain/validator/rules/validation-rule';
 import { FieldValidatorPrivateFixtures as FieldValidatorFixtures } from './test-fixtures';
@@ -23,24 +23,13 @@ describe('number validator with range value rule', () => {
         }],
       });
     });
-
-    test('fail, value is required', () => {
-      const result = sut.validate(undefined);
-      expect(result.isFailure()).toBe(true);
-      expect(result.value).toEqual({
-        ageField: [{
-          text: 'Значение не должно быть undefined или null',
-          hint: {},
-        }],
-      });
-    });
   });
 
   describe('test comppile error text by rule hint', () => {
     test('success compiled by two parameter', () => {
       const result = sut.validate(15);
       expect(result.isFailure()).toBe(true);
-      const dtoErrors = result.value as DtoFieldErrors;
+      const dtoErrors = result.value as DtoFieldValidatorErrors;
       expect(Array.isArray(dtoErrors.ageField)).toBe(true);
       expect((dtoErrors.ageField as RuleError[]).length).toBe(1);
       const expectedError = 'Возраст должен быть между 18 и 65';

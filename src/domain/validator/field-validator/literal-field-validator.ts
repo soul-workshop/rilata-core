@@ -1,14 +1,13 @@
-import { failure } from '../../../common/result/failure';
 import { success } from '../../../common/result/success';
 import { LeadRule } from '../../validator/rules/lead-rule';
-import { LiteralDataType, RuleError } from '../../validator/rules/types';
+import { LiteralDataType } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
 import { CannotBeNullableAssertionRule } from '../rules/assert-rules/cannot-be-nullable.a-rule';
 import { CanBeNullableRule } from '../rules/nullable-rules/can-be-nullable.n-rule';
 import { FieldValidator } from './field-validator';
 import {
-  GetArrayConfig, GetFieldValidatorDataType, FieldValidatorResult, ArrayFieldErrors,
+  FieldResult, GetArrayConfig, GetFieldValidatorDataType,
 } from './types';
 
 export class LiteralFieldValidator<
@@ -28,7 +27,16 @@ export class LiteralFieldValidator<
     super(attrName, isRequired, arrayConfig, dataType);
   }
 
-  protected validateValue(value: unknown): FieldValidatorResult {
+  protected validateValue(value: unknown): FieldResult {
+    if (this.arrayConfig.isArray === false) {
+      const nullableAnswer = this.validateNullableValue(value);
+      if (nullableAnswer.break) {
+        return nullableAnswer.isValidValue
+          ? success(undefined)
+          : this.getFailResult(nullableAnswer.errors);
+      }
+    }
+
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
     if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
@@ -40,10 +48,6 @@ export class LiteralFieldValidator<
     return validateAnswer.isValidValue
       ? success(undefined)
       : this.getFailResult(validateAnswer.errors);
-  }
-
-  protected getFailResult(errors: RuleError[] | ArrayFieldErrors): FieldValidatorResult {
-    return failure({ [this.attrName]: errors });
   }
 
   protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
