@@ -13,7 +13,7 @@ describe('distance between dates', () => {
   });
 
   test('failure, date less than required', () => {
-    const result = sut.validate(new Date('1999-01-02T12:00').getTime());
+    const result = sut.validate(new Date('1999-01-02T11:55').getTime());
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
@@ -24,7 +24,7 @@ describe('distance between dates', () => {
   });
 
   test('failure, date is greater than required', () => {
-    const result = sut.validate(new Date('2020-01-02T12:00').getTime());
+    const result = sut.validate(new Date('2020-01-02T12:05').getTime());
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {

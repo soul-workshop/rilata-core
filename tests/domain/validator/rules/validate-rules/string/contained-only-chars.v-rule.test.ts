@@ -34,21 +34,21 @@ describe('String must be equal to value', () => {
     });
   });
 
-  test('success, string equal value2', () => {
-    const sut = new ContainedOnlyCharsValidationRule('b');
+  test('успех, только один валидный символ', () => {
+    const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('b');
     expect(result).toEqual({
       behaviour: 'RunNextRule',
     });
   });
 
-  test('failure, string is not equal value', () => {
-    const sut = new ContainedOnlyCharsValidationRule('s');
-    const result = sut.validate('b');
+  test('провал, только один не валидный символ', () => {
+    const sut = new ContainedOnlyCharsValidationRule('omb');
+    const result = sut.validate('s');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
-        hint: { onlyChars: 's' },
+        hint: { onlyChars: 'omb' },
         text: 'Строка должна содержать только {{onlyChars}}',
       },
     });
@@ -66,7 +66,7 @@ describe('String must be equal to value', () => {
     });
   });
 
-  test('failure, string is not equal value', () => {
+  test('провал, передана валидная строка с одним невалидным символом', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('bod');
     expect(result).toEqual({

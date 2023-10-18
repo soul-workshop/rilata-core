@@ -22,7 +22,7 @@ describe('There should be no spaces in the string', () => {
   });
 
   test('failed, line contains vertical tab', () => {
-    const result = sut.validate(`string${String.fromCharCode(11)}WithNewLine`);
+    const result = sut.validate(`string${String.fromCharCode(11)}WithVerticalTab`);
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {

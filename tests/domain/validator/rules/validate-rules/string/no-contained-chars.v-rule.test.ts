@@ -50,7 +50,7 @@ describe('String must not be equal to value', () => {
     });
   });
 
-  test('failure, string contains invalid characters', () => {
+  test('провал, в ошибку успешно передается текст переданный в конструктор', () => {
     const sut = new NoContainedCharsValidationRule(' ', 'Строка не должна содержать пробел');
     const result = sut.validate('1 number have');
     expect(result).toEqual({
