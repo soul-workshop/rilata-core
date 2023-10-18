@@ -2,10 +2,9 @@ import { describe, expect, test } from 'bun:test';
 import { MaxCharsCountValidationRule } from '../../../../../../src/domain/validator/rules/validate-rules/string/max-chars-count.v-rule';
 
 describe('Line length should not be greater than', () => {
-  const value = 'hello';
   test('success, string length is less than maximum string length', () => {
     const sut = new MaxCharsCountValidationRule(10);
-    const result = sut.validate(value);
+    const result = sut.validate('hello');
     expect(result).toEqual({
       behaviour: 'SuccessRunNextRule',
     });
