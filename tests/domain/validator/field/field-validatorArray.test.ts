@@ -1,9 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { ValidationRule } from '../../../../src/domain/validator/rules/validation-rule';
-import { FieldValidatorPrivateFixtures as FieldValidatorFixtures } from './test-fixtures';
 import { LiteralFieldValidator } from '../../../../src/domain/validator/field-validator/literal-field-validator';
 import { StringChoiceValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/string-choice.v-rule';
-import { TrimEndStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim-end.l-rule';
 import { CannotBeUndefinedValidationRule } from '../../../../src/domain/validator/rules/assert-rules/cannot-be-undefined.a-rule';
 import { CanBeNullValidationRule } from '../../../../src/domain/validator/rules/nullable-rules/can-be-only-null.n-rule';
 import { CannotBeNullValidationRule } from '../../../../src/domain/validator/rules/assert-rules/cannot-be-null.a-rule';
@@ -23,14 +21,6 @@ describe('тесты литерального валидатора приним�
       const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin', 'staffManager']);
-      expect(res.isSuccess()).toBe(true);
-      expect(res.value).toBe(undefined);
-    });
-
-    test('успех, приведение значений работает для элементов массива', () => {
-      const roles = ['admin', 'staffManager', 'officeChieff', 'saleManager'];
-      const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)], [new TrimEndStringLeadRule()]);
-      const res = sut.validate(['admin  ']);
       expect(res.isSuccess()).toBe(true);
       expect(res.value).toBe(undefined);
     });

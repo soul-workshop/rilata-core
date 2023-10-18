@@ -1,5 +1,4 @@
 import { Locale } from '../../locale';
-import { LeadRule } from './lead-rule';
 import { ValidationRule } from './validation-rule';
 
 export type RuleType = 'nullable' |'type' | 'assert' | 'validate';
@@ -10,33 +9,33 @@ export type RuleDataType = LiteralDataType | unknown;
 
 export type GeneralValidationRule = ValidationRule<RuleType, RuleDataType>;
 
-export type GeneralLeadRule = LeadRule<LiteralDataType>;
-
 export type RuleError = Locale
 
-export type RunNextRule = { behaviour: 'RunNextRule' };
+export type SuccessRunNextRule = { behaviour: 'SuccessRunNextRule' };
 
-export type BreakValidation = { behaviour: 'BreakValidation' };
+export type SuccessBreakValidation = { behaviour: 'SuccessBreakValidation' };
 
 export type SaveErrorAndBreakValidation = {
+  errorName: string,
   behaviour: 'SaveErrorAndBreakValidation',
   ruleError: RuleError,
 };
 
 export type SaveErrorAndRunNextRule = {
+  errorName: string,
   behaviour: 'SaveErrorAndRunNextRule',
   ruleError: RuleError,
 };
 
 export type ValidationRuleAnswer =
-  RunNextRule
-  | BreakValidation
+  SuccessRunNextRule
+  | SuccessBreakValidation
   | SaveErrorAndRunNextRule
   | SaveErrorAndBreakValidation;
 
-export type TypeOrAssertRuleAnswer = RunNextRule | SaveErrorAndBreakValidation;
+export type TypeOrAssertRuleAnswer = SuccessRunNextRule | SaveErrorAndBreakValidation;
 
-export type EmptyValueRuleAnswer = RunNextRule | BreakValidation;
+export type EmptyValueRuleAnswer = SuccessRunNextRule | SuccessBreakValidation;
 
 export type GetRuleAnswer<RT extends RuleType> =
   RT extends 'type' | 'assert'
@@ -46,7 +45,7 @@ export type GetRuleAnswer<RT extends RuleType> =
       : ValidationRuleAnswer
 
 export type GetSuccessRuleAnswer<RT extends RuleType> =
-  Extract<GetRuleAnswer<RT>, RunNextRule | BreakValidation>;
+  Extract<GetRuleAnswer<RT>, SuccessRunNextRule | SuccessBreakValidation>;
 
 export type GetFailRuleAnswer<RT extends RuleType> =
   Extract<GetRuleAnswer<RT>, SaveErrorAndRunNextRule | SaveErrorAndBreakValidation>;
@@ -57,7 +56,7 @@ type GetBehavourString<RT extends RuleType> =
     : never;
 
 export type GetSuccessBehaviourString<RT extends RuleType> =
-  Extract<GetBehavourString<RT>, 'RunNextRule' | 'BreakValidation'>;
+  Extract<GetBehavourString<RT>, 'SuccessRunNextRule' | 'SuccessBreakValidation'>;
 
 export type GetFailBehaviourString<RT extends RuleType> =
   Extract<GetBehavourString<RT>, 'SaveErrorAndBreakValidation' | 'SaveErrorAndRunNextRule'>;

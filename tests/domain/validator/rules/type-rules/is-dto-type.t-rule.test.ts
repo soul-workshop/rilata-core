@@ -11,7 +11,7 @@ describe('IsDTOTypeRule', () => {
       },
     );
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

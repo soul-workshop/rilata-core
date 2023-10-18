@@ -6,7 +6,7 @@ describe('IsStringTypeRule', () => {
     const rule = new IsStringTypeRule();
     const result = rule.validate('Hello World');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

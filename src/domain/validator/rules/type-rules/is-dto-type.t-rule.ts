@@ -10,7 +10,7 @@ export class IsDTOTypeRule extends ValidationRule<'type', unknown> {
       && Array.isArray(value) === false
       && value !== null
     )
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

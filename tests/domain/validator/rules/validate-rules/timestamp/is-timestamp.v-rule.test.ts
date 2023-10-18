@@ -6,7 +6,7 @@ describe('Value is a date', () => {
     const sut = new IsTimeStampValidationRule();
     const result = sut.validate(1694683538);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
   test('failure, if the value is given as a negative number', () => {

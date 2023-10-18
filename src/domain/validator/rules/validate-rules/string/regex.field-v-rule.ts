@@ -8,7 +8,7 @@ export class RegexFormatValidationRule extends ValidationRule<'validate', string
 
   validate(value: string): ValidationRuleAnswer {
     return this.regex.test(value)
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', this.hint);
   }
 }

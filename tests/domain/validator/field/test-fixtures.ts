@@ -3,7 +3,6 @@ import { LiteralFieldValidator } from '../../../../src/domain/validator/field-va
 import { RegexFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/regex.field-v-rule';
 import { EqualCharsCountValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/equal-chars-count.v-rule';
 import { StringChoiceValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/string-choice.v-rule';
-import { TrimStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim';
 import { RangeNumberValidationRule } from '../../../../src/domain/validator/rules/validate-rules/number/range-number.v-rule';
 import { UUIDFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/uuid-format.v-rule';
 import { IsTimeStampValidationRule } from '../../../../src/domain/validator/rules/validate-rules/timestamp/is-timestamp.v-rule';
@@ -26,7 +25,6 @@ export namespace FieldValidatorPrivateFixtures {
         ),
         new EqualCharsCountValidationRule(16),
       ],
-      [new TrimStringLeadRule()],
     ),
     type: new LiteralFieldValidator(
       'type',
@@ -34,7 +32,6 @@ export namespace FieldValidatorPrivateFixtures {
       { isArray: false },
       'string',
       [new StringChoiceValidationRule(['mobile', 'work'])],
-      [new TrimStringLeadRule()],
     ),
     noOutField: new LiteralFieldValidator('noOutField', true, { isArray: false }, 'string', []),
   };

@@ -4,9 +4,9 @@ import { IsNumberTypeRule } from '../../../../../src/domain/validator/rules/type
 describe('IsNumberTypeRule', () => {
   test('success, received value equal number', () => {
     const rule = new IsNumberTypeRule();
-    const result = rule.validate(42); // Здесь 42 - это число
+    const result = rule.validate(42);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

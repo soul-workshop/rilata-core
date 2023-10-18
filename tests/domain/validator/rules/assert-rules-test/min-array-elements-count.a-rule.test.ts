@@ -6,11 +6,11 @@ describe('min array elements count rule', () => {
     const sut = new MinArrayElementsCountAssertionRule(0);
     test('success, valueArray length is equal min', () => {
       const res = sut.validate([]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
     test('success, valueArray length is more than min', () => {
       const res = sut.validate([1, 2, 3, 4]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
   });
 
@@ -18,7 +18,7 @@ describe('min array elements count rule', () => {
     const sut = new MinArrayElementsCountAssertionRule(3);
     test('success, valueArray length is more than min', () => {
       const res = sut.validate([1, 2, 3, 4]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
     test('failure, valueArray length is empty', () => {
       const res = sut.validate([]);
@@ -35,7 +35,7 @@ describe('min array elements count rule', () => {
     });
     test('success, valueArray length is  equal to min', () => {
       const res = sut.validate([1, 2, 3]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
     test('failure, valueArray length is less than or than min', () => {
       const res = sut.validate([1, 2]);

@@ -32,7 +32,7 @@ describe('Length of the string must be equal to', () => {
     const sut = new EqualCharsCountValidationRule(5);
     const result = sut.validate(value);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 });

@@ -7,7 +7,7 @@ describe('CanBeNullableRule tests', () => {
     const rule = new CanBeUndefinedValidationRule();
     const validationResult = rule.validate(value);
     expect(validationResult).toEqual({
-      behaviour: 'BreakValidation',
+      behaviour: 'SuccessBreakValidation',
     });
   });
 
@@ -17,7 +17,7 @@ describe('CanBeNullableRule tests', () => {
     valuesToCheck.forEach((value) => {
       const validationResult = rule.validate(value);
       expect(validationResult).toEqual({
-        behaviour: 'RunNextRule',
+        behaviour: 'SuccessRunNextRule',
       });
     });
   });

@@ -6,14 +6,14 @@ describe('Validating strings using regular expressions', () => {
     const sut = new RegexFormatValidationRule(/world$/, 'Текст должен заканчиваться на слово world');
     const result = sut.validate('Hello world');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
   test('success ИИН is valid', () => {
     const sut = new RegexFormatValidationRule(/^[0-9]\d{11}$/, 'Введите ИИН (12 цифр) ');
     const result = sut.validate('010625530759');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
   test('failure ИИН is not valid', () => {
@@ -31,7 +31,7 @@ describe('Validating strings using regular expressions', () => {
     const sut = new RegexFormatValidationRule(/^\+\d{1,3} \d{3} \d{3} \d{4}$/, 'Введите номер в формате +7 702 777 7777');
     const result = sut.validate('+7 702 950 7304');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
   test('failure, incorrect phone number entered', () => {

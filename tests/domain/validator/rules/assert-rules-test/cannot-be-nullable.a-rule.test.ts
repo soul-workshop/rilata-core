@@ -8,7 +8,7 @@ describe('can not be nullable  rule tests', () => {
     diffTypes.forEach((type) => {
       const result = sut.validate(type);
       expect(result).toEqual({
-        behaviour: 'RunNextRule',
+        behaviour: 'SuccessRunNextRule',
       });
     });
   });

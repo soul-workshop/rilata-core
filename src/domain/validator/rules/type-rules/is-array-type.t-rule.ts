@@ -6,7 +6,7 @@ export class IsArrayTypeRule extends ValidationRule<'type', unknown> {
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
     return Array.isArray(value)
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

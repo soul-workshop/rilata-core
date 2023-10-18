@@ -8,7 +8,7 @@ describe('CanBeNullableRule', () => {
     valuesToCheck.forEach((value) => {
       const validationResult = rule.validate(value);
       expect(validationResult).toEqual({
-        behaviour: 'BreakValidation',
+        behaviour: 'SuccessBreakValidation',
       });
     });
   });
@@ -19,7 +19,7 @@ describe('CanBeNullableRule', () => {
     valuesToCheck.forEach((value) => {
       const validationResult = rule.validate(value);
       expect(validationResult).toEqual({
-        behaviour: 'RunNextRule',
+        behaviour: 'SuccessRunNextRule',
       });
     });
   });

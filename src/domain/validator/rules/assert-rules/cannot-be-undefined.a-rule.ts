@@ -6,7 +6,7 @@ export class CannotBeUndefinedValidationRule extends ValidationRule<'assert', un
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
     return value !== undefined
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

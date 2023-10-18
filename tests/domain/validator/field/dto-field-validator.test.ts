@@ -381,7 +381,7 @@ describe('DTO Tests', () => {
         });
       });
 
-      test('Failure, an array arrived with several errors ', () => {
+      test('Failure, an array arrived with several errors1 ', () => {
         const result = sut.validate([
           { number: '+7-555-879-11-02', type: 'mobil', noOutField: true },
           { number: '+7-555-879-24-022', type: 'mobile', noOutField: 'info' },
@@ -412,7 +412,7 @@ describe('DTO Tests', () => {
                   hint: {},
                 },
                 {
-                  text: 'Строка должна быть равна {{count}}, сейчас {{current}}',
+                  text: 'Длина строки должна быть равна {{count}}, сейчас {{current}}',
                   hint: {
                     count: 16,
                     current: 17,

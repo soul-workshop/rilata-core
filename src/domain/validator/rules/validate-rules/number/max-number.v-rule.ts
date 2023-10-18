@@ -10,7 +10,7 @@ export class MaxNumberValidationRule extends ValidationRule<'validate', number> 
 
   validate(value: number): ValidationRuleAnswer {
     return value <= this.maxNumber
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', { max: this.maxNumber });
   }
 }

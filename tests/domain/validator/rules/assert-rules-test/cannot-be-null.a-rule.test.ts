@@ -18,7 +18,7 @@ describe('can not be null  rule tests', () => {
     const sut = new CannotBeNullValidationRule();
     const result = sut.validate(undefined);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -28,7 +28,7 @@ describe('can not be null  rule tests', () => {
     diffTypes.forEach((type) => {
       const result = sut.validate(type);
       expect(result).toEqual({
-        behaviour: 'RunNextRule',
+        behaviour: 'SuccessRunNextRule',
       });
     });
   });

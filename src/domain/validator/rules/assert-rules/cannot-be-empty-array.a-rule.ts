@@ -6,7 +6,7 @@ export class CannotBeEmptyArrayAssertionRule extends ValidationRule<'assert', un
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
     return Array.isArray(value) && value.length > 0
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

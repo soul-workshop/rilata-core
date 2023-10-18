@@ -6,7 +6,7 @@ export class CanBeUndefinedValidationRule extends ValidationRule<'nullable', unk
 
   validate(value: unknown): EmptyValueRuleAnswer {
     return value === undefined
-      ? this.returnSuccess('BreakValidation')
-      : this.returnSuccess('RunNextRule');
+      ? this.returnSuccess('SuccessBreakValidation')
+      : this.returnSuccess('SuccessRunNextRule');
   }
 }

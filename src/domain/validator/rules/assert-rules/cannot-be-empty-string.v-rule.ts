@@ -6,7 +6,7 @@ export class CannotBeEmptyStringAssertionRule extends ValidationRule<'assert', s
 
   validate(value: string): TypeOrAssertRuleAnswer {
     return value !== ''
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

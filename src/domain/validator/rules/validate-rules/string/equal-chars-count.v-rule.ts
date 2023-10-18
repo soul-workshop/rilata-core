@@ -11,6 +11,6 @@ export class EqualCharsCountValidationRule extends ValidationRule<'validate', st
   validate(value: string): ValidationRuleAnswer {
     return value.length !== this.charsCount
       ? this.returnFail('SaveErrorAndRunNextRule', { count: this.charsCount, current: value.length })
-      : this.returnSuccess('RunNextRule');
+      : this.returnSuccess('SuccessRunNextRule');
   }
 }

@@ -7,7 +7,7 @@ describe('Line length should not be greater than', () => {
     const sut = new MaxCharsCountValidationRule(10);
     const result = sut.validate(value);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -15,7 +15,7 @@ describe('Line length should not be greater than', () => {
     const sut = new MaxCharsCountValidationRule(5);
     const result = sut.validate('hello');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

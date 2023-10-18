@@ -6,7 +6,7 @@ export class CanBeNullValidationRule extends ValidationRule<'nullable', unknown>
 
   validate(value: unknown): EmptyValueRuleAnswer {
     return value === null
-      ? this.returnSuccess('BreakValidation')
-      : this.returnSuccess('RunNextRule');
+      ? this.returnSuccess('SuccessBreakValidation')
+      : this.returnSuccess('SuccessRunNextRule');
   }
 }

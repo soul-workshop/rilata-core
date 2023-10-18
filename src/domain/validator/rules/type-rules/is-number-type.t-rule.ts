@@ -6,7 +6,7 @@ export class IsNumberTypeRule extends ValidationRule<'type', unknown> {
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
     return typeof value === 'number'
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

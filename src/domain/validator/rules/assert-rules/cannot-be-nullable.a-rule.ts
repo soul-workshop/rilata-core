@@ -6,7 +6,7 @@ export class CannotBeNullableAssertionRule extends ValidationRule<'assert', unkn
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
     return value !== undefined && value !== null
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }
