@@ -10,7 +10,7 @@ describe('String must be equal to value', () => {
     });
   });
 
-  test('success, string equal value', () => {
+  test('успех, все символы допустимы', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('bom');
     expect(result).toEqual({
@@ -18,7 +18,7 @@ describe('String must be equal to value', () => {
     });
   });
 
-  test('success, string equal value', () => {
+  test('успех, допускается несколько раз использовать один символ', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('bomb');
     expect(result).toEqual({
@@ -26,7 +26,7 @@ describe('String must be equal to value', () => {
     });
   });
 
-  test('success, string equal value2', () => {
+  test('успех, можно успользовать только один символ много раз', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('ooooo');
     expect(result).toEqual({
