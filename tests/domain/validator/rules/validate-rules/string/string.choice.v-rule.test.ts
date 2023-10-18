@@ -6,7 +6,7 @@ describe('Value must be one of the list results', () => {
     const sut = new StringChoiceValidationRule(['Sagyndyk', 'Islyam']);
     const result = sut.validate('Sagyndyk');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

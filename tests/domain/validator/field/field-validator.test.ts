@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { DtoFieldValidatorErrors } from '../../../../src/domain/validator/field-validator/types';
+import { FieldErrors } from '../../../../src/domain/validator/field-validator/types';
 import { RuleError } from '../../../../src/domain/validator/rules/types';
 import { ValidationRule } from '../../../../src/domain/validator/rules/validation-rule';
 import { FieldValidatorPrivateFixtures as FieldValidatorFixtures } from './test-fixtures';
@@ -29,7 +29,7 @@ describe('number validator with range value rule', () => {
     test('success compiled by two parameter', () => {
       const result = sut.validate(15);
       expect(result.isFailure()).toBe(true);
-      const dtoErrors = result.value as DtoFieldValidatorErrors;
+      const dtoErrors = result.value as FieldErrors;
       expect(Array.isArray(dtoErrors.ageField)).toBe(true);
       expect((dtoErrors.ageField as RuleError[]).length).toBe(1);
       const expectedError = 'Возраст должен быть между 18 и 65';
@@ -46,13 +46,5 @@ describe('dto validator tests', () => {
     const result = sut.validate(FieldValidatorFixtures.addPersonCommand);
     expect(result.isSuccess()).toBe(true);
     expect(result.value).toBe(undefined);
-  });
-
-  test('success, test leadRule worked', () => {
-    const validatedData = FieldValidatorFixtures.addPersonCommand;
-    const phone = validatedData.contacts.phones[0];
-    phone.number = `\t${phone.number} `;
-    const result = sut.validate(validatedData);
-    expect(result.isSuccess()).toBe(true);
   });
 });

@@ -6,7 +6,7 @@ export class CannotBeInfinityRule extends ValidationRule<'assert', unknown> {
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
     return value !== Infinity && value !== -Infinity
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

@@ -16,7 +16,7 @@ export class RangeDataTimestampValidationRule extends ValidationRule<'validate',
 
   validate(value: number): ValidationRuleAnswer {
     return value >= this.minRangeData && value <= this.maxRangeData
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule');
   }
 }

@@ -6,7 +6,7 @@ describe('String must not be equal to value', () => {
     const sut = new NoContainedCharsValidationRule('5678');
     const result = sut.validate('123490');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -14,7 +14,7 @@ describe('String must not be equal to value', () => {
     const sut = new NoContainedCharsValidationRule('#!&?');
     const result = sut.validate('petrop076gmail.com');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -22,7 +22,7 @@ describe('String must not be equal to value', () => {
     const sut = new NoContainedCharsValidationRule('1234567890');
     const result = sut.validate('without any digit string');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

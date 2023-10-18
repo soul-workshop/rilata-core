@@ -7,7 +7,7 @@ export class UUIDFormatValidationRule extends ValidationRule<'validate', string>
 
   validate(value: string): ValidationRuleAnswer {
     return uuidUtility.isValidValue(value)
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule');
   }
 }

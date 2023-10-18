@@ -10,7 +10,7 @@ export class TextStrictEqualValidationRule extends ValidationRule<'validate', st
 
   validate(value: string): ValidationRuleAnswer {
     return this.strictString === value
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', { strictString: this.strictString });
   }
 }

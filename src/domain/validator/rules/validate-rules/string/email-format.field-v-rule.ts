@@ -7,7 +7,7 @@ export class EmailFormatValidationRule extends ValidationRule<'validate', string
 
   validate(value: string): ValidationRuleAnswer {
     return validate(value)
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule');
   }
 }

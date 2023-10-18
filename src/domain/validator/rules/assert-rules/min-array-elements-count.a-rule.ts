@@ -13,6 +13,6 @@ export class MinArrayElementsCountAssertionRule extends ValidationRule<'assert',
   validate(value: unknown[]): TypeOrAssertRuleAnswer {
     return value.length < this.minElementsCount
       ? this.returnFail('SaveErrorAndBreakValidation', { min: this.minElementsCount, currentCount: value.length })
-      : this.returnSuccess('RunNextRule');
+      : this.returnSuccess('SuccessRunNextRule');
   }
 }

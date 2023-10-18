@@ -2,12 +2,8 @@ import { describe, expect, test } from 'bun:test';
 import { LiteralFieldValidator } from '../../../../src/domain/validator/field-validator/literal-field-validator';
 import { GetFieldValidatorDataType } from '../../../../src/domain/validator/field-validator/types';
 import { LiteralDataType } from '../../../../src/domain/validator/rules/types';
-import { TrimStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim';
-import { TrimEndStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim-end.l-rule';
-import { TrimStartStringLeadRule } from '../../../../src/domain/validator/rules/lead-rules/string/trim-start.l-rule';
 import { MaxCharsCountValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/max-chars-count.v-rule';
 import { MinCharsCountValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/min-chars-count.v-rule';
-import { CannotBeEmptyStringValidationRule } from '../../../../src/domain/validator/rules/assert-rules/cannot-be-empty-string.a-rule';
 import { UUIDFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/uuid-format.v-rule';
 import { CannotBeUndefinedValidationRule } from '../../../../src/domain/validator/rules/assert-rules/cannot-be-undefined.a-rule';
 import { CanBeNullValidationRule } from '../../../../src/domain/validator/rules/nullable-rules/can-be-only-null.n-rule';
@@ -28,7 +24,6 @@ describe('Валидированное значение обязательно',
       const result = sut.validate(dataValue);
       expect(result.isSuccess()).toBe(true);
     });
-
     test('Провал, пришло undefined или null', () => {
       const nullValues = [undefined, null];
       const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, dataType, []);
@@ -86,21 +81,6 @@ describe('Валидированное значение обязательно',
           text: 'Значение должно быть булевым',
         },
       ],
-    });
-  });
-
-  test('Успех сработало приведение значения lead-rule', () => {
-    const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)], [new TrimEndStringLeadRule()]);
-    const result = sut.validate('Absolute   ');
-    expect(result.isSuccess()).toBe(true);
-  });
-
-  test('Успех сработало приведение значения двух lead-rule', () => {
-    const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)], [new TrimStartStringLeadRule(), new TrimEndStringLeadRule()]);
-    const values = ['Absolute  ', '  Absolute', ' Absolute  '];
-    values.forEach((value) => {
-      const result = sut.validate(value);
-      expect(result.isSuccess()).toBe(true);
     });
   });
 
@@ -204,22 +184,24 @@ describe('Валидированное значение обязательно',
   });
 
   describe('Получаем Infinity и NaN', () => {
-    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'number', []);
-    const infinityValues = [-Infinity, Infinity];
-    infinityValues.forEach((value) => {
-      test('Провал, пришло Infinity', () => {
-        const result = sut.validate(value);
-        expect(result.isFailure()).toBe(true);
-        expect(result.value).toEqual({
-          fieldName: [
-            {
-              text: 'Значение не может быть Infinity или -Infinity',
-              hint: {},
-            },
-          ],
+    test('Провал, пришел бесконечность и минус бесконечность', () => {
+      const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'number', []);
+      const infinityValues = [-Infinity, Infinity];
+      infinityValues.forEach((value) => {
+        test('Провал, пришло Infinity', () => {
+          const result = sut.validate(value);
+          expect(result.isFailure()).toBe(true);
+          expect(result.value).toEqual({
+            fieldName: [
+              {
+                text: 'Значение не может быть Infinity или -Infinity',
+                hint: {},
+              },
+            ],
+          });
         });
       });
-    });
+    }),
 
     test('Провал, пришло NaN', () => {
       const sut = new LiteralFieldValidator('fieldName', true, { isArray: false }, 'number', []);
@@ -288,19 +270,6 @@ describe('Валидированное значение необязательн
           hint: {},
         },
       ],
-    });
-  });
-  test('Успех сработало приведение значения lead-rule', () => {
-    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)], [new TrimStringLeadRule()]);
-    const result = sut.validate('  Absolute  ');
-    expect(result.isSuccess()).toBe(true);
-  });
-  test('Успех сработало приведение значения двух lead-rule', () => {
-    const sut = new LiteralFieldValidator('fieldName', false, { isArray: false }, 'string', [new MaxCharsCountValidationRule(8)], [new TrimStartStringLeadRule(), new TrimEndStringLeadRule()]);
-    const values = ['Absolute  ', '  Absolute', ' Absolute  '];
-    values.forEach((value) => {
-      const result = sut.validate(value);
-      expect(result.isSuccess()).toBe(true);
     });
   });
   test('Провал, пришло не валидное значение', () => {

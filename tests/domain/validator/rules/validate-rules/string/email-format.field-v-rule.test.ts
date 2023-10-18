@@ -5,7 +5,7 @@ describe('String must match the email format', () => {
   test('success, the resulting value is correlated with the email form', () => {
     const sut = new EmailFormatValidationRule();
     const result = sut.validate('example@email.com');
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
 
   test('failure, when there is no dog in email format', () => {

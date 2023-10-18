@@ -8,7 +8,7 @@ describe('distance between dates', () => {
   test('success, date no more and no less than necessary', () => {
     const result = sut.validate(new Date('2000-01-02T12:00').getTime());
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

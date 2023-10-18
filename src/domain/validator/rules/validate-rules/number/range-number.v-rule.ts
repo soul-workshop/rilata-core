@@ -11,7 +11,7 @@ export class RangeNumberValidationRule extends ValidationRule<'validate', number
 
   validate(value: number): ValidationRuleAnswer {
     return value >= this.min && value <= this.max
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', { max: this.max, min: this.min });
   }
 }

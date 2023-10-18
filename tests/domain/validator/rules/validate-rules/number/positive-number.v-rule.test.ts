@@ -5,22 +5,22 @@ describe('Number must be positive', () => {
   const sut = new PositiveNumberValidationRule();
   test('success, the resulting value is positive', () => {
     const result = sut.validate(10);
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
 
   test('success, resulting value is 0', () => {
     const result = sut.validate(0);
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
 
   test('success, resulting value is infinity', () => {
     const result = sut.validate(Infinity);
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
 
   test('success, resulting value is -0', () => {
     const result = sut.validate(-0);
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
 
   test('failure, resulting value is a negative number', () => {

@@ -6,7 +6,7 @@ export class IsTimeStampValidationRule extends ValidationRule<'validate', number
 
   validate(value: number): ValidationRuleAnswer {
     return (new Date(value)).getTime() > 0
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule');
   }
 }

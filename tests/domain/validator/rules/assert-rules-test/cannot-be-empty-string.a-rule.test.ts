@@ -8,7 +8,7 @@ describe('can not empty string rule tests', () => {
     arrayString.forEach((type) => {
       const result = sut.validate(type);
       expect(result).toEqual({
-        behaviour: 'RunNextRule',
+        behaviour: 'SuccessRunNextRule',
       });
     });
   });

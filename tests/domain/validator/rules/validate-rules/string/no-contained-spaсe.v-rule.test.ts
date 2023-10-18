@@ -6,7 +6,7 @@ describe('There should be no spaces in the string', () => {
   test('success, there are no spaces in the string', () => {
     const result = sut.validate('StringWithoutSpaces');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

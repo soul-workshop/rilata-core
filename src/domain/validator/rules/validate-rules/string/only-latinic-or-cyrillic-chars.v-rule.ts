@@ -10,7 +10,7 @@ export class OnlyLitinicOrCyrillicCharsValidationRule extends ValidationRule <'v
 
   validate(value: string): ValidationRuleAnswer {
     return this.latinic.test(value) || this.cyrillic.test(value)
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule');
   }
 }

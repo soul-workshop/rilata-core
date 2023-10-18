@@ -6,14 +6,14 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
   test('success, there are no prohibited languages in the string', () => {
     const result = sut.validate('Latinic');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
   test('success, there are no prohibited languages in the string', () => {
     const result = sut.validate('Кирилица');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

@@ -6,7 +6,7 @@ export class PositiveNumberValidationRule extends ValidationRule<'validate', num
 
   validate(value: number): ValidationRuleAnswer {
     return value >= 0
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule');
   }
 }

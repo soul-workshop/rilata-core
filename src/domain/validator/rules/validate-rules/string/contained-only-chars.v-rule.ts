@@ -15,6 +15,6 @@ export class ContainedOnlyCharsValidationRule extends ValidationRule<'validate',
       if (!this.onlyChars.includes(char)) {
         return this.returnFail('SaveErrorAndRunNextRule', { onlyChars: this.onlyChars });
       }
-    } return this.returnSuccess('RunNextRule');
+    } return this.returnSuccess('SuccessRunNextRule');
   }
 }

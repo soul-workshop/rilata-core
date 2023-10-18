@@ -5,17 +5,17 @@ describe('Number must be in the range', () => {
   test('success, the resulting value in a range of numbers', () => {
     const sut = new RangeNumberValidationRule(18, 64);
     const result = sut.validate(31);
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
   test('success, the resulting value is equal to the minimum value', () => {
     const sut = new RangeNumberValidationRule(18, 64);
     const result = sut.validate(18);
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
   test('success, the resulting value is equal to the maximum value', () => {
     const sut = new RangeNumberValidationRule(18, 64);
     const result = sut.validate(64);
-    expect(result).toEqual({ behaviour: 'RunNextRule' });
+    expect(result).toEqual({ behaviour: 'SuccessRunNextRule' });
   });
   test('failure, the resulting value is greater than the maximum value', () => {
     const sut = new RangeNumberValidationRule(18, 64);

@@ -6,7 +6,7 @@ describe('String Equality Checks', () => {
     const sut = new TextStrictEqualValidationRule('aaabbb');
     const result = sut.validate('aaabbb');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

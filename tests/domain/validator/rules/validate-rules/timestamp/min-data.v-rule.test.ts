@@ -7,7 +7,7 @@ describe('Value is a date', () => {
     const sut = new MinDateStampValidationRule(date);
     const result = sut.validate(978332400000);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
   test('failure, if the value is given as a past date', () => {

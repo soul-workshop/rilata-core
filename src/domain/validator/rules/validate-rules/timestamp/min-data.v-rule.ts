@@ -13,7 +13,7 @@ export class MinDateStampValidationRule extends ValidationRule<'validate', numbe
 
   validate(value: number): ValidationRuleAnswer {
     return value >= this.minDateAsTimestamp
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', { minDate: this.minDateAsTimestamp });
   }
 }

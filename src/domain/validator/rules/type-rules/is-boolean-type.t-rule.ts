@@ -6,7 +6,7 @@ export class IsBooleanTypeRule extends ValidationRule<'type', unknown> {
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
     return typeof value === 'boolean'
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndBreakValidation');
   }
 }

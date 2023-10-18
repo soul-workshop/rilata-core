@@ -7,7 +7,7 @@ describe('Value is a date', () => {
     const sut = new MaxDateStampValidationRule(date);
     const result = sut.validate(2578297780000);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
   test('failure, if the value is given as a future date', () => {

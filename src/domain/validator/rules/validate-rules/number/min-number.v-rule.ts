@@ -10,7 +10,7 @@ export class MinNumberValidationRule extends ValidationRule<'validate', number> 
 
   validate(value: number): ValidationRuleAnswer {
     return value >= this.minNumber
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', { min: this.minNumber });
   }
 }

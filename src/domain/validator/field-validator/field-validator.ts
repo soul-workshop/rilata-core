@@ -140,7 +140,7 @@ export abstract class FieldValidator<
       const result = rule.validate(value);
       const { behaviour } = result;
 
-      if (behaviour === 'BreakValidation') {
+      if (behaviour === 'SuccessBreakValidation') {
         shouldBreak = true;
       } else if (behaviour === 'SaveErrorAndRunNextRule') {
         errors.push(result.ruleError);

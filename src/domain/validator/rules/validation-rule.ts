@@ -42,7 +42,7 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
     );
 
     return tuples.reduce(
-      ([_, raw], [key, value]) => ['_', this.replaceByRegex(raw, key, String(value))],
+      ([, raw], [key, value]) => ['_', this.replaceByRegex(raw, key, String(value))],
     )[1];
   }
 

@@ -6,7 +6,7 @@ describe('can not empty array rule tests', () => {
     const sut = new CannotBeEmptyArrayAssertionRule();
     const result = sut.validate([1]);
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

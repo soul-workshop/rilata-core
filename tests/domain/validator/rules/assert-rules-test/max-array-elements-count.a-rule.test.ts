@@ -19,7 +19,7 @@ describe('max array elements count rule', () => {
     });
     test('success, valueArray length is  empty', () => {
       const res = sut.validate([]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
   });
 
@@ -27,15 +27,15 @@ describe('max array elements count rule', () => {
     const sut = new MaxArrayElementsCountAssertionRule(5);
     test('success, valueArray length is less than or equal to max', () => {
       const res = sut.validate([1, 2, 3, 4]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
     test('success, valueArray length is  equal to max', () => {
       const res = sut.validate([1, 2, 3, 4, 5]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
     test('success, valueArray length is  empty', () => {
       const res = sut.validate([]);
-      expect(res).toEqual({ behaviour: 'RunNextRule' });
+      expect(res).toEqual({ behaviour: 'SuccessRunNextRule' });
     });
     test('failure, the length of the value array is greater than max. ', () => {
       const res = sut.validate([1, 2, 3, 4, 5, 6, 0, 12]);

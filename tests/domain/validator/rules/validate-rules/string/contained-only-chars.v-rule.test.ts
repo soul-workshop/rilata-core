@@ -6,7 +6,7 @@ describe('String must be equal to value', () => {
     const sut = new ContainedOnlyCharsValidationRule('572374194057129687');
     const result = sut.validate('0123456789');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -14,7 +14,7 @@ describe('String must be equal to value', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('bom');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -22,7 +22,7 @@ describe('String must be equal to value', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('bomb');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -30,7 +30,7 @@ describe('String must be equal to value', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('ooooo');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 
@@ -38,7 +38,7 @@ describe('String must be equal to value', () => {
     const sut = new ContainedOnlyCharsValidationRule('omb');
     const result = sut.validate('b');
     expect(result).toEqual({
-      behaviour: 'RunNextRule',
+      behaviour: 'SuccessRunNextRule',
     });
   });
 

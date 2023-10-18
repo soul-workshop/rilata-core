@@ -8,7 +8,7 @@ describe('IsBooleanTypeRule', () => {
     valuesToCheck.forEach((value) => {
       const validationResult = rule.validate(value);
       expect(validationResult).toEqual({
-        behaviour: 'RunNextRule',
+        behaviour: 'SuccessRunNextRule',
       });
     });
   });

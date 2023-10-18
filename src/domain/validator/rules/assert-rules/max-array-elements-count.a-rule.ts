@@ -13,6 +13,6 @@ export class MaxArrayElementsCountAssertionRule extends ValidationRule<'assert',
   validate(value: unknown[]): TypeOrAssertRuleAnswer {
     return value.length > this.maxElementsCount
       ? this.returnFail('SaveErrorAndBreakValidation', { max: this.maxElementsCount, currentCount: value.length })
-      : this.returnSuccess('RunNextRule');
+      : this.returnSuccess('SuccessRunNextRule');
   }
 }

@@ -10,7 +10,7 @@ export class StringChoiceValidationRule extends ValidationRule<'validate', strin
 
   validate(value: string): ValidationRuleAnswer {
     return this.choices.includes(value)
-      ? this.returnSuccess('RunNextRule')
+      ? this.returnSuccess('SuccessRunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', { choices: this.choices });
   }
 }

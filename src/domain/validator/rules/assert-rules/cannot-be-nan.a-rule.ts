@@ -5,8 +5,8 @@ export class CannotBeNanRule extends ValidationRule<'assert', unknown> {
   requirement = 'Значение не может быть NaN';
 
   validate(value: unknown): TypeOrAssertRuleAnswer {
-    return isNaN(value)
+    return isNaN(Number(value))
       ? this.returnFail('SaveErrorAndBreakValidation')
-      : this.returnSuccess('RunNextRule');
+      : this.returnSuccess('SuccessRunNextRule');
   }
 }

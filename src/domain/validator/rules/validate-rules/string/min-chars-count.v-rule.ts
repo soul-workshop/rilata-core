@@ -11,6 +11,6 @@ export class MinCharsCountValidationRule extends ValidationRule<'validate', stri
   validate(value: string): ValidationRuleAnswer {
     return value.length < this.minCharsCount
       ? this.returnFail('SaveErrorAndRunNextRule', { minCount: this.minCharsCount })
-      : this.returnSuccess('RunNextRule');
+      : this.returnSuccess('SuccessRunNextRule');
   }
 }

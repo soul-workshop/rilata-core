@@ -8,7 +8,7 @@ describe('IsArrayTypeRule tests', () => {
     valuesToCheck.forEach((value) => {
       const result = rule.validate(value);
       expect(result).toEqual({
-        behaviour: 'RunNextRule',
+        behaviour: 'SuccessRunNextRule',
       });
     });
   });
