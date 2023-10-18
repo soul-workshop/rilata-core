@@ -13,7 +13,7 @@ export class ContainedOnlyCharsValidationRule extends ValidationRule<'validate',
     // eslint-disable-next-line no-restricted-syntax
     for (const char of value) {
       if (!this.onlyChars.includes(char)) {
-        return this.returnFail('SaveErrorAndRunNextRule');
+        return this.returnFail('SaveErrorAndRunNextRule', { onlyChars: this.onlyChars });
       }
     } return this.returnSuccess('RunNextRule');
   }

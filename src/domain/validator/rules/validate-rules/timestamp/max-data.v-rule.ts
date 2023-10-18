@@ -12,7 +12,7 @@ export class MaxDateStampValidationRule extends ValidationRule<'validate', numbe
   }
 
   validate(value: number): ValidationRuleAnswer {
-    return value < this.maxDateAsTimestamp
+    return value <= this.maxDateAsTimestamp
       ? this.returnSuccess('RunNextRule')
       : this.returnFail('SaveErrorAndRunNextRule', { maxDate: this.maxDateAsTimestamp });
   }

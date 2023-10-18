@@ -2,7 +2,7 @@ import { ValidationRuleAnswer } from '../../types';
 import { ValidationRule } from '../../validation-rule';
 
 export class OnlyLitinicOrCyrillicCharsValidationRule extends ValidationRule <'validate', string> {
-  requirement = 'В строке может быть только латиница и кирилица';
+  requirement = 'Строка может содержать слова только на латинице или на кирилице.';
 
   private latinic = /^[ a-z]+$/i;
 
