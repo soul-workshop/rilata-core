@@ -4,8 +4,8 @@ import { TypeOrAssertRuleAnswer } from '../types';
 export class CannotBeNanRule extends ValidationRule<'assert', unknown> {
   requirement = 'Значение не может быть NaN';
 
-  validate(value: number): TypeOrAssertRuleAnswer {
-    return isNaN(value)
+  validate(value: unknown): TypeOrAssertRuleAnswer {
+    return isNaN(Number(value))
       ? this.returnFail('SaveErrorAndBreakValidation')
       : this.returnSuccess('SuccessRunNextRule');
   }
