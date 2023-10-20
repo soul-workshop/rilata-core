@@ -1,5 +1,4 @@
 import { CannotBeEmptyStringAssertionRule } from '../../../rules/assert-rules/cannot-be-empty-string.v-rule';
-import { LeadRule } from '../../../rules/lead-rule';
 import { ValidationRule } from '../../../rules/validation-rule';
 import { LiteralFieldValidator } from '../../literal-field-validator';
 
@@ -10,7 +9,6 @@ export class CannotEmptyStringField<
     attrName: NAME,
     required: REQ,
     protected validateRules: ValidationRule<'validate', string>[],
-    protected leadRules: LeadRule<string>[] = [],
   ) {
     super(
       attrName,
@@ -18,7 +16,6 @@ export class CannotEmptyStringField<
       { isArray: false },
       'string',
       [new CannotBeEmptyStringAssertionRule(), ...validateRules],
-      leadRules,
     );
   }
 }

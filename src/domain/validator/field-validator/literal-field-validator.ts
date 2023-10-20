@@ -1,5 +1,4 @@
 import { success } from '../../../common/result/success';
-import { LeadRule } from '../../validator/rules/lead-rule';
 import { LiteralDataType } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';
@@ -22,7 +21,6 @@ export class LiteralFieldValidator<
     arrayConfig: GetArrayConfig<IS_ARR>,
     protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
     protected validateRules: ValidationRule<'validate', DATA_TYPE>[],
-    protected leadRules: LeadRule<DATA_TYPE>[] = [],
   ) {
     super(attrName, isRequired, arrayConfig, dataType);
   }
@@ -40,11 +38,7 @@ export class LiteralFieldValidator<
     const typeAnswer = this.validateByRules(value, this.getTypeCheckRules());
     if (typeAnswer.isValidValue === false) return this.getFailResult(typeAnswer.errors);
 
-    const leadedValue = this.leadRules.reduce(
-      (newValue, leadRule) => leadRule.lead(newValue as DATA_TYPE),
-      value,
-    );
-    const validateAnswer = this.validateByRules(leadedValue, this.validateRules);
+    const validateAnswer = this.validateByRules(value, this.validateRules);
     return validateAnswer.isValidValue
       ? success(undefined)
       : this.getFailResult(validateAnswer.errors);
