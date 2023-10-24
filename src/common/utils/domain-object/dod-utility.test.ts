@@ -1,5 +1,5 @@
 import { DODPrivateFixtures as DODF } from '../../../domain/domain-object-data/dod-private-fixtures';
-import { AggregateVersion } from '../../../domain/domain-object-data/domain-objects';
+import { AggregateVersion } from '../../../app/infra/rilata-backend-fronted/domain-object-data/domain-objects';
 import { GetDODMeta } from '../../../domain/domain-object-data/types';
 import { dtoUtility } from '../dto';
 import { UUIDUtility } from '../uuid/uuid-utility';

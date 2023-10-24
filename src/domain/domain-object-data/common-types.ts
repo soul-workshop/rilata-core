@@ -36,6 +36,7 @@ export type ErrorDod<
   NAME extends string,
   TYPE extends ErrorType = 'domain-error'
 > = {
+  meta: any;
   locale: LOCALE,
   name: NAME,
   domainType: 'error',

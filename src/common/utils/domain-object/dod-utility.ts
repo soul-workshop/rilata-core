@@ -5,7 +5,7 @@ import { Locale } from '../../../domain/locale';
 import { uuidUtility } from '../uuid/uuid-utility';
 
 /** Утилита для работы с объектами DomainObjectData */
-class DodUtility {
+export class DodUtility {
   getAppErrorByType<ERR extends ErrorDod<Locale, string, 'app-error'>>(
     name: ERR['name'],
     text: ERR['locale']['text'],
