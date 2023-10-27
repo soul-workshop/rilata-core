@@ -9,6 +9,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+*.lockb
+bun.lockb
 
 # OS
 .DS_Store
