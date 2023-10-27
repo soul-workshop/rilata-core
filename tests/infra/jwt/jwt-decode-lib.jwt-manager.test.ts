@@ -18,7 +18,7 @@ const incorrectToken = 'qwe';
 describe('Тест метода decodeToken', () => {
   test('Успешный тест', () => {
     const payload = jwtManager.decodeToken(correctToken);
-    // expect(payload.isSuccess()).toBeTruthy();
+    expect(payload.isSuccess()).toBeTruthy();
     expect(typeof (payload.value as DecodedToken<TestJWTPayload>).exp).toEqual('number');
     expect(typeof (payload.value as DecodedToken<TestJWTPayload>).iat).toEqual('number');
     expect(typeof (payload.value as DecodedToken<TestJWTPayload>).payload.userId).toBe('string');
