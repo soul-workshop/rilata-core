@@ -19,8 +19,8 @@ export abstract class JWTDecodeLibJWTManager<
     } catch (err) {
       return failure(dodUtility.getDomainErrorByType<InvalidTokenError>(
         'InvalidTokenError', 
-        "Невозможно расшифровать токен: токен имеет не верный формат.", 
-        { rawToken: `${this.decodeToken(rawToken)}`}));
+        "Невозможно расшифровать токен. Токен имеет не верный формат.", 
+        { rawToken: `${rawToken}`}));
     }
     return success(decodedInfo);
   }

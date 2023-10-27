@@ -53,7 +53,7 @@ export type VerifyTokenError = IncorrectTokenTypeError | NotValidTokenPayloadErr
 
 export type InvalidTokenBody = 
   {
-    text: 'Невозможно расшифровать токен: токен имеет не верный формат.',
+    text: 'Невозможно расшифровать токен. Токен имеет не верный формат.',
     hint: {
         rawToken: string,
     }
