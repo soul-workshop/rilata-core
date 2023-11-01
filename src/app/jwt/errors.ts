@@ -58,7 +58,5 @@ export type InvalidTokenBody =
         rawToken: string,
     }
 };
-
-export type InvalidTokenError = ErrorDod<InvalidTokenBody, 'InvalidTokenError'>;
-
 /** Невозможно расшифровать токен: токен имеет не верный формат. */
+export type InvalidTokenError = ErrorDod<InvalidTokenBody, 'InvalidTokenError'>;
