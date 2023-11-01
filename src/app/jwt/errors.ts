@@ -58,24 +58,7 @@ export type InvalidTokenBody =
         rawToken: string,
     }
 };
-/** Невозможно расшифровать токен: токен имеет не верный формат. */
 
-/** Некорректный хэш телеграмма */
 export type InvalidTokenError = ErrorDod<InvalidTokenBody, 'InvalidTokenError'>;
 
-export type TelegramHashErrorBody = {
-    text: 'Хэш телеграмма некорректный',
-    hint:{
-        hash: string,
-    }
-}
-
-/** Auth_date телеграмма устарел, должно быть не менее 7 дней */
-export type TelegramDtoError = ErrorDod<TelegramHashErrorBody, 'TelegramHashErrorBody'>
-
-export type TelegramAuthDateError = {
-    text: 'auth_date больше 7 дней',
-    hint:{
-        auth_date:string,
-    }
-}
+/** Невозможно расшифровать токен: токен имеет не верный формат. */
