@@ -16,6 +16,7 @@ export abstract class UseCase implements Actionable {
 
   init(moduleResolver: ModuleResolver): void {
     this.moduleResolver = moduleResolver;
+    this.logger = moduleResolver.getLogger();
   }
 
   abstract execute(...args: unknown[]): Promise<unknown>

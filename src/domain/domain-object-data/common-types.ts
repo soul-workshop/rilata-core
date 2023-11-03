@@ -54,6 +54,11 @@ export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
 
 export type GeneralEventDod = EventDod<DomainAttrs, Name>;
 
+export type UseCaseQueryDod<ATTRS extends DomainAttrs, NAME extends string> = {
+  attrs: ATTRS,
+  name: NAME,
+}
+
 export type UseCaseCommandDod<ATTRS extends DomainAttrs, NAME extends string> = {
   attrs: ATTRS,
   name: NAME,
