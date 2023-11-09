@@ -13,13 +13,13 @@
     "test": "bun test"
   },
   "dependencies": {
-    "bun-types": "^1.0.1",
     "email-validator": "^2.0.4",
     "jwt-decode": "^3.1.2",
-    "nurgeo-project-configs": "github:NurGeo/project-config",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "nurgeo-project-configs": "github:NurGeo/project-config",
+    "bun-types": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "eslint": "^8.7.0",
