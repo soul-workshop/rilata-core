@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
+import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { InternalError } from './error-types';
@@ -33,7 +34,7 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams> exten
   /**
    * Выполнить проверку какие либо проверки до выполнения доменной логики.
    * */
-  protected async runInitialChecks(..._args: unknown[]): Promise<GetUcResult<UC_PARAMS>> {
+  protected async runInitialChecks(..._args: unknown[]): Promise<Result<unknown, unknown>> {
     return success(undefined);
   }
 }
