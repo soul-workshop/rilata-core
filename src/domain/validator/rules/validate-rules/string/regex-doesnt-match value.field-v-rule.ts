@@ -1,7 +1,7 @@
 import { ValidationRuleAnswer } from '../../types';
 import { ValidationRule } from '../../validation-rule';
 
-export class RegexReturnFalseFormatValidationRule extends ValidationRule<'validate', string> {
+export class RegexDoesntMatchValidationRule extends ValidationRule<'validate', string> {
   constructor(protected regex: RegExp, public requirement: string, private hint = {}) {
     super();
   }

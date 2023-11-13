@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { LiteralFieldValidator } from '../../../../src/domain/validator/field-validator/literal-field-validator';
-import { RegexReturnTrueFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/regex-return-true.field-v-rule';
+import { RegexReturnTrueFormatValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/regex-matches-value.field-v-rule';
 import { EqualCharsCountValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/equal-chars-count.v-rule';
 import { StringChoiceValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/string-choice.v-rule';
 import { RangeNumberValidationRule } from '../../../../src/domain/validator/rules/validate-rules/number/range-number.v-rule';
