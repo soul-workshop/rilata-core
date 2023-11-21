@@ -23,6 +23,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyLitinicOrCyrillicCharsValidationRule',
         text: 'Строка может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -34,6 +35,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyLitinicOrCyrillicCharsValidationRule',
         text: 'Строка может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -45,6 +47,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyLitinicOrCyrillicCharsValidationRule',
         text: 'Строка может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -56,6 +59,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyLitinicOrCyrillicCharsValidationRule',
         text: 'Строка может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -67,6 +71,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyLitinicOrCyrillicCharsValidationRule',
         text: 'Строка может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -78,6 +83,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyLitinicOrCyrillicCharsValidationRule',
         text: 'Строка может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -89,6 +95,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyLitinicOrCyrillicCharsValidationRule',
         text: 'Строка может содержать слова только на латинице или на кирилице.',
       },
     });

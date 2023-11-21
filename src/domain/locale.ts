@@ -11,4 +11,5 @@ export type LocaleHint = Record<string, unknown>;
 export type Locale = {
   text: string,
   hint: LocaleHint,
+  name?: string,
 }

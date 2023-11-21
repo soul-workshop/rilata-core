@@ -22,6 +22,7 @@ describe('IsArrayTypeRule tests', () => {
         behaviour: 'SaveErrorAndBreakValidation',
         ruleError: {
           hint: {},
+          name: 'IsArrayTypeRule',
           text: 'Значение должно быть массивом данных',
         },
       });

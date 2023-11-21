@@ -13,6 +13,7 @@ describe('max array elements count rule', () => {
             currentCount: 2,
             max: 0,
           },
+          name: 'MaxArrayElementsCountAssertionRule',
           text: 'Максимальное количество элементов может быть {{max}}, сейчас {{currentCount}}',
         },
       });
@@ -46,6 +47,7 @@ describe('max array elements count rule', () => {
             currentCount: 8,
             max: 5,
           },
+          name: 'MaxArrayElementsCountAssertionRule',
           text: 'Максимальное количество элементов может быть {{max}}, сейчас {{currentCount}}',
         },
       });

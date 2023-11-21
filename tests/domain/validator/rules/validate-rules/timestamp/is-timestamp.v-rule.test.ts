@@ -16,6 +16,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'IsTimeStampValidationRule',
         text: 'Значение не является датой',
       },
     });
@@ -27,6 +28,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'IsTimeStampValidationRule',
         text: 'Значение не является датой',
       },
     });
@@ -38,6 +40,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'IsTimeStampValidationRule',
         text: 'Значение не является датой',
       },
     });
@@ -49,6 +52,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'IsTimeStampValidationRule',
         text: 'Значение не является датой',
       },
     });

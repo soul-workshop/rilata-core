@@ -19,6 +19,7 @@ describe('number validator with range value rule', () => {
       expect(result.value).toEqual({
         ageField: [{
           text: 'Возраст должен быть между {{min}} и {{max}}',
+          name: "RangeNumberValidationRule",
           hint: { max: 65, min: 18 },
         }],
       });

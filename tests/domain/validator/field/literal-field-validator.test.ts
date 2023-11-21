@@ -34,6 +34,7 @@ describe('Валидированное значение обязательно',
           fieldName: [
             {
               text: 'Значение не должно быть undefined или null',
+              name: 'CannotBeNullableAssertionRule',
               hint: {},
             },
           ],
@@ -50,6 +51,7 @@ describe('Валидированное значение обязательно',
       fieldName: [
         {
           hint: {},
+          name: 'IsNumberTypeRule',
           text: 'Значение должно быть числовым',
         },
       ],
@@ -64,6 +66,7 @@ describe('Валидированное значение обязательно',
       fieldName: [
         {
           hint: {},
+          name: 'CannotBeEmptyStringAssertionRule',
           text: 'Сротка обязательна к заполнению',
         },
       ],
@@ -78,6 +81,7 @@ describe('Валидированное значение обязательно',
       fieldName: [
         {
           hint: {},
+          name: 'IsBooleanTypeRule',
           text: 'Значение должно быть булевым',
         },
       ],
@@ -94,6 +98,7 @@ describe('Валидированное значение обязательно',
         fieldName: [
           {
             text: 'Длина строки должна быть не больше {{maxCount}}',
+            name: 'MaxCharsCountValidationRule',
             hint: {
               maxCount: 8,
             },
@@ -111,6 +116,7 @@ describe('Валидированное значение обязательно',
       fieldName: [
         {
           text: 'Строка должна быть не меньше {{minCount}}',
+          name: 'MinCharsCountValidationRule',
           hint: {
             minCount: 3,
           },
@@ -127,6 +133,7 @@ describe('Валидированное значение обязательно',
       fieldName: [
         {
           text: 'Значение должно соответствовать формату UUID',
+          name: 'UUIDFormatValidationRule',
           hint: {},
         },
       ],
@@ -164,6 +171,7 @@ describe('Валидированное значение обязательно',
         fieldName: [
           {
             text: 'Длина строки должна быть не больше {{maxCount}}',
+            name: 'MaxCharsCountValidationRule',
             hint: { maxCount: 8 },
           },
         ],
@@ -176,6 +184,7 @@ describe('Валидированное значение обязательно',
         fieldName: [
           {
             text: 'Значение не должно быть undefined',
+            name: "CannotBeUndefinedValidationRule",
             hint: {},
           },
         ],
@@ -195,6 +204,7 @@ describe('Валидированное значение обязательно',
             fieldName: [
               {
                 text: 'Значение не может быть Infinity или -Infinity',
+                name: 'CannotBeInfinityRule',
                 hint: {},
               },
             ],
@@ -211,6 +221,7 @@ describe('Валидированное значение обязательно',
         fieldName: [
           {
             text: 'Значение не может быть NaN',
+            name: "CannotBeNanRule",
             hint: {},
           },
         ],
@@ -249,6 +260,7 @@ describe('Валидированное значение необязательн
       fieldName: [
         {
           text: 'Значение должно быть числовым',
+          name: 'IsNumberTypeRule',
           hint: {},
         },
       ],
@@ -267,6 +279,7 @@ describe('Валидированное значение необязательн
       fieldName: [
         {
           text: 'Значение должно быть булевым',
+          name: 'IsBooleanTypeRule',
           hint: {},
         },
       ],
@@ -281,6 +294,7 @@ describe('Валидированное значение необязательн
       fieldName: [
         {
           text: 'Длина строки должна быть не больше {{maxCount}}',
+          name: 'MaxCharsCountValidationRule',
           hint: {
             maxCount: 8,
           },
@@ -296,11 +310,13 @@ describe('Валидированное значение необязательн
       fieldName: [
         {
           text: 'Длина строки должна быть не больше {{maxCount}}',
+          name: 'MaxCharsCountValidationRule',
           hint: {
             maxCount: 8,
           },
         }, {
           text: 'Значение должно соответствовать формату UUID',
+          name: 'UUIDFormatValidationRule',
           hint: {},
         },
       ],
@@ -314,11 +330,13 @@ describe('Валидированное значение необязательн
       fieldName: [
         {
           text: 'Строка должна быть не меньше {{minCount}}',
+          name: 'MinCharsCountValidationRule',
           hint: {
             minCount: 9,
           },
         }, {
           text: 'Значение должно соответствовать формату UUID',
+          name: 'UUIDFormatValidationRule',
           hint: {},
         },
       ],
@@ -356,6 +374,7 @@ describe('Валидированное значение необязательн
         fieldName: [
           {
             text: 'Длина строки должна быть не больше {{maxCount}}',
+            name: "MaxCharsCountValidationRule",
             hint: { maxCount: 8 },
           },
         ],
@@ -368,6 +387,7 @@ describe('Валидированное значение необязательн
         fieldName: [
           {
             text: 'Значение не может быть равным null',
+            name: "CannotBeNullValidationRule",
             hint: {},
           },
         ],
@@ -386,6 +406,7 @@ describe('Валидированное значение необязательн
           fieldName: [
             {
               text: 'Значение не может быть Infinity или -Infinity',
+              name: 'CannotBeInfinityRule',
               hint: {},
             },
           ],
@@ -400,6 +421,7 @@ describe('Валидированное значение необязательн
         fieldName: [
           {
             text: 'Значение не может быть NaN',
+            name: 'CannotBeNanRule',
             hint: {},
           },
         ],

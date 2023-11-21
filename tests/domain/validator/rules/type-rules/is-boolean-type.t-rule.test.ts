@@ -22,6 +22,7 @@ describe('IsBooleanTypeRule', () => {
         behaviour: 'SaveErrorAndBreakValidation',
         ruleError: {
           hint: {},
+          name: 'IsBooleanTypeRule',
           text: 'Значение должно быть булевым',
         },
       });

@@ -22,7 +22,6 @@ export type SaveErrorAndBreakValidation = {
 };
 
 export type SaveErrorAndRunNextRule = {
-  errorName: string,
   behaviour: 'SaveErrorAndRunNextRule',
   ruleError: RuleError,
 };

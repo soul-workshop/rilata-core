@@ -17,6 +17,7 @@ describe('can not empty array rule tests', () => {
       behaviour: 'SaveErrorAndBreakValidation',
       ruleError: {
         hint: {},
+        name: 'CannotBeEmptyArrayAssertionRule',
         text: 'Значение должно быть не пустым массивом данных',
       },
     });

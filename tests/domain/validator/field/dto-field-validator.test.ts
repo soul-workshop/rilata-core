@@ -34,6 +34,7 @@ describe('DTO Tests', () => {
             type: [
               {
                 text: 'Значение должно быть одним из значений списка',
+                name: 'StringChoiceValidationRule',
                 hint: { choices: ['mobile', 'work'] },
               },
             ],
@@ -51,12 +52,14 @@ describe('DTO Tests', () => {
             noOutField: [
               {
                 hint: {},
+                name: 'CannotBeNullableAssertionRule',
                 text: 'Значение не должно быть undefined или null',
               },
             ],
             type: [
               {
                 text: 'Значение должно быть одним из значений списка',
+                name: 'StringChoiceValidationRule',
                 hint: { choices: ['mobile', 'work'] },
               },
             ],
@@ -71,6 +74,7 @@ describe('DTO Tests', () => {
           ___dto_whole_value_validation_error___: [
             {
               text: 'Значение должно быть объектом',
+              name: 'IsDTOTypeRule',
               hint: {},
             },
           ],
@@ -86,6 +90,7 @@ describe('DTO Tests', () => {
             ___dto_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined или null',
+                name: 'CannotBeNullableAssertionRule',
                 hint: {},
               },
             ],
@@ -103,6 +108,7 @@ describe('DTO Tests', () => {
           ___dto_whole_value_validation_error___: [
             {
               text: 'Значение должно быть объектом',
+              name: 'IsDTOTypeRule',
               hint: {},
             },
           ],
@@ -145,6 +151,7 @@ describe('DTO Tests', () => {
               noOutField: [
                 {
                   text: 'Значение не должно быть undefined или null',
+                  name: "CannotBeNullableAssertionRule",
                   hint: {},
                 },
               ],
@@ -159,6 +166,7 @@ describe('DTO Tests', () => {
             ___dto_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined',
+                name: 'CannotBeUndefinedValidationRule',
                 hint: {},
               },
             ],
@@ -199,6 +207,7 @@ describe('DTO Tests', () => {
             type: [
               {
                 text: 'Значение должно быть одним из значений списка',
+                name: 'StringChoiceValidationRule',
                 hint: { choices: ['mobile', 'work'] },
               },
             ],
@@ -216,12 +225,14 @@ describe('DTO Tests', () => {
             noOutField: [
               {
                 hint: {},
+                name: 'CannotBeNullableAssertionRule',
                 text: 'Значение не должно быть undefined или null',
               },
             ],
             type: [
               {
                 text: 'Значение должно быть строковым значением',
+                name: 'IsStringTypeRule',
                 hint: {},
               },
             ],
@@ -236,6 +247,7 @@ describe('DTO Tests', () => {
           ___dto_whole_value_validation_error___: [
             {
               text: 'Значение должно быть объектом',
+              name: 'IsDTOTypeRule',
               hint: {},
             },
           ],
@@ -252,6 +264,7 @@ describe('DTO Tests', () => {
           ___dto_whole_value_validation_error___: [
             {
               text: 'Значение должно быть объектом',
+              name: 'IsDTOTypeRule',
               hint: {},
             },
           ],
@@ -292,6 +305,7 @@ describe('DTO Tests', () => {
               noOutField: [
                 {
                   text: 'Значение должно быть строковым значением',
+                  name: 'IsStringTypeRule',
                   hint: {},
                 },
               ],
@@ -306,6 +320,7 @@ describe('DTO Tests', () => {
             ___dto_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined',
+                name: "CannotBeUndefinedValidationRule",
                 hint: {},
               },
             ],
@@ -339,6 +354,7 @@ describe('DTO Tests', () => {
             ___array_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined или null',
+                name: 'CannotBeNullableAssertionRule',
                 hint: {},
               },
             ],
@@ -355,6 +371,7 @@ describe('DTO Tests', () => {
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение должно быть массивом данных',
+              name: 'IsArrayTypeRule',
               hint: {},
             },
           ],
@@ -373,8 +390,9 @@ describe('DTO Tests', () => {
               type: [
                 {
                   text: 'Значение должно быть одним из значений списка',
+                  name: 'StringChoiceValidationRule',
                   hint: { choices: ['mobile', 'work'] },
-                },
+                }
               ],
             },
           },
@@ -393,12 +411,14 @@ describe('DTO Tests', () => {
               type: [
                 {
                   text: 'Значение должно быть одним из значений списка',
+                  name: "StringChoiceValidationRule",
                   hint: { choices: ['mobile', 'work'] },
                 },
               ],
               noOutField: [
                 {
                   hint: {},
+                  name: "IsStringTypeRule",
                   text: 'Значение должно быть строковым значением',
                 },
               ],
@@ -409,10 +429,12 @@ describe('DTO Tests', () => {
               number: [
                 {
                   text: 'Строка должна соответствовать формату: "+7-###-##-##"',
+                  name: 'RegexFormatValidationRule',
                   hint: {},
                 },
                 {
                   text: 'Длина строки должна быть равна {{count}}, сейчас {{current}}',
+                  name: 'EqualCharsCountValidationRule',
                   hint: {
                     count: 16,
                     current: 17,
@@ -435,6 +457,7 @@ describe('DTO Tests', () => {
             ___dto_whole_value_validation_error___: [
               {
                 text: 'Значение должно быть объектом',
+                name: 'IsDTOTypeRule',
                 hint: {},
               },
             ],
@@ -479,12 +502,14 @@ describe('DTO Tests', () => {
                 type: [
                   {
                     text: 'Значение должно быть одним из значений списка',
+                    name: 'StringChoiceValidationRule',
                     hint: { choices: ['mobile', 'work'] },
                   },
                 ],
                 noOutField: [
                   {
                     text: 'Значение не должно быть undefined или null',
+                    name: 'CannotBeNullableAssertionRule',
                     hint: {},
                   },
                 ],
@@ -500,6 +525,7 @@ describe('DTO Tests', () => {
             ___array_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined',
+                name: 'CannotBeUndefinedValidationRule',
                 hint: {},
               },
             ],
@@ -517,6 +543,7 @@ describe('DTO Tests', () => {
               ___dto_whole_value_validation_error___: [
                 {
                   text: 'Значение должно быть объектом',
+                  name: 'IsDTOTypeRule',
                   hint: {},
                 },
               ],
@@ -526,6 +553,7 @@ describe('DTO Tests', () => {
                 noOutField: [
                   {
                     text: 'Значение не должно быть undefined или null',
+                    name: 'CannotBeNullableAssertionRule',
                     hint: {},
                   },
                 ],
@@ -568,6 +596,7 @@ describe('DTO Tests', () => {
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение должно быть массивом данных',
+              name: 'IsArrayTypeRule',
               hint: {},
             },
           ],
@@ -586,6 +615,7 @@ describe('DTO Tests', () => {
               type: [
                 {
                   text: 'Значение должно быть одним из значений списка',
+                  name: 'StringChoiceValidationRule',
                   hint: { choices: ['mobile', 'work'] },
                 },
               ],
@@ -606,12 +636,14 @@ describe('DTO Tests', () => {
               noOutField: [
                 {
                   hint: {},
+                  name: 'CannotBeNullableAssertionRule',
                   text: 'Значение не должно быть undefined или null',
                 },
               ],
               type: [
                 {
                   text: 'Значение должно быть одним из значений списка',
+                  name: 'StringChoiceValidationRule',
                   hint: { choices: ['mobile', 'work'] },
                 },
               ],
@@ -632,6 +664,7 @@ describe('DTO Tests', () => {
               type: [
                 {
                   text: 'Значение должно быть одним из значений списка',
+                  name: 'StringChoiceValidationRule',
                   hint: { choices: ['mobile', 'work'] },
                 },
               ],
@@ -642,6 +675,7 @@ describe('DTO Tests', () => {
               noOutField: [
                 {
                   text: 'Значение должно быть строковым значением',
+                  name: 'IsStringTypeRule',
                   hint: {},
                 },
               ],
@@ -661,6 +695,7 @@ describe('DTO Tests', () => {
             ___dto_whole_value_validation_error___: [
               {
                 text: 'Значение должно быть объектом',
+                name: 'IsDTOTypeRule',
                 hint: {},
               },
             ],
@@ -699,6 +734,7 @@ describe('DTO Tests', () => {
             ___array_whole_value_validation_error___: [
               {
                 text: 'Значение не может быть равным null',
+                name: 'CannotBeNullValidationRule',
                 hint: {},
               },
             ],
@@ -717,6 +753,7 @@ describe('DTO Tests', () => {
                 noOutField: [
                   {
                     text: 'Значение не должно быть undefined или null',
+                    name: 'CannotBeNullableAssertionRule',
                     hint: {},
                   },
                 ],
@@ -736,6 +773,7 @@ describe('DTO Tests', () => {
               ___dto_whole_value_validation_error___: [
                 {
                   text: 'Значение должно быть объектом',
+                  name: 'IsDTOTypeRule',
                   hint: {},
                 },
               ],

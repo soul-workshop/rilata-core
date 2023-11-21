@@ -17,6 +17,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { minDate: 946728000000 },
+        name: 'MinDateStampValidationRule',
         text: 'Дата должно быть позже {{minDate}}',
       },
     });
@@ -28,6 +29,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { minDate: 946728000000 },
+        name: 'MinDateStampValidationRule',
         text: 'Дата должно быть позже {{minDate}}',
       },
     });
@@ -39,6 +41,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { minDate: 946728000000 },
+        name: 'MinDateStampValidationRule',
         text: 'Дата должно быть позже {{minDate}}',
       },
     });
