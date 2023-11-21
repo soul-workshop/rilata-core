@@ -16,7 +16,6 @@ export type SuccessRunNextRule = { behaviour: 'SuccessRunNextRule' };
 export type SuccessBreakValidation = { behaviour: 'SuccessBreakValidation' };
 
 export type SaveErrorAndBreakValidation = {
-  errorName: string,
   behaviour: 'SaveErrorAndBreakValidation',
   ruleError: RuleError,
 };
