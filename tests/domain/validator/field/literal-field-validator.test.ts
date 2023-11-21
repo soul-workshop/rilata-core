@@ -184,7 +184,7 @@ describe('Валидированное значение обязательно',
         fieldName: [
           {
             text: 'Значение не должно быть undefined',
-            name: "CannotBeUndefinedValidationRule",
+            name: 'CannotBeUndefinedValidationRule',
             hint: {},
           },
         ],
@@ -221,7 +221,7 @@ describe('Валидированное значение обязательно',
         fieldName: [
           {
             text: 'Значение не может быть NaN',
-            name: "CannotBeNanRule",
+            name: 'CannotBeNanRule',
             hint: {},
           },
         ],
@@ -374,7 +374,7 @@ describe('Валидированное значение необязательн
         fieldName: [
           {
             text: 'Длина строки должна быть не больше {{maxCount}}',
-            name: "MaxCharsCountValidationRule",
+            name: 'MaxCharsCountValidationRule',
             hint: { maxCount: 8 },
           },
         ],
@@ -387,7 +387,7 @@ describe('Валидированное значение необязательн
         fieldName: [
           {
             text: 'Значение не может быть равным null',
-            name: "CannotBeNullValidationRule",
+            name: 'CannotBeNullValidationRule',
             hint: {},
           },
         ],
