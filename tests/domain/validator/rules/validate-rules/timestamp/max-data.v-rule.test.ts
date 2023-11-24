@@ -17,6 +17,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { maxDate: 2578315980000 },
+        name: 'MaxDateStampValidationRule',
         text: 'Дата должно быть раньше {{maxDate}}',
       },
     });
@@ -28,6 +29,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { maxDate: 2578315980000 },
+        name: 'MaxDateStampValidationRule',
         text: 'Дата должно быть раньше {{maxDate}}',
       },
     });
@@ -39,6 +41,7 @@ describe('Value is a date', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { maxDate: 2578315980000 },
+        name: 'MaxDateStampValidationRule',
         text: 'Дата должно быть раньше {{maxDate}}',
       },
     });

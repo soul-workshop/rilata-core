@@ -25,6 +25,7 @@ describe('Line length should not be greater than', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { maxCount: 10 },
+        name: 'MaxCharsCountValidationRule',
         text: 'Длина строки должна быть не больше {{maxCount}}',
       },
     });

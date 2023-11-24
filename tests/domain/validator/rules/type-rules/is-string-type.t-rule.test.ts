@@ -19,6 +19,7 @@ describe('IsStringTypeRule', () => {
         behaviour: 'SaveErrorAndBreakValidation',
         ruleError: {
           hint: {},
+          name: 'IsStringTypeRule',
           text: 'Значение должно быть строковым значением',
         },
       });

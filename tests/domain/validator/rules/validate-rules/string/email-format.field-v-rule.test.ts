@@ -15,6 +15,7 @@ describe('String must match the email format', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'EmailFormatValidationRule',
         text: 'Строка не соответствует формату электронной почты',
       },
     });
@@ -26,6 +27,7 @@ describe('String must match the email format', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'EmailFormatValidationRule',
         text: 'Строка не соответствует формату электронной почты',
       },
     });
@@ -37,6 +39,7 @@ describe('String must match the email format', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'EmailFormatValidationRule',
         text: 'Строка не соответствует формату электронной почты',
       },
     });

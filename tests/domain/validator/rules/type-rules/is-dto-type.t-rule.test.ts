@@ -24,6 +24,7 @@ describe('IsDTOTypeRule', () => {
         behaviour: 'SaveErrorAndBreakValidation',
         ruleError: {
           hint: {},
+          name: 'IsDTOTypeRule',
           text: 'Значение должно быть объектом',
         },
       });

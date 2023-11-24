@@ -11,6 +11,7 @@ describe('Length of the string must be equal to', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { count: 4, current: value.length },
+        name: 'EqualCharsCountValidationRule',
         text: 'Длина строки должна быть равна {{count}}, сейчас {{current}}',
       },
     });
@@ -23,6 +24,7 @@ describe('Length of the string must be equal to', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { count: 5, current: 'hhheeeellllooo'.length },
+        name: 'EqualCharsCountValidationRule',
         text: 'Длина строки должна быть равна {{count}}, сейчас {{current}}',
       },
     });

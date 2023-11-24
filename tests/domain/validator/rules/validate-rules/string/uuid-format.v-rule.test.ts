@@ -16,6 +16,7 @@ describe('Value must match the UUID format', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'UUIDFormatValidationRule',
         text: 'Значение должно соответствовать формату UUID',
       },
     });

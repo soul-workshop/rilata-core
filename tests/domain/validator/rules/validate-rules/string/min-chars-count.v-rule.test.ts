@@ -25,6 +25,7 @@ describe('Line length should not be greater than', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { minCount: 10 },
+        name: 'MinCharsCountValidationRule',
         text: 'Строка должна быть не меньше {{minCount}}',
       },
     });

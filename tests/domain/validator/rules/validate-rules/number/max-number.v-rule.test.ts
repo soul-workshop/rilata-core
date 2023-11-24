@@ -23,6 +23,7 @@ describe('Number must be less than or equal to', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { max: maxAllowedNumber },
+        name: 'MaxNumberValidationRule',
         text: 'Число должно быть меньше или равно {{max}}',
       },
     });

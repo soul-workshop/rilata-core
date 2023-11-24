@@ -33,6 +33,7 @@ describe('String must not be equal to value', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { noChars: '#!&?' },
+        name: 'NoContainedCharsValidationRule',
         text: 'Строка не должна содержать символы {{noChars}}',
       },
     });
@@ -45,6 +46,7 @@ describe('String must not be equal to value', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { noChars: '1234567890' },
+        name: 'NoContainedCharsValidationRule',
         text: 'Строка не должна содержать символы {{noChars}}',
       },
     });
@@ -57,6 +59,7 @@ describe('String must not be equal to value', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { noChars: ' ' },
+        name: 'NoContainedCharsValidationRule',
         text: 'Строка не должна содержать пробел',
       },
     });

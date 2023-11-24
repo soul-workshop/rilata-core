@@ -22,6 +22,7 @@ describe('can not be nullable  rule tests', () => {
         behaviour: 'SaveErrorAndBreakValidation',
         ruleError: {
           hint: {},
+          name: 'CannotBeNullableAssertionRule',
           text: 'Значение не должно быть undefined или null',
         },
       });

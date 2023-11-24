@@ -18,6 +18,7 @@ describe('distance between dates', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RangeDataTimestampValidationRule',
         text: 'Дата должна быть позже {{minDate}} и раньше {{maxDate}}',
       },
     });
@@ -29,6 +30,7 @@ describe('distance between dates', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RangeDataTimestampValidationRule',
         text: 'Дата должна быть позже {{minDate}} и раньше {{maxDate}}',
       },
     });
@@ -40,6 +42,7 @@ describe('distance between dates', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RangeDataTimestampValidationRule',
         text: 'Дата должна быть позже {{minDate}} и раньше {{maxDate}}',
       },
     });
@@ -51,6 +54,7 @@ describe('distance between dates', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RangeDataTimestampValidationRule',
         text: 'Дата должна быть позже {{minDate}} и раньше {{maxDate}}',
       },
     });

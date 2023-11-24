@@ -29,6 +29,7 @@ describe('min array elements count rule', () => {
             currentCount: 0,
             min: 3,
           },
+          name: 'MinArrayElementsCountAssertionRule',
           text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
         },
       });
@@ -46,6 +47,7 @@ describe('min array elements count rule', () => {
             currentCount: 2,
             min: 3,
           },
+          name: 'MinArrayElementsCountAssertionRule',
           text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
         },
       });

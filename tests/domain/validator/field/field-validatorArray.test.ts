@@ -44,6 +44,7 @@ describe('тесты литерального валидатора приним�
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined или null',
+              name: 'CannotBeNullableAssertionRule',
               hint: {},
             },
           ],
@@ -60,6 +61,7 @@ describe('тесты литерального валидатора приним�
         ___array_whole_value_validation_error___: [
           {
             text: 'Значение должно быть массивом данных',
+            name: 'IsArrayTypeRule',
             hint: {},
           },
         ],
@@ -76,6 +78,7 @@ describe('тесты литерального валидатора приним�
           roles: [
             {
               text: 'Значение должно быть одним из значений списка',
+              name: 'StringChoiceValidationRule',
               hint: {
                 choices: ['admin', 'staffManager', 'officeChieff', 'saleManager'],
               },
@@ -95,6 +98,7 @@ describe('тесты литерального валидатора приним�
           roles: [
             {
               text: 'Значение должно быть строковым значением',
+              name: 'IsStringTypeRule',
               hint: {},
             },
           ],
@@ -121,6 +125,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Значение должно быть не пустым массивом данных',
+                name: 'CannotBeEmptyArrayAssertionRule',
                 hint: {},
               },
             ],
@@ -136,6 +141,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined или null',
+                name: 'CannotBeNullableAssertionRule',
                 hint: {},
               },
             ],
@@ -177,6 +183,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Максимальное количество элементов может быть {{max}}, сейчас {{currentCount}}',
+                name: 'MaxArrayElementsCountAssertionRule',
                 hint: {
                   max: 2,
                   currentCount: 3,
@@ -195,6 +202,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 hint: {},
+                name: 'CannotBeNullableAssertionRule',
                 text: 'Значение не должно быть undefined или null',
               },
             ],
@@ -228,6 +236,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
+                name: 'MinArrayElementsCountAssertionRule',
                 hint: {
                   min: 2,
                   currentCount: 0,
@@ -246,6 +255,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
+                name: 'MinArrayElementsCountAssertionRule',
                 hint: {
                   min: 2,
                   currentCount: 1,
@@ -264,6 +274,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 hint: {},
+                name: 'CannotBeNullableAssertionRule',
                 text: 'Значение не должно быть undefined или null',
               },
             ],
@@ -299,6 +310,7 @@ describe('тесты литерального валидатора приним�
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined',
+              name: 'CannotBeUndefinedValidationRule',
               hint: {},
             },
           ],
@@ -336,6 +348,7 @@ describe('тесты литерального валидатора приним�
         ___array_whole_value_validation_error___: [
           {
             text: 'Значение должно быть массивом данных',
+            name: 'IsArrayTypeRule',
             hint: {},
           },
         ],
@@ -352,6 +365,7 @@ describe('тесты литерального валидатора приним�
           roles: [
             {
               text: 'Значение должно быть одним из значений списка',
+              name: 'StringChoiceValidationRule',
               hint: {
                 choices: ['admin', 'staffManager', 'officeChieff', 'saleManager'],
               },
@@ -389,6 +403,7 @@ describe('тесты литерального валидатора приним�
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение не может быть равным null',
+              name: 'CannotBeNullValidationRule',
               hint: {},
             },
           ],
