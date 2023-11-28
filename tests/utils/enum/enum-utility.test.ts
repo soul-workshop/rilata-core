@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-shadow */
-import { eNumUtility } from './enum-utility';
+import { describe, test, expect } from 'bun:test';
+import { eNumUtility } from '../../../src/common/utils/enum/enum-utility';
 
 describe('Test eNumUtility', () => {
   enum strEnum {

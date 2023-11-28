@@ -1,4 +1,5 @@
-import { arrayUtility } from './arrayUtility';
+import { describe, test, expect } from 'bun:test';
+import { arrayUtility } from '../../../src/common/utils/array/arrayUtility';
 
 describe('arrayUtility class', () => {
   test('перемешать содержимое списка случайным образом', async () => {

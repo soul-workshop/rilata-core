@@ -1,4 +1,5 @@
-import { stringUtility } from './string.utility';
+import { describe, test, expect } from 'bun:test';
+import { stringUtility } from '../../../src/common/utils/string/string.utility';
 
 describe('Тестирование класса StringUtility', () => {
   test('Метод trimChars', () => {
