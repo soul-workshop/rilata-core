@@ -1,4 +1,3 @@
-import { domainObjectUtility } from '../src/common/utils/domain-object/domain-object-utility';
 import { ErrorDod, EventDod } from '../src/domain/domain-object-data/common-types';
 
 export namespace DODPrivateFixtures {
@@ -84,16 +83,16 @@ export namespace DODPrivateFixtures {
     },
   };
 
-  export const outputPersonDOD = domainObjectUtility.getOutputData(
-    personDOD,
-    ['contacts.noOutField', 'contacts.email.noOutField', 'contacts.phones.noOutField'],
-  );
+  // export const outputPersonDOD = dodUtility.getOutputData(
+  //   personDOD,
+  //   ['contacts.noOutField', 'contacts.email.noOutField', 'contacts.phones.noOutField'],
+  // );
 
   export type PersonPhoneAddedEventDOD = EventDod<PhoneAttrs, 'PersonPhoneAddedEvent'>;
 
   export type InternalAppAttrs = { text: string, hint: { traceback: 'any object' } };
 
-  export type InternalAppError = ErrorDod<InternalAppAttrs, 'InternalError', 'app-error'>;
+  export type InternalAppError = ErrorDod<InternalAppAttrs, 'InternalAppError', 'app-error'>;
 
   export type PersonNotExitsErrorDOD = ErrorDod<{ text: string, hint: { personId: string } }, 'PersonNotExitsError'>;
 
