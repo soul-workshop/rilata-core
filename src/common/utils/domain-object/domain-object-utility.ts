@@ -1,8 +1,5 @@
-// import {
-//   GeneralDOD, DomainAttrs, OutputDA, OutputDOD,
-// } from '../../../domain/domain-object/types';
-// import { GetDomainAttrsDotKeys } from '../../type-functions';
-// import { dtoUtility } from '../dto';
+import { GetDomainAttrsDotKeys } from '../../type-functions';
+import { dtoUtility } from '../dto';
 
 // export class domainObjectUtility {
 //   static getOutputAttrs<
