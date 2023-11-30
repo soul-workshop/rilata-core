@@ -1,5 +1,5 @@
 import { TokenType } from './types';
-import { ErrorDod } from "../../domain/domain-object-data/common-types";
+import { ErrorDod } from '../../domain/domain-object-data/common-types';
 
 export type IncorrectTokenTypeBody = {
   text: 'Некорректный тип токена авторизации',
@@ -51,8 +51,7 @@ export type JsonWebTokenError = ErrorDod<JsonWebTokenErrorBody, 'JsonWebTokenErr
 export type VerifyTokenError = IncorrectTokenTypeError | NotValidTokenPayloadError
   | NotBeforeError | TokenExpiredError | JsonWebTokenError;
 
-export type InvalidTokenBody = 
-  {
+export type InvalidTokenBody = {
     text: 'Невозможно расшифровать токен. Токен имеет не верный формат.',
     hint: {
         rawToken: string,
