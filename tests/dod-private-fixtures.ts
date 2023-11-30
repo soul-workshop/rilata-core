@@ -90,11 +90,11 @@ export namespace DODPrivateFixtures {
 
   export type PersonPhoneAddedEventDOD = EventDod<PhoneAttrs, 'PersonPhoneAddedEvent'>;
 
-  export type InternalAppAttrs = { text: string, hint: { traceback: 'any object' } };
+  export type InternalAppLocale = { text: string, hint: { traceback: 'any object' } };
 
-  export type InternalAppError = ErrorDod<InternalAppAttrs, 'InternalAppError', 'app-error'>;
+  export type InternalAppError = ErrorDod<InternalAppLocale, 'InternalAppError', 'app-error'>;
 
-  export type PersonNotExitsErrorDOD = ErrorDod<{ text: string, hint: { personId: string } }, 'PersonNotExitsError'>;
+  export type PersonNotExitsErrorDOD = ErrorDod<{ text: string, hint: { personId: string } }, 'PersonNotExistError'>;
 
   export type PersonEmailAddedEventDOD = EventDod<PersonAttrs, 'PersonEmailAddedEvent'>;
 }

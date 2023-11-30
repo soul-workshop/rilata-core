@@ -6,101 +6,33 @@ import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
 
 const sut = dodUtility;
 
+const requestID = uuidUtility.getNewUUID();
+
 describe('test DODUtility class', () => {
   describe('получение attrs объекта события', () => {
-    const requestID = uuidUtility.getNewUUID();
-
     test('получили тот же объект attrs что передали', () => {
-      const phoneAddedEventAttrs = {
-        ...dtoUtility.deepCopy(DODF.phoneAttrs),
-      };
-
       const phoneAddedEvent = sut.getEventByType<
           DODF.PersonPhoneAddedEventDOD
-          >('PersonPhoneAddedEvent', phoneAddedEventAttrs, {
+          >('PersonPhoneAddedEvent', dtoUtility.deepCopy(DODF.phoneAttrs), {
             type: 'AnonymousUser',
             requestID,
           });
 
-      expect(phoneAddedEvent.attrs).toStrictEqual({
-        number: '+7-777-287-81-82',
-        type: 'mobile',
-        noOutField: 'empty info',
-      });
-    });
+      const eventID = phoneAddedEvent.eventId;
 
-    test('получили ожидаемую метаинформацию', () => {
-      const phoneAddedEventAttrs = {
-        ...dtoUtility.deepCopy(DODF.phoneAttrs),
-      };
-
-      const phoneAddedEvent = sut.getEventByType<
-          DODF.PersonPhoneAddedEventDOD
-          >('PersonPhoneAddedEvent', phoneAddedEventAttrs, {
-            type: 'AnonymousUser',
-            requestID,
-          });
-
-      const expectedMeta: DODF.PersonPhoneAddedEventDOD = {
+      expect(phoneAddedEvent).toStrictEqual({
+        name: 'PersonPhoneAddedEvent',
+        caller: {
+          type: 'AnonymousUser',
+          requestID,
+        },
         attrs: {
           number: '+7-777-287-81-82',
           type: 'mobile',
           noOutField: 'empty info',
         },
-        name: 'PersonPhoneAddedEvent',
         domainType: 'event',
-        eventId: phoneAddedEvent.eventId,
-        caller: {
-          type: 'AnonymousUser',
-          requestID: phoneAddedEvent.eventId,
-        },
-      };
-
-      expect(phoneAddedEvent.name).toStrictEqual('PersonPhoneAddedEvent');
-      expect(phoneAddedEvent.domainType).toStrictEqual('event');
-      expect(phoneAddedEvent.eventId).toStrictEqual(expectedMeta.eventId);
-      expect(phoneAddedEvent.caller).toStrictEqual({
-        type: 'AnonymousUser',
-        requestID,
-      });
-    });
-
-    test('получили ожидаемый DOD объект события', () => {
-      const phoneAddedEventAttrs = {
-        ...dtoUtility.deepCopy(DODF.phoneAttrs),
-      };
-
-      const phoneAddedEvent = sut.getEventByType<
-          DODF.PersonPhoneAddedEventDOD
-          >('PersonPhoneAddedEvent', phoneAddedEventAttrs, {
-            type: 'AnonymousUser',
-            requestID,
-          });
-
-      const expectedMeta: DODF.PersonPhoneAddedEventDOD = {
-        attrs: {
-          number: '+7-777-287-81-82',
-          type: 'mobile',
-          noOutField: 'empty info',
-        },
-        name: 'PersonPhoneAddedEvent',
-        domainType: 'event',
-        eventId: phoneAddedEvent.eventId,
-        caller: {
-          type: 'AnonymousUser',
-          requestID: phoneAddedEvent.eventId,
-        },
-      };
-
-      expect(phoneAddedEvent.attrs.number).toStrictEqual('+7-777-287-81-82');
-      expect(phoneAddedEvent.attrs.type).toStrictEqual('mobile');
-      expect(phoneAddedEvent.attrs.noOutField).toStrictEqual('empty info');
-      expect(phoneAddedEvent.name).toStrictEqual('PersonPhoneAddedEvent');
-      expect(phoneAddedEvent.domainType).toStrictEqual('event');
-      expect(phoneAddedEvent.eventId).toStrictEqual(expectedMeta.eventId);
-      expect(phoneAddedEvent.caller).toStrictEqual({
-        type: 'AnonymousUser',
-        requestID,
+        eventId: eventID,
       });
     });
   });
@@ -117,18 +49,6 @@ describe('test DODUtility class', () => {
       const errAttrs = { traceback: 'any object' } as const;
       const appError = sut.getAppErrorByType<DODF.InternalAppError>('InternalAppError', 'app-error', errAttrs);
 
-      const expectedMeta: DODF.InternalAppError = {
-        locale: {
-          text: 'app-error',
-          hint: {
-            traceback: errAttrs.traceback,
-          },
-        },
-        name: 'InternalAppError',
-        domainType: 'error',
-        errorType: 'app-error',
-      };
-
       expect(appError.name).toStrictEqual('InternalAppError');
       expect(appError.domainType).toStrictEqual('error');
       expect(appError.errorType).toStrictEqual('app-error');
@@ -138,7 +58,7 @@ describe('test DODUtility class', () => {
       const errAttrs = { traceback: 'any object' } as const;
       const appError = sut.getAppErrorByType<DODF.InternalAppError>('InternalAppError', 'app-error', errAttrs);
 
-      const expectedMeta: DODF.InternalAppError = {
+      expect(appError).toStrictEqual({
         locale: {
           text: 'app-error',
           hint: {
@@ -148,13 +68,7 @@ describe('test DODUtility class', () => {
         name: 'InternalAppError',
         domainType: 'error',
         errorType: 'app-error',
-      };
-
-      expect(appError.locale.text).toStrictEqual('app-error');
-      expect(appError.locale.hint).toStrictEqual({ traceback: 'any object' });
-      expect(appError.name).toStrictEqual('InternalAppError');
-      expect(appError.domainType).toStrictEqual('error');
-      expect(appError.errorType).toStrictEqual('app-error');
+      });
     });
   });
 
@@ -162,7 +76,7 @@ describe('test DODUtility class', () => {
     test('получили объект attrs', () => {
       const errAttrs = { personId: '5' };
       const domainError = sut
-        .getDomainErrorByType<DODF.PersonNotExitsErrorDOD>('PersonNotExitsError', 'domain-error', errAttrs);
+        .getDomainErrorByType<DODF.PersonNotExitsErrorDOD>('PersonNotExistError', 'domain-error', errAttrs);
 
       expect(domainError.locale.hint).toStrictEqual({ personId: '5' });
     });
@@ -170,21 +84,9 @@ describe('test DODUtility class', () => {
     test('получили ожидаемую метаинформацию', () => {
       const errAttrs = { personId: '5' };
       const domainError = sut
-        .getDomainErrorByType<DODF.PersonNotExitsErrorDOD>('PersonNotExitsError', 'domain-error', errAttrs);
+        .getDomainErrorByType<DODF.PersonNotExitsErrorDOD>('PersonNotExistError', 'domain-error', errAttrs);
 
-      const expectedMeta: DODF.PersonNotExitsErrorDOD = {
-        locale: {
-          text: 'domain-error',
-          hint: {
-            personId: errAttrs.personId,
-          },
-        },
-        name: 'PersonNotExitsError',
-        domainType: 'error',
-        errorType: 'domain-error',
-      };
-
-      expect(domainError.name).toEqual('PersonNotExitsError');
+      expect(domainError.name).toEqual('PersonNotExistError');
       expect(domainError.domainType).toEqual('error');
       expect(domainError.errorType).toEqual('domain-error');
     });
@@ -192,25 +94,19 @@ describe('test DODUtility class', () => {
     test('получили ожидаемый DOD объект доменной ошибки', () => {
       const errAttrs = { personId: '5' };
       const domainError = sut
-        .getDomainErrorByType<DODF.PersonNotExitsErrorDOD>('PersonNotExitsError', 'domain-error', errAttrs);
+        .getDomainErrorByType<DODF.PersonNotExitsErrorDOD>('PersonNotExistError', 'domain-error', errAttrs);
 
-      const expectedMeta: DODF.PersonNotExitsErrorDOD = {
+      expect(domainError).toStrictEqual({
         locale: {
           text: 'domain-error',
           hint: {
             personId: errAttrs.personId,
           },
         },
-        name: 'PersonNotExitsError',
+        name: 'PersonNotExistError',
         domainType: 'error',
         errorType: 'domain-error',
-      };
-
-      expect(domainError.locale.text).toStrictEqual('domain-error');
-      expect(domainError.locale.hint).toStrictEqual({ personId: '5' });
-      expect(domainError.name).toStrictEqual('PersonNotExitsError');
-      expect(domainError.domainType).toStrictEqual('error');
-      expect(domainError.errorType).toStrictEqual('domain-error');
+      });
     });
   });
 });
