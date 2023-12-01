@@ -1,4 +1,5 @@
-import { intersection, difference, union } from './set';
+import { describe, test, expect } from 'bun:test';
+import { intersection, difference, union } from '../../../src/common/utils/set/set';
 
 describe('Set', () => {
   test('test intersection', async () => {

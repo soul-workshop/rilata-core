@@ -1,4 +1,4 @@
-import { AssertionException } from '../../exceptions';
+import { AssertionException } from '../../types';
 
 export class HTTPUtility {
   encodeArrayQueryParam(param: unknown[]): string {

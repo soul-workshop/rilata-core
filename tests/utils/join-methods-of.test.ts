@@ -1,4 +1,5 @@
-import { joinMethodsOf } from './join-methods-of';
+import { expect, test } from 'bun:test';
+import { joinMethodsOf } from '../../src/common/utils/join-methods-of';
 
 let setACalled = false;
 let setBCalled = false;

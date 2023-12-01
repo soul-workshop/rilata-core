@@ -1,5 +1,6 @@
-import { AssertionException } from '../../exceptions';
-import { httpUtility } from './http.utility';
+import { describe, test, expect } from 'bun:test';
+import { httpUtility } from '../../../src/common/utils/protocols/http.utility';
+import { AssertionException } from '../../../src/common/types';
 
 describe('Тестирование HTTPUtility', () => {
   test('Успешное кодирование', () => {
@@ -19,7 +20,7 @@ describe('Тестирование HTTPUtility', () => {
 
   test('Неуспешное кодирование: передан не массив', () => {
     expect(() => httpUtility.encodeArrayQueryParam(true as unknown as unknown[]))
-      .toThrowError(AssertionException);
+      .toThrow(new AssertionException('В HTTPUtility.encodeArrayQueryParam аргументом передан не массив.'));
   });
 
   test('Успешное декодирование', () => {
@@ -39,6 +40,6 @@ describe('Тестирование HTTPUtility', () => {
 
   test('Неуспешное декодирование: передана не строка', () => {
     expect(() => httpUtility.decodeArrayQueryParam(true as unknown as string))
-      .toThrowError(AssertionException);
+      .toThrow(new AssertionException('В HTTPUtility.decodeArrayQueryParam аргументом передана не строка.'));
   });
 });

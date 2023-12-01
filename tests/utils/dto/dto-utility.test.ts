@@ -1,5 +1,6 @@
-import { AssertionException } from '../../exceptions';
-import { dtoUtility } from './dto-utility';
+import { describe, expect, test } from 'bun:test';
+import { AssertionException } from '../../../src/common/types';
+import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
 
 const sut = dtoUtility;
 
@@ -199,7 +200,7 @@ describe('dtoUtility class', () => {
       expect(recievedAttrKeys).toEqual(expectedAttrKeys);
     });
   });
-
+  // Надо исправить ошибку с типами и проверить метод excludeDeepAttrs TODO: Нурболат
   describe('тест метода excludeDeepAttrs', () => {
     const personDTO = {
       firstName: 'Donald',
@@ -231,7 +232,7 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrs(personDTO, [attrToDelete]);
+      const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
       expect(result).toStrictEqual(expectedDTO);
     });
 
@@ -248,7 +249,7 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrs(personDTO, [attrToDelete]);
+      const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
       expect(result).toStrictEqual(expectedDTO);
     });
 
@@ -268,10 +269,11 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrs(personDTO, [attrToDelete]);
+      const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
       expect(result).toStrictEqual(expectedDTO);
     });
 
+    // Не работает метод когда массив строк TODO: Нурболат
     test('Уберем несколько атрибутов разного уровня', () => {
       const attrsToDelete = ['contacts.email.address', 'lastName'];
 
@@ -291,10 +293,12 @@ describe('dtoUtility class', () => {
       expect(result).toStrictEqual(expectedDTO);
     });
 
+    // Не работает метод когда массив строк TODO: Нурболат
     test('Проверка, что оригинал не трогается.', () => {
       const personDTOCopy = sut.deepCopy(personDTO);
       const attrsToDelete = ['firstName', 'contacts.phone'];
       const result = dtoUtility.excludeDeepAttrs(personDTO, attrsToDelete);
+
       expect(result).not.toEqual(personDTO);
       expect(personDTO).toStrictEqual(personDTOCopy);
     });
@@ -386,7 +390,7 @@ describe('dtoUtility class', () => {
 
     test('Не успех. Ключ отсутствует. Исключение', () => {
       expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'unknown', true))
-        .toThrowError(AssertionException);
+        .toThrow(new AssertionException('В объекте {"categories":{"products":{"banana":{"price":25}}}} отсутствует вложенный ключ unknown.'));
     });
 
     test('Не успех. Ключ отсутствует (вложенный).', () => {
@@ -396,7 +400,7 @@ describe('dtoUtility class', () => {
 
     test('Не успех. Ключ отсутствует (вложенный). Исключение', () => {
       expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'categories.unknown', true))
-        .toThrowError(AssertionException);
+        .toThrow(new AssertionException('В объекте {"categories":{"products":{"banana":{"price":25}}}} отсутствует вложенный ключ categories.unknown.'));
     });
 
     test('Не успех. Ключ отсутствует (вложенный несколько раз).', () => {
@@ -406,22 +410,22 @@ describe('dtoUtility class', () => {
 
     test('Не успех. Ключ отсутствует (вложенный несколько раз). Исключение', () => {
       expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'categories.unknown.fake.another', true))
-        .toThrowError(AssertionException);
+        .toThrow(new AssertionException('В объекте {"categories":{"products":{"banana":{"price":25}}}} отсутствует вложенный ключ categories.unknown.fake.another.'));
     });
 
     test('Не успех. Ключ начинается с точки', () => {
       expect(() => dtoUtility.getValueByDeepAttr(storeDTO, '.categories'))
-        .toThrowError(AssertionException);
+        .toThrow(new AssertionException('Ключ .categories не может начинаться или заканчиваться точкой и не может быть пустым'));
     });
 
     test('Не успех. Ключ заканчивается точкой', () => {
       expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'categories.'))
-        .toThrowError(AssertionException);
+        .toThrow(new AssertionException('Ключ categories. не может начинаться или заканчиваться точкой и не может быть пустым'));
     });
 
     test('Не успех. Ключ пустая строка', () => {
       expect(() => dtoUtility.getValueByDeepAttr(storeDTO, ''))
-        .toThrowError(AssertionException);
+        .toThrow(new AssertionException('Ключ  не может начинаться или заканчиваться точкой и не может быть пустым'));
     });
   });
 

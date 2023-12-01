@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
-import { DateTimeUtility } from './date-time-utility';
+import { describe, test, expect } from 'bun:test';
+import { DateTimeUtility } from '../../../src/common/utils/date-time/date-time-utility';
 
 describe('Тестирование DateTimeUtility', () => {
   describe('Метод dateToMidnight', () => {

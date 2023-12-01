@@ -1,9 +1,5 @@
-/* eslint-disable no-use-before-define */
-
-import { domainObjectUtility } from '../src/common/utils/domain-object/domain-object-utility';
 import { ErrorDod, EventDod } from '../src/domain/domain-object-data/common-types';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace DODPrivateFixtures {
   export type PhoneAttrs = {
     number: string,
@@ -87,10 +83,16 @@ export namespace DODPrivateFixtures {
     },
   };
 
-  export const outputPersonDOD = domainObjectUtility.getOutputData(
-    personDOD,
-    ['contacts.noOutField', 'contacts.email.noOutField', 'contacts.phones.noOutField'],
-  );
+  // export const outputPersonDOD = dodUtility.getOutputData(
+  //   personDOD,
+  //   ['contacts.noOutField', 'contacts.email.noOutField', 'contacts.phones.noOutField'],
+  // );
+
+  export type PersonPhoneAddedEventDOD = EventDod<PhoneAttrs, 'PersonPhoneAddedEvent'>;
+
+  export type InternalAppLocale = { text: string, hint: { traceback: 'any object' } };
+
+  export type InternalAppError = ErrorDod<InternalAppLocale, 'InternalAppError', 'app-error'>;
 
   export type PersonNotExitsErrorDOD = ErrorDod<{ text: string, hint: { personId: string } }, 'PersonNotExistError'>;
 
