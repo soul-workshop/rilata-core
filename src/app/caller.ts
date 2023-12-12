@@ -8,7 +8,7 @@ export type AnonymousUser = {
 export type DomainUser = {
   type: 'DomainUser',
   requestID: UuidType,
-  id: IdType,
+  userId: IdType,
 };
 
 export type ModuleCaller = {
