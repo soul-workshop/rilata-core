@@ -5,6 +5,6 @@ export abstract class GroupRole<A extends GroupRoleAttrs> {
   constructor(protected attrs: A) {}
 
   inThisRole(userId: UserId): boolean {
-    return Boolean(this.attrs.userIds.find((listUserId) => listUserId === userId));
+    return this.attrs.userIds.some((listUserId) => listUserId === userId);
   }
 }
