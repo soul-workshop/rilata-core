@@ -1,14 +1,10 @@
 import { Result } from '../../common/result/types';
 import { DomainAttrs, GeneralDomainMeta } from './common-types';
 
-export type ActionType = 'class' | 'instance';
-
 /** полное описание одного из действий агрегата */
 export type ActionParams<
-  NAME extends string, TYPE extends ActionType, CMD, SCSS, ERRORS, EVENT
+  CMD, SCSS, ERRORS, EVENT
 > = {
-  name: NAME,
-  type: TYPE,
   command: CMD,
   success: SCSS,
   errors: ERRORS,
@@ -16,11 +12,11 @@ export type ActionParams<
 }
 
 export type GeneralActionParams = ActionParams<
-  string, ActionType, unknown, unknown, unknown, unknown
+  unknown, unknown, unknown, unknown
 >;
 
 export type DomainResult<AC_PARAMS extends GeneralActionParams> =
-  AC_PARAMS extends ActionParams< string, ActionType, unknown, infer SCSS, infer ERRORS, unknown>
+  AC_PARAMS extends ActionParams<unknown, infer SCSS, infer ERRORS, unknown>
     ? Result<ERRORS, SCSS>
     : never;
 

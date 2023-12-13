@@ -19,8 +19,6 @@ type PersonAddedEventAttrs = {
 export type PersonAddedEvent = EventDod<PersonAddedEventAttrs, 'PersonAddedEvent'>;
 
 export type AddPersonActionParams = ActionParams<
-  'addPerson',
-  'class',
   AddingPersonDomainCommand,
   undefined,
   AllowedOnlyEmployeerError | AllowedOnlyStaffManagersError,

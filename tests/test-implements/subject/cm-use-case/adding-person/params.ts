@@ -3,6 +3,7 @@ import { CommandUseCaseParams, GetUcResult } from '../../../../../src/app/use-ca
 import { UseCaseCommandDod } from '../../../../../src/domain/domain-object-data/common-types';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
 import { AddingPersonDomainCommand, PersonAddedEvent, PersonAlreadyExistsError } from '../../domain-data/person/add-person.params';
+import { PersonParams } from '../../domain-data/person/params';
 
 export type AddingPersonUCCommand = UseCaseCommandDod<AddingPersonDomainCommand, 'AddPersonCommand'>;
 
@@ -12,6 +13,7 @@ export type AddingPersonInputOptions = {
 }
 
 export type AddingPersonUCParams = CommandUseCaseParams<
+  PersonParams,
   AddingPersonInputOptions,
   string,
   PersonAlreadyExistsError | AllowedOnlyEmployeerError | AllowedOnlyStaffManagersError,

@@ -1,14 +1,10 @@
-import { ActionType, GeneralInstanceActionable } from './actionable/types';
-import { Actionable } from './actionable/actionable';
 import { ModuleResolver } from '../../conf/module-resolver';
 import { Logger } from '../../common/logger/logger';
+import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
+import { GetARParamsAggregateName } from '../../domain/domain-object-data/type-functions';
 
-export abstract class UseCase implements Actionable {
-  readonly abstract actionType: ActionType;
-
-  readonly abstract actionName: string;
-
-  abstract actionIsAvailable(userId: string, ...args: unknown[]): Promise<boolean>;
+export abstract class UseCase<ARP extends GeneralARDParams> {
+  protected abstract aggregateName: GetARParamsAggregateName<ARP>;
 
   protected moduleResolver!: ModuleResolver;
 
@@ -20,12 +16,4 @@ export abstract class UseCase implements Actionable {
   }
 
   abstract execute(...args: unknown[]): Promise<unknown>
-
-  isInstanceActionable(): this is GeneralInstanceActionable {
-    return this.actionType === 'instance';
-  }
-
-  isClassActionable(): this is GeneralInstanceActionable {
-    return this.actionType === 'class';
-  }
 }
