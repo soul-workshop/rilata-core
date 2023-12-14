@@ -54,18 +54,10 @@ export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
 
 export type GeneralEventDod = EventDod<DomainAttrs, Name>;
 
-export type UseCaseQueryDod<ATTRS extends DomainAttrs, NAME extends string> = {
-  attrs: ATTRS,
-  name: NAME,
+export type ActionDod = {
+  actionName: string,
+  body: DTO,
 }
-
-export type UseCaseCommandDod<ATTRS extends DomainAttrs, NAME extends string> = {
-  attrs: ATTRS,
-  name: NAME,
-  commandId?: UuidType,
-}
-
-export type GeneralCommandDod = UseCaseCommandDod<DTO, string>;
 
 export type GetDomainAttrs<D extends GeneralARDTransfer> =
   D extends AggregateRootDataTransfer<infer A, infer _> ? A : never;

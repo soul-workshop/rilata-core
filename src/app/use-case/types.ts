@@ -1,16 +1,18 @@
+/* eslint-disable no-use-before-define */
 import { Result } from '../../common/result/types';
 import { GetArrayType } from '../../common/type-functions';
 import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
 import {
-  GeneralCommandDod, GeneralErrorDod, GeneralEventDod,
+  GeneralErrorDod, GeneralEventDod, ActionDod,
 } from '../../domain/domain-object-data/common-types';
+import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 import { Caller } from '../caller';
 import { ModuleType } from '../module/types';
 import { CommandUseCase } from './command-use-case';
 import { UseCaseBaseErrors } from './error-types';
 import { QueryUseCase } from './query-use-case';
 
-export type AppEventType = 'command-event' | 'read-event' | 'event';
+export type AppEventType = 'command-event' | 'read-module' | 'event';
 
 export type GetAppEventDod<EVENTS extends GeneralEventDod[], M_TYPE extends ModuleType> =
   M_TYPE extends 'command-module'
@@ -19,29 +21,33 @@ export type GetAppEventDod<EVENTS extends GeneralEventDod[], M_TYPE extends Modu
       ? Array<GetArrayType<EVENTS> & { event: 'read-event' }>
       : EVENTS
 
+export type InputOptions<A extends ActionDod> = {
+  actionDod: A,
+  caller: Caller,
+}
+
+export type GeneralInputOptions = InputOptions<ActionDod>;
+
 export type QueryUseCaseParams<
   AR_PARAMS extends GeneralARDParams,
-  INPUT_OPT, // что входит в useCase,
+  INPUT_OPT extends GeneralInputOptions, // что входит в useCase,
   SUCCESS_OUT, // ответ клиенту в случае успеха
-  FAIL_OUT, // возвращаемый ответ в случау не успеха
+  FAIL_OUT extends GeneralErrorDod, // возвращаемый ответ в случае не успеха
 > = {
   inputOptions: INPUT_OPT,
   successOut: SUCCESS_OUT,
   errors: FAIL_OUT,
 }
 
-export type GeneralQueryUcParams = QueryUseCaseParams<GeneralARDParams, unknown, unknown, unknown>;
+export type GeneralQueryUcParams = QueryUseCaseParams<
+  GeneralARDParams, GeneralInputOptions, unknown, GeneralErrorDod
+>;
 
 export type GeneraQuerylUseCase = QueryUseCase<GeneralQueryUcParams>;
 
-export type CommandUCOptions = {
-  command: GeneralCommandDod,
-  caller: Caller,
-}
-
 export type CommandUseCaseParams<
   AR_PARAMS extends GeneralARDParams,
-  INPUT_OPT extends CommandUCOptions, // что входит в useCase,
+  INPUT_OPT extends GeneralInputOptions, // что входит в useCase,
   SUCCESS_OUT, // ответ в случае успеха
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENTS extends GeneralEventDod[], // публикуемые доменные события
@@ -53,10 +59,17 @@ export type CommandUseCaseParams<
 }
 
 export type GeneralCommandUcParams = CommandUseCaseParams<
-  GeneralARDParams, CommandUCOptions, unknown, GeneralErrorDod, GeneralEventDod[]
+  GeneralARDParams, GeneralInputOptions, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
 export type GeneralCommandUseCase = CommandUseCase<GeneralCommandUcParams>;
+
+export type ActionDodValidator<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
+  DtoFieldValidator<
+    GetActionDodName<UC_PARAMS>,
+    true, false,
+    GetRequestDodBody<UC_PARAMS>
+  >
 
 export type GetUcResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> = Result<
   P['errors'] | UseCaseBaseErrors,
@@ -68,11 +81,16 @@ export type GetUcErrorsResult<P extends GeneralQueryUcParams> =
 
 export type GetUcOptions<P extends GeneralQueryUcParams> = P['inputOptions'];
 
-export type GetUcParamsARParams<UCPARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
-  UCPARAMS extends QueryUseCaseParams<infer AR_PARAMS, unknown, unknown, unknown>
-    ? AR_PARAMS
-    : UCPARAMS extends CommandUseCaseParams<
-      infer AR_PARAMS, CommandUCOptions, unknown, GeneralErrorDod, GeneralEventDod[]
-    >
-      ? AR_PARAMS
+export type GetARParamsFromUcParams<P extends GeneralQueryUcParams | GeneralCommandUcParams> =
+  // eslint-disable-next-line max-len
+  P extends CommandUseCaseParams<infer T, GeneralInputOptions, unknown, GeneralErrorDod, GeneralEventDod[]>
+    ? T
+    : P extends QueryUseCaseParams<infer T2, GeneralInputOptions, unknown, GeneralErrorDod>
+      ? T2
       : never
+
+export type GetActionDodName<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
+  UC_PARAMS['inputOptions']['actionDod']['actionName']
+
+export type GetRequestDodBody<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
+  UC_PARAMS['inputOptions']['actionDod']['body']
