@@ -68,9 +68,9 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   }
 
   protected checkValidations(
-    requestDod: GetActionDodBody<UC_PARAMS>,
+    actionDod: GetActionDodBody<UC_PARAMS>,
   ): Result<ValidationError, undefined> {
-    const result = this.validatorMap.validate(requestDod);
+    const result = this.validatorMap.validate(actionDod);
 
     if (result.isFailure()) {
       const err: ValidationError = {
