@@ -32,7 +32,7 @@ export type QueryUseCaseParams<
   AR_PARAMS extends GeneralARDParams,
   INPUT_OPT extends GeneralInputOptions, // что входит в useCase,
   SUCCESS_OUT, // ответ клиенту в случае успеха
-  FAIL_OUT extends GeneralErrorDod, // возвращаемый ответ в случае не успеха
+  FAIL_OUT extends GeneralErrorDod | UseCaseBaseErrors, // возвращаемый ответ в случае не успеха
 > = {
   inputOptions: INPUT_OPT,
   successOut: SUCCESS_OUT,
@@ -40,7 +40,7 @@ export type QueryUseCaseParams<
 }
 
 export type GeneralQueryUcParams = QueryUseCaseParams<
-  GeneralARDParams, GeneralInputOptions, unknown, GeneralErrorDod
+  GeneralARDParams, GeneralInputOptions, unknown, GeneralErrorDod | UseCaseBaseErrors
 >;
 
 export type GeneraQuerylUseCase = QueryUseCase<GeneralQueryUcParams>;
@@ -68,7 +68,7 @@ export type ActionDodValidator<UC_PARAMS extends GeneralQueryUcParams | GeneralC
   DtoFieldValidator<
     GetActionDodName<UC_PARAMS>,
     true, false,
-    GetRequestDodBody<UC_PARAMS>
+    GetActionDodBody<UC_PARAMS>
   >
 
 export type GetUcResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> = Result<
@@ -92,5 +92,5 @@ export type GetARParamsFromUcParams<P extends GeneralQueryUcParams | GeneralComm
 export type GetActionDodName<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
   UC_PARAMS['inputOptions']['actionDod']['actionName']
 
-export type GetRequestDodBody<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
+export type GetActionDodBody<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
   UC_PARAMS['inputOptions']['actionDod']['body']

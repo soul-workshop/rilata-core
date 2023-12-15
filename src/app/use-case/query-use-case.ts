@@ -7,7 +7,7 @@ import { Locale } from '../../domain/locale';
 import { Caller, CallerType } from '../caller';
 import {
   GeneralQueryUcParams, GetUcOptions, GetARParamsFromUcParams, GetUcResult,
-  GetRequestDodBody, ActionDodValidator, GetActionDodName,
+  GetActionDodBody, ActionDodValidator, GetActionDodName,
 } from './types';
 import { UseCase } from './use-case';
 import { InternalError, PermissionDeniedError, ValidationError } from './error-types';
@@ -68,7 +68,7 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   }
 
   protected checkValidations(
-    requestDod: GetRequestDodBody<UC_PARAMS>,
+    requestDod: GetActionDodBody<UC_PARAMS>,
   ): Result<ValidationError, undefined> {
     const result = this.validatorMap.validate(requestDod);
 
