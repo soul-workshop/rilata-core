@@ -1,5 +1,6 @@
 import { Logger } from '../../common/logger/logger';
 import { ModuleResolver } from '../../conf/module-resolver';
+import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
 import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../use-case/types';
 import { UseCase } from '../use-case/use-case';
 import { ModuleType } from './types';
@@ -15,7 +16,7 @@ export abstract class Module<M_TYPE extends ModuleType> {
 
   protected moduleResolver!: ModuleResolver;
 
-  protected useCases!: UseCase[];
+  protected useCases!: UseCase<GeneralARDParams>[];
 
   protected logger!: Logger;
 
@@ -26,11 +27,11 @@ export abstract class Module<M_TYPE extends ModuleType> {
     this.useCases.forEach((useCase) => useCase.init(moduleResolver));
   }
 
-  getUseCase<T extends UseCase>(name: T['actionName']): T {
-    const finded = this.useCases.find((useCase) => useCase.actionName === name);
+  getUseCase<T extends typeof UseCase>(Cls: T): InstanceType<T> {
+    const finded = this.useCases.find((useCase) => useCase.constructor.name === Cls.name);
     if (finded === undefined) {
-      this.logger.error(`not finded in module "${this.moduleName}" usecase by name ${name}`, this.useCases);
+      this.logger.error(`not finded in module "${this.moduleName}" usecase by name ${Cls.name}`, this.useCases);
     }
-    return finded as T;
+    return finded as InstanceType<T>;
   }
 }

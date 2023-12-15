@@ -13,11 +13,7 @@ export type GetARParamsEventNames<AR_PARAMS extends GeneralARDParams> =
     ? NAME
     : never
 
+export type GetARParamsActionParams<AR_PARAMS extends GeneralARDParams> = AR_PARAMS['actions']
+
 export type GetARParamsAggregateName<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS['meta']['name']
-
-export type GetARParamsActionNames<AR_PARAMS extends GeneralARDParams> =
-  AR_PARAMS['actions']['name']
-
-export type GetARParmasActionType<AR_PARAMS extends GeneralARDParams> =
-  AR_PARAMS['actions']['type']

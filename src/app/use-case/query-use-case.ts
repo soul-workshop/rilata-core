@@ -4,11 +4,17 @@ import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
-import { InternalError } from './error-types';
-import { GeneralQueryUcParams, GetUcOptions, GetUcResult } from './types';
+import { Caller, CallerType } from '../caller';
+import {
+  GeneralQueryUcParams, GetUcOptions, GetUcParamsARParams, GetUcResult,
+} from './types';
 import { UseCase } from './use-case';
+import { InternalError, PermissionDeniedError } from './error-types';
 
-export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams> extends UseCase {
+export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
+  extends UseCase<GetUcParamsARParams<UC_PARAMS>> {
+  protected abstract supportedCallers: ReadonlyArray<CallerType>;
+
   /** выполнение доменной логики */
   protected abstract runDomain(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>>
 
@@ -36,5 +42,17 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams> exten
    * */
   protected async runInitialChecks(..._args: unknown[]): Promise<Result<unknown, unknown>> {
     return success(undefined);
+  }
+
+  // eslint-disable-next-line max-len
+  protected checkCallerPermission(caller: Caller): Result<PermissionDeniedError<Locale>, undefined> {
+    if (this.supportedCallers.includes(caller.type)) return success(undefined);
+
+    const err = dodUtility.getDomainErrorByType<PermissionDeniedError<Locale>>(
+      'Permission denied',
+      'Действие не доступно',
+      { allowedOnlyFor: this.supportedCallers },
+    );
+    return failure(err);
   }
 }
