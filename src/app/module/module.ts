@@ -27,11 +27,11 @@ export abstract class Module<M_TYPE extends ModuleType> {
     this.useCases.forEach((useCase) => useCase.init(moduleResolver));
   }
 
-  getUseCaseByActionName(actionDodName: string): UseCase<GeneralARDParams> {
-    const useCase = this.useCases.find((uc) => uc.getName() === actionDodName);
+  getUseCaseByName(name: string): UseCase<GeneralARDParams> {
+    const useCase = this.useCases.find((uc) => uc.getName() === name);
     if (useCase === undefined) {
       this.logger.error(
-        `not finded in module "${this.moduleName}" usecase by name "${actionDodName}"`,
+        `not finded in module "${this.moduleName}" usecase by name "${name}"`,
         { useCaseNames: this.useCases.map((uc) => uc.getName()) },
       );
     }
