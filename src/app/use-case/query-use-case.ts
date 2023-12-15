@@ -6,17 +6,22 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { Caller, CallerType } from '../caller';
 import {
-  GeneralQueryUcParams, GetUcOptions, GetUcParamsARParams, GetUcResult,
+  GeneralQueryUcParams, GetUcOptions, GetARParamsFromUcParams, GetUcResult,
+  GetActionDodBody, ActionDodValidator, GetActionDodName,
 } from './types';
 import { UseCase } from './use-case';
-import { InternalError, PermissionDeniedError } from './error-types';
+import { InternalError, PermissionDeniedError, ValidationError } from './error-types';
 
 export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
-  extends UseCase<GetUcParamsARParams<UC_PARAMS>> {
+  extends UseCase<GetARParamsFromUcParams<UC_PARAMS>> {
+  protected abstract name: GetActionDodName<UC_PARAMS>;
+
   protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
   /** выполнение доменной логики */
   protected abstract runDomain(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>>
+
+  protected abstract validatorMap: ActionDodValidator<UC_PARAMS>;
 
   async execute(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>> {
     try {
@@ -38,10 +43,16 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   }
 
   /**
-   * Выполнить проверку какие либо проверки до выполнения доменной логики.
+   * Выполнить проверку разрешений, которую можно выполнить до
+   * выполнения доменной логики и её проверок.
    * */
-  protected async runInitialChecks(..._args: unknown[]): Promise<Result<unknown, unknown>> {
-    return success(undefined);
+  protected async runInitialChecks(
+    options: GetUcOptions<UC_PARAMS>,
+  ): Promise<Result<ValidationError | PermissionDeniedError<Locale>, undefined>> {
+    const checkCallerResult = this.checkCallerPermission(options.caller);
+    if (checkCallerResult.isFailure()) return checkCallerResult;
+
+    return this.checkValidations(options);
   }
 
   // eslint-disable-next-line max-len
@@ -54,5 +65,22 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
       { allowedOnlyFor: this.supportedCallers },
     );
     return failure(err);
+  }
+
+  protected checkValidations(
+    actionDod: GetActionDodBody<UC_PARAMS>,
+  ): Result<ValidationError, undefined> {
+    const result = this.validatorMap.validate(actionDod);
+
+    if (result.isFailure()) {
+      const err: ValidationError = {
+        name: 'validation-error',
+        domainType: 'error',
+        errorType: 'app-error',
+        errors: result.value,
+      };
+      return failure(err);
+    }
+    return result;
   }
 }

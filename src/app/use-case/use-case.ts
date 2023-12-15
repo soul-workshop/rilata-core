@@ -6,6 +6,8 @@ import { GetARParamsAggregateName } from '../../domain/domain-object-data/type-f
 export abstract class UseCase<ARP extends GeneralARDParams> {
   protected abstract aggregateName: GetARParamsAggregateName<ARP>;
 
+  protected abstract name: string;
+
   protected moduleResolver!: ModuleResolver;
 
   protected logger!: Logger;
@@ -16,4 +18,12 @@ export abstract class UseCase<ARP extends GeneralARDParams> {
   }
 
   abstract execute(...args: unknown[]): Promise<unknown>
+
+  getAggregateName(): string {
+    return this.aggregateName;
+  }
+
+  getName(): string {
+    return this.name;
+  }
 }

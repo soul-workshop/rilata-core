@@ -27,11 +27,14 @@ export abstract class Module<M_TYPE extends ModuleType> {
     this.useCases.forEach((useCase) => useCase.init(moduleResolver));
   }
 
-  getUseCase<T extends typeof UseCase>(Cls: T): InstanceType<T> {
-    const finded = this.useCases.find((useCase) => useCase.constructor.name === Cls.name);
-    if (finded === undefined) {
-      this.logger.error(`not finded in module "${this.moduleName}" usecase by name ${Cls.name}`, this.useCases);
+  getUseCaseByName(name: string): UseCase<GeneralARDParams> {
+    const useCase = this.useCases.find((uc) => uc.getName() === name);
+    if (useCase === undefined) {
+      this.logger.error(
+        `not finded in module "${this.moduleName}" usecase by name "${name}"`,
+        { useCaseNames: this.useCases.map((uc) => uc.getName()) },
+      );
     }
-    return finded as InstanceType<T>;
+    return useCase;
   }
 }

@@ -1,16 +1,14 @@
-import { Caller } from '../../../../../src/app/caller';
-import { CommandUseCaseParams, GetUcResult } from '../../../../../src/app/use-case/types';
-import { UseCaseCommandDod } from '../../../../../src/domain/domain-object-data/common-types';
+import { CommandUseCaseParams, GetUcResult, InputOptions } from '../../../../../src/app/use-case/types';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
 import { AddingPersonDomainCommand, PersonAddedEvent, PersonAlreadyExistsError } from '../../domain-data/person/add-person.params';
 import { PersonParams } from '../../domain-data/person/params';
 
-export type AddingPersonUCCommand = UseCaseCommandDod<AddingPersonDomainCommand, 'AddPersonCommand'>;
-
-export type AddingPersonInputOptions = {
-  command: AddingPersonUCCommand,
-  caller: Caller,
+export type AddPersonActionDod = {
+  actionName: 'addPerson',
+  body: AddingPersonDomainCommand
 }
+
+export type AddingPersonInputOptions = InputOptions<AddPersonActionDod>
 
 export type AddingPersonUCParams = CommandUseCaseParams<
   PersonParams,

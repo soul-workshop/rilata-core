@@ -1,18 +1,18 @@
 import { CommandUseCase } from '../../../../../src/app/use-case/command-use-case';
 import { GetUcOptions, GetUcResult } from '../../../../../src/app/use-case/types';
 import { AddingPersonUCParams } from './params';
-import { addPersonVMap } from './v-map';
+import { addPersonValidator } from './v-map';
 
 export class AddingPersonUC extends CommandUseCase<AddingPersonUCParams> {
   protected supportedCallers = ['DomainUser'] as const;
 
-  protected validatorMap = addPersonVMap;
+  protected validatorMap = addPersonValidator;
 
   actionType = 'class' as const;
 
   aggregateName = 'PersonAR' as const;
 
-  actionName = 'addPerson' as const;
+  name = 'addPerson' as const;
 
   protected runDomain(
     options: GetUcOptions<AddingPersonUCParams>,
