@@ -1,3 +1,3 @@
 export interface Realisable {
-  getRealisatioin(...args: unknown[]): unknown
+  getRealisation(...args: unknown[]): unknown
 }

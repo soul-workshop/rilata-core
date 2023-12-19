@@ -1,5 +1,6 @@
 import { ModuleResolver } from '../../conf/module-resolver';
 import { Logger } from '../../common/logger/logger';
+import { Result } from '../../common/result/types';
 
 export abstract class UseCase {
   protected abstract aRootName: string;
@@ -15,7 +16,7 @@ export abstract class UseCase {
     this.logger = moduleResolver.getLogger();
   }
 
-  abstract execute(...args: unknown[]): Promise<unknown>
+  abstract execute(...args: unknown[]): Promise<Result<unknown, unknown>>
 
   getAggregateName(): string {
     return this.aRootName;

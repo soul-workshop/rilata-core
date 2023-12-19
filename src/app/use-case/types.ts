@@ -83,14 +83,6 @@ export type GetUcErrorsResult<P extends GeneralQueryUcParams> =
 
 export type GetUcOptions<P extends GeneralQueryUcParams> = P['inputOptions'];
 
-export type GetARParamsFromUcParams<P extends GeneralQueryUcParams | GeneralCommandUcParams> =
-  // eslint-disable-next-line max-len
-  P extends CommandUseCaseParams<infer T, GeneralInputOptions, unknown, GeneralErrorDod, GeneralEventDod[]>
-    ? T
-    : P extends QueryUseCaseParams<infer T2, GeneralInputOptions, unknown, GeneralErrorDod>
-      ? T2
-      : never
-
 export type GetActionDodName<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
   UC_PARAMS['inputOptions']['actionDod']['actionName']
 

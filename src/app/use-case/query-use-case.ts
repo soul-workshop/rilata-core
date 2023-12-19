@@ -54,7 +54,7 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
     const checkCallerResult = this.checkCallerPermission(options.caller);
     if (checkCallerResult.isFailure()) return checkCallerResult;
 
-    return this.checkValidations(options);
+    return this.checkValidations(options.actionDod.body);
   }
 
   // eslint-disable-next-line max-len
@@ -70,9 +70,9 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   }
 
   protected checkValidations(
-    actionDod: GetActionDodBody<UC_PARAMS>,
+    actionDodBody: GetActionDodBody<UC_PARAMS>,
   ): Result<ValidationError, undefined> {
-    const result = this.validatorMap.validate(actionDod);
+    const result = this.validatorMap.validate(actionDodBody);
 
     if (result.isFailure()) {
       const err: ValidationError = {
