@@ -13,7 +13,7 @@ type ExpressResponse = {
 }
 
 export abstract class Controller {
-  async execute(
+  protected async executeUseCase(
     actionDod: ActionDod,
     caller: Caller,
     module: Module<ModuleType>,
