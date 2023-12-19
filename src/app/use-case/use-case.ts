@@ -1,10 +1,8 @@
 import { ModuleResolver } from '../../conf/module-resolver';
 import { Logger } from '../../common/logger/logger';
-import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
-import { GetARParamsAggregateName } from '../../domain/domain-object-data/type-functions';
 
-export abstract class UseCase<ARP extends GeneralARDParams> {
-  protected abstract aggregateName: GetARParamsAggregateName<ARP>;
+export abstract class UseCase {
+  protected abstract aRootName: string;
 
   protected abstract name: string;
 
@@ -20,7 +18,7 @@ export abstract class UseCase<ARP extends GeneralARDParams> {
   abstract execute(...args: unknown[]): Promise<unknown>
 
   getAggregateName(): string {
-    return this.aggregateName;
+    return this.aRootName;
   }
 
   getName(): string {

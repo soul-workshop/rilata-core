@@ -1,6 +1,5 @@
 import { Logger } from '../../common/logger/logger';
 import { ModuleResolver } from '../../conf/module-resolver';
-import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
 import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../use-case/types';
 import { UseCase } from '../use-case/use-case';
 import { ModuleType } from './types';
@@ -16,7 +15,7 @@ export abstract class Module<M_TYPE extends ModuleType> {
 
   protected moduleResolver!: ModuleResolver;
 
-  protected useCases!: UseCase<GeneralARDParams>[];
+  protected useCases!: UseCase[];
 
   protected logger!: Logger;
 
@@ -27,7 +26,7 @@ export abstract class Module<M_TYPE extends ModuleType> {
     this.useCases.forEach((useCase) => useCase.init(moduleResolver));
   }
 
-  getUseCaseByName(name: string): UseCase<GeneralARDParams> {
+  getUseCaseByName(name: string): UseCase {
     const useCase = this.useCases.find((uc) => uc.getName() === name);
     if (useCase === undefined) {
       this.logger.error(

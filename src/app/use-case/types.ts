@@ -34,6 +34,7 @@ export type QueryUseCaseParams<
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT extends GeneralErrorDod | UseCaseBaseErrors, // возвращаемый ответ в случае не успеха
 > = {
+  aRootName: AR_PARAMS['meta']['name'],
   inputOptions: INPUT_OPT,
   successOut: SUCCESS_OUT,
   errors: FAIL_OUT,
@@ -52,6 +53,7 @@ export type CommandUseCaseParams<
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENTS extends GeneralEventDod[], // публикуемые доменные события
 > = {
+  aRootName: AR_PARAMS['meta']['name'],
   inputOptions: INPUT_OPT,
   successOut: SUCCESS_OUT,
   errors: FAIL_OUT,

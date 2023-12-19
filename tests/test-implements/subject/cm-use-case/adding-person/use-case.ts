@@ -10,7 +10,7 @@ export class AddingPersonUC extends CommandUseCase<AddingPersonUCParams> {
 
   actionType = 'class' as const;
 
-  aggregateName = 'PersonAR' as const;
+  aRootName = 'PersonAR' as const;
 
   name = 'addPerson' as const;
 

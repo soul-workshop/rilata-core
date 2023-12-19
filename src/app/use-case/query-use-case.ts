@@ -6,15 +6,17 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { Caller, CallerType } from '../caller';
 import {
-  GeneralQueryUcParams, GetUcOptions, GetARParamsFromUcParams, GetUcResult,
+  GeneralQueryUcParams, GetUcOptions, GetUcResult,
   GetActionDodBody, ActionDodValidator, GetActionDodName,
 } from './types';
 import { UseCase } from './use-case';
 import { InternalError, PermissionDeniedError, ValidationError } from './error-types';
 
 export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
-  extends UseCase<GetARParamsFromUcParams<UC_PARAMS>> {
+  extends UseCase {
   protected abstract name: GetActionDodName<UC_PARAMS>;
+
+  protected abstract aRootName: UC_PARAMS['aRootName'];
 
   protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
