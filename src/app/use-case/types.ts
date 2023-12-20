@@ -32,7 +32,7 @@ export type QueryUseCaseParams<
   AR_PARAMS extends GeneralARDParams,
   INPUT_OPT extends GeneralInputOptions, // что входит в useCase,
   SUCCESS_OUT, // ответ клиенту в случае успеха
-  FAIL_OUT extends GeneralErrorDod | UseCaseBaseErrors, // возвращаемый ответ в случае не успеха
+  FAIL_OUT extends GeneralErrorDod, // возвращаемый ответ в случае не успеха
 > = {
   aRootName: AR_PARAMS['meta']['name'],
   inputOptions: INPUT_OPT,
@@ -41,7 +41,7 @@ export type QueryUseCaseParams<
 }
 
 export type GeneralQueryUcParams = QueryUseCaseParams<
-  GeneralARDParams, GeneralInputOptions, unknown, GeneralErrorDod | UseCaseBaseErrors
+  GeneralARDParams, GeneralInputOptions, unknown, GeneralErrorDod
 >;
 
 export type GeneraQuerylUseCase = QueryUseCase<GeneralQueryUcParams>;
@@ -61,6 +61,7 @@ export type CommandUseCaseParams<
 }
 
 export type GeneralCommandUcParams = CommandUseCaseParams<
+  // eslint-disable-next-line max-len
   GeneralARDParams, GeneralInputOptions, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 

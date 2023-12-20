@@ -1,4 +1,3 @@
-import { Result } from '../../common/result/types';
 import { ActionDod } from '../../domain/domain-object-data/common-types';
 import { Caller } from '../caller';
 import { Module } from '../module/module';
@@ -13,6 +12,14 @@ type ExpressResponse = {
 }
 
 export abstract class Controller {
+  STATUS_CODES: Record<UseCaseBaseErrors['name'], number> = {
+    'Not Found': 404,
+    'Permission denied': 403,
+    'Internal error': 500,
+    'Bad Request': 400,
+    'Validation Error': 400,
+  };
+
   protected async executeUseCase(
     actionDod: ActionDod,
     caller: Caller,
@@ -26,15 +33,13 @@ export abstract class Controller {
       caller,
     };
 
-    const useCaseResult: Result<UseCaseBaseErrors, unknown> = await useCase.execute(inputOptions);
+    const useCaseResult = await useCase.execute(inputOptions);
 
     if (useCaseResult.isSuccess() === true) {
       response.status(200);
     } else if (useCaseResult.isFailure()) {
-      if (useCaseResult.value.name === 'Internal error') response.status(500);
-      else if (useCaseResult.value.name === 'Permission denied') response.status(403);
-      else if (useCaseResult.value.name === 'validation-error') response.status(400);
-      else if (useCaseResult.value.name === 'BadRequest') response.status(400);
+      const err = useCaseResult.value as UseCaseBaseErrors;
+      response.status(this.STATUS_CODES[err.name]);
     }
 
     const resultDTO: ResultDTO<unknown, unknown> = {
