@@ -76,7 +76,7 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
 
     if (result.isFailure()) {
       const err: ValidationError = {
-        name: 'validation-error',
+        name: 'Validation Error',
         domainType: 'error',
         errorType: 'app-error',
         errors: result.value,
