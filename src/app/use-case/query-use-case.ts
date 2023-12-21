@@ -6,7 +6,7 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { Caller, CallerType } from '../caller';
 import {
-  GeneralQueryUcParams, GetUcOptions, GetUcResult,
+  GeneralQueryUcParams, GetUcOptions, UcResult,
   GetActionDodBody, ActionDodValidator, GetActionDodName,
 } from './types';
 import { UseCase } from './use-case';
@@ -14,18 +14,18 @@ import { InternalError, PermissionDeniedError, ValidationError } from './error-t
 
 export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   extends UseCase {
-  protected abstract name: GetActionDodName<UC_PARAMS>;
+  protected abstract override name: GetActionDodName<UC_PARAMS>;
 
   protected abstract aRootName: UC_PARAMS['aRootName'];
 
   protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
   /** выполнение доменной логики */
-  protected abstract runDomain(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>>
+  protected abstract runDomain(options: GetUcOptions<UC_PARAMS>): Promise<UcResult<UC_PARAMS>>
 
   protected abstract validatorMap: ActionDodValidator<UC_PARAMS>;
 
-  async execute(options: GetUcOptions<UC_PARAMS>): Promise<GetUcResult<UC_PARAMS>> {
+  async execute(options: GetUcOptions<UC_PARAMS>): Promise<UcResult<UC_PARAMS>> {
     try {
       const checksResult = await this.runInitialChecks(options);
       if (checksResult.isFailure()) return checksResult;

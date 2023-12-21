@@ -6,7 +6,7 @@ import { GeneralAR } from './types';
 
 export abstract class AggregateFactory<PARAMS extends GeneralARDParams> {
   /** создать экземпляр агрегата по событию */
-  abstract create(caller: Caller, command: DTO): AggregateRoot<PARAMS>
+  abstract create(caller: Caller, attrs: DTO): AggregateRoot<PARAMS>
 
   abstract restore(...args: unknown[]): GeneralAR
 }

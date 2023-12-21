@@ -1,4 +1,4 @@
-import { CommandUseCaseParams, GetUcResult, InputOptions } from '../../../../../src/app/use-case/types';
+import { CommandUseCaseParams, UcResult, InputOptions } from '../../../../../src/app/use-case/types';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
 import { AddingPersonDomainCommand, PersonAddedEvent, PersonAlreadyExistsError } from '../../domain-data/person/add-person.params';
 import { PersonParams } from '../../domain-data/person/params';
@@ -18,4 +18,4 @@ export type AddingPersonUCParams = CommandUseCaseParams<
   PersonAddedEvent[]
 >;
 
-export type AddingPersonResult = GetUcResult<AddingPersonUCParams>;
+export type AddingPersonResult = UcResult<AddingPersonUCParams>;

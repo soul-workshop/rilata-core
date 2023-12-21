@@ -19,7 +19,7 @@ export class LiteralFieldValidator<
     attrName: NAME,
     isRequired: REQ,
     arrayConfig: GetArrayConfig<IS_ARR>,
-    protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
+    protected override dataType: GetFieldValidatorDataType<DATA_TYPE>,
     protected validateRules: ValidationRule<'validate', DATA_TYPE>[],
   ) {
     super(attrName, isRequired, arrayConfig, dataType);
@@ -44,7 +44,7 @@ export class LiteralFieldValidator<
       : this.getFailResult(validateAnswer.errors);
   }
 
-  protected getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
+  protected override getRequiredOrNullableRules(): Array<ValidationRule<'assert', unknown> | ValidationRule<'nullable', unknown>> {
     if (this.dataType !== 'string') return super.getRequiredOrNullableRules();
     return this.isRequired
       ? [new CannotBeNullableAssertionRule(), new CannotBeEmptyStringAssertionRule()]

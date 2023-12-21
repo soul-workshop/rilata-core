@@ -16,9 +16,7 @@ export type GeneralActionParams = ActionParams<
 >;
 
 export type DomainResult<AC_PARAMS extends GeneralActionParams> =
-  AC_PARAMS extends ActionParams<unknown, infer SCSS, infer ERRORS, unknown>
-    ? Result<ERRORS, SCSS>
-    : never;
+  Result<AC_PARAMS['errors'], AC_PARAMS['success']>;
 
 /** полное описание доменного агрегата */
 export type AggregateRootDataParams<

@@ -74,12 +74,12 @@ export type ActionDodValidator<UC_PARAMS extends GeneralQueryUcParams | GeneralC
     GetActionDodBody<UC_PARAMS>
   >
 
-export type GetUcResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> = Result<
+export type UcResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> = Result<
   P['errors'] | UseCaseBaseErrors,
   P['successOut']
 >
 
-export type GetUcErrorsResult<P extends GeneralQueryUcParams> =
+export type GetUcErrorsResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> =
   Result<P['errors'] | UseCaseBaseErrors, never>
 
 export type GetUcOptions<P extends GeneralQueryUcParams> = P['inputOptions'];
