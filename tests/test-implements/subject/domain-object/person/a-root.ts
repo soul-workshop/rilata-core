@@ -4,6 +4,7 @@ import { success } from '../../../../../src/common/result/success';
 import { callerUtility } from '../../../../../src/common/utils/caller/caller-utility';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
 import { DomainResult } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
+import { AggregateRootHelper } from '../../../../../src/domain/domain-object/aggregate-helper';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
 import { AddPersonActionParams } from '../../domain-data/person/add-person.params';
@@ -12,8 +13,11 @@ import { PersonAttrs, PersonMeta, PersonParams } from '../../domain-data/person/
 import { ComapanyAR } from '../company/a-root';
 
 export class PersonAR extends AggregateRoot<PersonParams> {
+  protected helper: AggregateRootHelper<PersonParams>;
+
   constructor(protected attrs: PersonAttrs, protected version: number) {
     super();
+    this.helper = new AggregateRootHelper(attrs, 'PersonAR', version, []);
   }
 
   protected getMeta(): PersonMeta {
@@ -50,7 +54,7 @@ export class PersonAR extends AggregateRoot<PersonParams> {
       },
       caller,
     );
-    this.registerDomainEvent(event);
+    this.helper.registerDomainEvent(event);
     return success(undefined);
   }
 

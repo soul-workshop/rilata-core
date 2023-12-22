@@ -20,7 +20,7 @@ export class PersonFactory extends AggregateFactory<PersonParams> {
       { aRoot: personAttrs },
       caller,
     );
-    person.registerDomainEvent(event);
+    person.getHelper().registerDomainEvent(event);
     return person;
   }
 

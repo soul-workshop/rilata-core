@@ -1,10 +1,14 @@
 import { UserId } from '../../../../../src/common/types';
+import { AggregateRootHelper } from '../../../../../src/domain/domain-object/aggregate-helper';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
-import { CompanyAttrs, CompanyMeta, CompanyParams } from '../../domain-data/company/params';
+import { CompanyAttrs, CompanyParams } from '../../domain-data/company/params';
 
 export class ComapanyAR extends AggregateRoot<CompanyParams> {
+  helper: AggregateRootHelper<CompanyParams>;
+
   constructor(protected attrs: CompanyAttrs, protected version: number) {
     super();
+    this.helper = new AggregateRootHelper(attrs, 'CompanyAR', version, ['admins']);
   }
 
   isEmployeer(userId: UserId): boolean {
@@ -19,11 +23,7 @@ export class ComapanyAR extends AggregateRoot<CompanyParams> {
     return this.attrs.admins.includes(userId);
   }
 
-  protected getMeta(): CompanyMeta {
-    throw new Error('Method not implemented.');
-  }
-
   getShortName(): string {
-    throw new Error('Method not implemented.');
+    return `Company: ${this.attrs.name}`;
   }
 }

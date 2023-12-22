@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Result } from '../../common/result/types';
+import { GetDtoKeysByDotNotation } from '../../common/type-functions';
+import { DTO } from '../dto';
 import { DomainAttrs, GeneralDomainMeta } from './common-types';
 
 /** полное описание одного из действий агрегата */
@@ -23,6 +26,7 @@ export type AggregateRootDataParams<
   ATTRS extends DomainAttrs,
   META extends GeneralDomainMeta,
   ACTIONS extends GeneralActionParams,
+  NO_OUT_KEYS extends GetDtoKeysByDotNotation<ATTRS>[]
 > = {
   attrs: ATTRS,
   meta: META,
@@ -30,7 +34,7 @@ export type AggregateRootDataParams<
 }
 
 export type GeneralARDParams = AggregateRootDataParams<
-  DomainAttrs, GeneralDomainMeta, GeneralActionParams
+  DomainAttrs, GeneralDomainMeta, GeneralActionParams, GetDtoKeysByDotNotation<DTO>[]
 >;
 
 export type UserActions = Record<string, boolean>;

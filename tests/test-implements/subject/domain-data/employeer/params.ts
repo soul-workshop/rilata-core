@@ -10,7 +10,7 @@ export type EmployeerAttrs = {
 export type EmployeerMeta = DomainMeta<'EmployeerAR'>;
 
 export type EmployeerParams = AggregateRootDataParams<
-  EmployeerAttrs, EmployeerMeta, never
+  EmployeerAttrs, EmployeerMeta, never, never
 >;
 
 export type OutputEmployeerAttrs = EmployeerAttrs;
