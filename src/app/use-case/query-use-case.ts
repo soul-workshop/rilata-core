@@ -10,7 +10,7 @@ import {
   GetActionDodBody, ActionDodValidator, GetActionDodName,
 } from './types';
 import { UseCase } from './use-case';
-import { InternalError, PermissionDeniedError, ValidationError } from './error-types';
+import { PermissionDeniedError, ValidationError } from './error-types';
 
 export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   extends UseCase {
@@ -26,22 +26,9 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   protected abstract validatorMap: ActionDodValidator<UC_PARAMS>;
 
   async execute(options: GetUcOptions<UC_PARAMS>): Promise<UcResult<UC_PARAMS>> {
-    try {
-      const checksResult = await this.runInitialChecks(options);
-      if (checksResult.isFailure()) return checksResult;
-      return this.runDomain(options);
-    } catch (e) {
-      if (process.env.TEST_ENV === 'test') {
-        throw e;
-      }
-      this.logger.fatalError('server internal error', options);
-      const err = dodUtility.getAppErrorByType<InternalError<Locale>>(
-        'Internal error',
-        'Извините, на сервере произошла ошибка',
-        {},
-      );
-      return failure(err);
-    }
+    const checksResult = await this.runInitialChecks(options);
+    if (checksResult.isFailure()) return checksResult;
+    return this.runDomain(options);
   }
 
   /**

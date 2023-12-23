@@ -36,4 +36,8 @@ export abstract class Module<M_TYPE extends ModuleType> {
     }
     return useCase;
   }
+
+  getLogger(): Logger {
+    return this.logger;
+  }
 }
