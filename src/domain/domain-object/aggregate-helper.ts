@@ -1,4 +1,5 @@
-import { ExcludeDeepDtoAttrs, GetDtoKeysByDotNotation } from '../../common/type-functions';
+import { Logger } from '../../common/logger/logger';
+import { ExcludeDeepDtoAttrs } from '../../common/type-functions';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { AggregateRootDataTransfer, GeneralARDParams } from '../domain-object-data/aggregate-data-types';
 import { GetARParamsAggregateName, GetARParamsEvents, GetNoOutKeysFromARParams } from '../domain-object-data/type-functions';
@@ -13,7 +14,10 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     protected aRootName: GetARParamsAggregateName<PARAMS>,
     protected version: number,
     protected outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,
-  ) {}
+    protected logger: Logger,
+  ) {
+    this.validateVersion();
+  }
 
   getMeta(): PARAMS['meta'] {
     return {
@@ -52,5 +56,14 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
 
   cleanDomainEvents(): void {
     this.domainEvents = [];
+  }
+
+  private validateVersion(): void {
+    if (typeof this.version !== 'number' || this.version < 0) {
+      this.logger.error(
+        `not valid version for aggregate ${this.aRootName}`,
+        { aRootName: this.aRootName, version: this.version },
+      );
+    }
   }
 }
