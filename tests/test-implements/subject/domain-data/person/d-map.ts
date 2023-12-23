@@ -45,6 +45,11 @@ export const contactsDMap: DomainMap<ContactsAttrs> = {
     attributeDescription: 'Позволяет доставить вам информацию в твердых носителях',
     placeHolder: 'Введите почтовый адрес',
   },
+  techSupportComments: {
+    label: 'Комментарии техподдержки',
+    attributeDescription: 'Техподдержка может оставлять сообщения',
+    placeHolder: 'Введите комментарий',
+  },
 };
 
 export const personDMap: DomainMap<PersonAttrs> = {

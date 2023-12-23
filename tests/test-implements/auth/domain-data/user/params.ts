@@ -11,7 +11,7 @@ export type UserAttrs = {
 export type UserMeta = DomainMeta<'UserAR'>;
 
 export type UserParams = AggregateRootDataParams<
-  UserAttrs, UserMeta, never
+  UserAttrs, UserMeta, never, never
 >;
 
 export type OutputUserAttrs = Omit<UserAttrs, 'passHash'>;

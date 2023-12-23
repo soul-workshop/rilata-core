@@ -13,7 +13,7 @@ export type CompanyAttrs = {
 export type CompanyMeta = DomainMeta<'CompanyAR'>;
 
 export type CompanyParams = AggregateRootDataParams<
-  CompanyAttrs, CompanyMeta, never
+  CompanyAttrs, CompanyMeta, never, ['admins']
 >;
 
 export type OutputCompanyAttrs = CompanyAttrs;
