@@ -14,11 +14,11 @@ type ExpressResponse = {
 
 export abstract class Controller {
   STATUS_CODES: Record<UseCaseBaseErrors['name'], number> = {
-    'Not Found': 404,
+    'Not found': 404,
     'Permission denied': 403,
     'Internal error': 500,
-    'Bad Request': 400,
-    'Validation Error': 400,
+    'Bad request': 400,
+    'Validation error': 400,
   };
 
   constructor(protected module: Module<ModuleType>, protected runMode: string) {}

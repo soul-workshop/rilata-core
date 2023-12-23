@@ -4,14 +4,14 @@ import { ArrayFieldErrors, FieldErrors } from '../../domain/validator/field-vali
 
 export type ValidationError = {
   errors: FieldErrors | ArrayFieldErrors,
-  name: 'Validation Error',
+  name: 'Validation error',
   domainType: 'error',
   errorType: 'app-error',
 }
 
-export type BadRequestError<L extends Locale> = ErrorDod<L, 'Bad Request', 'app-error'>;
+export type BadRequestError<L extends Locale> = ErrorDod<L, 'Bad request', 'app-error'>;
 
-export type NotFoundError<L extends Locale> = ErrorDod<L, 'Not Found', 'app-error'>;
+export type NotFoundError<L extends Locale> = ErrorDod<L, 'Not found', 'app-error'>;
 
 export type PermissionDeniedError<LOCALE extends Locale> =
   ErrorDod<LOCALE, 'Permission denied', 'domain-error'>;

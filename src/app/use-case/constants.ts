@@ -8,7 +8,7 @@ export const badRequestError: BadRequestError<Locale> = {
     text: 'Bad request',
     hint: {},
   },
-  name: 'Bad Request',
+  name: 'Bad request',
   errorType: 'app-error',
   domainType: 'error',
 };
@@ -18,7 +18,7 @@ export const badRequestInvalidCommandNameError: BadRequestError<Locale> = {
     text: 'Bad request, invalid command name',
     hint: {},
   },
-  name: 'Bad Request',
+  name: 'Bad request',
   errorType: 'app-error',
   domainType: 'error',
 };
@@ -28,7 +28,7 @@ export const notFoundError: NotFoundError<Locale> = {
     text: 'Page not found',
     hint: {},
   },
-  name: 'Not Found',
+  name: 'Not found',
   errorType: 'app-error',
   domainType: 'error',
 };
