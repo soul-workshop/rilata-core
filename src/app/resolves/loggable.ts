@@ -1,4 +1,4 @@
-import { Logger } from '../common/logger/logger';
+import { Logger } from '../../common/logger/logger';
 
 export interface LoggerResolver {
   getLogger(): Logger
