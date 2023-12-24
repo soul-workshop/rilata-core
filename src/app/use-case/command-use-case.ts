@@ -37,6 +37,7 @@ export abstract class CommandUseCase<
     options: GetUcOptions<UC_PARAMS>,
     uow: UnitOfWork,
   ): Promise<UcResult<UC_PARAMS>> {
+    // класс CommandAsyncLocalStorage еще предстоит реализовать
     const asyncLocalStorage = CommandAsyncLocalStorage.instance(this.moduleResolver);
     const useCaseResult = await asyncLocalStorage.run(
       { caller: options.caller, currentUoW: uow },
