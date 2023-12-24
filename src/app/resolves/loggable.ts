@@ -1,5 +1,5 @@
 import { Logger } from '../../common/logger/logger';
 
-export interface LoggerResolver {
+export interface Loggable {
   getLogger(): Logger
 }
