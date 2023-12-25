@@ -21,6 +21,10 @@ export class PersonAR extends AggregateRoot<PersonParams> {
     this.helper = new AggregateRootHelper(attrs, 'PersonAR', version, ['contacts.techSupportComments'], resolver);
   }
 
+  getId(): string {
+    return this.attrs.id;
+  }
+
   /** возвращает в формате Иванов И. И. */
   getShortName(): string {
     const patronomic = this.attrs.patronomic && this.attrs.patronomic.length > 0
