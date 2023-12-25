@@ -1,6 +1,6 @@
-import { AssertionException } from '../../types';
+import { AssertionException } from '../../exeptions';
 
-export class HTTPUtility {
+class HTTPUtility {
   encodeArrayQueryParam(param: unknown[]): string {
     if (!Array.isArray(param)) {
       throw new AssertionException(

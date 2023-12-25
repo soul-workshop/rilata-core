@@ -1,5 +1,5 @@
 import { Logger } from '../../common/logger/logger';
-import { ModuleResolver } from '../../conf/module-resolver';
+import { ModuleResolver } from '../resolves/module-resolver';
 import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../use-case/types';
 import { UseCase } from '../use-case/use-case';
 import { ModuleType } from './types';

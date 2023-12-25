@@ -1,7 +1,6 @@
-import { Facadable } from './facadable';
-import { LoggerResolver } from './loggable';
+import { Databaseable } from './databaseable';
 import { Repositoriable } from './repositoriable';
-import { UnitOfWorkable } from './unit-of-workable';
+import { Loggable } from './loggable';
 
 export interface ModuleResolver extends
-    LoggerResolver, Repositoriable, Facadable, UnitOfWorkable {}
+    Loggable, Repositoriable, Databaseable {}

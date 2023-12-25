@@ -1,5 +1,5 @@
 import { DTO } from '../../domain/dto';
-import { Realisable } from '../../domain/realisable';
+import { Realisable } from '../resolves/realisable';
 import { JWTTokens } from './types';
 
 export interface TokenCreator<PAYLOAD extends DTO> {
