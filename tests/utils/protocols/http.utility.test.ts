@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 import { httpUtility } from '../../../src/common/utils/protocols/http.utility';
-import { AssertionException } from '../../../src/common/types';
+import { AssertionException } from '../../../src/common/exeptions';
 
 describe('Тестирование HTTPUtility', () => {
   test('Успешное кодирование', () => {
