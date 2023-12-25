@@ -4,9 +4,11 @@ import { ArrayFieldErrors, FieldErrors } from '../../domain/validator/field-vali
 
 export type ValidationError = {
   errors: FieldErrors | ArrayFieldErrors,
-  name: 'Validation error',
-  domainType: 'error',
-  errorType: 'app-error',
+  meta: {
+    name: 'Validation error',
+    domainType: 'error',
+    errorType: 'app-error',
+  }
 }
 
 export type BadRequestError<L extends Locale> = ErrorDod<L, 'Bad request', 'app-error'>;

@@ -1,13 +1,11 @@
-import { IdType, UuidType } from '../common/types';
+import { IdType } from '../common/types';
 
 export type AnonymousUser = {
   type: 'AnonymousUser',
-  requestID: UuidType,
 };
 
 export type DomainUser = {
   type: 'DomainUser',
-  requestID: UuidType,
   userId: IdType,
 };
 

@@ -1,21 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Result } from '../../common/result/types';
-import { GetDtoKeysByDotNotation } from '../../common/type-functions';
+import { ExcludeDeepDtoAttrs, GetDtoKeysByDotNotation } from '../../common/type-functions';
+import { GetNoOutKeysFromARParams } from '../domain-object-data/type-functions';
 import { DTO } from '../dto';
-import { DomainAttrs, GeneralDomainMeta } from './common-types';
+import {
+  DomainAttrs, DomainMeta, GeneralErrorDod, GeneralEventDod,
+} from './common-types';
 
 /** полное описание одного из действий агрегата */
 export type ActionParams<
-  CMD, SCSS, ERRORS, EVENT
+  CMD, SCSS, ERRORS extends GeneralErrorDod, EVENTS extends GeneralEventDod[]
 > = {
   command: CMD,
   success: SCSS,
   errors: ERRORS,
-  events: EVENT,
+  events: EVENTS,
 }
 
 export type GeneralActionParams = ActionParams<
-  unknown, unknown, unknown, unknown
+  unknown, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
 export type DomainResult<AC_PARAMS extends GeneralActionParams> =
@@ -24,7 +27,7 @@ export type DomainResult<AC_PARAMS extends GeneralActionParams> =
 /** полное описание доменного агрегата */
 export type AggregateRootDataParams<
   ATTRS extends DomainAttrs,
-  META extends GeneralDomainMeta,
+  META extends DomainMeta<string>,
   ACTIONS extends GeneralActionParams,
   NO_OUT_KEYS extends GetDtoKeysByDotNotation<ATTRS>[]
 > = {
@@ -34,28 +37,23 @@ export type AggregateRootDataParams<
 }
 
 export type GeneralARDParams = AggregateRootDataParams<
-  DomainAttrs, GeneralDomainMeta, GeneralActionParams, GetDtoKeysByDotNotation<DTO>[]
+  DomainAttrs, DomainMeta<string>, GeneralActionParams, GetDtoKeysByDotNotation<DTO>[]
 >;
 
 export type UserActions = Record<string, boolean>;
 
+export type AggregateDataTransfer = {
+  attrs: unknown,
+  meta: DomainMeta<string>,
+}
+
 /** формат агрегата для передачи данных  */
-export type AggregateRootDataTransfer<
-  D extends DomainAttrs,
-  M extends GeneralDomainMeta,
-  A extends UserActions = UserActions,
+export type OutputAggregateDataTransfer<
+  PARAMS extends GeneralARDParams
 > = {
-  attrs: D,
-  meta?: M,
-  actions?: A,
+  // @ts-ignore
+  attrs: ExcludeDeepDtoAttrs<PARAMS['attrs'], GetNoOutKeysFromARParams<PARAMS>>,
+  meta: PARAMS['meta'],
 }
 
-export type GeneralARDTransfer = AggregateRootDataTransfer<DomainAttrs, GeneralDomainMeta>;
-
-/** передача всех данных об агрегате */
-export type FullAggregateRootDataTransfer<D extends GeneralARDTransfer> = {
-  classActions?: UserActions,
-  instances: D[],
-}
-
-export type GeneralFullARDTransfer = FullAggregateRootDataTransfer<GeneralARDTransfer>;
+export type GeneralOutputAggregateDataTransfer = OutputAggregateDataTransfer<GeneralARDParams>;

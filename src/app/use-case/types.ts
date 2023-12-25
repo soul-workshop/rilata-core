@@ -85,7 +85,7 @@ export type GetUcErrorsResult<P extends GeneralQueryUcParams | GeneralCommandUcP
 export type GetUcOptions<P extends GeneralQueryUcParams> = P['inputOptions'];
 
 export type GetActionDodName<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
-  UC_PARAMS['inputOptions']['actionDod']['actionName']
+  UC_PARAMS['inputOptions']['actionDod']['meta']['name']
 
 export type GetActionDodBody<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
   UC_PARAMS['inputOptions']['actionDod']['body']
