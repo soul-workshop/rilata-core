@@ -1,6 +1,6 @@
 import { UuidType } from '../../../../../src/common/types';
-import { ActionParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
-import { EventDod } from '../../../../../src/domain/domain-object-data/common-types';
+import { ActionParams } from '../../../../../src/domain/domain-object-data/params-types';
+import { EventDod } from '../../../../../src/domain/domain-object-data/domain-types';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../company/role-errors';
 import { PhoneAttrs } from './params';
 

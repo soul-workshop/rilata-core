@@ -1,4 +1,4 @@
-import { DomainAttrs } from '../domain-object-data/common-types';
+import { DomainAttrs } from '../domain-object-data/domain-types';
 import { GeneralAR } from './types';
 
 /** Доменный объект, обычно часть агрегата */

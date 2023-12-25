@@ -4,13 +4,13 @@ import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { UserId } from '../../../../../src/common/types';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
-import { DomainResult } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
+import { DomainResult } from '../../../../../src/domain/domain-object-data/params-types';
 import { AggregateRootHelper } from '../../../../../src/domain/domain-object/aggregate-helper';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
 import { AddPersonActionParams } from '../../domain-data/person/add-person.params';
 import { AddPhoneActionParams } from '../../domain-data/person/add-phones.params';
-import { PersonAttrs, PersonMeta, PersonParams } from '../../domain-data/person/params';
+import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
 import { ComapanyAR } from '../company/a-root';
 
 export class PersonAR extends AggregateRoot<PersonParams> {
@@ -18,7 +18,7 @@ export class PersonAR extends AggregateRoot<PersonParams> {
 
   constructor(protected attrs: PersonAttrs, protected version: number, resolver: ModuleResolver) {
     super();
-    this.helper = new AggregateRootHelper(attrs, 'PersonAR', version, [], resolver);
+    this.helper = new AggregateRootHelper(attrs, 'PersonAR', version, ['contacts.techSupportComments'], resolver);
   }
 
   /** возвращает в формате Иванов И. И. */
