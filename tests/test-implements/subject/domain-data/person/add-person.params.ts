@@ -13,9 +13,8 @@ export type PersonAlreadyExistsError = ErrorDod<
   'PersonExistsError'
 >;
 
-type PersonAddedEventAttrs = {
-  aRoot: PersonAttrs
-}
+type PersonAddedEventAttrs = PersonAttrs
+
 export type PersonAddedEvent = EventDod<PersonAddedEventAttrs, 'PersonAddedEvent'>;
 
 export type AddPersonActionParams = ActionParams<

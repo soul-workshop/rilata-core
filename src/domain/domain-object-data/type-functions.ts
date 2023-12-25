@@ -1,17 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AggregateRootDataParams, GeneralActionParams, GeneralARDParams } from './aggregate-data-types';
-import { DomainAttrs, EventDod, GeneralDomainMeta } from './common-types';
+import {
+  DomainAttrs, DomainMeta, EventDod, GeneralEventDod,
+} from './common-types';
 
 export type GetARParamsAttrs<AR_PARAMS extends GeneralARDParams> = AR_PARAMS['attrs'];
 
 export type GetARParamsEvents<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS['actions']['events'] extends Array<infer ARR_TYPE>
-    ? ARR_TYPE
-    : AR_PARAMS['actions']['events'];
+    ? ARR_TYPE extends GeneralEventDod
+      ? ARR_TYPE
+      : never
+    : never;
 
-export type GetARParamsEventNames<AR_PARAMS extends GeneralARDParams> =
-  AR_PARAMS['actions']['events'] extends EventDod<infer _, infer NAME>
+export type GetARParamsEventNames<EVENT extends GeneralEventDod> =
+  EVENT extends EventDod<infer _, infer NAME>
     ? NAME
+    : never
+
+export type GetARParamsEventAttrs<EVENT extends GeneralEventDod> =
+  EVENT extends EventDod<infer ATTRS, infer _>
+    ? ATTRS
     : never
 
 export type GetARParamsActionParams<AR_PARAMS extends GeneralARDParams> = AR_PARAMS['actions']
@@ -21,7 +30,7 @@ export type GetARParamsAggregateName<AR_PARAMS extends GeneralARDParams> =
 
 export type GetNoOutKeysFromARParams<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS extends AggregateRootDataParams<
-    DomainAttrs, GeneralDomainMeta, GeneralActionParams, infer T
+    DomainAttrs, DomainMeta<string>, GeneralActionParams, infer T
   >
     ? T
     : never
