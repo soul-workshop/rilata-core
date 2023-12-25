@@ -10,15 +10,12 @@ export abstract class CommandUseCase<
 > extends QueryUseCase<UC_PARAMS> {
   override async execute(options: GetUcOptions<UC_PARAMS>): Promise<UcResult<UC_PARAMS>> {
     // разрешить юзкейсу перезапуститься 1 раз, если возникла ошибка в БД.
-    // Скорее всего это просто ошибка параллельной вставки записей
-    // с уникальными полями
     let databaseErrorRestartAttempts = 1;
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const uow = await UnitOfWork.create(this.moduleResolver);
       try {
-        return await this.executeUseOfUnitOfWork(options, uow);
+        return await this.executeUseOfUnitOfWork(options);
       } catch (e) {
         if (e instanceof OptimisticLockVersionMismatchError) {
           continue;
@@ -35,24 +32,16 @@ export abstract class CommandUseCase<
 
   protected async executeUseOfUnitOfWork(
     options: GetUcOptions<UC_PARAMS>,
-    uow: UnitOfWork,
   ): Promise<UcResult<UC_PARAMS>> {
-    // класс CommandAsyncLocalStorage еще предстоит реализовать
-    const asyncLocalStorage = CommandAsyncLocalStorage.instance(this.moduleResolver);
-    const useCaseResult = await asyncLocalStorage.run(
-      { caller: options.caller, currentUoW: uow },
-      async () => {
-        try {
-          const res = await super.execute(options);
-          if (res.isSuccess()) await uow.commit();
-          else await uow.rollback();
-          return res;
-        } catch (e) {
-          await uow.rollback();
-          throw e;
-        }
-      },
-    );
-    return useCaseResult;
+    const unitOfWork = new UnitOfWork(this.moduleResolver);
+    try {
+      const res = await super.execute(options);
+      if (res.isSuccess()) await unitOfWork.commit();
+      else await unitOfWork.rollback();
+      return res;
+    } catch (e) {
+      await unitOfWork.rollback();
+      throw e;
+    }
   }
 }
