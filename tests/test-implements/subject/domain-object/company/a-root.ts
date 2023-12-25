@@ -12,6 +12,10 @@ export class ComapanyAR extends AggregateRoot<CompanyParams> {
     this.helper = new AggregateRootHelper(attrs, 'CompanyAR', version, ['admins'], resolver);
   }
 
+  getId(): string {
+    return this.attrs.id;
+  }
+
   isEmployeer(userId: UserId): boolean {
     return this.attrs.employeers.includes(userId);
   }
