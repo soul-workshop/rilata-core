@@ -1,10 +1,10 @@
 /* eslint-disable no-use-before-define */
 import { Result } from '../../common/result/types';
 import { GetArrayType } from '../../common/type-functions';
-import { GeneralARDParams } from '../../domain/domain-object-data/params-types';
+import { GeneralARDParams } from '../../domain/domain-data/params-types';
 import {
   GeneralErrorDod, GeneralEventDod, ActionDod,
-} from '../../domain/domain-object-data/domain-types';
+} from '../../domain/domain-data/domain-types';
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 import { Caller } from '../caller';
 import { ModuleType } from '../module/types';

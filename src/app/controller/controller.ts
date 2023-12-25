@@ -1,4 +1,4 @@
-import { ActionDod } from '../../domain/domain-object-data/domain-types';
+import { ActionDod } from '../../domain/domain-data/domain-types';
 import { Caller } from '../caller';
 import { Module } from '../module/module';
 import { InternalError, UseCaseBaseErrors } from '../use-case/error-types';

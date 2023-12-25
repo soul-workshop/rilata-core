@@ -1,5 +1,5 @@
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
-import { GeneralARDParams } from '../domain-object-data/params-types';
+import { GeneralARDParams } from '../domain-data/params-types';
 import { AggregateRootHelper } from './aggregate-helper';
 
 /** Корневой объект - т.е имеет уникальную глобальную идентификацию */

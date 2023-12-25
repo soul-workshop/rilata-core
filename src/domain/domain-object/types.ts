@@ -1,5 +1,5 @@
 import { UserId } from '../../common/types';
-import { GeneralARDParams } from '../domain-object-data/params-types';
+import { GeneralARDParams } from '../domain-data/params-types';
 import { AggregateRoot } from './aggregate-root';
 
 export type GeneralAR = AggregateRoot<GeneralARDParams>;

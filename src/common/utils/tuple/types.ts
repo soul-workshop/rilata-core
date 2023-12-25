@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Преобразует tuple ['a', 'b', 'c'] в объект {0: 'a', 1: 'b', 2: 'c'}.
  */
