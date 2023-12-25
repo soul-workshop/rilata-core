@@ -3,8 +3,8 @@ import { ModuleResolver } from '../../app/resolves/module-resolver';
 import { UuidType } from '../../common/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
-import { OutputAggregateDataTransfer, GeneralARDParams } from '../domain-object-data/aggregate-data-types';
-import { GeneralEventDod } from '../domain-object-data/common-types';
+import { GeneralARDParams } from '../domain-object-data/params-types';
+import { OutputAggregateDataTransfer, GeneralEventDod } from '../domain-object-data/domain-types';
 import {
   GetARParamsAggregateName, GetARParamsEventAttrs, GetARParamsEventNames,
   GetARParamsEvents, GetNoOutKeysFromARParams,

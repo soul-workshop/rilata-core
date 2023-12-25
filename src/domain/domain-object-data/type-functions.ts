@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AggregateRootDataParams, GeneralActionParams, GeneralARDParams } from './aggregate-data-types';
+import { AggregateRootDataParams, GeneralActionParams, GeneralARDParams } from './params-types';
 import {
   DomainAttrs, DomainMeta, EventDod, GeneralEventDod,
-} from './common-types';
+} from './domain-types';
 
 export type GetARParamsAttrs<AR_PARAMS extends GeneralARDParams> = AR_PARAMS['attrs'];
 

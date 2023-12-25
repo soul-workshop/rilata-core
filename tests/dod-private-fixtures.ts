@@ -1,4 +1,4 @@
-import { ErrorDod, EventDod } from '../src/domain/domain-object-data/common-types';
+import { ErrorDod, EventDod } from '../src/domain/domain-object-data/domain-types';
 
 export namespace DODPrivateFixtures {
   export type PhoneAttrs = {
