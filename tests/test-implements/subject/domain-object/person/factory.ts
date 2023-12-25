@@ -14,7 +14,7 @@ export class PersonFactory extends AggregateFactory<PersonParams> {
       id: uuidUtility.getNewUUID(),
       contacts: { phones: [] },
     };
-    const person = new PersonAR(personAttrs, 0);
+    const person = new PersonAR(personAttrs, 0, this.resolver.getLogger());
     const event = dodUtility.getEventByType<PersonAddedEvent>(
       'PersonAddedEvent',
       { aRoot: personAttrs },
@@ -25,6 +25,6 @@ export class PersonFactory extends AggregateFactory<PersonParams> {
   }
 
   restore(attrs: PersonAttrs, version: number): PersonAR {
-    return new PersonAR(attrs, version);
+    return new PersonAR(attrs, version, this.resolver.getLogger());
   }
 }

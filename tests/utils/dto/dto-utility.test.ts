@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { AssertionException } from '../../../src/common/types';
+import { AssertionException } from '../../../src/common/exeptions';
 import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
 
 const sut = dtoUtility;

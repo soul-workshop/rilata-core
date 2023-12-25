@@ -1,6 +1,6 @@
 import { ValidationRule } from '../validation-rule';
 import { TypeOrAssertRuleAnswer } from '../types';
-import { AssertionException } from '../../../../common/types';
+import { AssertionException } from '../../../../common/exeptions';
 
 export class MaxArrayElementsCountAssertionRule extends ValidationRule<'assert', unknown> {
   requirement = 'Максимальное количество элементов может быть {{max}}, сейчас {{currentCount}}';
