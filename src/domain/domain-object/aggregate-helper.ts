@@ -3,12 +3,12 @@ import { ModuleResolver } from '../../app/resolves/module-resolver';
 import { UuidType } from '../../common/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
-import { GeneralARDParams } from '../domain-object-data/params-types';
-import { OutputAggregateDataTransfer, GeneralEventDod } from '../domain-object-data/domain-types';
+import { GeneralARDParams } from '../domain-data/params-types';
+import { OutputAggregateDataTransfer, GeneralEventDod } from '../domain-data/domain-types';
 import {
   GetARParamsAggregateName, GetARParamsEventAttrs, GetARParamsEventNames,
   GetARParamsEvents, GetNoOutKeysFromARParams,
-} from '../domain-object-data/type-functions';
+} from '../domain-data/type-functions';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */

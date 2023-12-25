@@ -1,5 +1,5 @@
-import { ActionParams, DomainResult } from '../../../../../src/domain/domain-object-data/params-types';
-import { ErrorDod, EventDod } from '../../../../../src/domain/domain-object-data/domain-types';
+import { ActionParams, DomainResult } from '../../../../../src/domain/domain-data/params-types';
+import { ErrorDod, EventDod } from '../../../../../src/domain/domain-data/domain-types';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../company/role-errors';
 import { PersonAttrs } from './params';
 
