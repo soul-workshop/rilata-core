@@ -1,4 +1,4 @@
-import { ErrorDod } from '../../domain/domain-object-data/domain-types';
+import { ErrorDod } from '../../domain/domain-data/domain-types';
 import { Locale } from '../../domain/locale';
 import { ArrayFieldErrors, FieldErrors } from '../../domain/validator/field-validator/types';
 

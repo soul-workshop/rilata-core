@@ -1,6 +1,6 @@
 import { Caller } from '../../app/caller';
 import { ModuleResolver } from '../../app/resolves/module-resolver';
-import { GeneralARDParams } from '../domain-object-data/params-types';
+import { GeneralARDParams } from '../domain-data/params-types';
 import { DTO } from '../dto';
 import { AggregateRoot } from './aggregate-root';
 

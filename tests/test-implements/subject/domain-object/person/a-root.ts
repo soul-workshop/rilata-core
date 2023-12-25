@@ -4,7 +4,7 @@ import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { UserId } from '../../../../../src/common/types';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
-import { DomainResult } from '../../../../../src/domain/domain-object-data/params-types';
+import { DomainResult } from '../../../../../src/domain/domain-data/params-types';
 import { AggregateRootHelper } from '../../../../../src/domain/domain-object/aggregate-helper';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';

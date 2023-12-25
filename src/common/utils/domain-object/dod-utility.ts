@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ErrorDod } from '../../../domain/domain-object-data/domain-types';
+import { ErrorDod } from '../../../domain/domain-data/domain-types';
 import { Locale } from '../../../domain/locale';
 
 /** Утилита для работы с объектами DomainObjectData */

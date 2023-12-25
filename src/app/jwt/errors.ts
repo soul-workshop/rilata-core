@@ -1,5 +1,5 @@
 import { TokenType } from './types';
-import { ErrorDod } from '../../domain/domain-object-data/domain-types';
+import { ErrorDod } from '../../domain/domain-data/domain-types';
 
 export type IncorrectTokenTypeBody = {
   text: 'Некорректный тип токена авторизации',

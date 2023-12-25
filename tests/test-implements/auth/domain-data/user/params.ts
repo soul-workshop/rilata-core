@@ -1,6 +1,6 @@
 import { UuidType } from '../../../../../src/common/types';
-import { AggregateRootDataParams } from '../../../../../src/domain/domain-object-data/params-types';
-import { DomainMeta } from '../../../../../src/domain/domain-object-data/domain-types';
+import { AggregateRootDataParams } from '../../../../../src/domain/domain-data/params-types';
+import { DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
 
 export type UserAttrs = {
   id: UuidType,
