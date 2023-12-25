@@ -1,4 +1,5 @@
-import { AssertionException, UuidType } from '../../types';
+import { UuidType } from '../../types';
+import { AssertionException } from '../../exeptions';
 
 class UUIDUtility {
   private uuidRegex = '^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$';

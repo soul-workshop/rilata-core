@@ -44,5 +44,3 @@ export type ConstructorReturnType<C extends Constructor<any>>
 
 export type Timestamp = number;
 export type UserId = UuidType;
-
-export class AssertionException extends Error {}

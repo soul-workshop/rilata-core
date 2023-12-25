@@ -1,4 +1,5 @@
 import { Caller } from '../../../../../src/app/caller';
+import { Logger } from '../../../../../src/common/logger/logger';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { callerUtility } from '../../../../../src/common/utils/caller/caller-utility';
@@ -15,9 +16,9 @@ import { ComapanyAR } from '../company/a-root';
 export class PersonAR extends AggregateRoot<PersonParams> {
   protected helper: AggregateRootHelper<PersonParams>;
 
-  constructor(protected attrs: PersonAttrs, protected version: number) {
+  constructor(protected attrs: PersonAttrs, protected version: number, logger: Logger) {
     super();
-    this.helper = new AggregateRootHelper(attrs, 'PersonAR', version, []);
+    this.helper = new AggregateRootHelper(attrs, 'PersonAR', version, [], logger);
   }
 
   protected getMeta(): PersonMeta {
