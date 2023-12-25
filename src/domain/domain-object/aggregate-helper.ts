@@ -1,5 +1,4 @@
 import { Caller } from '../../app/caller';
-import { ModuleResolver } from '../../app/resolves/module-resolver';
 import { UuidType } from '../../common/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
@@ -9,6 +8,8 @@ import {
   GetARParamsAggregateName, GetARParamsEventAttrs, GetARParamsEventNames,
   GetARParamsEvents, GetNoOutKeysFromARParams,
 } from '../domain-data/type-functions';
+import { storeDispatcher } from '../../app/async-store/store-dispatcher';
+import { Logger } from '../../common/logger/logger';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */
@@ -16,11 +17,11 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
   private domainEvents: GetARParamsEvents<PARAMS>[] = [];
 
   constructor(
-    protected attrs: PARAMS['attrs'],
     protected aRootName: GetARParamsAggregateName<PARAMS>,
+    protected attrs: PARAMS['attrs'],
     protected version: number,
     protected outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,
-    protected resolver: ModuleResolver,
+    protected logger: Logger,
   ) {
     this.validateVersion();
   }
@@ -55,13 +56,14 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     actionId: UuidType,
     caller: Caller,
   ): void {
+    const store = storeDispatcher.getStoreOrExepction();
     const event: GeneralEventDod = {
       attrs: eventAttrs,
       meta: {
         eventId: uuidUtility.getNewUUID(),
         actionId,
         name: eventName,
-        moduleName: this.resolver.getModulName(),
+        moduleName: store.moduleResolver.getModule().getModuleName(),
         domainType: 'event',
       },
       caller,
@@ -80,7 +82,7 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
 
   private validateVersion(): void {
     if (typeof this.version !== 'number' || this.version < 0) {
-      this.resolver.getLogger().error(
+      this.logger.error(
         `not valid version for aggregate ${this.aRootName}`,
         { aRootName: this.aRootName, version: this.version },
       );

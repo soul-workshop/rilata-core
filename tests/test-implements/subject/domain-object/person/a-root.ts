@@ -1,5 +1,5 @@
 import { DomainUser } from '../../../../../src/app/caller';
-import { ModuleResolver } from '../../../../../src/app/resolves/module-resolver';
+import { Logger } from '../../../../../src/common/logger/logger';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { UserId } from '../../../../../src/common/types';
@@ -16,9 +16,9 @@ import { ComapanyAR } from '../company/a-root';
 export class PersonAR extends AggregateRoot<PersonParams> {
   protected helper: AggregateRootHelper<PersonParams>;
 
-  constructor(protected attrs: PersonAttrs, protected version: number, resolver: ModuleResolver) {
+  constructor(protected attrs: PersonAttrs, protected version: number, logger: Logger) {
     super();
-    this.helper = new AggregateRootHelper(attrs, 'PersonAR', version, ['contacts.techSupportComments'], resolver);
+    this.helper = new AggregateRootHelper('PersonAR', attrs, version, ['contacts.techSupportComments'], logger);
   }
 
   getId(): string {

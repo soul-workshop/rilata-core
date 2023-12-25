@@ -1,10 +1,11 @@
 import { ActionDod } from '../../domain/domain-data/domain-types';
 import { Caller } from '../caller';
-import { Module } from '../module/module';
 import { InternalError, UseCaseBaseErrors } from '../use-case/error-types';
-import { InputOptions } from '../use-case/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
+import { storeDispatcher } from '../async-store/store-dispatcher';
+import { ModuleResolver } from '../resolves/module-resolver';
+import { StorePayload } from '../async-store/types';
 
 type ExpressResponse = {
   status(status: number): ExpressResponse,
@@ -20,7 +21,7 @@ export abstract class Controller {
     'Validation error': 400,
   };
 
-  constructor(protected module: Module, protected runMode: string) {}
+  constructor(protected moduleResolver: ModuleResolver, protected runMode: string) {}
 
   protected async executeUseCase(
     actionDod: ActionDod,
@@ -29,13 +30,19 @@ export abstract class Controller {
   ): Promise<void> {
     try {
       const actionName = actionDod.meta.name;
-      const useCase = this.module.getUseCaseByName(actionName as string);
-      const inputOptions: InputOptions<ActionDod> = {
-        actionDod,
-        caller,
-      };
+      const useCase = this.moduleResolver.getModule().getUseCaseByName(actionName);
 
-      const useCaseResult = await useCase.execute(inputOptions);
+      const store: StorePayload = {
+        caller,
+        moduleResolver: this.moduleResolver,
+        actionId: actionDod.meta.actionId,
+      };
+      const threadStore = storeDispatcher.getThreadStore();
+      const useCaseResult = await threadStore.run(
+        store,
+        (aDod) => useCase.execute(aDod),
+        actionDod,
+      );
 
       if (useCaseResult.isSuccess() === true) {
         response.status(200);
@@ -52,7 +59,7 @@ export abstract class Controller {
       if (this.runMode.includes('test')) {
         throw e;
       }
-      this.module.getLogger().fatalError('server internal error', { actionDod, caller });
+      this.moduleResolver.getLogger().fatalError('server internal error', { actionDod, caller });
       const err = dodUtility.getAppErrorByType<InternalError<Locale>>(
         'Internal error',
         'Извините, на сервере произошла ошибка',
