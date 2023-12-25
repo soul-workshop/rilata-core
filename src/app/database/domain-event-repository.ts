@@ -6,5 +6,5 @@ export interface DomainEventRepository {
 
   getNotPublishedEvents(): GeneralEventDod[]
 
-  markStatusAsPublished(eventId: UuidType): Promise<void>
+  markAsPublished(eventId: UuidType): Promise<void>
 }
