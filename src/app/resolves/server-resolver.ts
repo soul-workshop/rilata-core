@@ -1,6 +1,6 @@
-import { LoggerResolver } from './loggable';
+import { Loggable } from './loggable';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ServerResolver extends LoggerResolver {
+export interface ServerResolver extends Loggable {
 
 }
