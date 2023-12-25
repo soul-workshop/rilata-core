@@ -2,7 +2,6 @@
 /* eslint-disable no-await-in-loop */
 import { GeneralCommandUcParams, GetUcOptions, UcResult } from './types';
 import { QueryUseCase } from './query-use-case';
-import { UnitOfWork } from '../unit-of-work/unit-of-work';
 import { DatabaseObjectSavingError, OptimisticLockVersionMismatchError } from '../../common/exeptions';
 
 export abstract class CommandUseCase<
@@ -33,14 +32,14 @@ export abstract class CommandUseCase<
   protected async executeUseOfUnitOfWork(
     options: GetUcOptions<UC_PARAMS>,
   ): Promise<UcResult<UC_PARAMS>> {
-    const unitOfWork = new UnitOfWork(this.moduleResolver);
+    const db = this.moduleResolver.getDatabase();
     try {
       const res = await super.execute(options);
-      if (res.isSuccess()) await unitOfWork.commit();
-      else await unitOfWork.rollback();
+      if (res.isSuccess()) await db.commit();
+      else await db.rollback();
       return res;
     } catch (e) {
-      await unitOfWork.rollback();
+      await db.rollback();
       throw e;
     }
   }
