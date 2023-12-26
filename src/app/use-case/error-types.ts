@@ -1,12 +1,14 @@
-import { ErrorDod } from '../../domain/domain-object-data/common-types';
+import { ErrorDod } from '../../domain/domain-data/domain-types';
 import { Locale } from '../../domain/locale';
 import { ArrayFieldErrors, FieldErrors } from '../../domain/validator/field-validator/types';
 
 export type ValidationError = {
   errors: FieldErrors | ArrayFieldErrors,
-  name: 'Validation error',
-  domainType: 'error',
-  errorType: 'app-error',
+  meta: {
+    name: 'Validation error',
+    domainType: 'error',
+    errorType: 'app-error',
+  }
 }
 
 export type BadRequestError<L extends Locale> = ErrorDod<L, 'Bad request', 'app-error'>;

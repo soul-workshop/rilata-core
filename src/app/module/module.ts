@@ -4,8 +4,8 @@ import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../use-case/types';
 import { UseCase } from '../use-case/use-case';
 import { ModuleType } from './types';
 
-export abstract class Module<M_TYPE extends ModuleType> {
-  readonly abstract moduleType: M_TYPE;
+export abstract class Module {
+  readonly abstract moduleType: ModuleType;
 
   readonly abstract moduleName: string;
 
@@ -39,5 +39,9 @@ export abstract class Module<M_TYPE extends ModuleType> {
 
   getLogger(): Logger {
     return this.logger;
+  }
+
+  getModuleName(): string {
+    return this.moduleName;
   }
 }

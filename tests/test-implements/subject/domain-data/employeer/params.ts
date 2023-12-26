@@ -1,6 +1,6 @@
 import { UuidType } from '../../../../../src/common/types';
-import { AggregateRootDataParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
-import { DomainMeta } from '../../../../../src/domain/domain-object-data/common-types';
+import { AggregateRootDataParams } from '../../../../../src/domain/domain-data/params-types';
+import { DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
 
 export type EmployeerAttrs = {
   id: UuidType

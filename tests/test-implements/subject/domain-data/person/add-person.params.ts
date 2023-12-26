@@ -1,5 +1,5 @@
-import { ActionParams, DomainResult } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
-import { ErrorDod, EventDod } from '../../../../../src/domain/domain-object-data/common-types';
+import { ActionParams, DomainResult } from '../../../../../src/domain/domain-data/params-types';
+import { ErrorDod, EventDod } from '../../../../../src/domain/domain-data/domain-types';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../company/role-errors';
 import { PersonAttrs } from './params';
 
@@ -13,9 +13,8 @@ export type PersonAlreadyExistsError = ErrorDod<
   'PersonExistsError'
 >;
 
-type PersonAddedEventAttrs = {
-  aRoot: PersonAttrs
-}
+type PersonAddedEventAttrs = PersonAttrs
+
 export type PersonAddedEvent = EventDod<PersonAddedEventAttrs, 'PersonAddedEvent'>;
 
 export type AddPersonActionParams = ActionParams<

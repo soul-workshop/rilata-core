@@ -1,7 +1,6 @@
-import { ActionDod } from '../../domain/domain-object-data/common-types';
+import { ActionDod } from '../../domain/domain-data/domain-types';
 import { Caller } from '../caller';
 import { Module } from '../module/module';
-import { ModuleType } from '../module/types';
 import { InternalError, UseCaseBaseErrors } from '../use-case/error-types';
 import { InputOptions } from '../use-case/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
@@ -13,7 +12,7 @@ type ExpressResponse = {
 }
 
 export abstract class Controller {
-  STATUS_CODES: Record<UseCaseBaseErrors['name'], number> = {
+  STATUS_CODES: Record<UseCaseBaseErrors['meta']['name'], number> = {
     'Not found': 404,
     'Permission denied': 403,
     'Internal error': 500,
@@ -21,7 +20,7 @@ export abstract class Controller {
     'Validation error': 400,
   };
 
-  constructor(protected module: Module<ModuleType>, protected runMode: string) {}
+  constructor(protected module: Module, protected runMode: string) {}
 
   protected async executeUseCase(
     actionDod: ActionDod,
@@ -29,7 +28,7 @@ export abstract class Controller {
     response: ExpressResponse,
   ): Promise<void> {
     try {
-      const { actionName } = actionDod;
+      const actionName = actionDod.meta.name;
       const useCase = this.module.getUseCaseByName(actionName as string);
       const inputOptions: InputOptions<ActionDod> = {
         actionDod,
@@ -42,7 +41,7 @@ export abstract class Controller {
         response.status(200);
       } else if (useCaseResult.isFailure()) {
         const err = useCaseResult.value as UseCaseBaseErrors;
-        response.status(this.STATUS_CODES[err.name]);
+        response.status(this.STATUS_CODES[err.meta.name]);
       }
 
       response.send({

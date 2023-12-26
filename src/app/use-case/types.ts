@@ -1,10 +1,10 @@
 /* eslint-disable no-use-before-define */
 import { Result } from '../../common/result/types';
 import { GetArrayType } from '../../common/type-functions';
-import { GeneralARDParams } from '../../domain/domain-object-data/aggregate-data-types';
+import { GeneralARDParams } from '../../domain/domain-data/params-types';
 import {
   GeneralErrorDod, GeneralEventDod, ActionDod,
-} from '../../domain/domain-object-data/common-types';
+} from '../../domain/domain-data/domain-types';
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 import { Caller } from '../caller';
 import { ModuleType } from '../module/types';
@@ -85,7 +85,7 @@ export type GetUcErrorsResult<P extends GeneralQueryUcParams | GeneralCommandUcP
 export type GetUcOptions<P extends GeneralQueryUcParams> = P['inputOptions'];
 
 export type GetActionDodName<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
-  UC_PARAMS['inputOptions']['actionDod']['actionName']
+  UC_PARAMS['inputOptions']['actionDod']['meta']['name']
 
 export type GetActionDodBody<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
   UC_PARAMS['inputOptions']['actionDod']['body']
