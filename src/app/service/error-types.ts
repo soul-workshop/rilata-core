@@ -21,7 +21,7 @@ export type PermissionDeniedError<LOCALE extends Locale> =
 export type InternalError<LOCALE extends Locale> =
   ErrorDod<LOCALE, 'Internal error', 'app-error'>;
 
-export type UseCaseBaseErrors =
+export type AppBaseErrors =
   BadRequestError<Locale>
   | NotFoundError<Locale>
   | PermissionDeniedError<Locale>

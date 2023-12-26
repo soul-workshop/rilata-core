@@ -1,4 +1,4 @@
-import { PermissionDeniedError } from '../../../../../src/app/use-case/error-types';
+import { PermissionDeniedError } from '../../../../../src/app/service/error-types';
 
 export type AllowedOnlyStaffManagersError = PermissionDeniedError<{
   text: 'Действие доступно только для менеджеров компании',

@@ -6,8 +6,8 @@ import { PersonAttrs } from './params';
 export type AddingPersonDomainCommand = Omit<PersonAttrs, 'id' | 'contacts'>;
 
 // В AddPersonActionParams ошибка не добавлена, потому что данная ошибка выясняется не
-// на уровне домена, а в useCase в ходе обращения в репозиторий, поэтому добавлена
-// в ответ на уровне useCase.
+// на уровне домена, а в service в ходе обращения в репозиторий, поэтому добавлена
+// в ответ на уровне service.
 export type PersonAlreadyExistsError = ErrorDod<
   {text: 'Человек с данным ИИН уже существует в системе', hint: Record<never, unknown>},
   'PersonExistsError'
