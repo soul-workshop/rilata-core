@@ -1,4 +1,4 @@
-import { Database } from '../database';
+import { Database } from '../database/database';
 
 export interface Databaseable {
   getDatabase(): Database
