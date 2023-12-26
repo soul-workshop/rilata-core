@@ -21,6 +21,7 @@ export abstract class Module {
 
   init(moduleResolver: ModuleResolver): void {
     this.moduleResolver = moduleResolver;
+    moduleResolver.init(this);
     this.logger = moduleResolver.getLogger();
     this.useCases = [...this.queryUseCases, ...this.commandUseCases];
     this.useCases.forEach((useCase) => useCase.init(moduleResolver));
