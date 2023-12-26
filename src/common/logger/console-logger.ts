@@ -21,12 +21,12 @@ export class ConsoleLogger implements Logger {
     this.fatalError(log, logAttrs);
   }
 
-  error(log: string, logAttrs?: unknown): never {
-    this.throwError(this.makeLogString('ERROR', log), logAttrs);
+  async error(log: string, logAttrs?: unknown): Promise<void> {
+    this.makeLogString('ERROR', log), logAttrs;
   }
 
-  fatalError(log: string, logAttrs?: unknown): never {
-    this.throwError(this.makeLogString('FATAL_ERROR', log), logAttrs);
+  async fatalError(log: string, logAttrs?: unknown): Promise<void> {
+    this.makeLogString('FATAL_ERROR', log), logAttrs;
   }
 
   private makeLogString(type: string, log: string): string {
@@ -36,10 +36,5 @@ export class ConsoleLogger implements Logger {
 
   private toConsole(text: string): void {
     console.log(text);
-  }
-
-  private throwError(err: string, logAttrs: unknown): never {
-    this.toConsole(JSON.stringify(logAttrs));
-    throw Error(err);
   }
 }
