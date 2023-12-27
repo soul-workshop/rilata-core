@@ -1,8 +1,8 @@
-import { ModuleResolver } from '../../conf/module-resolver';
 import { Logger } from '../../common/logger/logger';
 import { Result } from '../../common/result/types';
+import { ModuleResolver } from '../resolves/module-resolver';
 
-export abstract class UseCase {
+export abstract class Service {
   protected abstract aRootName: string;
 
   protected abstract name: string;

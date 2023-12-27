@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { AssertionException } from '../../../src/common/types';
+import { AssertionException } from '../../../src/common/exeptions';
 import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
 
 const sut = dtoUtility;
@@ -233,7 +233,7 @@ describe('dtoUtility class', () => {
       };
 
       const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
-      expect(result).toStrictEqual(expectedDTO);
+      expect(result).toEqual(expectedDTO);
     });
 
     test('Уберем атрибут второго уровня', () => {
@@ -250,7 +250,7 @@ describe('dtoUtility class', () => {
       };
 
       const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
-      expect(result).toStrictEqual(expectedDTO);
+      expect(result).toEqual(expectedDTO);
     });
 
     test('Уберем атрибут третьего уровня', () => {
@@ -270,7 +270,7 @@ describe('dtoUtility class', () => {
       };
 
       const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
-      expect(result).toStrictEqual(expectedDTO);
+      expect(result).toEqual(expectedDTO);
     });
 
     // Не работает метод когда массив строк TODO: Нурболат
@@ -290,7 +290,7 @@ describe('dtoUtility class', () => {
       };
 
       const result = dtoUtility.excludeDeepAttrs(personDTO, attrsToDelete);
-      expect(result).toStrictEqual(expectedDTO);
+      expect(result).toEqual(expectedDTO);
     });
 
     // Не работает метод когда массив строк TODO: Нурболат

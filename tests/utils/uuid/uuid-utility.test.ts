@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { describe, test, expect } from 'bun:test';
-import { AssertionException } from '../../../src/common/types';
+import { AssertionException } from '../../../src/common/exeptions';
 import { uuidUtility } from '../../../src/common/utils/uuid/uuid-utility';
 
 describe('uuidUtility class test', () => {

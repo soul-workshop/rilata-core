@@ -4,17 +4,17 @@ import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
 import { Locale } from '../../domain/locale';
 import { ResultDTO } from '../result-dto';
-import { BadRequestError } from '../use-case/error-types';
-import { GeneralCommandUcParams, GeneralQueryUcParams, UcResult } from '../use-case/types';
+import { BadRequestError } from '../service/error-types';
+import { GeneralCommandServiceParams, GeneralQueryServiceParams, ServiceResult } from '../service/types';
 
 export abstract class BackendApi {
     protected abstract moduleUrl: string;
 
     constructor(protected logger: Logger, protected jwtToken: string) {}
 
-    async request<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams>(
-      actionDod: UC_PARAMS['inputOptions'],
-    ): Promise<UcResult<UC_PARAMS>> {
+    async request<SERVICE_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
+      actionDod: SERVICE_PARAMS['actionDod'],
+    ): Promise<ServiceResult<SERVICE_PARAMS>> {
       const backendResult = await fetch(this.moduleUrl, {
         method: 'POST',
         headers: {
@@ -25,7 +25,7 @@ export abstract class BackendApi {
         body: JSON.stringify(actionDod),
       });
 
-      const resultDto = await backendResult.json() as ResultDTO<UC_PARAMS['errors'], UC_PARAMS['successOut']>;
+      const resultDto = await backendResult.json() as ResultDTO<SERVICE_PARAMS['errors'], SERVICE_PARAMS['successOut']>;
       if (resultDto.success === false) {
         return failure(resultDto.payload);
       }
@@ -42,9 +42,11 @@ export abstract class BackendApi {
           text: 'Ошибка интернета',
           hint: {},
         },
-        name: 'Bad request',
-        errorType: 'app-error',
-        domainType: 'error',
+        meta: {
+          name: 'Bad request',
+          errorType: 'app-error',
+          domainType: 'error',
+        },
       });
     }
 }

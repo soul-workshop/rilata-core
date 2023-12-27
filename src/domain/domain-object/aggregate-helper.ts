@@ -1,8 +1,16 @@
-import { Logger } from '../../common/logger/logger';
-import { ExcludeDeepDtoAttrs } from '../../common/type-functions';
+import { Caller } from '../../app/caller';
+import { UuidType } from '../../common/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
-import { AggregateRootDataTransfer, GeneralARDParams } from '../domain-object-data/aggregate-data-types';
-import { GetARParamsAggregateName, GetARParamsEvents, GetNoOutKeysFromARParams } from '../domain-object-data/type-functions';
+import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
+import { GeneralARDParams } from '../domain-data/params-types';
+import { OutputAggregateDataTransfer, GeneralEventDod } from '../domain-data/domain-types';
+import {
+  GetARParamsAggregateName, GetARParamsEventAttrs, GetARParamsEventNames,
+  GetARParamsEvents, GetNoOutKeysFromARParams,
+} from '../domain-data/type-functions';
+import { storeDispatcher } from '../../app/async-store/store-dispatcher';
+import { Logger } from '../../common/logger/logger';
+import { AssertionException } from '../../common/exeptions';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */
@@ -10,8 +18,8 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
   private domainEvents: GetARParamsEvents<PARAMS>[] = [];
 
   constructor(
-    protected attrs: PARAMS['attrs'],
     protected aRootName: GetARParamsAggregateName<PARAMS>,
+    protected attrs: PARAMS['attrs'],
     protected version: number,
     protected outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,
     protected logger: Logger,
@@ -22,17 +30,14 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
   getMeta(): PARAMS['meta'] {
     return {
       name: this.aRootName,
-      domainType: 'domain-object',
-      objectType: 'aggregate',
+      domainType: 'aggregate',
+      version: this.version,
     };
   }
 
-  getOutput(): AggregateRootDataTransfer<
-    // @ts-ignore
-    ExcludeDeepDtoAttrs<PARAMS['attrs'], GetNoOutKeysFromARParams<PARAMS>>,
-    PARAMS['meta'] > {
+  getOutput(): OutputAggregateDataTransfer<PARAMS> {
     return {
-      // @ts-ignore
+    // @ts-ignore
       attrs: dtoUtility.excludeDeepAttrs(this.attrs, this.outputExcludeAttrs),
       meta: this.getMeta(),
     };
@@ -46,8 +51,26 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     return this.aRootName;
   }
 
-  registerDomainEvent(event: GetARParamsEvents<PARAMS>): void {
-    this.domainEvents.push(event);
+  registerDomainEvent<EVENT extends GetARParamsEvents<PARAMS>>(
+    eventName: GetARParamsEventNames<EVENT>,
+    eventAttrs: GetARParamsEventAttrs<EVENT>,
+    actionId: UuidType,
+    caller: Caller,
+  ): void {
+    const store = storeDispatcher.getStoreOrExepction();
+    const event: GeneralEventDod = {
+      attrs: eventAttrs,
+      meta: {
+        eventId: uuidUtility.getNewUUID(),
+        actionId,
+        name: eventName,
+        moduleName: store.moduleResolver.getModule().getModuleName(),
+        domainType: 'event',
+      },
+      caller,
+      aRootAttrs: this.getOutput(),
+    };
+    this.domainEvents.push(event as GetARParamsEvents<PARAMS>);
   }
 
   getDomainEvents(): GetARParamsEvents<PARAMS>[] {
@@ -60,10 +83,12 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
 
   private validateVersion(): void {
     if (typeof this.version !== 'number' || this.version < 0) {
+      const errStr = `not valid version for aggregate ${this.aRootName}`;
       this.logger.error(
-        `not valid version for aggregate ${this.aRootName}`,
+        errStr,
         { aRootName: this.aRootName, version: this.version },
       );
+      throw new AssertionException(errStr);
     }
   }
 }

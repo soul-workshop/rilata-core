@@ -1,11 +1,11 @@
-import { ActionDod } from '../../domain/domain-object-data/common-types';
+import { ActionDod } from '../../domain/domain-data/domain-types';
 import { Caller } from '../caller';
-import { Module } from '../module/module';
-import { ModuleType } from '../module/types';
-import { InternalError, UseCaseBaseErrors } from '../use-case/error-types';
-import { InputOptions } from '../use-case/types';
+import { InternalError, AppBaseErrors } from '../service/error-types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
+import { storeDispatcher } from '../async-store/store-dispatcher';
+import { ModuleResolver } from '../resolves/module-resolver';
+import { StorePayload } from '../async-store/types';
 
 type ExpressResponse = {
   status(status: number): ExpressResponse,
@@ -13,7 +13,7 @@ type ExpressResponse = {
 }
 
 export abstract class Controller {
-  STATUS_CODES: Record<UseCaseBaseErrors['name'], number> = {
+  STATUS_CODES: Record<AppBaseErrors['meta']['name'], number> = {
     'Not found': 404,
     'Permission denied': 403,
     'Internal error': 500,
@@ -21,39 +21,45 @@ export abstract class Controller {
     'Validation error': 400,
   };
 
-  constructor(protected module: Module<ModuleType>, protected runMode: string) {}
+  constructor(protected moduleResolver: ModuleResolver, protected runMode: string) {}
 
-  protected async executeUseCase(
+  protected async executeService(
     actionDod: ActionDod,
     caller: Caller,
     response: ExpressResponse,
   ): Promise<void> {
     try {
-      const { actionName } = actionDod;
-      const useCase = this.module.getUseCaseByName(actionName as string);
-      const inputOptions: InputOptions<ActionDod> = {
-        actionDod,
+      const actionName = actionDod.meta.name;
+      const service = this.moduleResolver.getModule().getServiceByName(actionName);
+
+      const store: StorePayload = {
         caller,
+        moduleResolver: this.moduleResolver,
+        actionId: actionDod.meta.actionId,
       };
+      const threadStore = storeDispatcher.getThreadStore();
+      const serviceResult = await threadStore.run(
+        store,
+        (aDod) => service.execute(aDod),
+        actionDod,
+      );
 
-      const useCaseResult = await useCase.execute(inputOptions);
-
-      if (useCaseResult.isSuccess() === true) {
+      if (serviceResult.isSuccess() === true) {
         response.status(200);
-      } else if (useCaseResult.isFailure()) {
-        const err = useCaseResult.value as UseCaseBaseErrors;
-        response.status(this.STATUS_CODES[err.name]);
+      } else if (serviceResult.isFailure()) {
+        const err = serviceResult.value as AppBaseErrors;
+        response.status(this.STATUS_CODES[err.meta.name]);
       }
 
       response.send({
-        success: useCaseResult.isSuccess(),
-        payload: useCaseResult.value,
+        success: serviceResult.isSuccess(),
+        payload: serviceResult.value,
       });
     } catch (e) {
       if (this.runMode.includes('test')) {
         throw e;
       }
-      this.module.getLogger().fatalError('server internal error', { actionDod, caller });
+      this.moduleResolver.getLogger().fatalError('server internal error', { actionDod, caller });
       const err = dodUtility.getAppErrorByType<InternalError<Locale>>(
         'Internal error',
         'Извините, на сервере произошла ошибка',

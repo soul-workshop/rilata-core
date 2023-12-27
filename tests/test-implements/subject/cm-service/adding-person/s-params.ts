@@ -1,21 +1,24 @@
-import { CommandUseCaseParams, UcResult, InputOptions } from '../../../../../src/app/use-case/types';
+import { CommandServiceParams, ServiceResult } from '../../../../../src/app/service/types';
+import { UuidType } from '../../../../../src/common/types';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
 import { AddingPersonDomainCommand, PersonAddedEvent, PersonAlreadyExistsError } from '../../domain-data/person/add-person.params';
 import { PersonParams } from '../../domain-data/person/params';
 
 export type AddPersonActionDod = {
-  actionName: 'addPerson',
-  body: AddingPersonDomainCommand
+  meta: {
+    name: 'addPerson',
+    actionId: UuidType,
+    domainType: 'action',
+  }
+  attrs: AddingPersonDomainCommand
 }
 
-export type AddingPersonInputOptions = InputOptions<AddPersonActionDod>
-
-export type AddingPersonUCParams = CommandUseCaseParams<
+export type AddingPersonServiceParams = CommandServiceParams<
   PersonParams,
-  AddingPersonInputOptions,
+  AddPersonActionDod,
   string,
   PersonAlreadyExistsError | AllowedOnlyEmployeerError | AllowedOnlyStaffManagersError,
   PersonAddedEvent[]
 >;
 
-export type AddingPersonResult = UcResult<AddingPersonUCParams>;
+export type AddingPersonResult = ServiceResult<AddingPersonServiceParams>;

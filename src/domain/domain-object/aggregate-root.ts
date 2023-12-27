@@ -1,5 +1,5 @@
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
-import { GeneralARDParams } from '../domain-object-data/aggregate-data-types';
+import { GeneralARDParams } from '../domain-data/params-types';
 import { AggregateRootHelper } from './aggregate-helper';
 
 /** Корневой объект - т.е имеет уникальную глобальную идентификацию */
@@ -12,9 +12,7 @@ export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
     Обычно используется для идентификации пользователем объекта в списке */
   abstract getShortName(): string;
 
-  getId(): string {
-    return this.attrs.id;
-  }
+  abstract getId(): string
 
   getAttrs(conf: { copy: boolean } = { copy: true }): PARAMS['attrs'] {
     return conf.copy ? dtoUtility.deepCopy(this.attrs) : this.attrs;
