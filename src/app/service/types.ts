@@ -84,4 +84,4 @@ export type GetActionDodName<
 
 export type GetActionDodBody<
   S_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams
-> = S_PARAMS['actionDod']['body']
+> = S_PARAMS['actionDod']['attrs']

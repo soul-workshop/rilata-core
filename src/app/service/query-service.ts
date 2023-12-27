@@ -42,7 +42,7 @@ export abstract class QueryService<S_PARAMS extends GeneralQueryServiceParams>
     const checkCallerResult = this.checkCallerPermission();
     if (checkCallerResult.isFailure()) return checkCallerResult;
 
-    return this.checkValidations(actionDod.body);
+    return this.checkValidations(actionDod.attrs);
   }
 
   // eslint-disable-next-line max-len

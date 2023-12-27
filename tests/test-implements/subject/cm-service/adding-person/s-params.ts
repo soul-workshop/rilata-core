@@ -10,7 +10,7 @@ export type AddPersonActionDod = {
     actionId: UuidType,
     domainType: 'action',
   }
-  body: AddingPersonDomainCommand
+  attrs: AddingPersonDomainCommand
 }
 
 export type AddingPersonServiceParams = CommandServiceParams<

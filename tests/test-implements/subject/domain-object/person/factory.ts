@@ -9,7 +9,7 @@ import { PersonAR } from './a-root';
 export class PersonFactory extends AggregateFactory<PersonParams> {
   create(caller: Caller, actionDod: AddPersonActionDod): PersonAR {
     const personAttrs: PersonAttrs = {
-      ...actionDod.body,
+      ...actionDod.attrs,
       id: uuidUtility.getNewUUID(),
       contacts: { phones: [] },
     };
