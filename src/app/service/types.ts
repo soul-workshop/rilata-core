@@ -7,9 +7,9 @@ import {
 } from '../../domain/domain-data/domain-types';
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 import { ModuleType } from '../module/types';
-import { CommandUseCase } from './command-use-case';
-import { UseCaseBaseErrors } from './error-types';
-import { QueryUseCase } from './query-use-case';
+import { CommandService } from './command-service';
+import { AppBaseErrors } from './error-types';
+import { QueryService } from './query-service';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
 
@@ -20,9 +20,9 @@ export type GetAppEventDod<EVENTS extends GeneralEventDod[], M_TYPE extends Modu
       ? Array<GetArrayType<EVENTS> & { event: 'read-event' }>
       : EVENTS
 
-export type QueryUseCaseParams<
+export type QueryServiceParams<
   AR_PARAMS extends GeneralARDParams,
-  ACTION_DOD extends ActionDod, // что входит в useCase,
+  ACTION_DOD extends ActionDod, // что входит в service,
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT extends GeneralErrorDod, // возвращаемый ответ в случае не успеха
 > = {
@@ -32,15 +32,15 @@ export type QueryUseCaseParams<
   errors: FAIL_OUT,
 }
 
-export type GeneralQueryUcParams = QueryUseCaseParams<
+export type GeneralQueryServiceParams = QueryServiceParams<
   GeneralARDParams, ActionDod, unknown, GeneralErrorDod
 >;
 
-export type GeneraQuerylUseCase = QueryUseCase<GeneralQueryUcParams>;
+export type GeneraQueryService = QueryService<GeneralQueryServiceParams>;
 
-export type CommandUseCaseParams<
+export type CommandServiceParams<
   AR_PARAMS extends GeneralARDParams,
-  ACTION_DOD extends ActionDod, // что входит в useCase,
+  ACTION_DOD extends ActionDod, // что входит в service,
   SUCCESS_OUT, // ответ в случае успеха
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENTS extends GeneralEventDod[], // публикуемые доменные события
@@ -52,29 +52,36 @@ export type CommandUseCaseParams<
   events: EVENTS,
 }
 
-export type GeneralCommandUcParams = CommandUseCaseParams<
+export type GeneralCommandServiceParams = CommandServiceParams<
   GeneralARDParams, ActionDod, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
-export type GeneralCommandUseCase = CommandUseCase<GeneralCommandUcParams>;
+export type GeneralCommandService = CommandService<GeneralCommandServiceParams>;
 
-export type ActionDodValidator<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
+export type ActionDodValidator<
+  S_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams
+> =
   DtoFieldValidator<
-    GetActionDodName<UC_PARAMS>,
+    GetActionDodName<S_PARAMS>,
     true, false,
-    GetActionDodBody<UC_PARAMS>
+    GetActionDodBody<S_PARAMS>
   >
 
-export type UcResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> = Result<
-  P['errors'] | UseCaseBaseErrors,
+export type ServiceResult<
+  P extends GeneralQueryServiceParams | GeneralCommandServiceParams
+> = Result<
+  P['errors'] | AppBaseErrors,
   P['successOut']
 >
 
-export type GetUcErrorsResult<P extends GeneralQueryUcParams | GeneralCommandUcParams> =
-  Result<P['errors'] | UseCaseBaseErrors, never>
+export type GetServiceErrorsResult<
+  P extends GeneralQueryServiceParams | GeneralCommandServiceParams
+> = Result<P['errors'] | AppBaseErrors, never>
 
-export type GetActionDodName<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
-  UC_PARAMS['actionDod']['meta']['name']
+export type GetActionDodName<
+  S_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams
+> = S_PARAMS['actionDod']['meta']['name']
 
-export type GetActionDodBody<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams> =
-  UC_PARAMS['actionDod']['body']
+export type GetActionDodBody<
+  S_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams
+> = S_PARAMS['actionDod']['body']

@@ -1,20 +1,20 @@
 import { Module } from '../../../../../../src/app/module/module';
 import { ModuleType } from '../../../../../../src/app/module/types';
-import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../../../../../../src/app/use-case/types';
-import { AddingPersonUC } from '../../../cm-use-case/adding-person/use-case';
+import { GeneralCommandService, GeneraQueryService } from '../../../../../../src/app/service/types';
+import { AddingPersonService } from '../../../cm-service/adding-person/service';
 
 export class SubjectModule extends Module {
   moduleType: ModuleType = 'common-module' as const;
 
   moduleName = 'SubjectModule';
 
-  queryUseCases: GeneraQuerylUseCase[] = [];
+  queryServices: GeneraQueryService[] = [];
 
-  commandUseCases: GeneralCommandUseCase[] = [
-    new AddingPersonUC(),
+  commandServices: GeneralCommandService[] = [
+    new AddingPersonService(),
   ];
 
-  useCases: GeneraQuerylUseCase[] = [];
+  services: GeneraQueryService[] = [];
 
   getName(): string {
     return this.constructor.name;

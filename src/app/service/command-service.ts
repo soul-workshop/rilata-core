@@ -1,14 +1,14 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-await-in-loop */
-import { GeneralCommandUcParams, UcResult } from './types';
-import { QueryUseCase } from './query-use-case';
+import { GeneralCommandServiceParams, ServiceResult } from './types';
+import { QueryService } from './query-service';
 import { DatabaseObjectSavingError, OptimisticLockVersionMismatchError } from '../../common/exeptions';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 
-export abstract class CommandUseCase<
-  UC_PARAMS extends GeneralCommandUcParams,
-> extends QueryUseCase<UC_PARAMS> {
-  override async execute(actionDod: UC_PARAMS['actionDod']): Promise<UcResult<UC_PARAMS>> {
+export abstract class CommandService<
+  S_PARAMS extends GeneralCommandServiceParams,
+> extends QueryService<S_PARAMS> {
+  override async execute(actionDod: S_PARAMS['actionDod']): Promise<ServiceResult<S_PARAMS>> {
     // разрешить юзкейсу перезапуститься 1 раз, если возникла ошибка в БД.
     let databaseErrorRestartAttempts = 1;
 
@@ -30,7 +30,7 @@ export abstract class CommandUseCase<
     }
   }
 
-  protected async executeUseOfUnitOfWork(actionDod: UC_PARAMS['actionDod']): Promise<UcResult<UC_PARAMS>> {
+  protected async executeUseOfUnitOfWork(actionDod: S_PARAMS['actionDod']): Promise<ServiceResult<S_PARAMS>> {
     const store = storeDispatcher.getStoreOrExepction();
     const db = store.moduleResolver.getDatabase();
 

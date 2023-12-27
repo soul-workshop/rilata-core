@@ -1,6 +1,6 @@
 import { ActionDod } from '../../domain/domain-data/domain-types';
 import { Caller } from '../caller';
-import { InternalError, UseCaseBaseErrors } from '../use-case/error-types';
+import { InternalError, AppBaseErrors } from '../service/error-types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { storeDispatcher } from '../async-store/store-dispatcher';
@@ -13,7 +13,7 @@ type ExpressResponse = {
 }
 
 export abstract class Controller {
-  STATUS_CODES: Record<UseCaseBaseErrors['meta']['name'], number> = {
+  STATUS_CODES: Record<AppBaseErrors['meta']['name'], number> = {
     'Not found': 404,
     'Permission denied': 403,
     'Internal error': 500,
@@ -23,14 +23,14 @@ export abstract class Controller {
 
   constructor(protected moduleResolver: ModuleResolver, protected runMode: string) {}
 
-  protected async executeUseCase(
+  protected async executeService(
     actionDod: ActionDod,
     caller: Caller,
     response: ExpressResponse,
   ): Promise<void> {
     try {
       const actionName = actionDod.meta.name;
-      const useCase = this.moduleResolver.getModule().getUseCaseByName(actionName);
+      const service = this.moduleResolver.getModule().getServiceByName(actionName);
 
       const store: StorePayload = {
         caller,
@@ -38,22 +38,22 @@ export abstract class Controller {
         actionId: actionDod.meta.actionId,
       };
       const threadStore = storeDispatcher.getThreadStore();
-      const useCaseResult = await threadStore.run(
+      const serviceResult = await threadStore.run(
         store,
-        (aDod) => useCase.execute(aDod),
+        (aDod) => service.execute(aDod),
         actionDod,
       );
 
-      if (useCaseResult.isSuccess() === true) {
+      if (serviceResult.isSuccess() === true) {
         response.status(200);
-      } else if (useCaseResult.isFailure()) {
-        const err = useCaseResult.value as UseCaseBaseErrors;
+      } else if (serviceResult.isFailure()) {
+        const err = serviceResult.value as AppBaseErrors;
         response.status(this.STATUS_CODES[err.meta.name]);
       }
 
       response.send({
-        success: useCaseResult.isSuccess(),
-        payload: useCaseResult.value,
+        success: serviceResult.isSuccess(),
+        payload: serviceResult.value,
       });
     } catch (e) {
       if (this.runMode.includes('test')) {

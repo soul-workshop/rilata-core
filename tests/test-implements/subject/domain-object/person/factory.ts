@@ -1,7 +1,7 @@
 import { Caller } from '../../../../../src/app/caller';
 import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
 import { AggregateFactory } from '../../../../../src/domain/domain-object/aggregate-factory';
-import { AddPersonActionDod } from '../../cm-use-case/adding-person/params';
+import { AddPersonActionDod } from '../../cm-service/adding-person/s-params';
 import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
 import { PersonAR } from './a-root';
 

@@ -1,8 +1,8 @@
 import { AssertionException } from '../../common/exeptions';
 import { Logger } from '../../common/logger/logger';
 import { ModuleResolver } from '../resolves/module-resolver';
-import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../use-case/types';
-import { UseCase } from '../use-case/use-case';
+import { GeneralCommandService, GeneraQueryService } from '../service/types';
+import { Service } from '../service/service';
 import { ModuleType } from './types';
 
 export abstract class Module {
@@ -10,13 +10,13 @@ export abstract class Module {
 
   readonly abstract moduleName: string;
 
-  readonly abstract queryUseCases: GeneraQuerylUseCase[]
+  readonly abstract queryServices: GeneraQueryService[]
 
-  readonly abstract commandUseCases: GeneralCommandUseCase[];
+  readonly abstract commandServices: GeneralCommandService[];
 
   protected moduleResolver!: ModuleResolver;
 
-  protected useCases!: UseCase[];
+  protected services!: Service[];
 
   protected logger!: Logger;
 
@@ -24,18 +24,18 @@ export abstract class Module {
     this.moduleResolver = moduleResolver;
     moduleResolver.init(this);
     this.logger = moduleResolver.getLogger();
-    this.useCases = [...this.queryUseCases, ...this.commandUseCases];
-    this.useCases.forEach((useCase) => useCase.init(moduleResolver));
+    this.services = [...this.queryServices, ...this.commandServices];
+    this.services.forEach((service) => service.init(moduleResolver));
   }
 
-  getUseCaseByName(name: string): UseCase {
-    const useCase = this.useCases.find((uc) => uc.getName() === name);
-    if (useCase === undefined) {
-      const errStr = `not finded in module "${this.moduleName}" usecase by name "${name}"`;
-      this.logger.error(errStr, { useCaseNames: this.useCases.map((uc) => uc.getName()) });
+  getServiceByName(name: string): Service {
+    const service = this.services.find((s) => s.getName() === name);
+    if (service === undefined) {
+      const errStr = `not finded in module "${this.moduleName}" service by name "${name}"`;
+      this.logger.error(errStr, { serviceNames: this.services.map((s) => s.getName()) });
       throw new AssertionException(errStr);
     }
-    return useCase;
+    return service;
   }
 
   getLogger(): Logger {

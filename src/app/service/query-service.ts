@@ -6,27 +6,27 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { CallerType } from '../caller';
 import {
-  GeneralQueryUcParams, UcResult,
+  GeneralQueryServiceParams, ServiceResult,
   GetActionDodBody, ActionDodValidator, GetActionDodName,
 } from './types';
-import { UseCase } from './use-case';
+import { Service } from './service';
 import { PermissionDeniedError, ValidationError } from './error-types';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 
-export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
-  extends UseCase {
-  protected abstract override name: GetActionDodName<UC_PARAMS>;
+export abstract class QueryService<S_PARAMS extends GeneralQueryServiceParams>
+  extends Service {
+  protected abstract override name: GetActionDodName<S_PARAMS>;
 
-  protected abstract aRootName: UC_PARAMS['aRootName'];
+  protected abstract aRootName: S_PARAMS['aRootName'];
 
   protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
   /** выполнение доменной логики */
-  protected abstract runDomain(actionDod: UC_PARAMS['actionDod']): Promise<UcResult<UC_PARAMS>>
+  protected abstract runDomain(actionDod: S_PARAMS['actionDod']): Promise<ServiceResult<S_PARAMS>>
 
-  protected abstract validatorMap: ActionDodValidator<UC_PARAMS>;
+  protected abstract validatorMap: ActionDodValidator<S_PARAMS>;
 
-  async execute(actionDod: UC_PARAMS['actionDod']): Promise<UcResult<UC_PARAMS>> {
+  async execute(actionDod: S_PARAMS['actionDod']): Promise<ServiceResult<S_PARAMS>> {
     const checksResult = await this.runInitialChecks(actionDod);
     if (checksResult.isFailure()) return checksResult;
     return this.runDomain(actionDod);
@@ -37,7 +37,7 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
    * выполнения доменной логики и её проверок.
    * */
   protected async runInitialChecks(
-    actionDod: UC_PARAMS['actionDod'],
+    actionDod: S_PARAMS['actionDod'],
   ): Promise<Result<ValidationError | PermissionDeniedError<Locale>, undefined>> {
     const checkCallerResult = this.checkCallerPermission();
     if (checkCallerResult.isFailure()) return checkCallerResult;
@@ -59,7 +59,7 @@ export abstract class QueryUseCase<UC_PARAMS extends GeneralQueryUcParams>
   }
 
   protected checkValidations(
-    actionDodBody: GetActionDodBody<UC_PARAMS>,
+    actionDodBody: GetActionDodBody<S_PARAMS>,
   ): Result<ValidationError, undefined> {
     const result = this.validatorMap.validate(actionDodBody);
 
