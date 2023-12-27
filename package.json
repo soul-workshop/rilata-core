@@ -5,7 +5,7 @@
   "author": "GIS Expert",
   "license": "ISC",
   "private": true,
-  "repository": "git@github.com:soul-workshop/rilata2.git",
+  "repository": "git@github.com:craftyard/rilata-core.git",
   "scripts": {
     "build": "bun tsc",
     "tslint": "bun tsc --noEmit",
