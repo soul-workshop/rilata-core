@@ -33,9 +33,11 @@ describe('test DODUtility class', () => {
             traceback: errAttrs.traceback,
           },
         },
-        name: 'InternalAppError',
-        domainType: 'error',
-        errorType: 'app-error',
+        meta: {
+          name: 'InternalAppError',
+          domainType: 'error',
+          errorType: 'app-error',
+        },
       });
     });
   });
@@ -71,9 +73,11 @@ describe('test DODUtility class', () => {
             personId: errAttrs.personId,
           },
         },
-        name: 'PersonNotExistError',
-        domainType: 'error',
-        errorType: 'domain-error',
+        meta: {
+          name: 'PersonNotExistError',
+          domainType: 'error',
+          errorType: 'domain-error',
+        },
       });
     });
   });

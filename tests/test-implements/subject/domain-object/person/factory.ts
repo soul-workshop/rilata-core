@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 import { Caller } from '../../../../../src/app/caller';
 import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
 import { AggregateFactory } from '../../../../../src/domain/domain-object/aggregate-factory';
@@ -14,7 +15,9 @@ export class PersonFactory extends AggregateFactory<PersonParams> {
     };
     const person = new PersonAR(personAttrs, 0, this.logger);
 
-    person.getHelper().registerDomainEvent('PersonAddedEvent', personAttrs, actionDod.meta.actionId, caller);
+    person.getHelper().registerDomainEvent(
+      'PersonAddedEvent', personAttrs, actionDod.meta.actionId, caller,
+    );
     return person;
   }
 
