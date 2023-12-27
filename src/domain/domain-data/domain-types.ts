@@ -73,5 +73,5 @@ export type ActionDod = {
     actionId: UuidType,
     domainType: 'action',
   },
-  body: DTO,
+  attrs: DTO,
 }
