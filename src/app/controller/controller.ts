@@ -19,6 +19,7 @@ export abstract class Controller {
     'Internal error': 500,
     'Bad request': 400,
     'Validation error': 400,
+    'Net error': 400,
   };
 
   constructor(protected moduleResolver: ModuleResolver, protected runMode: string) {}

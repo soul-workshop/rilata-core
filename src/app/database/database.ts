@@ -1,9 +1,9 @@
 export interface Database {
   init(...args: unknown[]): Promise<void>
 
-  startTransaction(): Promise<unknown>
+  startTransaction(...args: unknown[]): Promise<unknown>
 
-  commit(): Promise<unknown>
+  commit(...args: unknown[]): Promise<unknown>
 
-  rollback(): Promise<unknown>
+  rollback(...args: unknown[]): Promise<unknown>
 }
