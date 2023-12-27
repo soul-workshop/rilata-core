@@ -15,6 +15,8 @@ export type BadRequestError<L extends Locale> = ErrorDod<L, 'Bad request', 'app-
 
 export type NotFoundError<L extends Locale> = ErrorDod<L, 'Not found', 'app-error'>;
 
+export type NetError<L extends Locale> = ErrorDod<L, 'Net error', 'app-error'>;
+
 export type PermissionDeniedError<LOCALE extends Locale> =
   ErrorDod<LOCALE, 'Permission denied', 'domain-error'>;
 
@@ -26,4 +28,5 @@ export type AppBaseErrors =
   | NotFoundError<Locale>
   | PermissionDeniedError<Locale>
   | InternalError<Locale>
+  | NetError<Locale>
   | ValidationError;
