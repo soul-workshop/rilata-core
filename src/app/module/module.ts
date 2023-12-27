@@ -1,3 +1,4 @@
+import { AssertionException } from '../../common/exeptions';
 import { Logger } from '../../common/logger/logger';
 import { ModuleResolver } from '../resolves/module-resolver';
 import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../use-case/types';
@@ -30,10 +31,9 @@ export abstract class Module {
   getUseCaseByName(name: string): UseCase {
     const useCase = this.useCases.find((uc) => uc.getName() === name);
     if (useCase === undefined) {
-      this.logger.error(
-        `not finded in module "${this.moduleName}" usecase by name "${name}"`,
-        { useCaseNames: this.useCases.map((uc) => uc.getName()) },
-      );
+      const errStr = `not finded in module "${this.moduleName}" usecase by name "${name}"`;
+      this.logger.error(errStr, { useCaseNames: this.useCases.map((uc) => uc.getName()) });
+      throw new AssertionException(errStr);
     }
     return useCase;
   }
