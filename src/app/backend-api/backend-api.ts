@@ -10,15 +10,17 @@ import { GeneralCommandUcParams, GeneralQueryUcParams, UcResult } from '../use-c
 export abstract class BackendApi {
     protected abstract moduleUrl: string;
 
-    constructor(protected logger: Logger) {}
+    constructor(protected logger: Logger, protected jwtToken: string) {}
 
-    async request<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams>(actionDod: UC_PARAMS['inputOptions'], jwtToken: string): Promise<UcResult<UC_PARAMS>> {
+    async request<UC_PARAMS extends GeneralQueryUcParams | GeneralCommandUcParams>(
+      actionDod: UC_PARAMS['inputOptions'],
+    ): Promise<UcResult<UC_PARAMS>> {
       const backendResult = await fetch(this.moduleUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: jwtToken,
+          Authorization: this.jwtToken,
         },
         body: JSON.stringify(actionDod),
       });
@@ -33,11 +35,11 @@ export abstract class BackendApi {
       return this.notResultDto(resultDto);
     }
 
-    notResultDto(value: unknown): Result<BadRequestError<Locale>, never> {
+    private notResultDto(value: unknown): Result<BadRequestError<Locale>, never> {
       this.logger.error('json of response not valid', value);
       return failure({
         locale: {
-          text: 'Bad request',
+          text: 'Ошибка интернета',
           hint: {},
         },
         name: 'Bad request',
