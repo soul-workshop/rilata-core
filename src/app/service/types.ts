@@ -8,7 +8,7 @@ import {
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 import { ModuleType } from '../module/types';
 import { CommandService } from './command-service';
-import { AppBaseErrors } from './error-types';
+import { ServiceBaseErrors } from './error-types';
 import { QueryService } from './query-service';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
@@ -70,13 +70,13 @@ export type ActionDodValidator<
 export type ServiceResult<
   P extends GeneralQueryServiceParams | GeneralCommandServiceParams
 > = Result<
-  P['errors'] | AppBaseErrors,
+  P['errors'] | ServiceBaseErrors,
   P['successOut']
 >
 
 export type GetServiceErrorsResult<
   P extends GeneralQueryServiceParams | GeneralCommandServiceParams
-> = Result<P['errors'] | AppBaseErrors, never>
+> = Result<P['errors'] | ServiceBaseErrors, never>
 
 export type GetActionDodName<
   S_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams

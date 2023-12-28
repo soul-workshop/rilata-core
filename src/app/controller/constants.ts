@@ -1,6 +1,6 @@
-import { AppBaseErrors } from '../service/error-types';
+import { BackendBaseErrors } from '../service/error-types';
 
-export const STATUS_CODES: Record<AppBaseErrors['meta']['name'], number> = {
+export const STATUS_CODES: Record<BackendBaseErrors['meta']['name'], number> = {
   'Not found': 404,
   'Permission denied': 403,
   'Internal error': 500,
