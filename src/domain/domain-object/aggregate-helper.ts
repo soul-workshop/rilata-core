@@ -10,7 +10,6 @@ import {
 } from '../domain-data/type-functions';
 import { storeDispatcher } from '../../app/async-store/store-dispatcher';
 import { Logger } from '../../common/logger/logger';
-import { AssertionException } from '../../common/exeptions';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */
@@ -83,12 +82,10 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
 
   private validateVersion(): void {
     if (typeof this.version !== 'number' || this.version < 0) {
-      const errStr = `not valid version for aggregate ${this.aRootName}`;
-      this.logger.error(
-        errStr,
+      throw this.logger.error(
+        `not valid version for aggregate ${this.aRootName}`,
         { aRootName: this.aRootName, version: this.version },
       );
-      throw new AssertionException(errStr);
     }
   }
 }

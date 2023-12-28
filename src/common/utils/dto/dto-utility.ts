@@ -2,6 +2,7 @@
 /* eslint-disable no-continue */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DTO } from '../../../domain/dto';
+import { AssertionException } from '../../exeptions';
 import {
   ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDtoKeysByDotNotation,
 } from '../../type-functions';
@@ -151,7 +152,7 @@ export class dtoUtility {
     throwError = false,
   ): T | undefined {
     if (key.startsWith('.') || key.endsWith('.') || key === '') {
-      throw new Error(
+      throw new AssertionException(
         `Ключ ${key} не может начинаться или заканчиваться точкой и не может быть пустым`,
       );
     }
@@ -169,7 +170,7 @@ export class dtoUtility {
     } catch (err) {
       if (err instanceof TypeError) {
         if (throwError) {
-          throw new Error(
+          throw new AssertionException(
             `В объекте ${JSON.stringify(dto)} отсутствует вложенный ключ ${key}.`,
           );
         }
