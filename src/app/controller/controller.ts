@@ -6,6 +6,7 @@ import { Locale } from '../../domain/locale';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { ModuleResolver } from '../resolves/module-resolver';
 import { StorePayload } from '../async-store/types';
+import { STATUS_CODES } from './constants';
 
 type ExpressResponse = {
   status(status: number): ExpressResponse,
@@ -13,15 +14,6 @@ type ExpressResponse = {
 }
 
 export abstract class Controller {
-  STATUS_CODES: Record<AppBaseErrors['meta']['name'], number> = {
-    'Not found': 404,
-    'Permission denied': 403,
-    'Internal error': 500,
-    'Bad request': 400,
-    'Validation error': 400,
-    'Net error': 400,
-  };
-
   constructor(protected moduleResolver: ModuleResolver, protected runMode: string) {}
 
   protected async executeService(
@@ -49,7 +41,7 @@ export abstract class Controller {
         response.status(200);
       } else if (serviceResult.isFailure()) {
         const err = serviceResult.value as AppBaseErrors;
-        response.status(this.STATUS_CODES[err.meta.name]);
+        response.status(STATUS_CODES[err.meta.name]);
       }
 
       response.send({
