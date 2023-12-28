@@ -6,7 +6,7 @@ import { Locale } from '../../domain/locale';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { ModuleResolver } from '../resolves/module-resolver';
 import { StorePayload } from '../async-store/types';
-import { STATUS_CODES } from './statusCode';
+import { STATUS_CODES } from './constants';
 
 type ExpressResponse = {
   status(status: number): ExpressResponse,
