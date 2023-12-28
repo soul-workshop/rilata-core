@@ -23,10 +23,11 @@ export type PermissionDeniedError<LOCALE extends Locale> =
 export type InternalError<LOCALE extends Locale> =
   ErrorDod<LOCALE, 'Internal error', 'app-error'>;
 
-export type AppBaseErrors =
+export type ServiceBaseErrors =
   BadRequestError<Locale>
   | NotFoundError<Locale>
   | PermissionDeniedError<Locale>
   | InternalError<Locale>
-  | NetError<Locale>
   | ValidationError;
+
+export type BackendBaseErrors = ServiceBaseErrors | NetError<Locale>;

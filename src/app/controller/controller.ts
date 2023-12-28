@@ -1,6 +1,6 @@
 import { ActionDod } from '../../domain/domain-data/domain-types';
 import { Caller } from '../caller';
-import { InternalError, AppBaseErrors } from '../service/error-types';
+import { InternalError, ServiceBaseErrors } from '../service/error-types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { storeDispatcher } from '../async-store/store-dispatcher';
@@ -13,16 +13,15 @@ type ExpressResponse = {
 }
 
 export abstract class Controller {
-  STATUS_CODES: Record<AppBaseErrors['meta']['name'], number> = {
+  STATUS_CODES: Record<ServiceBaseErrors['meta']['name'], number> = {
     'Not found': 404,
     'Permission denied': 403,
     'Internal error': 500,
     'Bad request': 400,
     'Validation error': 400,
-    'Net error': 400,
   };
 
-  constructor(protected moduleResolver: ModuleResolver, protected runMode: string) {}
+  constructor(protected moduleResolver: ModuleResolver) {}
 
   protected async executeService(
     actionDod: ActionDod,
@@ -48,8 +47,9 @@ export abstract class Controller {
       if (serviceResult.isSuccess() === true) {
         response.status(200);
       } else if (serviceResult.isFailure()) {
-        const err = serviceResult.value as AppBaseErrors;
-        response.status(this.STATUS_CODES[err.meta.name]);
+        const err = serviceResult.value as ServiceBaseErrors;
+        const statusCode = this.STATUS_CODES[err.meta.name] ?? 400;
+        response.status(statusCode);
       }
 
       response.send({
@@ -57,7 +57,7 @@ export abstract class Controller {
         payload: serviceResult.value,
       });
     } catch (e) {
-      if (this.runMode.includes('test')) {
+      if (this.moduleResolver.getRunMode().includes('test')) {
         throw e;
       }
       this.moduleResolver.getLogger().fatalError('server internal error', { actionDod, caller });
