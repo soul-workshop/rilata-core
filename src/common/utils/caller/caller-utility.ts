@@ -1,4 +1,5 @@
 import { Caller } from '../../../app/caller';
+import { AssertionException } from '../../exeptions';
 import { UserId } from '../../types';
 
 class CallerUtility {
@@ -14,7 +15,7 @@ class CallerUtility {
   getUserId(caller: Caller): UserId {
     const finded = this.findUserId(caller);
     if (finded) return finded;
-    throw Error('user id is not finded');
+    throw new AssertionException('user id is not finded');
   }
 }
 
