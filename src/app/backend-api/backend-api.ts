@@ -36,7 +36,7 @@ export abstract class BackendApi {
     }
 
     private notResultDto(value: unknown): Result<BadRequestError<Locale>, never> {
-      this.logger.error('json of response not valid', value);
+      this.logger.error('response value is not resultDto', value);
       return failure({
         locale: {
           text: 'Ошибка интернета',

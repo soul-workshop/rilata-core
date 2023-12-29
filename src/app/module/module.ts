@@ -1,4 +1,3 @@
-import { AssertionException } from '../../common/exeptions';
 import { Logger } from '../../common/logger/logger';
 import { ModuleResolver } from '../resolves/module-resolver';
 import { GeneralCommandService, GeneraQueryService } from '../service/types';
@@ -31,9 +30,10 @@ export abstract class Module {
   getServiceByName(name: string): Service {
     const service = this.services.find((s) => s.getName() === name);
     if (service === undefined) {
-      const errStr = `not finded in module "${this.moduleName}" service by name "${name}"`;
-      this.logger.error(errStr, { serviceNames: this.services.map((s) => s.getName()) });
-      throw new AssertionException(errStr);
+      throw this.logger.error(
+        `not finded in module "${this.moduleName}" service by name "${name}"`,
+        { serviceNames: this.services.map((s) => s.getName()) },
+      );
     }
     return service;
   }
