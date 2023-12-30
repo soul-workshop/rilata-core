@@ -7,6 +7,7 @@ import { storeDispatcher } from '../async-store/store-dispatcher';
 import { ModuleResolver } from '../resolves/module-resolver';
 import { StorePayload } from '../async-store/types';
 import { STATUS_CODES } from './constants';
+import { Result } from '../../common/result/types';
 
 type ExpressResponse = {
   status(status: number): ExpressResponse,
@@ -37,10 +38,12 @@ export abstract class Controller {
         actionDod,
       );
 
-      if (serviceResult.isSuccess() === true) {
+      if (serviceResult.isSuccess()) {
         response.status(200);
-      } else if (serviceResult.isFailure()) {
-        const err = serviceResult.value as ServiceBaseErrors;
+        // приведение типа, потому что в наследниках (других git-репозиторий)
+        // почему то serviceResult становится never!;
+      } else if ((serviceResult as Result<ServiceBaseErrors, never>).isFailure()) {
+        const err = (serviceResult as Result<ServiceBaseErrors, never>).value;
         response.status(STATUS_CODES[err.meta.name] ?? 400);
       }
 
