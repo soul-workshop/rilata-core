@@ -40,8 +40,7 @@ export abstract class Controller {
 
       if (serviceResult.isSuccess()) {
         response.status(200);
-        // приведение типа, потому что в наследниках (других git-репозиторий)
-        // почему то serviceResult становится never!;
+        // приведение типа, потому что serviceResult становится never!;
       } else if ((serviceResult as Result<ServiceBaseErrors, never>).isFailure()) {
         const err = (serviceResult as Result<ServiceBaseErrors, never>).value;
         response.status(STATUS_CODES[err.meta.name] ?? 400);

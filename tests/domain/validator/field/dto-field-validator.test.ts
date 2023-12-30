@@ -21,7 +21,7 @@ describe('DTO Tests', () => {
           { number: '+7-555-879-11-02', type: 'work', noOutField: 'info' },
         );
         expect(result.isSuccess()).toBe(true);
-        expect(result.value).toEqual(undefined);
+        expect(result.value).toBeUndefined();
       });
 
       test('Failure, one of the attributes is not a valid value', () => {
@@ -132,13 +132,13 @@ describe('DTO Tests', () => {
             { number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' },
           );
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
 
         test('Success, received null', () => {
           const result = sutRequired.validate(null);
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
 
         test('Failure, dto arrived with errors in attributes', () => {
@@ -185,7 +185,7 @@ describe('DTO Tests', () => {
           { number: '+7-555-879-11-02', type: 'work', noOutField: 'info' },
         );
         expect(result.isSuccess()).toBe(true);
-        expect(result.value).toBe(undefined);
+        expect(result.value).toBeUndefined();
       });
 
       test('Success, together the value came undefined null', () => {
@@ -193,7 +193,7 @@ describe('DTO Tests', () => {
         valuesToCheck.forEach((value) => {
           const result = sut.validate(value);
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
       });
 
@@ -286,13 +286,13 @@ describe('DTO Tests', () => {
             { number: '+7-777-287-81-82', type: 'mobile', noOutField: 'empty info' },
           );
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
 
         test('Success, came null value', () => {
           const result = sutNotRequired.validate(null);
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
 
         test('Failure, dto arrived with errors in attributes', () => {
@@ -342,7 +342,7 @@ describe('DTO Tests', () => {
           { number: '+7-555-879-24-02', type: 'work', noOutField: 'info' },
         ]);
         expect(result.isSuccess()).toBe(true);
-        expect(result.value).toBe(undefined);
+        expect(result.value).toBeUndefined();
       });
 
       test('Failure, came as undefined and null', () => {
@@ -481,13 +481,13 @@ describe('DTO Tests', () => {
             { number: '+7-777-287-24-82', type: 'mobile', noOutField: 'empty info' },
           ]);
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
 
         test('Success, came as null', () => {
           const result = sutNotRequired.validate(null);
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
 
         test('Failure, dto arrived with errors in attributes', () => {
@@ -575,7 +575,7 @@ describe('DTO Tests', () => {
           { number: '+7-555-879-24-02', type: 'work', noOutField: 'info' },
         ]);
         expect(result.isSuccess()).toBe(true);
-        expect(result.value).toBe(undefined);
+        expect(result.value).toBeUndefined();
       });
 
       test('Success, came as undefined and null value', () => {
@@ -583,7 +583,7 @@ describe('DTO Tests', () => {
         valuesToCheck.forEach((value) => {
           const result = sut.validate(value);
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
       });
 
@@ -719,7 +719,7 @@ describe('DTO Tests', () => {
             { number: '+7-777-287-24-82', type: 'mobile', noOutField: 'empty info' },
           ]);
           expect(result.isSuccess()).toBe(true);
-          expect(result.value).toBe(undefined);
+          expect(result.value).toBeUndefined();
         });
 
         test('Success, came as undefined value', () => {

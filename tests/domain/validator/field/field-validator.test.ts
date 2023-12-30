@@ -46,6 +46,6 @@ describe('dto validator tests', () => {
   test('success dto validate', () => {
     const result = sut.validate(FieldValidatorFixtures.addPersonCommand);
     expect(result.isSuccess()).toBe(true);
-    expect(result.value).toBe(undefined);
+    expect(result.value).toBeUndefined();
   });
 });

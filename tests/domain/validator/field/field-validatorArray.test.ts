@@ -14,7 +14,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin']);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toBe(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test(' успех, пришло валидное значение', () => {
@@ -22,7 +22,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin', 'staffManager']);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toBe(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test(' успех, пришло пустой массив', () => {
@@ -30,7 +30,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate([]);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toEqual(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test(' провал, пришло undefined, null', () => {
@@ -113,7 +113,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, mustBeFilled: true }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test(' провал, пришло пустой массив', () => {
@@ -155,7 +155,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, maxElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate([]);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('успех, количество элементов меньше максимального', () => {
@@ -163,7 +163,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, maxElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('успех, количество элементов равно максимальному', () => {
@@ -171,7 +171,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, maxElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin', 'staffManager']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('провал, количество элементов больше максимального', () => {
@@ -216,7 +216,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, minElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin', 'staffManager', 'officeChieff']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('успех, количество элементов равно минимальному', () => {
@@ -224,7 +224,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, minElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin', 'staffManager']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('провал, пришел пустой массив', () => {
@@ -294,13 +294,13 @@ describe('тесты литерального валидатора приним�
       test('успех, пришло валидное значение', () => {
         const res = sut.validate(['admin']);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test(' успех, пришло null', () => {
         const res = sut.validate(null);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test('провал, пришло undefined', () => {
@@ -325,7 +325,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin']);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toBe(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test('успех, пришло undefined, null1', () => {
@@ -335,7 +335,7 @@ describe('тесты литерального валидатора приним�
       valueTest.forEach((value) => {
         const res = sut.validate(value);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
     });
 
@@ -387,13 +387,13 @@ describe('тесты литерального валидатора приним�
       test('успех, пришло валидное значение', () => {
         const res = sut.validate(['admin']);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test(' успех, пришло undefined', () => {
         const res = sut.validate(undefined);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test('провал, пришло null', () => {

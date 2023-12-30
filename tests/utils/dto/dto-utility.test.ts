@@ -275,7 +275,8 @@ describe('dtoUtility class', () => {
 
     // Не работает метод когда массив строк TODO: Нурболат
     test('Уберем несколько атрибутов разного уровня', () => {
-      const attrsToDelete = ['contacts.email.address', 'lastName'];
+      // TODO сделать чтобы можно было передавать readonly tuple;
+      const attrsToDelete: ['contacts.email.address', 'lastName'] = ['contacts.email.address', 'lastName'];
 
       const expectedDTO = {
         firstName: 'Donald',
@@ -296,7 +297,7 @@ describe('dtoUtility class', () => {
     // Не работает метод когда массив строк TODO: Нурболат
     test('Проверка, что оригинал не трогается.', () => {
       const personDTOCopy = sut.deepCopy(personDTO);
-      const attrsToDelete = ['firstName', 'contacts.phone'];
+      const attrsToDelete: ['firstName', 'contacts.phone'] = ['firstName', 'contacts.phone'];
       const result = dtoUtility.excludeDeepAttrs(personDTO, attrsToDelete);
 
       expect(result).not.toEqual(personDTO);
