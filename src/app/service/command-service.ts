@@ -4,7 +4,6 @@ import { GeneralCommandServiceParams, ServiceResult } from './types';
 import { QueryService } from './query-service';
 import { DatabaseObjectSavingError, OptimisticLockVersionMismatchError } from '../../common/exeptions';
 import { storeDispatcher } from '../async-store/store-dispatcher';
-import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
 
 export abstract class CommandService<
   S_PARAMS extends GeneralCommandServiceParams,
