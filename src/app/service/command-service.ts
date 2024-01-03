@@ -49,11 +49,10 @@ export abstract class CommandService<
   protected async executeWithUseOfUnitOfWork(
     actionDod: S_PARAMS['actionDod'],
   ): Promise<ServiceResult<S_PARAMS>> {
-    const unitOfWorkId = uuidUtility.getNewUUID();
     const store = storeDispatcher.getStoreOrExepction();
-    store.unitOfWorkId = unitOfWorkId;
     const db = store.moduleResolver.getDatabase();
-    await db.startTransaction(unitOfWorkId);
+    const unitOfWorkId = await db.startTransaction();
+    store.unitOfWorkId = unitOfWorkId;
 
     try {
       const res = await super.execute(actionDod);

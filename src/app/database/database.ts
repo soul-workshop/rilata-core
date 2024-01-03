@@ -1,14 +1,14 @@
 import { UuidType } from '../../common/types';
 import { ModuleResolver } from '../resolves/module-resolver';
 
+type TransactionId = UuidType;
+
 export interface Database {
   init(moduleResolver: ModuleResolver, ...args: unknown[]): Promise<void>
 
-  getUnitOfWorkId(): UuidType
+  startTransaction(): Promise<TransactionId>
 
-  startTransaction(unitOfWorkId?: UuidType, ...args: unknown[]): Promise<unknown>
+  commit(transactionId: TransactionId): Promise<void>
 
-  commit(unitOfWorkId?: UuidType, ...args: unknown[]): Promise<unknown>
-
-  rollback(unitOfWorkId?: UuidType, ...args: unknown[]): Promise<unknown>
+  rollback(transactionId: TransactionId): Promise<void>
 }
