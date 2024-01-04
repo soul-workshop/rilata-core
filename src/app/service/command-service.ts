@@ -4,7 +4,6 @@ import { GeneralCommandServiceParams, ServiceResult } from './types';
 import { QueryService } from './query-service';
 import { DatabaseObjectSavingError, OptimisticLockVersionMismatchError } from '../../common/exeptions';
 import { storeDispatcher } from '../async-store/store-dispatcher';
-import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
 
 export abstract class CommandService<
   S_PARAMS extends GeneralCommandServiceParams,
@@ -49,11 +48,10 @@ export abstract class CommandService<
   protected async executeWithUseOfUnitOfWork(
     actionDod: S_PARAMS['actionDod'],
   ): Promise<ServiceResult<S_PARAMS>> {
-    const unitOfWorkId = uuidUtility.getNewUUID();
     const store = storeDispatcher.getStoreOrExepction();
-    store.unitOfWorkId = unitOfWorkId;
     const db = store.moduleResolver.getDatabase();
-    await db.startTransaction(unitOfWorkId);
+    const unitOfWorkId = await db.startTransaction();
+    store.unitOfWorkId = unitOfWorkId;
 
     try {
       const res = await super.execute(actionDod);
