@@ -42,8 +42,8 @@ export abstract class BackendApi {
           text: 'Ошибка интернета',
           hint: {},
         },
+        name: 'Bad request',
         meta: {
-          name: 'Bad request',
           errorType: 'app-error',
           domainType: 'error',
         },
