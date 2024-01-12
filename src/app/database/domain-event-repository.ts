@@ -4,7 +4,9 @@ import { GeneralEventDod } from '../../domain/domain-data/domain-types';
 export interface DomainEventRepository {
   addEvent(event: GeneralEventDod): Promise<void>
 
-  getNotPublishedEvents(): GeneralEventDod[]
+  isEventExist(actionId: UuidType): Promise<boolean>
 
-  markAsPublished(eventId: UuidType): Promise<void>
+  getNotPublishedEvents(): Promise<string[]>
+
+  markAsPublished(actionId: UuidType): Promise<void>
 }
