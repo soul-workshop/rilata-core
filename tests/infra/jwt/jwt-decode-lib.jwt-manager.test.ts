@@ -28,7 +28,7 @@ describe('Тест метода decodeToken', () => {
   test('Неуспешный тест. Формат токена не верный', () => {
     const payload = jwtManager.getTokenPayload(incorrectToken);
     expect(payload.isFailure()).toBeTruthy();
-    expect((payload.value as InvalidTokenError).meta.name).toEqual('InvalidTokenError');
+    expect((payload.value as InvalidTokenError).name).toEqual('InvalidTokenError');
   });
 });
 
@@ -43,6 +43,6 @@ describe('Тест метода getTokenPayload', () => {
   test('Неспешный тест. Формат токена не верный', () => {
     const payload = jwtManager.getTokenPayload(incorrectToken);
     expect(payload.isFailure()).toBeTruthy();
-    expect((payload.value as InvalidTokenError).meta.name).toEqual('InvalidTokenError');
+    expect((payload.value as InvalidTokenError).name).toEqual('InvalidTokenError');
   });
 });

@@ -6,14 +6,14 @@ import { Locale } from '../../../domain/locale';
 /** Утилита для работы с объектами DomainObjectData */
 class DodUtility {
   getAppErrorByType<ERR extends ErrorDod<Locale, string, 'app-error'>>(
-    name: ERR['meta']['name'],
+    name: ERR['name'],
     text: ERR['locale']['text'],
     hint: ERR['locale']['hint'],
   ): ERR {
     return {
       locale: { text, hint },
+      name,
       meta: {
-        name,
         errorType: 'app-error',
         domainType: 'error',
       },
@@ -21,14 +21,14 @@ class DodUtility {
   }
 
   getDomainErrorByType<ERR extends ErrorDod<Locale, string, 'domain-error'>>(
-    name: ERR['meta']['name'],
+    name: ERR['name'],
     text: ERR['locale']['text'],
     hint: ERR['locale']['hint'],
   ): ERR {
     return {
       locale: { text, hint },
+      name,
       meta: {
-        name,
         errorType: 'domain-error',
         domainType: 'error',
       },

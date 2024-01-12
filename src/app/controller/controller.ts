@@ -43,7 +43,7 @@ export abstract class Controller {
         // приведение типа, потому что serviceResult становится never!;
       } else if ((serviceResult as Result<ServiceBaseErrors, never>).isFailure()) {
         const err = (serviceResult as Result<ServiceBaseErrors, never>).value;
-        response.status(STATUS_CODES[err.meta.name] ?? 400);
+        response.status(STATUS_CODES[err.name] ?? 400);
       }
 
       response.send({

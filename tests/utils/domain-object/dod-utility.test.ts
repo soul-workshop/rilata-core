@@ -17,7 +17,7 @@ describe('test DODUtility class', () => {
       const errAttrs = { traceback: 'any object' } as const;
       const appError = sut.getAppErrorByType<DODF.InternalAppError>('InternalAppError', 'app-error', errAttrs);
 
-      expect(appError.meta.name).toStrictEqual('InternalAppError');
+      expect(appError.name).toStrictEqual('InternalAppError');
       expect(appError.meta.domainType).toStrictEqual('error');
       expect(appError.meta.errorType).toStrictEqual('app-error');
     });
@@ -33,8 +33,8 @@ describe('test DODUtility class', () => {
             traceback: errAttrs.traceback,
           },
         },
+        name: 'InternalAppError',
         meta: {
-          name: 'InternalAppError',
           domainType: 'error',
           errorType: 'app-error',
         },
@@ -56,7 +56,7 @@ describe('test DODUtility class', () => {
       const domainError = sut
         .getDomainErrorByType<DODF.PersonNotExitsErrorDOD>('PersonNotExistError', 'domain-error', errAttrs);
 
-      expect(domainError.meta.name).toEqual('PersonNotExistError');
+      expect(domainError.name).toEqual('PersonNotExistError');
       expect(domainError.meta.domainType).toEqual('error');
       expect(domainError.meta.errorType).toEqual('domain-error');
     });
@@ -73,8 +73,8 @@ describe('test DODUtility class', () => {
             personId: errAttrs.personId,
           },
         },
+        name: 'PersonNotExistError',
         meta: {
-          name: 'PersonNotExistError',
           domainType: 'error',
           errorType: 'domain-error',
         },

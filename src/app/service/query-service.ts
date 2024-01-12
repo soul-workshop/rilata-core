@@ -65,8 +65,8 @@ export abstract class QueryService<S_PARAMS extends GeneralQueryServiceParams>
 
     if (result.isFailure()) {
       const err: ValidationError = {
+        name: 'Validation error',
         meta: {
-          name: 'Validation error',
           domainType: 'error',
           errorType: 'app-error',
         },
