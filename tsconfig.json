@@ -1,27 +1,15 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "types": [ "bun-types" ],
-
-    "lib": ["esnext"],
-    "module": "esnext",
-    "target": "esnext",
-
+    "module": "nodeNext",
+    "target": "es2022",
     "moduleResolution": "nodeNext",
     "outDir": "./dist",
-
     "allowJs": true,
     "esModuleInterop": true,
-
     "noErrorTruncation": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-  },
-  "include": [
-    "src/**/*",
-  ],
-  "exclude": [
-    "tests/**/*",
-  ]
+  }
 }
