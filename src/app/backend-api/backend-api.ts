@@ -10,17 +10,18 @@ import { GeneralCommandServiceParams, GeneralQueryServiceParams, ServiceResult }
 export abstract class BackendApi {
     protected abstract moduleUrl: string;
 
-    constructor(protected logger: Logger, protected jwtToken: string) {}
+    constructor(protected logger: Logger) {}
 
     async request<SERVICE_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
       actionDod: SERVICE_PARAMS['actionDod'],
+      jwtToken: string,
     ): Promise<ServiceResult<SERVICE_PARAMS>> {
       const backendResult = await fetch(this.moduleUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: this.jwtToken,
+          Authorization: jwtToken,
         },
         body: JSON.stringify(actionDod),
       });
