@@ -19,7 +19,7 @@
     "skipLibCheck": true,
   },
   "include": [
-    "src/**/*", "tests/fixtures/test-resolver-mock.ts",
+    "src/**/*",
   ],
   "exclude": [
     "tests/**/*",
