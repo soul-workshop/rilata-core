@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import { LiteralFieldValidator } from '../../../../src/domain/validator/field-validator/literal-field-validator';
 import { RegexMatchesValueValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/regex-matches-value.field-v-rule';
 import { EqualCharsCountValidationRule } from '../../../../src/domain/validator/rules/validate-rules/string/equal-chars-count.v-rule';
@@ -74,6 +73,7 @@ export namespace FieldValidatorPrivateFixtures {
     contacts: new DtoFieldValidator('contacts', true, { isArray: false }, 'dto', contactAttrsValidatormap),
   };
 
+  export type AddPersonCommand = DodFixtures.PersonAttrs;
   export class AddPersonCommandValidator extends DtoFieldValidator<
     'AddPersonCommand', true, false, AddPersonCommand
   > {
@@ -81,8 +81,6 @@ export namespace FieldValidatorPrivateFixtures {
       super('AddPersonCommand', true, { isArray: false }, 'dto', personAttrsValidatrorMap);
     }
   }
-
-  export type AddPersonCommand = DodFixtures.PersonAttrs;
 
   export const addPersonCommand: AddPersonCommand = {
     id: 'c26ffd1c-8387-4350-93de-a630576ec60c',

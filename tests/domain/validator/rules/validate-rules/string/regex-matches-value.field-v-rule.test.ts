@@ -28,14 +28,14 @@ describe('Validating strings using regular expressions', () => {
     });
   });
   test('success, correct phone number entered', () => {
-    const sut = new RegexMatchesValueValidationRule(/^\+\d{1,3} \d{3} \d{3} \d{4}$/, 'Введите номер в формате +7 702 777 7777');
+    const sut = new RegexMatchesValueValidationRule(/^\+\d{1} \d{3} \d{3} \d{4}$/, 'Введите номер в формате +7 702 777 7777');
     const result = sut.validate('+7 702 950 7304');
     expect(result).toEqual({
       behaviour: 'SuccessRunNextRule',
     });
   });
   test('failure, incorrect phone number entered', () => {
-    const sut = new RegexMatchesValueValidationRule(/^\+\d{1,3} \d{3} \d{3} \d{2}$/, 'Введите номер в формате +7 702 777 7777');
+    const sut = new RegexMatchesValueValidationRule(/^\+\d{1} \d{3} \d{3} \d{4}$/, 'Введите номер в формате +7 702 777 7777');
     const result = sut.validate('+7 709507 73224');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
