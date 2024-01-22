@@ -40,3 +40,5 @@ export class TestResolverMock implements ModuleResolver {
     throw new Error('Method not implemented.');
   }
 }
+
+export const resolver = new TestResolverMock();
