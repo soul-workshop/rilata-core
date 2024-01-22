@@ -1,13 +1,13 @@
-import { uuidUtility } from '../../src/common/utils/uuid/uuid-utility';
-import { StorePayload, ThreadStore } from "../../src/app/async-store/types";
-import { Caller } from "../../src/app/caller";
-import { UuidType } from "../../src/common/types";
-import { TestResolverMock } from "./test-resolver-mock";
+import { StorePayload } from '../../src/app/async-store/types';
+import { Caller } from '../../src/app/caller';
+import { UuidType } from '../../src/common/types';
+import { TestResolverMock } from './test-resolver-mock';
 import { storeDispatcher } from '../../src/app/async-store/store-dispatcher';
 
 const resolver = new TestResolverMock();
 
-export function getTestStoreDispatcher(actionId: UuidType, caller?: Caller): typeof storeDispatcher {
+export function getTestStoreDispatcher(actionId: UuidType, caller?: Caller):
+typeof storeDispatcher {
   const storePayload: StorePayload = {
     caller: caller ?? {
       type: 'DomainUser',
