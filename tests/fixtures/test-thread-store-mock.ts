@@ -15,7 +15,6 @@ export function getTestStoreDispatcher(actionId: UuidType, caller?: Caller): typ
     },
     moduleResolver: resolver,
     actionId,
-    unitOfWorkId: uuidUtility.getNewUUID(),
   };
 
   storeDispatcher.setThreadStore({

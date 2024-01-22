@@ -17,7 +17,7 @@ export class TestResolverMock implements ModuleResolver {
   }
 
   getRunMode(): RunMode {
-    throw new Error('Method not implemented.');
+    return 'test';
   }
 
   getModule(): Module {
