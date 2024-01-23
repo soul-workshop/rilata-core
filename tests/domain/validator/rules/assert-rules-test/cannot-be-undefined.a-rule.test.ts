@@ -9,6 +9,7 @@ describe('can not be null  rule tests', () => {
       behaviour: 'SaveErrorAndBreakValidation',
       ruleError: {
         hint: {},
+        name: 'CannotBeUndefinedValidationRule',
         text: 'Значение не должно быть undefined',
       },
     });

@@ -1,6 +1,5 @@
 /* eslint-disable no-use-before-define */
 import { Result } from '../../../common/result/types';
-import { GeneralCommandDod } from '../../domain-object-data/common-types';
 import { DTO } from '../../dto';
 import { LiteralDataType, RuleError } from '../../validator/rules/types';
 import { DtoFieldValidator } from './dto-field-validator';
@@ -79,6 +78,3 @@ export type ValidatorMap<DTO_TYPE extends DTO> = {
         ? GetValidator<KEY, true, true, NonNullable<ARR_TYPE>>
         : GetValidator<KEY, true, false, NonNullable<DTO_TYPE[KEY]>>
 }
-
-export type CommandValidatorMap<CMD extends GeneralCommandDod> =
-  DtoFieldValidator<CMD['name'], true, false, CMD['attrs']>;

@@ -20,6 +20,7 @@ describe('can not empty string rule tests', () => {
       behaviour: 'SaveErrorAndBreakValidation',
       ruleError: {
         hint: {},
+        name: 'CannotBeEmptyStringValidationRule',
         text: 'Значение должно быть не пустой строкой',
       },
     });

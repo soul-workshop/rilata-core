@@ -1,20 +1,18 @@
 {
   "compilerOptions": {
-    "types": [ "bun-types" ],
-
-    "lib": ["esnext"],
-    "module": "esnext",
-    "target": "esnext",
-
+    "experimentalDecorators": true,
+    "module": "nodeNext",
+    "target": "es2022",
     "moduleResolution": "nodeNext",
-    "outDir": "./dist",
-
-    "allowJs": true,
+    "noEmit": true,
     "esModuleInterop": true,
-
     "noErrorTruncation": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
+<<<<<<< HEAD
   },
+=======
+  }
+>>>>>>> main
 }

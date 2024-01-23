@@ -19,6 +19,7 @@ describe('number validator with range value rule', () => {
       expect(result.value).toEqual({
         ageField: [{
           text: 'Возраст должен быть между {{min}} и {{max}}',
+          name: 'RangeNumberValidationRule',
           hint: { max: 65, min: 18 },
         }],
       });
@@ -45,6 +46,6 @@ describe('dto validator tests', () => {
   test('success dto validate', () => {
     const result = sut.validate(FieldValidatorFixtures.addPersonCommand);
     expect(result.isSuccess()).toBe(true);
-    expect(result.value).toBe(undefined);
+    expect(result.value).toBeUndefined();
   });
 });

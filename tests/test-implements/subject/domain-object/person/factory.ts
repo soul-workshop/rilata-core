@@ -1,30 +1,27 @@
+/* eslint-disable function-paren-newline */
 import { Caller } from '../../../../../src/app/caller';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
 import { AggregateFactory } from '../../../../../src/domain/domain-object/aggregate-factory';
-import { AddingPersonUCCommand } from '../../cm-use-case/adding-person/params';
-import { PersonAddedEvent } from '../../domain-data/person/add-person.params';
+import { AddPersonActionDod } from '../../cm-service/adding-person/s-params';
 import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
 import { PersonAR } from './a-root';
 
 export class PersonFactory extends AggregateFactory<PersonParams> {
-  create(caller: Caller, command: AddingPersonUCCommand): PersonAR {
+  create(caller: Caller, actionDod: AddPersonActionDod): PersonAR {
     const personAttrs: PersonAttrs = {
-      ...command.attrs,
+      ...actionDod.attrs,
       id: uuidUtility.getNewUUID(),
       contacts: { phones: [] },
     };
-    const person = new PersonAR(personAttrs, 0);
-    const event = dodUtility.getEventByType<PersonAddedEvent>(
-      'PersonAddedEvent',
-      { aRoot: personAttrs },
-      caller,
+    const person = new PersonAR(personAttrs, 0, this.logger);
+
+    person.getHelper().registerDomainEvent(
+      'PersonAddedEvent', personAttrs, actionDod.meta.actionId, caller,
     );
-    person.registerDomainEvent(event);
     return person;
   }
 
   restore(attrs: PersonAttrs, version: number): PersonAR {
-    return new PersonAR(attrs, version);
+    return new PersonAR(attrs, version, this.logger);
   }
 }

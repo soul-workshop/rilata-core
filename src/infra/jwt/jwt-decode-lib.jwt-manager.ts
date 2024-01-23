@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { InvalidTokenError } from '../../app/jwt/errors';
-import { JWTManager } from '../../app/jwt/jwt-manager.interface';
+import { JWTDecoder } from '../../app/jwt/jwt-decoder.interface';
 import { DecodedToken } from '../../app/jwt/types';
 import { DTO } from '../../domain/dto';
 import { failure } from '../../common/result/failure';
@@ -11,16 +11,17 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 /** Класс для декодирования JWT токена. */
 export abstract class JWTDecodeLibJWTManager<
   PAYLOAD extends DTO
-> implements JWTManager<PAYLOAD> {
+> implements JWTDecoder<PAYLOAD> {
   decodeToken(rawToken: string): Result<InvalidTokenError, DecodedToken<PAYLOAD>> {
     let decodedInfo: DecodedToken<PAYLOAD>;
     try {
       decodedInfo = jwtDecode(rawToken);
     } catch (err) {
       return failure(dodUtility.getDomainErrorByType<InvalidTokenError>(
-        'InvalidTokenError', 
-        "Невозможно расшифровать токен. Токен имеет не верный формат.", 
-        { rawToken: `${rawToken}`}));
+        'InvalidTokenError',
+        'Невозможно расшифровать токен. Токен имеет не верный формат.',
+        { rawToken: `${rawToken}` },
+      ));
     }
     return success(decodedInfo);
   }

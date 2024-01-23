@@ -49,6 +49,7 @@ describe('String must be equal to value', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { onlyChars: 'omb' },
+        name: 'ContainedOnlyCharsValidationRule',
         text: 'Строка должна содержать только {{onlyChars}}',
       },
     });
@@ -61,6 +62,7 @@ describe('String must be equal to value', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { onlyChars: ' ' },
+        name: 'ContainedOnlyCharsValidationRule',
         text: 'Строка должна содержать только пробел',
       },
     });
@@ -73,6 +75,7 @@ describe('String must be equal to value', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { onlyChars: 'omb' },
+        name: 'ContainedOnlyCharsValidationRule',
         text: 'Строка должна содержать только {{onlyChars}}',
       },
     });

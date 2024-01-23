@@ -1,27 +1,28 @@
-import { Caller } from '../../../../../src/app/caller';
+import { DomainUser } from '../../../../../src/app/caller';
+import { Logger } from '../../../../../src/common/logger/logger';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
-import { callerUtility } from '../../../../../src/common/utils/caller/caller-utility';
+import { UserId } from '../../../../../src/common/types';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
-import { DomainResult } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
+import { DomainResult } from '../../../../../src/domain/domain-data/params-types';
+import { AggregateRootHelper } from '../../../../../src/domain/domain-object/aggregate-helper';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { AllowedOnlyEmployeerError, AllowedOnlyStaffManagersError } from '../../domain-data/company/role-errors';
 import { AddPersonActionParams } from '../../domain-data/person/add-person.params';
-import { AddPhoneActionParams, PersonPhonesAddedEvent } from '../../domain-data/person/add-phones.params';
-import { PersonAttrs, PersonMeta, PersonParams } from '../../domain-data/person/params';
+import { AddPhoneActionParams } from '../../domain-data/person/add-phones.params';
+import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
 import { ComapanyAR } from '../company/a-root';
 
 export class PersonAR extends AggregateRoot<PersonParams> {
-  constructor(protected attrs: PersonAttrs, protected version: number) {
+  protected helper: AggregateRootHelper<PersonParams>;
+
+  constructor(protected attrs: PersonAttrs, protected version: number, logger: Logger) {
     super();
+    this.helper = new AggregateRootHelper('PersonAR', attrs, version, ['contacts.techSupportComments'], logger);
   }
 
-  protected getMeta(): PersonMeta {
-    return {
-      name: 'PersonAR',
-      domainType: 'domain-object',
-      objectType: 'aggregate',
-    };
+  getId(): string {
+    return this.attrs.id;
   }
 
   /** возвращает в формате Иванов И. И. */
@@ -33,29 +34,20 @@ export class PersonAR extends AggregateRoot<PersonParams> {
   }
 
   addPhone(
-    caller: Caller,
+    caller: DomainUser,
     company: ComapanyAR,
     addPhone: AddPhoneActionParams['command'],
   ): DomainResult<AddPhoneActionParams> {
-    const preconditionsResult = this.addPhonePreconditions(caller, company);
+    const preconditionsResult = this.addPhonePreconditions(caller.userId, company);
     if (preconditionsResult.isFailure()) return preconditionsResult;
 
     addPhone.phones.forEach((phone) => this.attrs.contacts.phones.push(phone));
 
-    const event = dodUtility.getEventByType<PersonPhonesAddedEvent>(
-      'PersonPhoneAddedEvent',
-      {
-        addedPhones: addPhone.phones,
-        aRoot: this.attrs,
-      },
-      caller,
-    );
-    this.registerDomainEvent(event);
+    this.helper.registerDomainEvent('PersonPhoneAddedEvent', addPhone.phones, addPhone.requestId, caller);
     return success(undefined);
   }
 
-  addPhonePreconditions(caller: Caller, company: ComapanyAR): DomainResult<AddPersonActionParams> {
-    const userId = callerUtility.getUserId(caller);
+  addPhonePreconditions(userId: UserId, company: ComapanyAR): DomainResult<AddPersonActionParams> {
     if (company.isEmployeer(userId) === false) {
       const err = dodUtility.getDomainErrorByType<AllowedOnlyEmployeerError>(
         'Permission denied',

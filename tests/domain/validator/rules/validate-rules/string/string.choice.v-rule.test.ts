@@ -22,6 +22,7 @@ describe('Value must be one of the list results', () => {
             'Islyam',
           ],
         },
+        name: 'StringChoiceValidationRule',
         text: 'Значение должно быть одним из значений списка',
       },
     });

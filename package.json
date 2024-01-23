@@ -1,25 +1,22 @@
 {
-  "name": "rilata2",
+  "name": "rilata",
   "version": "0.0.0",
   "description": "",
   "author": "GIS Expert",
   "license": "ISC",
   "private": true,
-  "repository": "git@github.com:NurGeo/rilata2.git",
+  "repository": "https://github.com/craftyard/rilata-core.git",
   "scripts": {
-    "build": "bun tsc",
-    "tslint": "bun tsc --noEmit",
-    "lint": "bun eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "bun test"
+    "tslint": "bun tsc",
+    "lint": "bun eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {
-    "bun-types": "^1.0.1",
     "email-validator": "^2.0.4",
-    "jwt-decode": "^3.1.2",
-    "nurgeo-project-configs": "github:NurGeo/project-config",
-    "reflect-metadata": "^0.1.13"
+    "jwt-decode": "^3.1.2"
   },
   "devDependencies": {
+    "nurgeo-project-configs": "github:NurGeo/project-config",
+    "@types/bun": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "eslint": "^8.7.0",

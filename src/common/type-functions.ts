@@ -30,7 +30,7 @@ const b: GetDtoKeysByDotNotation<typeof a> //  'a | a.b | a.b.c' | 'a.d'
 export type GetDtoKeysByDotNotation<ObjectType extends DTO> =
 {[Key in keyof ObjectType & string]: NonNullable<ObjectType[Key]> extends Array<infer T>
   ? T extends object
-    ? `${Key}` | `${Key}.${GetDtoKeysByDotNotation<T>}`
+    ? `${Key}` | `${Key}.${GetDtoKeysByDotNotation<NonNullable<T>>}`
     : `${Key}`
   : NonNullable<ObjectType[Key]> extends object
     ? `${Key}` | `${Key}.${GetDtoKeysByDotNotation<NonNullable<ObjectType[Key]>>}`

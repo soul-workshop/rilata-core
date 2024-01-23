@@ -17,6 +17,7 @@ describe('String Equality Checks', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { strictString: 'Aaabbb' },
+        name: 'TextStrictEqualValidationRule',
         text: 'Строка должна быть строго равна "{{strictString}}"',
       },
     });
@@ -29,6 +30,7 @@ describe('String Equality Checks', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { strictString: 'aaabbb' },
+        name: 'TextStrictEqualValidationRule',
         text: 'Строка должна быть строго равна "{{strictString}}"',
       },
     });

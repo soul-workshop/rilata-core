@@ -23,6 +23,7 @@ describe('Validating strings using regular expressions', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RegexFormatValidationRule',
         text: 'Введите ИИН (12 цифр) ',
       },
     });
@@ -41,6 +42,7 @@ describe('Validating strings using regular expressions', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RegexFormatValidationRule',
         text: 'Введите номер в формате +7 702 777 7777',
       },
     });

@@ -56,7 +56,7 @@ export class DtoFieldValidator<
       : success(undefined);
   }
 
-  protected getFailResult(errors: FieldErrors | RuleErrors): FullFieldResult {
+  protected override getFailResult(errors: FieldErrors | RuleErrors): FullFieldResult {
     return failure({ [DtoFieldValidator.DTO_WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
   }
 }

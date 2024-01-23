@@ -1,8 +1,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ErrorDod, GeneralEventDod } from '../../../domain/domain-object-data/common-types';
+import { ErrorDod } from '../../../domain/domain-data/domain-types';
 import { Locale } from '../../../domain/locale';
-import { uuidUtility } from '../uuid/uuid-utility';
 
 /** Утилита для работы с объектами DomainObjectData */
 class DodUtility {
@@ -12,10 +11,12 @@ class DodUtility {
     hint: ERR['locale']['hint'],
   ): ERR {
     return {
-      name,
       locale: { text, hint },
-      errorType: 'app-error',
-      domainType: 'error',
+      name,
+      meta: {
+        errorType: 'app-error',
+        domainType: 'error',
+      },
     } as ERR;
   }
 
@@ -25,21 +26,13 @@ class DodUtility {
     hint: ERR['locale']['hint'],
   ): ERR {
     return {
-      name,
       locale: { text, hint },
-      errorType: 'domain-error',
-      domainType: 'error',
-    } as ERR;
-  }
-
-  getEventByType<EV extends GeneralEventDod>(name: EV['name'], attrs: EV['attrs'], caller: EV['caller']): EV {
-    return {
       name,
-      caller,
-      attrs,
-      domainType: 'event',
-      eventId: uuidUtility.getNewUUID(),
-    } as EV;
+      meta: {
+        errorType: 'domain-error',
+        domainType: 'error',
+      },
+    } as ERR;
   }
 }
 

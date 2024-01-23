@@ -24,6 +24,7 @@ describe('Number must be in the range', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { max: 64, min: 18 },
+        name: 'RangeNumberValidationRule',
         text: 'Число должно быть в диапозоне от {{min}} до {{max}}',
       },
     });
@@ -35,6 +36,7 @@ describe('Number must be in the range', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: { max: 64, min: 18 },
+        name: 'RangeNumberValidationRule',
         text: 'Число должно быть в диапозоне от {{min}} до {{max}}',
       },
     });

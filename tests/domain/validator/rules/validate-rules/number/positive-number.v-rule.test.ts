@@ -29,6 +29,7 @@ describe('Number must be positive', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'PositiveNumberValidationRule',
         text: 'Число должно быть положительным',
       },
     });
@@ -40,6 +41,7 @@ describe('Number must be positive', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'PositiveNumberValidationRule',
         text: 'Число должно быть положительным',
       },
     });
@@ -51,6 +53,7 @@ describe('Number must be positive', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'PositiveNumberValidationRule',
         text: 'Число должно быть положительным',
       },
     });

@@ -1,5 +1,5 @@
-import { AggregateRootDataParams } from '../../../../../src/domain/domain-object-data/aggregate-data-types';
-import { DomainMeta } from '../../../../../src/domain/domain-object-data/common-types';
+import { AggregateRootDataParams } from '../../../../../src/domain/domain-data/params-types';
+import { DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
 import { AddPersonActionParams } from './add-person.params';
 import { AddPhoneActionParams } from './add-phones.params';
 
@@ -17,6 +17,7 @@ export type ContactsAttrs = {
   phones: PhoneAttrs[],
   email?: EmailAttrs[],
   address?: string,
+  techSupportComments?: string[],
 }
 
 export type PersonAttrs = {
@@ -30,8 +31,9 @@ export type PersonAttrs = {
 
 export type PersonMeta = DomainMeta<'PersonAR'>;
 
+// при вызове у агрегата personAR.getHelper().getOutput() вернется объект без комментов техподдержки
 export type PersonParams = AggregateRootDataParams<
-  PersonAttrs, PersonMeta, AddPersonActionParams | AddPhoneActionParams
+  PersonAttrs, PersonMeta, AddPersonActionParams | AddPhoneActionParams, ['contacts.techSupportComments']
 >;
 
 export type OutputPersonAttrs = PersonAttrs;

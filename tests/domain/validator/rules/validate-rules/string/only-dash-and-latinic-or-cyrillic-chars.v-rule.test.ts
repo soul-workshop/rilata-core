@@ -30,6 +30,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyDashAndLitinicOrCyrillicCharsValidationRule',
         text: 'Строка не должна содержать символы кроме "-"(дефис) и может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -41,6 +42,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyDashAndLitinicOrCyrillicCharsValidationRule',
         text: 'Строка не должна содержать символы кроме "-"(дефис) и может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -52,6 +54,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyDashAndLitinicOrCyrillicCharsValidationRule',
         text: 'Строка не должна содержать символы кроме "-"(дефис) и может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -63,6 +66,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyDashAndLitinicOrCyrillicCharsValidationRule',
         text: 'Строка не должна содержать символы кроме "-"(дефис) и может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -74,6 +78,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyDashAndLitinicOrCyrillicCharsValidationRule',
         text: 'Строка не должна содержать символы кроме "-"(дефис) и может содержать слова только на латинице или на кирилице.',
       },
     });
@@ -85,6 +90,7 @@ describe('The string must contain only Cyrillic and Latin alphabet', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'OnlyDashAndLitinicOrCyrillicCharsValidationRule',
         text: 'Строка не должна содержать символы кроме "-"(дефис) и может содержать слова только на латинице или на кирилице.',
       },
     });

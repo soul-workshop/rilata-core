@@ -3,4 +3,4 @@ export type ModuleParams = {
   subscribeModules: ModuleParams,
 }
 
-export type ModuleType = 'command-module' | 'read-module' | 'module';
+export type ModuleType = 'command-module' | 'read-module' | 'common-module';

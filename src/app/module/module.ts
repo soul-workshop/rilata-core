@@ -1,36 +1,48 @@
 import { Logger } from '../../common/logger/logger';
-import { ModuleResolver } from '../../conf/module-resolver';
-import { GeneralCommandUseCase, GeneraQuerylUseCase } from '../use-case/types';
-import { UseCase } from '../use-case/use-case';
+import { ModuleResolver } from '../resolves/module-resolver';
+import { GeneralCommandService, GeneraQueryService } from '../service/types';
+import { Service } from '../service/service';
 import { ModuleType } from './types';
 
-export abstract class Module<M_TYPE extends ModuleType> {
-  readonly abstract moduleType: M_TYPE;
+export abstract class Module {
+  readonly abstract moduleType: ModuleType;
 
   readonly abstract moduleName: string;
 
-  readonly abstract queryUseCases: GeneraQuerylUseCase[]
+  readonly abstract queryServices: GeneraQueryService[]
 
-  readonly abstract commandUseCases: GeneralCommandUseCase[];
+  readonly abstract commandServices: GeneralCommandService[];
 
   protected moduleResolver!: ModuleResolver;
 
-  protected useCases!: UseCase[];
+  protected services!: Service[];
 
   protected logger!: Logger;
 
   init(moduleResolver: ModuleResolver): void {
     this.moduleResolver = moduleResolver;
+    moduleResolver.init(this);
     this.logger = moduleResolver.getLogger();
-    this.useCases = [...this.queryUseCases, ...this.commandUseCases];
-    this.useCases.forEach((useCase) => useCase.init(moduleResolver));
+    this.services = [...this.queryServices, ...this.commandServices];
+    this.services.forEach((service) => service.init(moduleResolver));
   }
 
-  getUseCase<T extends UseCase>(name: T['actionName']): T {
-    const finded = this.useCases.find((useCase) => useCase.actionName === name);
-    if (finded === undefined) {
-      this.logger.error(`not finded in module "${this.moduleName}" usecase by name ${name}`, this.useCases);
+  getServiceByName(name: string): Service {
+    const service = this.services.find((s) => s.getName() === name);
+    if (service === undefined) {
+      throw this.logger.error(
+        `not finded in module "${this.moduleName}" service by name "${name}"`,
+        { serviceNames: this.services.map((s) => s.getName()) },
+      );
     }
-    return finded as T;
+    return service;
+  }
+
+  getLogger(): Logger {
+    return this.logger;
+  }
+
+  getModuleName(): string {
+    return this.moduleName;
   }
 }

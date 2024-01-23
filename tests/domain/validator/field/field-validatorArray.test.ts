@@ -14,7 +14,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin']);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toBe(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test(' успех, пришло валидное значение', () => {
@@ -22,7 +22,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin', 'staffManager']);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toBe(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test(' успех, пришло пустой массив', () => {
@@ -30,7 +30,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', true, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate([]);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toEqual(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test(' провал, пришло undefined, null', () => {
@@ -44,6 +44,7 @@ describe('тесты литерального валидатора приним�
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined или null',
+              name: 'CannotBeNullableAssertionRule',
               hint: {},
             },
           ],
@@ -60,6 +61,7 @@ describe('тесты литерального валидатора приним�
         ___array_whole_value_validation_error___: [
           {
             text: 'Значение должно быть массивом данных',
+            name: 'IsArrayTypeRule',
             hint: {},
           },
         ],
@@ -76,6 +78,7 @@ describe('тесты литерального валидатора приним�
           roles: [
             {
               text: 'Значение должно быть одним из значений списка',
+              name: 'StringChoiceValidationRule',
               hint: {
                 choices: ['admin', 'staffManager', 'officeChieff', 'saleManager'],
               },
@@ -95,6 +98,7 @@ describe('тесты литерального валидатора приним�
           roles: [
             {
               text: 'Значение должно быть строковым значением',
+              name: 'IsStringTypeRule',
               hint: {},
             },
           ],
@@ -109,7 +113,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, mustBeFilled: true }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test(' провал, пришло пустой массив', () => {
@@ -121,6 +125,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Значение должно быть не пустым массивом данных',
+                name: 'CannotBeEmptyArrayAssertionRule',
                 hint: {},
               },
             ],
@@ -136,6 +141,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined или null',
+                name: 'CannotBeNullableAssertionRule',
                 hint: {},
               },
             ],
@@ -149,7 +155,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, maxElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate([]);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('успех, количество элементов меньше максимального', () => {
@@ -157,7 +163,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, maxElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('успех, количество элементов равно максимальному', () => {
@@ -165,7 +171,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, maxElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin', 'staffManager']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('провал, количество элементов больше максимального', () => {
@@ -177,6 +183,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Максимальное количество элементов может быть {{max}}, сейчас {{currentCount}}',
+                name: 'MaxArrayElementsCountAssertionRule',
                 hint: {
                   max: 2,
                   currentCount: 3,
@@ -195,6 +202,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 hint: {},
+                name: 'CannotBeNullableAssertionRule',
                 text: 'Значение не должно быть undefined или null',
               },
             ],
@@ -208,7 +216,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, minElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin', 'staffManager', 'officeChieff']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('успех, количество элементов равно минимальному', () => {
@@ -216,7 +224,7 @@ describe('тесты литерального валидатора приним�
           const sut = new LiteralFieldValidator('roles', true, { isArray: true, minElementsCount: 2 }, 'string', [new StringChoiceValidationRule(roles)]);
           const res = sut.validate(['admin', 'staffManager']);
           expect(res.isSuccess()).toBe(true);
-          expect(res.value).toBe(undefined);
+          expect(res.value).toBeUndefined();
         });
 
         test('провал, пришел пустой массив', () => {
@@ -228,6 +236,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
+                name: 'MinArrayElementsCountAssertionRule',
                 hint: {
                   min: 2,
                   currentCount: 0,
@@ -246,6 +255,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
+                name: 'MinArrayElementsCountAssertionRule',
                 hint: {
                   min: 2,
                   currentCount: 1,
@@ -264,6 +274,7 @@ describe('тесты литерального валидатора приним�
             ___array_whole_value_validation_error___: [
               {
                 hint: {},
+                name: 'CannotBeNullableAssertionRule',
                 text: 'Значение не должно быть undefined или null',
               },
             ],
@@ -283,13 +294,13 @@ describe('тесты литерального валидатора приним�
       test('успех, пришло валидное значение', () => {
         const res = sut.validate(['admin']);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test(' успех, пришло null', () => {
         const res = sut.validate(null);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test('провал, пришло undefined', () => {
@@ -299,6 +310,7 @@ describe('тесты литерального валидатора приним�
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение не должно быть undefined',
+              name: 'CannotBeUndefinedValidationRule',
               hint: {},
             },
           ],
@@ -313,7 +325,7 @@ describe('тесты литерального валидатора приним�
       const sut = new LiteralFieldValidator('roles', false, { isArray: true }, 'string', [new StringChoiceValidationRule(roles)]);
       const res = sut.validate(['admin']);
       expect(res.isSuccess()).toBe(true);
-      expect(res.value).toBe(undefined);
+      expect(res.value).toBeUndefined();
     });
 
     test('успех, пришло undefined, null1', () => {
@@ -323,7 +335,7 @@ describe('тесты литерального валидатора приним�
       valueTest.forEach((value) => {
         const res = sut.validate(value);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
     });
 
@@ -336,6 +348,7 @@ describe('тесты литерального валидатора приним�
         ___array_whole_value_validation_error___: [
           {
             text: 'Значение должно быть массивом данных',
+            name: 'IsArrayTypeRule',
             hint: {},
           },
         ],
@@ -352,6 +365,7 @@ describe('тесты литерального валидатора приним�
           roles: [
             {
               text: 'Значение должно быть одним из значений списка',
+              name: 'StringChoiceValidationRule',
               hint: {
                 choices: ['admin', 'staffManager', 'officeChieff', 'saleManager'],
               },
@@ -373,13 +387,13 @@ describe('тесты литерального валидатора приним�
       test('успех, пришло валидное значение', () => {
         const res = sut.validate(['admin']);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test(' успех, пришло undefined', () => {
         const res = sut.validate(undefined);
         expect(res.isSuccess()).toBe(true);
-        expect(res.value).toBe(undefined);
+        expect(res.value).toBeUndefined();
       });
 
       test('провал, пришло null', () => {
@@ -389,6 +403,7 @@ describe('тесты литерального валидатора приним�
           ___array_whole_value_validation_error___: [
             {
               text: 'Значение не может быть равным null',
+              name: 'CannotBeNullValidationRule',
               hint: {},
             },
           ],

@@ -58,7 +58,7 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
   ): GetFailRuleAnswer<RT> {
     return {
       behaviour,
-      ruleError: { text: this.requirement, hint },
+      ruleError: { text: this.requirement, hint, name: this.constructor.name },
     } as GetFailRuleAnswer<RT>;
   }
 

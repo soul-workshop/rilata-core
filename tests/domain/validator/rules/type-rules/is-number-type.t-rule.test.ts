@@ -19,6 +19,7 @@ describe('IsNumberTypeRule', () => {
         behaviour: 'SaveErrorAndBreakValidation',
         ruleError: {
           hint: {},
+          name: 'IsNumberTypeRule',
           text: 'Значение должно быть числовым',
         },
       });

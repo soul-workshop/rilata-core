@@ -91,31 +91,3 @@ export namespace FieldValidatorPrivateFixtures {
     contacts: DodFixtures.personContactAttrs,
   };
 }
-
-export namespace FieldValidatorTestMocksPrivateFixtures {
-  class LoggerMock implements Logger {
-    info(log: string): Promise<void> {
-      throw new Error('Method not implemented.');
-    }
-
-    warning(log: string): Promise<void> {
-      throw new Error('Method not implemented.');
-    }
-
-    assert(condition: boolean, log: string, logAttrs?: unknown): Promise<void> {
-      throw new Error('Method not implemented.');
-    }
-
-    error(log: string, logAttrs?: unknown): never {
-      throw new Error('Method not implemented.');
-    }
-
-    fatalError(log: string, logAttrs?: unknown): never {
-      throw new Error('Method not implemented.');
-    }
-  }
-
-  export function getLoggerMock(): Logger {
-    return new LoggerMock();
-  }
-}
