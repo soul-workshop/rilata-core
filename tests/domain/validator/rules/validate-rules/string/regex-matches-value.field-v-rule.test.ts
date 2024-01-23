@@ -10,14 +10,14 @@ describe('Validating strings using regular expressions', () => {
     });
   });
   test('success ИИН is valid', () => {
-    const sut = new RegexMatchesValueValidationRule(/^[0-9]\d{11}$/, 'Введите ИИН (12 цифр) ');
+    const sut = new RegexMatchesValueValidationRule(/^\d{12}$/, 'Введите ИИН (12 цифр) ');
     const result = sut.validate('010625530759');
     expect(result).toEqual({
       behaviour: 'SuccessRunNextRule',
     });
   });
   test('failure ИИН is not valid', () => {
-    const sut = new RegexMatchesValueValidationRule(/^[0-9]\d{11}$/, 'Введите ИИН (12 цифр) ');
+    const sut = new RegexMatchesValueValidationRule(/^\d{12}$/, 'Введите ИИН (12 цифр) ');
     const result = sut.validate('0106255307');
     expect(result).toEqual({
       behaviour: 'SaveErrorAndRunNextRule',
