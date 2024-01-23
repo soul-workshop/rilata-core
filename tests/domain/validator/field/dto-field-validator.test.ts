@@ -429,7 +429,7 @@ describe('DTO Tests', () => {
               number: [
                 {
                   text: 'Строка должна соответствовать формату: "+7-###-##-##"',
-                  name: 'RegexFormatValidationRule',
+                  name: 'RegexMatchesValueValidationRule',
                   hint: {},
                 },
                 {
