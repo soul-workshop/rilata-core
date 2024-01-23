@@ -54,7 +54,7 @@ export abstract class FieldValidator<
     if (this.arrayConfig.isArray) {
       const arrayValidationResult = this.validateArray(value);
       if (arrayValidationResult.isSuccess()) {
-        return this.complexValidate(value as number[]);
+        return this.complexValidate(value);
       }
       return arrayValidationResult;
     }
