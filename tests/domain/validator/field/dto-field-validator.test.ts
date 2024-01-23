@@ -151,7 +151,7 @@ describe('DTO Tests', () => {
               noOutField: [
                 {
                   text: 'Значение не должно быть undefined или null',
-                  name: "CannotBeNullableAssertionRule",
+                  name: 'CannotBeNullableAssertionRule',
                   hint: {},
                 },
               ],
@@ -320,7 +320,7 @@ describe('DTO Tests', () => {
             ___dto_whole_value_validation_error___: [
               {
                 text: 'Значение не должно быть undefined',
-                name: "CannotBeUndefinedValidationRule",
+                name: 'CannotBeUndefinedValidationRule',
                 hint: {},
               },
             ],
@@ -392,7 +392,7 @@ describe('DTO Tests', () => {
                   text: 'Значение должно быть одним из значений списка',
                   name: 'StringChoiceValidationRule',
                   hint: { choices: ['mobile', 'work'] },
-                }
+                },
               ],
             },
           },
@@ -411,14 +411,14 @@ describe('DTO Tests', () => {
               type: [
                 {
                   text: 'Значение должно быть одним из значений списка',
-                  name: "StringChoiceValidationRule",
+                  name: 'StringChoiceValidationRule',
                   hint: { choices: ['mobile', 'work'] },
                 },
               ],
               noOutField: [
                 {
                   hint: {},
-                  name: "IsStringTypeRule",
+                  name: 'IsStringTypeRule',
                   text: 'Значение должно быть строковым значением',
                 },
               ],

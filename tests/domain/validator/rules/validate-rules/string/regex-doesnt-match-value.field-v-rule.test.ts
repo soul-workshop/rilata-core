@@ -30,6 +30,7 @@ describe('Validating strings using regular expressions', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RegexDoesntMatchValidationRule',
         text: 'Текст не должен заканчиваться на слово world',
       },
     });
@@ -41,6 +42,7 @@ describe('Validating strings using regular expressions', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RegexDoesntMatchValidationRule',
         text: 'В тексте не должно присутствовать слово stairs',
       },
     });
@@ -52,6 +54,7 @@ describe('Validating strings using regular expressions', () => {
       behaviour: 'SaveErrorAndRunNextRule',
       ruleError: {
         hint: {},
+        name: 'RegexDoesntMatchValidationRule',
         text: 'Текст не должен содержать цифр',
       },
     });
