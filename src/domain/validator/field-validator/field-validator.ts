@@ -55,16 +55,14 @@ export abstract class FieldValidator<
       const arrayValidationResult = this.validateArray(value);
       if (arrayValidationResult.isSuccess()) {
         return this.complexValidate(value as number[]);
-      } else {
-        return arrayValidationResult;
       }
-    } else {
-      return this.validateValue(value);
+      return arrayValidationResult;
     }
+    return this.validateValue(value);
   }
-  
-  protected complexValidate(value: number[]): FullFieldResult {
-      return success(undefined);
+
+  protected complexValidate(value: unknown): FullFieldResult {
+    return success(undefined);
   }
 
   /** проверка массива данных */
