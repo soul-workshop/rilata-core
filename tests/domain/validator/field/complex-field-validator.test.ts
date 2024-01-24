@@ -44,6 +44,7 @@ describe(
       const result = sut.validate([2, 4, 8, 16, 32]);
       expect(result.isSuccess()).toBe(true);
     });
+    
     test('провал, второе значение не валидно', () => {
       const result = sut.validate([2, 6, 8, 16, 32]);
       expect(result.isFailure()).toBe(true);
@@ -60,7 +61,6 @@ describe(
       });
     });
    
-
     test('провал, значение должно быть числовым', () => {
       const result = sut.validate([2, 4, undefined, 16,'stay']);
       expect(result.isFailure()).toBe(true);
