@@ -51,9 +51,18 @@ export abstract class FieldValidator<
   }
 
   validate(value: unknown): FullFieldResult {
-    return this.arrayConfig.isArray
-      ? this.validateArray(value)
-      : this.validateValue(value);
+    if (this.arrayConfig.isArray) {
+      const arrayValidationResult = this.validateArray(value);
+      if (arrayValidationResult.isSuccess()) {
+        return this.complexValidate(value);
+      }
+      return arrayValidationResult;
+    }
+    return this.validateValue(value);
+  }
+
+  protected complexValidate(value: unknown): FullFieldResult {
+    return success(undefined);
   }
 
   /** проверка массива данных */
