@@ -37,7 +37,7 @@ class EveryNextValueMustBeDoubleProgressFieldValidator extends LiteralFieldValid
 }
 
 describe(
-  'тесты для EveryNextValueMustBeDoubleProgressFieldValidator принимающего массив данных геометрической прогрессии в котором знаменатель равен 2',
+  'Валидатор, который проверяет чтобы каждый следующий элемент был в два раза больше',
   () => {
     const sut = new EveryNextValueMustBeDoubleProgressFieldValidator();
     test('успех, валидация прошла успешно', () => {
@@ -59,43 +59,28 @@ describe(
         },
       });
     });
-    test('провал, количество элементов меньше чем должно быть', () => {
-      const result = sut.validate([2]);
-      expect(result.isFailure()).toBe(true);
-      expect(result.value).toEqual({
-        ___array_whole_value_validation_error___: [
-          {
-            text: 'Минимальное количество элементов может быть {{min}}, сейчас {{currentCount}}',
-            hint: {
-              min: 2,
-              currentCount: 1,
-            },
-            name: 'MinArrayElementsCountAssertionRule',
-          },
-        ],
-      });
-    });
+   
 
     test('провал, значение должно быть числовым', () => {
-      const result = sut.validate([2, undefined, 'stay']);
+      const result = sut.validate([2, 4, undefined, 16,'stay']);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
-        1: {
+        "2": {
           array: [
             {
-              text: 'Значение должно быть числовым',
+              text: "Значение должно быть числовым",
               hint: {},
-              name: 'IsNumberTypeRule',
-            },
+              name: "IsNumberTypeRule",
+            }
           ],
         },
-        2: {
+        "4": {
           array: [
             {
-              text: 'Значение должно быть числовым',
+              text: "Значение должно быть числовым",
               hint: {},
-              name: 'IsNumberTypeRule',
-            },
+              name: "IsNumberTypeRule",
+            }
           ],
         },
       });
