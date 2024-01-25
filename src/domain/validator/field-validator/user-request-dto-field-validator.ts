@@ -8,6 +8,6 @@ false,
 DTO
 > {
     constructor(){
-        super('getUser', true, { isArray: false }, 'dto',);
+        super('getUser', true, { isArray: false }, 'dto', );
     }
 }
