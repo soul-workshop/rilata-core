@@ -4,7 +4,7 @@ import { FullFieldResult } from '../../../../src/domain/validator/field-validato
 import { success } from '../../../../src/common/result/success';
 import { failure } from '../../../../src/common/result/failure';
 
-class EveryNextValueMustBeDoubleProgressFieldValidator extends LiteralFieldValidator<
+class EveryNextValueMustBeDoubleProgressArrayFieldValidator extends LiteralFieldValidator<
   'array',
   true,
   true,
@@ -39,7 +39,7 @@ class EveryNextValueMustBeDoubleProgressFieldValidator extends LiteralFieldValid
 describe(
   'Валидатор, который проверяет чтобы каждый следующий элемент был в два раза больше',
   () => {
-    const sut = new EveryNextValueMustBeDoubleProgressFieldValidator();
+    const sut = new EveryNextValueMustBeDoubleProgressArrayFieldValidator();
     test('успех, валидация прошла успешно', () => {
       const result = sut.validate([2, 4, 8, 16, 32]);
       expect(result.isSuccess()).toBe(true);
@@ -61,7 +61,7 @@ describe(
       });
     });
    
-    test('провал, значение должно быть числовым', () => {
+    test('провал, базовая валидация не прошла, комплексная проверка не выполняется', () => {
       const result = sut.validate([2, 4, undefined, 16,'stay']);
       expect(result.isFailure()).toBe(true);
       expect(result.value).toEqual({
