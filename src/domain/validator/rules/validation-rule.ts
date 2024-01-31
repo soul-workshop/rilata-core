@@ -37,9 +37,11 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
   /** возвращает текстовое сообщение для пользователя по переданной ошибке.
     Сделана такая сложность, для поддержки перевода на другие языки. */
   static rawToMessage(ruleErr: RuleError): string {
+    if (Object.keys(ruleErr.hint).length === 0) return ruleErr.text;
     const tuples = [['_', ruleErr.text]].concat(
       Object.entries(ruleErr.hint).map(([key, value]) => [key, String(value)]),
     );
+
 
     return tuples.reduce(
       ([, raw], [key, value]) => ['_', this.replaceByRegex(raw, key, String(value))],
