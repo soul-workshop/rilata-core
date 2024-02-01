@@ -8,8 +8,8 @@ export const badRequestError: BadRequestError<Locale> = {
     text: 'Bad request',
     hint: {},
   },
+  name: 'Bad request',
   meta: {
-    name: 'Bad request',
     errorType: 'app-error',
     domainType: 'error',
   },
@@ -20,8 +20,8 @@ export const badRequestInvalidCommandNameError: BadRequestError<Locale> = {
     text: 'Bad request, invalid command name',
     hint: {},
   },
+  name: 'Bad request',
   meta: {
-    name: 'Bad request',
     errorType: 'app-error',
     domainType: 'error',
   },
@@ -32,8 +32,8 @@ export const notFoundError: NotFoundError<Locale> = {
     text: 'Page not found',
     hint: {},
   },
+  name: 'Not found',
   meta: {
-    name: 'Not found',
     errorType: 'app-error',
     domainType: 'error',
   },
@@ -44,8 +44,8 @@ export const internalError: InternalError<Locale> = {
     text: 'Internal error',
     hint: {},
   },
+  name: 'Internal error',
   meta: {
-    name: 'Internal error',
     errorType: 'app-error',
     domainType: 'error',
   },
@@ -56,8 +56,8 @@ export const permissionDeniedError: PermissionDeniedError<Locale> = {
     text: 'Действие не доступно',
     hint: {},
   },
+  name: 'Permission denied',
   meta: {
-    name: 'Permission denied',
     errorType: 'domain-error',
     domainType: 'error',
   },
@@ -68,8 +68,8 @@ export const authPermissionDeniedError: PermissionDeniedError<Locale> = {
     text: 'Действие доступно только для аутентифицированных пользователей.',
     hint: {},
   },
+  name: 'Permission denied',
   meta: {
-    name: 'Permission denied',
     errorType: 'domain-error',
     domainType: 'error',
   },

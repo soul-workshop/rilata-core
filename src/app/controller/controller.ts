@@ -43,7 +43,7 @@ export abstract class Controller {
         // приведение типа, потому что serviceResult становится never!;
       } else if ((serviceResult as Result<ServiceBaseErrors, never>).isFailure()) {
         const err = (serviceResult as Result<ServiceBaseErrors, never>).value;
-        response.status(STATUS_CODES[err.meta.name] ?? 400);
+        response.status(STATUS_CODES[err.name] ?? 400);
       }
 
       response.send({
@@ -54,7 +54,7 @@ export abstract class Controller {
       if (this.moduleResolver.getRunMode().includes('test')) {
         throw e;
       }
-      this.moduleResolver.getLogger().fatalError('server internal error', { actionDod, caller });
+      this.moduleResolver.getLogger().fatalError('server internal error', { actionDod, caller }, e as Error);
       const err = dodUtility.getAppErrorByType<InternalError<Locale>>(
         'Internal error',
         'Извините, на сервере произошла ошибка',

@@ -1,7 +1,7 @@
-import { RegexFormatValidationRule } from './regex.field-v-rule';
+import { RegexDoesntMatchValidationRule } from './regex-doesnt-match-value.field-v-rule';
 
-export class NoContainedSpaceValidationRule extends RegexFormatValidationRule {
+export class NoContainedSpaсeValidationRule extends RegexDoesntMatchValidationRule {
   constructor() {
-    super(/^\S*$/, 'Не должно быть пробелов');
+    super(/\s/, 'Не должно быть пробелов');
   }
 }

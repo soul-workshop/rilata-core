@@ -4,8 +4,8 @@ import { ArrayFieldErrors, FieldErrors } from '../../domain/validator/field-vali
 
 export type ValidationError = {
   errors: FieldErrors | ArrayFieldErrors,
+  name: 'Validation error',
   meta: {
-    name: 'Validation error',
     domainType: 'error',
     errorType: 'app-error',
   }

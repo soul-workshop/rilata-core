@@ -6,7 +6,9 @@ import { EventAsJson } from './types';
 export interface DomainEventRepository extends DomainEventSubscriber {
   addEvent(event: GeneralEventDod): Promise<void>
 
+  isEventExist(actionId: UuidType): Promise<boolean>
+
   getNotPublishedEvents(): EventAsJson[]
 
-  markAsPublished(eventId: UuidType): Promise<void>
+  markAsPublished(actionId: UuidType): Promise<void>
 }

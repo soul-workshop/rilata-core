@@ -22,18 +22,20 @@ export class ConsoleLogger implements Logger {
     throw this.fatalError(log, logAttrs);
   }
 
-  async error(log: string, logAttrs?: unknown): Promise<AssertionException> {
+  async error(log: string, logAttrs?: unknown, err?: Error): Promise<AssertionException> {
+    const errStack = err ? this.getErrStack(err) : {};
     this.toConsole(
       this.makeLogString('ERROR', log),
-      { ...this.getErrStack(), logAttrs },
+      { ...errStack, logAttrs },
     );
     return new AssertionException(log);
   }
 
-  async fatalError(log: string, logAttrs?: unknown): Promise<AssertionException> {
+  async fatalError(log: string, logAttrs?: unknown, err?: Error): Promise<AssertionException> {
+    const errStack = err ? this.getErrStack(err) : {};
     this.toConsole(
       this.makeLogString('FATAL_ERROR', log),
-      { ...this.getErrStack(), logAttrs },
+      { ...errStack, logAttrs },
     );
     return new AssertionException(log);
   }
@@ -43,12 +45,8 @@ export class ConsoleLogger implements Logger {
     return `${type}-${dateTime}: ${log}`;
   }
 
-  private getErrStack(): { stack: string[] } {
-    try {
-      throw Error();
-    } catch (e) {
-      return { stack: (e as Error).stack?.split('\n') ?? ['no stack'] };
-    }
+  private getErrStack(err: Error): { stack: string[] } {
+    return { stack: err.stack?.split('\n') ?? ['no stack'] };
   }
 
   private toConsole(text: string, logAttrs?: unknown): void {
