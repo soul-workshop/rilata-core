@@ -1,4 +1,5 @@
 import { GeneralEventDod } from '../../domain/domain-data/domain-types';
+import { EventAsJson } from '../database/types';
 
 export type BusEventSubscribe = {
   moduleName: string,
@@ -6,7 +7,7 @@ export type BusEventSubscribe = {
 }
 
 export type BusEventPublish = BusEventSubscribe & {
-  event: string,
+  event: EventAsJson,
 }
 
 export type EventHandler = (event: GeneralEventDod) => Promise<void>
