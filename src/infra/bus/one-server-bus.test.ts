@@ -1,5 +1,5 @@
-import { Bus } from './bus';
-import { BusEventSubscribe, EventHandler, BusEventPublish } from './types';
+import { Bus } from '../../app/bus/bus';
+import { BusEventSubscribe, EventHandler, BusEventPublish } from '../../app/bus/types';
 
 export class OneServerBus implements Bus {
   protected handlers: Record<string, EventHandler> = {};

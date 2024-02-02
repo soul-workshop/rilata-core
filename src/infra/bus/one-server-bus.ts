@@ -1,8 +1,10 @@
-import { describe, test, expect, mock } from 'bun:test';
+import {
+  describe, test, expect, mock,
+} from 'bun:test';
 import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
 import { EventDod, GeneralEventDod } from '../../domain/domain-data/domain-types';
 import { OneServerBus } from './one-server-bus.test';
-import { BusEventPublish, BusEventSubscribe, EventHandler } from './types';
+import { BusEventPublish, BusEventSubscribe } from '../../app/bus/types';
 
 describe('one server bus tests', () => {
   const sut = new OneServerBus();
