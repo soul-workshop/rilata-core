@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { Logger } from '../../common/logger/logger';
 import { ModuleResolver } from '../resolves/module-resolver';
 import { GeneralCommandService, GeneraQueryService } from '../service/types';
@@ -13,13 +14,13 @@ export abstract class Module {
 
   readonly abstract commandServices: GeneralCommandService[];
 
-  protected moduleResolver!: ModuleResolver;
+  protected moduleResolver!: ModuleResolver<Module>;
 
   protected services!: Service[];
 
   protected logger!: Logger;
 
-  init(moduleResolver: ModuleResolver): void {
+  init(moduleResolver: ModuleResolver<Module>): void {
     this.moduleResolver = moduleResolver;
     moduleResolver.init(this);
     this.logger = moduleResolver.getLogger();
