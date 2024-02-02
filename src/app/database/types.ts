@@ -1,3 +1,3 @@
 export type EventAsJson = string;
 
-export type EventAsJsonHandler = (event: EventAsJson) => Promise<void>
+export type EventAsJsonHandler = (eventName: string, event: EventAsJson) => Promise<void>
