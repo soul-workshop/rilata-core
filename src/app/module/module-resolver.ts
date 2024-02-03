@@ -10,14 +10,13 @@ import { Database } from '../database/database';
 import { Bus } from '../bus/bus';
 import { ModuleConfig } from './types';
 import { DomainEventRepository } from '../database/domain-event-repository';
+import { EventDelivererWorkerProxy } from '../event-deliverer/event-deliverer-worker';
 
 export abstract class ModuleResolver<M extends Module>
 implements Loggable, Repositoriable, Databaseable, Realisable {
   protected module!: M;
 
-  protected serverResolver!: ServerResolver;
-
-  abstract getModuleConfig(): ModuleConfig;
+  abstract moduleConfig: ModuleConfig;
 
   abstract getDatabase(): Database
 
@@ -27,9 +26,27 @@ implements Loggable, Repositoriable, Databaseable, Realisable {
 
   abstract getRepository(...args: unknown[]): unknown
 
-  init(module: M, serverResolver: ServerResolver): void {
+  constructor(protected serverResolver: ServerResolver) {}
+
+  /** инициализация выполняется классом server */
+  async init(module: M): Promise<void> {
     this.module = module;
-    this.serverResolver = serverResolver;
+
+    const path = this.moduleConfig.eventDelivererPath;
+    const file = Bun.file(path);
+    if (await file.exists() === false) {
+      throw this.getLogger().error(`not finded file by path ${path}`);
+    }
+  }
+
+  getEventDelivererWorker(): EventDelivererWorkerProxy {
+    const e = new EventDelivererWorkerProxy();
+    e.init(this);
+    return e;
+  }
+
+  getModuleConfig(): ModuleConfig {
+    return this.moduleConfig;
   }
 
   getLogger(): Logger {

@@ -12,8 +12,9 @@ export abstract class Server {
 
   constructor(protected runModuleNames: string[]) {}
 
-  init(serverResolver: ServerResolver): void {
+  async init(serverResolver: ServerResolver): Promise<void> {
     this.resolver = serverResolver;
+    this.resolver.init();
     const modulesAndResolvers = this.moduleConstructors.map(([ModuleCtor, ModResolverCtor]) => [
       new ModuleCtor(),
       new ModResolverCtor(),
@@ -25,7 +26,6 @@ export abstract class Server {
         throw this.resolver.getLogger().error(`not finded module by name: ${name}`);
       }
       const [module, resolver] = moduleAndResolver;
-      resolver.init(module, serverResolver);
       module.init(resolver);
       this.runModules.push(module);
       return module;

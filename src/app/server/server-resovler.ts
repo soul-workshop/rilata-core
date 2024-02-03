@@ -5,7 +5,8 @@ import { TokenVerifier } from '../jwt/token-verifier.interface';
 import { RunMode } from '../types';
 
 export abstract class ServerResolver {
-  abstract init(serverResolver: ServerResolver): void
+  /** инициализация выполняется классом server */
+  abstract init(): Promise<void>
 
   abstract getServerConfig(): unknown;
 
