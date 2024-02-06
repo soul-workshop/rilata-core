@@ -8,7 +8,7 @@ export abstract class AggregateFactory<PARAMS extends GeneralARDParams> {
   constructor(protected logger: Logger) {}
 
   /** создать экземпляр агрегата по событию */
-  abstract create(caller: Caller, command: DTO): AggregateRoot<PARAMS>
+  abstract create(caller: Caller, command: DTO, ...attrs: unknown[]): AggregateRoot<PARAMS>
 
   /** восстановить эксемпляр агрегата по атрибутам */
   abstract restore(...args: unknown[]): AggregateRoot<PARAMS>
