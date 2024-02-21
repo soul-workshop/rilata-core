@@ -42,7 +42,6 @@ export abstract class ValidationRule<RT extends RuleType, VT extends RuleDataTyp
       Object.entries(ruleErr.hint).map(([key, value]) => [key, String(value)]),
     );
 
-
     return tuples.reduce(
       ([, raw], [key, value]) => ['_', this.replaceByRegex(raw, key, String(value))],
     )[1];

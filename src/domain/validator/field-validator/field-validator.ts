@@ -34,7 +34,7 @@ export abstract class FieldValidator<
 
   constructor(
     protected attrName: NAME,
-    protected isRequired: REQ,
+    public isRequired: REQ,
     protected arrayConfig: GetArrayConfig<IS_ARR>,
     protected dataType: GetFieldValidatorDataType<DATA_TYPE>,
   ) {
