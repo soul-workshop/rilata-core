@@ -74,6 +74,6 @@ export abstract class QueryService<S_PARAMS extends GeneralQueryServiceParams>
       };
       return failure(err);
     }
-    return result;
+    return success(undefined);
   }
 }
