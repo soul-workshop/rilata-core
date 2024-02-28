@@ -10,6 +10,7 @@ import {
 } from '../domain-data/type-functions';
 import { storeDispatcher } from '../../app/async-store/store-dispatcher';
 import { Logger } from '../../common/logger/logger';
+import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */
@@ -50,33 +51,24 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     return this.aRootName;
   }
 
-  registerDomainEvent<EVENT extends GetARParamsEvents<PARAMS>>(
+  registerEvent<EVENT extends GetARParamsEvents<PARAMS>>(
     eventName: GetARParamsEventNames<EVENT>,
     eventAttrs: GetARParamsEventAttrs<EVENT>,
-    actionId: UuidType,
-    caller: Caller,
+    requestId?: UuidType,
+    caller?: Caller,
   ): void {
     const store = storeDispatcher.getStoreOrExepction();
-    const event: GeneralEventDod = {
-      attrs: eventAttrs,
-      meta: {
-        eventId: uuidUtility.getNewUUID(),
-        actionId,
-        name: eventName,
-        moduleName: store.moduleResolver.getModule().getModuleName(),
-        domainType: 'event',
-      },
-      caller,
-      aRootAttrs: this.getOutput(),
-    };
+    const event: GeneralEventDod = dodUtility.getEvent(
+      eventName, eventAttrs, this.getOutput(), requestId, caller,
+    );
     this.domainEvents.push(event as GetARParamsEvents<PARAMS>);
   }
 
-  getDomainEvents(): GetARParamsEvents<PARAMS>[] {
+  getEvents(): GetARParamsEvents<PARAMS>[] {
     return this.domainEvents;
   }
 
-  cleanDomainEvents(): void {
+  cleanEvents(): void {
     this.domainEvents = [];
   }
 

@@ -1,19 +1,9 @@
-import { DeliveryEvent } from '../bus/types';
-import { DomainEventRepository } from '../database/domain-event-repository';
+import { DeliveryEventType } from '../bus/types';
 
-export class EventDeliverer {
-  constructor(protected eventRepo: DomainEventRepository) {
-    eventRepo.subscribe(this.handle);
-  }
+export interface EventDeliverer {
+  /** publish not published events from event repository and subscribe to new events */
+  init(...args: unknown[]): void
 
-  init(): void {
-    this.eventRepo.getNotPublishedEvents().forEach((event) => {
-      this.handle(event);
-    });
-  }
-
-  protected async handle(deliveryEvent: DeliveryEvent): Promise<void> {
-    postMessage(deliveryEvent); // send to parent thread
-    this.eventRepo.markAsPublished(deliveryEvent.actionId);
-  }
+  /** handle new event */
+  handle(deliveryEvent: DeliveryEventType): Promise<void>
 }

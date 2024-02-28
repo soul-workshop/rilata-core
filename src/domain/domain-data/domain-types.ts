@@ -26,6 +26,11 @@ export type AggregateDataTransfer = {
   meta: DomainMeta<string>,
 }
 
+export type ARDT<ATTRS extends DTO, META extends DomainMeta<string> = DomainMeta<string>> = {
+  attrs: ATTRS,
+  meta: META,
+}
+
 /** формат агрегата для передачи данных  */
 export type OutputAggregateDataTransfer<
   PARAMS extends GeneralARDParams
@@ -38,8 +43,8 @@ export type OutputAggregateDataTransfer<
 export type GeneralOutputAggregateDataTransfer = OutputAggregateDataTransfer<GeneralARDParams>;
 
 export type ErrorDod<
-  LOCALE extends Locale,
   NAME extends string,
+  LOCALE extends Locale<NAME>,
   TYPE extends ErrorType = 'domain-error'
 > = {
   locale: LOCALE,
@@ -50,28 +55,38 @@ export type ErrorDod<
   }
 }
 
-export type GeneralErrorDod = ErrorDod<Locale, Name, ErrorType>;
+export type GeneralErrorDod = ErrorDod<string, Locale, ErrorType>;
 
-export type EventDod<ATTRS extends DomainAttrs, NAME extends string> = {
+export type EventDod<
+  ATTRS extends DomainAttrs,
+  NAME extends string,
+  ARDTF extends AggregateDataTransfer | ARDT<DTO> | undefined,
+  CALLER extends Caller = Caller
+> = {
   attrs: ATTRS,
   meta: {
     eventId: UuidType,
-    actionId: UuidType,
+    requestId: UuidType,
     name: NAME,
     moduleName: string,
     domainType: 'event',
+    created: number,
   }
-  caller: Caller,
-  aRootAttrs: AggregateDataTransfer,
+  caller: CALLER,
+  aRootAttrs: ARDTF,
 }
 
-export type GeneralEventDod = EventDod<DomainAttrs, string>;
+export type GeneralEventDod = EventDod<
+  DomainAttrs, string, AggregateDataTransfer | ARDT<DTO> | undefined
+>;
 
-export type ActionDod = {
+export type RequestDod <ATTRS extends DTO, NAME extends string> = {
   meta: {
-    name: string,
-    actionId: UuidType,
-    domainType: 'action',
+    name: NAME,
+    requestId: UuidType,
+    domainType: 'request',
   },
-  attrs: DTO,
+  attrs: ATTRS,
 }
+
+export type GeneralRequestDod = RequestDod<DTO, string>;

@@ -15,14 +15,15 @@
     "jwt-decode": "^3.1.2"
   },
   "devDependencies": {
-    "nurgeo-project-configs": "github:NurGeo/project-config",
     "@types/bun": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
+    "bun-types": "^1.0.25",
     "eslint": "^8.7.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.0.0",
+    "nurgeo-project-configs": "github:NurGeo/project-config",
     "typescript": "~4.8.2"
   }
 }

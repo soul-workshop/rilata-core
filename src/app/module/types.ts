@@ -1,9 +1,12 @@
+import { Module } from './module';
+import { ModuleResolver } from './module-resolver';
+import { ModuleResolves } from './module-resolves';
+
 export type ModuleType = 'command-module' | 'read-module' | 'common-module';
 
 export type ModuleConfig = {
   /** url контроллера данного модуля */
-  url: string,
-
-  /** путь к файлу eventDeliver данного модуля */
-  eventDelivererPath: string,
+  ModuleUrl: string,
 }
+
+export type GeneralModuleResolver = ModuleResolver<Module, ModuleResolves<Module>>

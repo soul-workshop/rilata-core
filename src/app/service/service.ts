@@ -1,17 +1,17 @@
 import { Logger } from '../../common/logger/logger';
 import { Result } from '../../common/result/types';
-import { ModuleResolver } from '../resolves/module-resolver';
+import { GeneralModuleResolver } from '../module/types';
 
 export abstract class Service {
   protected abstract aRootName: string;
 
-  protected abstract name: string;
+  abstract serviceName: string;
 
-  protected moduleResolver!: ModuleResolver;
+  protected moduleResolver!: GeneralModuleResolver;
 
   protected logger!: Logger;
 
-  init(moduleResolver: ModuleResolver): void {
+  init(moduleResolver: GeneralModuleResolver): void {
     this.moduleResolver = moduleResolver;
     this.logger = moduleResolver.getLogger();
   }
@@ -20,9 +20,5 @@ export abstract class Service {
 
   getAggregateName(): string {
     return this.aRootName;
-  }
-
-  getName(): string {
-    return this.name;
   }
 }

@@ -65,6 +65,12 @@ export type ExtendDtoAttrs<
       : never;
 }
 
+export type DeepPartial<T extends DTO> = {
+  [KEY in keyof T]?: T[KEY] extends Record<any, any>
+    ? DeepPartial<T[KEY]>
+    : Partial<T[KEY]>
+}
+
 export type SplitStringToArray<S extends string, D extends string> =
     string extends S ? string[] :
     S extends '' ? string[] :

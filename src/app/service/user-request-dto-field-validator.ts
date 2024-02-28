@@ -7,8 +7,8 @@ import { UUIDFormatValidationRule } from '../../domain/validator/rules/validate-
 import { failure } from '../../common/result/failure';
 
 const userRequestDTOValidatorMap = {
-    userId: new LiteralFieldValidator('userId', false, { isArray: false }, 'string', [new UUIDFormatValidationRule()]),
-    onMe: new LiteralFieldValidator ('onMe', false, { isArray:false }, 'boolean', [])
+  userId: new LiteralFieldValidator('userId', false, { isArray: false }, 'string', [new UUIDFormatValidationRule()]),
+  onMe: new LiteralFieldValidator('onMe', false, { isArray: false }, 'boolean', []),
 };
 
 class UserRequestDtoFieldValidator extends DtoFieldValidator<
@@ -17,26 +17,24 @@ true,
 false,
 { userId?: string, onMe?: boolean}
 > {
-    constructor(){
-        super('getUser', true, { isArray: false }, 'dto', userRequestDTOValidatorMap);
-    }
-    protected complexValidate(value: DTO): FullFieldResult {
+  constructor() {
+    super('getUser', true, { isArray: false }, 'dto', userRequestDTOValidatorMap);
+  }
 
-        if (Boolean(value.userId) !== Boolean(value.onMe)) {
-            return success(undefined);
-        } else {
-            return failure({
-                ___dto_whole_value_validation_error___: [
-                {
-                    text: 'DTO должен содержать либо userId, либо onMe',
-                    name: 'InvalidFieldCombinationError',
-                    hint: {},
-                },
-            ],
-        });
-        }
-        
+  protected complexValidate(value: DTO): FullFieldResult {
+    if (Boolean(value.userId) !== Boolean(value.onMe)) {
+      return success(undefined);
     }
+    return failure({
+      ___dto_whole_value_validation_error___: [
+        {
+          text: 'DTO должен содержать либо userId, либо onMe',
+          name: 'InvalidFieldCombinationError',
+          hint: {},
+        },
+      ],
+    });
+  }
 }
 
 export const userRequestDtoFieldValidatorInstance = new UserRequestDtoFieldValidator();

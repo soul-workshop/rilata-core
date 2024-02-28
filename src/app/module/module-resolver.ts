@@ -1,52 +1,63 @@
-import { Databaseable } from '../resolves/databaseable';
 import { Repositoriable } from '../resolves/repositoriable';
-import { Loggable } from '../resolves/loggable';
 import { Realisable } from '../resolves/realisable';
 import { Module } from '../module/module';
 import { RunMode } from '../types';
-import { ServerResolver } from '../server/server-resovler';
+import { ServerResolver } from '../server/server-resolver';
 import { Logger } from '../../common/logger/logger';
-import { Database } from '../database/database';
-import { Bus } from '../bus/bus';
 import { ModuleConfig } from './types';
-import { DomainEventRepository } from '../database/domain-event-repository';
-import { EventDelivererWorkerProxy } from '../event-deliverer/event-deliverer-worker';
+import { Facadable } from '../resolves/facadable';
+import { ModuleResolves } from './module-resolves';
+import { TokenVerifier } from '../jwt/token-verifier.interface';
+import { DTO } from '../../domain/dto';
+import { ModuleResolveInstance } from '../resolves/types';
 
-export abstract class ModuleResolver<M extends Module>
-implements Loggable, Repositoriable, Databaseable, Realisable {
+export abstract class ModuleResolver<M extends Module, MR extends ModuleResolves<M>>
+implements Repositoriable, Realisable, Facadable {
   protected module!: M;
 
-  abstract moduleConfig: ModuleConfig;
+  protected serverResolver!: ServerResolver;
 
-  abstract getDatabase(): Database
+  protected abstract moduleConfig: ModuleConfig;
 
-  abstract getEventRepository(): DomainEventRepository
+  abstract getRealisation(...args: unknown[]): ModuleResolveInstance
 
-  abstract getRealisation(...args: unknown[]): unknown
+  abstract getRepository(...args: unknown[]): ModuleResolveInstance
 
-  abstract getRepository(...args: unknown[]): unknown
+  abstract getFacade(...args: unknown[]): ModuleResolveInstance
 
-  constructor(protected serverResolver: ServerResolver) {}
+  constructor(protected resolves: MR) {}
 
   /** инициализация выполняется классом server */
-  async init(module: M): Promise<void> {
+  init(module: M, serverResolver: ServerResolver): void {
     this.module = module;
+    this.serverResolver = serverResolver;
 
-    const path = this.moduleConfig.eventDelivererPath;
-    const file = Bun.file(path);
-    if (await file.exists() === false) {
-      throw this.getLogger().error(`not finded file by path ${path}`);
-    }
+    this.initResolves();
+    this.getDatabase().init(this);
   }
 
-  getEventDelivererWorker(): EventDelivererWorkerProxy {
-    const e = new EventDelivererWorkerProxy();
-    e.init(this);
-    return e;
+  stop(): void {
+    this.getDatabase().stop();
+  }
+
+  getServerResolver(): ServerResolver {
+    return this.serverResolver;
+  }
+
+  getDatabase(): MR['db'] {
+    return this.resolves.db;
+  }
+
+  getEventRepository(): MR['eventRepo'] {
+    return this.resolves.eventRepo;
   }
 
   getModuleConfig(): ModuleConfig {
     return this.moduleConfig;
+  }
+
+  getTokenVerifier(): TokenVerifier<DTO> {
+    return this.serverResolver.getTokenVerifier();
   }
 
   getLogger(): Logger {
@@ -57,11 +68,20 @@ implements Loggable, Repositoriable, Databaseable, Realisable {
     return this.serverResolver.getRunMode();
   }
 
-  getBus(): Bus {
-    return this.serverResolver.getBus();
+  getModuleName(): string {
+    return this.resolves.moduleName;
   }
 
   getModule(): M {
     return this.module;
+  }
+
+  protected initResolves(): void {
+    Object.entries(this.resolves).forEach(([key, resolveItem]) => {
+      if (
+        (resolveItem as any).init
+        && typeof (resolveItem as any).init === 'function'
+      ) (resolveItem as any).init(this);
+    });
   }
 }

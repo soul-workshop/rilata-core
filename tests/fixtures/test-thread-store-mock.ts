@@ -1,25 +1,34 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { StorePayload } from '../../src/app/async-store/types';
-import { Caller } from '../../src/app/caller';
-import { UuidType } from '../../src/common/types';
-import { resolver } from './test-resolver-mock';
 import { storeDispatcher } from '../../src/app/async-store/store-dispatcher';
+import { uuidUtility } from '../../src/common/utils/uuid/uuid-utility';
+import { GeneralModuleResolver } from '../../src/app/module/types';
 
-export function setAndGetTestStoreDispatcher(actionId: UuidType, caller?: Caller):
+export function setAndGetTestStoreDispatcher(
+  store: Partial<StorePayload> & { moduleResolver: GeneralModuleResolver},
+):
 typeof storeDispatcher {
   const storePayload: StorePayload = {
-    caller: caller ?? {
+    caller: store.caller ?? {
       type: 'DomainUser',
       userId: 'fb8a83cf-25a3-2b4f-86e1-27f6de6d8374',
     },
-    moduleResolver: resolver,
-    actionId,
+    moduleResolver: store.moduleResolver,
+    requestId: store.requestId ?? uuidUtility.getNewUUID(),
+    databaseErrorRestartAttempts: store.databaseErrorRestartAttempts ?? 1,
+    unitOfWorkId: store.unitOfWorkId,
   };
 
   storeDispatcher.setThreadStore({
-    run: () => {
-      throw new Error('Method not implemented.');
-    },
     getStore: () => storePayload,
+
+    run <F, Fargs extends unknown[]>(
+      s: StorePayload,
+      fn: (...args: Fargs) => F,
+      ...args: Fargs
+    ): F {
+      throw Error('для запросов входящих с уровня контроллера необходимо использовать настоящий store');
+    },
   });
 
   return storeDispatcher;

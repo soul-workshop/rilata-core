@@ -1,20 +1,19 @@
 import { Module } from '../../src/app/module/module';
 import { ModuleResolver } from '../../src/app/module/module-resolver';
-import { Database } from '../../src/app/database/database';
-import { DomainEventRepository } from '../../src/app/database/domain-event-repository';
-import { EventDelivererWorkerProxy } from '../../src/app/event-deliverer/event-deliverer-worker';
 import { ModuleConfig, ModuleType } from '../../src/app/module/types';
-import { ServerResolver } from '../../src/app/server/server-resovler';
+import { ServerResolver } from '../../src/app/server/server-resolver';
 import { Bus } from '../../src/app/bus/bus';
 import { TokenVerifier } from '../../src/app/jwt/token-verifier.interface';
 import { RunMode } from '../../src/app/types';
 import { ConsoleLogger } from '../../src/common/logger/console-logger';
 import { DTO } from '../../src/domain/dto';
 import { Logger } from '../../src/common/logger/logger';
-import { GeneraQueryService, GeneralCommandService } from '../../src/app/service/types';
+import { GeneraQueryService, GeneralCommandService, GeneralEventService } from '../../src/app/service/types';
+import { ModuleResolves } from '../../src/app/module/module-resolves';
+import { ModuleResolveInstance } from '../../src/app/resolves/types';
 
 export class TestServerResolverMock extends ServerResolver {
-  async init(): Promise<void> {
+  init(): void {
     throw new Error('Method not implemented.');
   }
 
@@ -39,32 +38,20 @@ export class TestServerResolverMock extends ServerResolver {
   }
 }
 
-export class TestResolverMock extends ModuleResolver<Module> {
-  get moduleConfig(): ModuleConfig {
+export class TestModuleResolverMock extends ModuleResolver<Module, ModuleResolves<Module>> {
+  protected moduleConfig: ModuleConfig = {
+    ModuleUrl: 'some-url-path',
+  };
+
+  getFacade(...args: unknown[]): ModuleResolveInstance {
     throw new Error('Method not implemented.');
   }
 
-  getModuleConfig(): ModuleConfig {
+  getRealisation(...args: unknown[]): ModuleResolveInstance {
     throw new Error('Method not implemented.');
   }
 
-  getEventDelivererWorker(): EventDelivererWorkerProxy {
-    throw new Error('Method not implemented.');
-  }
-
-  getDatabase(): Database {
-    throw new Error('Method not implemented.');
-  }
-
-  getEventRepository(): DomainEventRepository {
-    throw new Error('Method not implemented.');
-  }
-
-  getRealisation(...args: unknown[]): unknown {
-    throw new Error('Method not implemented.');
-  }
-
-  getRepository(...args: unknown[]): unknown {
+  getRepository(...args: unknown[]): ModuleResolveInstance {
     throw new Error('Method not implemented.');
   }
 }
@@ -77,13 +64,16 @@ export class TestModuleMock extends Module {
   queryServices: GeneraQueryService[] = [];
 
   commandServices: GeneralCommandService[] = [];
+
+  eventServices: GeneralEventService[] = [];
 }
 
 export const testServerResolverMock = new TestServerResolverMock();
 
-export const testResolverMock = new TestResolverMock(testServerResolverMock);
+export const testmoduleResolverMock = new TestModuleResolverMock(
+  {} as ModuleResolves<Module>,
+);
 
 export const testModuleMock = new TestModuleMock();
 
-testResolverMock.init(testModuleMock);
-testModuleMock.init(testResolverMock);
+testModuleMock.init(testmoduleResolverMock, testServerResolverMock);

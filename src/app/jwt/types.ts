@@ -13,6 +13,6 @@ export type DecodedToken<PAYLOAD extends DTO> = PlainJWTPayload<PAYLOAD> & {
 };
 
 export type JWTTokens = {
-  accessToken: string,
-  refreshToken: string,
+  access: string,
+  refresh: string,
 }

@@ -11,23 +11,24 @@ export type ValidationError = {
   }
 }
 
-export type BadRequestError<L extends Locale> = ErrorDod<L, 'Bad request', 'app-error'>;
+export type BadRequestError<L extends Locale<'Bad request'>> = ErrorDod<'Bad request', L, 'app-error'>;
 
-export type NotFoundError<L extends Locale> = ErrorDod<L, 'Not found', 'app-error'>;
+export type NotFoundError<L extends Locale<'Not found'>> = ErrorDod<'Not found', L, 'app-error'>;
 
-export type NetError<L extends Locale> = ErrorDod<L, 'Net error', 'app-error'>;
+export type NetError<L extends Locale<'Net error'>> = ErrorDod<'Net error', L, 'app-error'>;
 
-export type PermissionDeniedError<LOCALE extends Locale> =
-  ErrorDod<LOCALE, 'Permission denied', 'domain-error'>;
+export type PermissionDeniedError<LOCALE extends Locale<'Permission denied'>> =
+  ErrorDod<'Permission denied', LOCALE, 'domain-error'>;
 
-export type InternalError<LOCALE extends Locale> =
-  ErrorDod<LOCALE, 'Internal error', 'app-error'>;
+export type InternalError<LOCALE extends Locale<'Internal error'>> =
+  ErrorDod<'Internal error', LOCALE, 'app-error'>;
 
 export type ServiceBaseErrors =
-  BadRequestError<Locale>
-  | NotFoundError<Locale>
-  | PermissionDeniedError<Locale>
-  | InternalError<Locale>
+  BadRequestError<Locale<'Bad request'>>
+  | NotFoundError<Locale<'Not found'>>
+  | NetError<Locale<'Net error'>>
+  | PermissionDeniedError<Locale<'Permission denied'>>
+  | InternalError<Locale<'Internal error'>>
   | ValidationError;
 
-export type BackendBaseErrors = ServiceBaseErrors | NetError<Locale>;
+export type BackendBaseErrors = ServiceBaseErrors;
