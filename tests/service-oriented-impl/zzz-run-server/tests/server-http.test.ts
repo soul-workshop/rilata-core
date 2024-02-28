@@ -35,6 +35,7 @@ describe('process http requests by server class', async () => {
       'getPersonByIin',
       { iin: '123123123123' },
     );
+
     const req = new Request(new URL('http://0.0.0.0:3000/api/subject-module/'), {
       method: 'post',
       headers: {
