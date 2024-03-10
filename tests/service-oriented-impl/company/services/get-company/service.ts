@@ -9,7 +9,7 @@ import { getCompanyValidator } from './v-map';
 export class GetingCompanyService extends QueryService<GetCompanyServiceParams> {
   serviceName = 'getCompany' as const;
 
-  protected aRootName = 'CompanyAR' as const;
+  aRootName = 'CompanyAR' as const;
 
   protected supportedCallers = ['DomainUser', 'ModuleCaller'] as const;
 

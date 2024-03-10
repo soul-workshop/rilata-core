@@ -1,7 +1,6 @@
 import { Caller } from '../../app/caller';
 import { UuidType } from '../../common/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
-import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
 import { GeneralARDParams } from '../domain-data/params-types';
 import { OutputAggregateDataTransfer, GeneralEventDod } from '../domain-data/domain-types';
 import {
@@ -20,6 +19,7 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
   constructor(
     protected aRootName: GetARParamsAggregateName<PARAMS>,
     protected attrs: PARAMS['attrs'],
+    protected idName: keyof PARAMS['attrs'] & string,
     protected version: number,
     protected outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,
     protected logger: Logger,
@@ -30,6 +30,7 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
   getMeta(): PARAMS['meta'] {
     return {
       name: this.aRootName,
+      idName: this.idName,
       domainType: 'aggregate',
       version: this.version,
     };
@@ -47,8 +48,16 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     return this.version;
   }
 
+  getId(): string {
+    return this.attrs[this.idName];
+  }
+
   getName(): string {
     return this.aRootName;
+  }
+
+  getLogger(): Logger {
+    return this.logger;
   }
 
   registerEvent<EVENT extends GetARParamsEvents<PARAMS>>(

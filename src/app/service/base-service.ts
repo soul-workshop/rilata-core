@@ -17,7 +17,7 @@ export abstract class BaseService<S_PARAMS extends GeneralBaseServiceParams>
   extends Service {
   abstract override serviceName: GetServiceName<S_PARAMS>;
 
-  protected abstract aRootName: S_PARAMS['aRootName'];
+  abstract override aRootName: S_PARAMS['aRootName'];
 
   protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
@@ -29,7 +29,7 @@ export abstract class BaseService<S_PARAMS extends GeneralBaseServiceParams>
   async execute(input: S_PARAMS['input']): Promise<ServiceResult<S_PARAMS>> {
     const checksResult = await this.runInitialChecks(input);
     if (checksResult.isFailure()) return checksResult;
-    return this.runDomain(input);
+    return this.runDomain(input) as Promise<ServiceResult<S_PARAMS>>;
   }
 
   /**

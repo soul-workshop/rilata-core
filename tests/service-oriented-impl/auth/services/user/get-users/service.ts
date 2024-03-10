@@ -10,7 +10,7 @@ import { getUsersValidator } from './v-map';
 export class GetingUsersService extends QueryService<GetUsersServiceParams> {
   serviceName = 'getUsers' as const;
 
-  protected aRootName = 'UserAR' as const;
+  aRootName = 'UserAR' as const;
 
   protected supportedCallers = ['DomainUser', 'ModuleCaller'] as const;
 

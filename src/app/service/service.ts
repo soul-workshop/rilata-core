@@ -3,7 +3,7 @@ import { Result } from '../../common/result/types';
 import { GeneralModuleResolver } from '../module/types';
 
 export abstract class Service {
-  protected abstract aRootName: string;
+  abstract aRootName: string;
 
   abstract serviceName: string;
 
@@ -17,8 +17,4 @@ export abstract class Service {
   }
 
   abstract execute(...args: unknown[]): Promise<Result<unknown, unknown>>
-
-  getAggregateName(): string {
-    return this.aRootName;
-  }
 }

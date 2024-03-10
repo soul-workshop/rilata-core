@@ -48,10 +48,6 @@ implements Repositoriable, Realisable, Facadable {
     return this.resolves.db;
   }
 
-  getEventRepository(): MR['eventRepo'] {
-    return this.resolves.eventRepo;
-  }
-
   getModuleConfig(): ModuleConfig {
     return this.moduleConfig;
   }

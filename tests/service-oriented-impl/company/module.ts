@@ -18,6 +18,4 @@ export class CompanyModule extends Module {
   ];
 
   eventServices: GeneralEventService[] = [];
-
-  services: GeneraQueryService[] = [];
 }

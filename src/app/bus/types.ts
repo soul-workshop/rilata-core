@@ -1,22 +1,57 @@
 import { UuidType } from '../../common/types';
-import { GeneralEventDod } from '../../domain/domain-data/domain-types';
-import { EventAsJson } from '../database/types';
+import { BusPayloadAsJson } from '../database/types';
 
-export type SubscribeToEvent = {
-  moduleName: string,
-  eventName: string,
+export type EventBusMessageType = 'event' | 'aggregate';
+
+type SubcribeToMessageBody = {
+  busMessageName: string,
+  publishModuleName: string,
+  handlerModuleName: string,
 }
 
-export type PublishedEvent = SubscribeToEvent & {
-  event: EventAsJson,
-  aRootId: UuidType,
+export type SubcribeToMessage = SubcribeToMessageBody & {
+  type: 'message',
 }
 
-export type DeliveryEventType = {
+export type SubcribeToEvent = SubcribeToMessageBody & {
+  type: 'event',
+}
+
+export type SubcribeToAggregate = SubcribeToMessageBody & {
+  type: 'aggregate',
+}
+
+/** Тип для подписки в шину */
+export type SubcribeToBusMessage = SubcribeToMessage | SubcribeToEvent | SubcribeToAggregate;
+
+type MessageBodyType = {
+  busMessageId: UuidType,
+  busMessageName: string,
+  payload: BusPayloadAsJson,
   requestId: UuidType,
-  event: EventAsJson,
-  eventName: string,
-  aRootId: UuidType,
 }
 
-export type EventHandler = (event: GeneralEventDod) => Promise<void>
+type EventBodyType = MessageBodyType & {
+  aRootName: string,
+}
+
+export type DeliveryMessage = MessageBodyType & {
+  type: 'message',
+}
+
+export type DeliveryEvent = EventBodyType & {
+  type: 'event',
+}
+
+/** Тип для доставщика в шину */
+export type DeliveryBusMessage = DeliveryMessage | DeliveryEvent;
+
+type PublishBodyType = {
+  publishModuleName: string,
+}
+export type PublishMessage = DeliveryMessage & PublishBodyType;
+
+export type PublishEvent = DeliveryEvent & PublishBodyType;
+
+/** Тип для публикации в шину */
+export type PublishBusMessage = PublishMessage | PublishEvent;

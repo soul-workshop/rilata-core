@@ -2,6 +2,7 @@ import { storeDispatcher } from '../../../app/async-store/store-dispatcher';
 import { Caller } from '../../../app/caller';
 import { GeneralRequestDod, GeneralErrorDod, GeneralEventDod } from '../../../domain/domain-data/domain-types';
 import { UuidType } from '../../types';
+import { dtoUtility } from '../dto/dto-utility';
 import { uuidUtility } from '../uuid/uuid-utility';
 
 /** Утилита для работы с объектами DomainObjectData */
@@ -39,7 +40,7 @@ class DodUtility {
   getEvent<E extends GeneralEventDod>(
     name: E['meta']['name'],
     attrs: E['attrs'],
-    aRootAttrs?: E['aRootAttrs'],
+    aRootAttrs: E['aRoot'],
     requestId?: E['meta']['requestId'],
     caller?: E['caller'],
     moduleName?: E['meta']['moduleName'],
@@ -52,10 +53,23 @@ class DodUtility {
         name,
         moduleName: moduleName ?? this.getCurrentModuleName(),
         domainType: 'event',
+        created: Date.now(),
       },
       caller: caller ?? this.getCurrentCaller(),
-      aRootAttrs,
+      aRoot: aRootAttrs,
     } as E;
+  }
+
+  /** Перевыпустить событие. Используется для перевыпуска cmd события в read модуле. */
+  regenerateEvent(event: GeneralEventDod, moduleName: string, newName?: string): GeneralEventDod {
+    return dtoUtility.replaceAttrs(event, {
+      meta: {
+        name: newName ?? event.meta.name,
+        eventId: uuidUtility.getNewUUID(),
+        moduleName,
+        created: Date.now(),
+      },
+    });
   }
 
   getRequestDod<A extends GeneralRequestDod>(

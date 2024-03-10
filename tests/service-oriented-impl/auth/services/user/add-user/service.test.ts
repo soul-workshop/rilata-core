@@ -1,6 +1,8 @@
 import {
   beforeEach, describe, expect, spyOn, test,
 } from 'bun:test';
+import { DeliveryEvent } from '../../../../../../src/app/bus/types';
+import { EventRepository } from '../../../../../../src/app/database/event-repository';
 import { TestDatabase } from '../../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
@@ -39,10 +41,12 @@ describe('add user service tests', async () => {
     const userAr = result.value as AddUserOut;
     expect(uuidUtility.isValidValue(userAr.userId)).toBe(true);
 
-    const eventRepo = resolver.getEventRepository();
-    const events = await eventRepo.getNotPublishedEvents();
+    const eventRepo = EventRepository.instance(resolver);
+    const events = await eventRepo.getNotPublished();
     expect(events.length).toBe(1);
-    expect(events[0].aRootId).toBe(userAr.userId);
+    const eventId = events[0].busMessageId;
+    const event = await eventRepo.getBusMessage(eventId);
+    expect(event?.aRoot.attrs.userId).toBe(userAr.userId);
   });
 
   test('успех, пользователь с таким id существует и service перезапустился', async () => {
@@ -67,10 +71,12 @@ describe('add user service tests', async () => {
     expect(result.isSuccess()).toBe(true);
     const userAr = result.value as AddUserOut;
 
-    const eventRepo = resolver.getEventRepository();
-    const events = await eventRepo.getNotPublishedEvents();
+    const eventRepo = EventRepository.instance(resolver);
+    const events = await eventRepo.getNotPublished();
     expect(events.length).toBe(1);
-    expect(events[0].aRootId).toBe(userAr.userId);
+    const eventId = events[0].busMessageId;
+    const event = await eventRepo.getBusMessage(eventId);
+    expect(event?.aRoot.attrs.userId).toBe(userAr.userId);
 
     // reexecute service by DatabaseObjectSavingError exception
     expect(repoAddUserMock).toHaveBeenCalledTimes(2);

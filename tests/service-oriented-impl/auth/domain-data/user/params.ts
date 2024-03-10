@@ -7,7 +7,7 @@ export type UserAttrs = {
   personIin: string,
 }
 
-export type UserMeta = DomainMeta<'UserAR'>;
+export type UserMeta = DomainMeta<'UserAR', 'userId'>;
 
 export type UserParams = AggregateRootDataParams<
   UserAttrs, UserMeta, never, []

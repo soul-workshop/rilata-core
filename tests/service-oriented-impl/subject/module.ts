@@ -18,6 +18,4 @@ export class SubjectModule extends Module {
   ];
 
   eventServices: GeneralEventService[] = [];
-
-  services: GeneraQueryService[] = [];
 }

@@ -12,7 +12,7 @@ export type FullCompany = Omit<CompanyAttrs, 'employees'> & {
   employees: FullUser[],
 }
 
-export type FullCompanyDomainMeta = DomainMeta<'FullCompany'>
+export type FullCompanyDomainMeta = DomainMeta<'FullCompany', 'id'>
 
 export type FullCompanyParams = AggregateRootDataParams<
   FullCompany,

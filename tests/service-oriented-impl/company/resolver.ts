@@ -6,6 +6,8 @@ import { CompanyResolves } from './resolves';
 import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { AuthFacade } from '../auth/facade';
 import { SubjectFacade } from '../subject/facade';
+import { EventRepository } from '../../../src/app/database/event-repository';
+import { BusMessageRepository } from '../../../src/app/database/bus-message-repository';
 
 export class CompanyModuleResolver extends ModuleResolver<CompanyModule, CompanyResolves> {
   protected moduleConfig: ModuleConfig = {
@@ -18,6 +20,9 @@ export class CompanyModuleResolver extends ModuleResolver<CompanyModule, Company
 
   getRepository(key: unknown): ModuleResolveInstance {
     if (key === CompanyRepository) return this.resolves.companyRepo;
+    if (key === EventRepository || key === BusMessageRepository) {
+      return this.resolves.busMessageRepo;
+    }
     throw this.getLogger().error(`not find repo to key: ${key}`);
   }
 

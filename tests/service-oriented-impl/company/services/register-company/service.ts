@@ -25,7 +25,7 @@ import { RegisterCompanyValidator } from './v.map';
 export class RegisteringCompanyService extends CommandService<CompanyRegisteredServiceParams> {
   serviceName = 'registerCompany' as const;
 
-  protected aRootName = 'CompanyAR' as const;
+  aRootName = 'CompanyAR' as const;
 
   protected supportedCallers = ['DomainUser'] as const;
 
@@ -108,10 +108,6 @@ export class RegisteringCompanyService extends CommandService<CompanyRegisteredS
     };
     const companyRepo = CompanyRepository.instance(this.moduleResolver);
     const company = companyFactory.create(companyAttrs);
-    const eventRepo = this.moduleResolver.getEventRepository();
-    await Promise.all(
-      company.getHelper().getEvents().map((e) => eventRepo.addEvent(e, company.getId())),
-    );
     return companyRepo.addCompany(company);
   }
 

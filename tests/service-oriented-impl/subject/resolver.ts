@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { BusMessageRepository } from '../../../src/app/database/bus-message-repository';
+import { EventRepository } from '../../../src/app/database/event-repository';
 import { ModuleResolver } from '../../../src/app/module/module-resolver';
 import { ModuleConfig } from '../../../src/app/module/types';
 import { ModuleResolveInstance } from '../../../src/app/resolves/types';
@@ -17,6 +19,9 @@ export class SubjectModuleResolver extends ModuleResolver<SubjectModule, Subject
 
   getRepository(key: unknown): ModuleResolveInstance {
     if (key === PersonRepository) return this.resolves.personRepo;
+    if (key === EventRepository || key === BusMessageRepository) {
+      return this.resolves.busMessageRepo;
+    }
     throw Error(`not found repository by key: ${key}`);
   }
 

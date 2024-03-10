@@ -1,6 +1,7 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
+import { EventRepository } from '../../../../../../src/app/database/event-repository';
 import { TestDatabase } from '../../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
@@ -46,7 +47,7 @@ describe('add person service tests', async () => {
     const getResult = await personRepo.getById(value.id);
     expect(getResult.isSuccess()).toBe(true);
     expect(getResult.value).toBeInstanceOf(PersonAR);
-    const eventRepo = resolver.getEventRepository();
+    const eventRepo = EventRepository.instance(resolver);
     const events = await eventRepo.getAggregateEvents(value.id);
     expect(events.length).toBe(1);
     expect(events[0].meta.name).toBe('PersonAddedEvent');

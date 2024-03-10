@@ -1,4 +1,6 @@
-import { ErrorDod, EventDod } from '../../../domain/domain-data/domain-types';
+import {
+  ARDT, DomainMeta, ErrorDod, EventDod,
+} from '../../../domain/domain-data/domain-types';
 
 export namespace DODPrivateFixtures {
   export type PhoneAttrs = {
@@ -46,6 +48,8 @@ export namespace DODPrivateFixtures {
     contacts: PersonContactsAttrs,
   };
 
+  export type PersonMeta = DomainMeta<'PersonAR', 'id'>
+
   export const personAttrs: PersonAttrs = {
     id: '1',
     name: 'Nur',
@@ -71,7 +75,9 @@ export namespace DODPrivateFixtures {
     },
   };
 
-  export type PersonPhoneAddedEventDOD = EventDod<PhoneAttrs, 'PersonPhoneAddedEvent', undefined>;
+  export type PersonARDT = ARDT<PersonAttrs, PersonMeta>;
+
+  export type PersonPhoneAddedEventDOD = EventDod<PhoneAttrs, 'PersonPhoneAddedEvent', PersonARDT>;
 
   export type InternalAppLocale = { text: string, hint: { traceback: 'any object' }, name: 'InternalAppError' };
 
@@ -79,5 +85,5 @@ export namespace DODPrivateFixtures {
 
   export type PersonNotExitsErrorDOD = ErrorDod<'PersonNotExistError', { text: string, hint: { personId: string }, name: 'PersonNotExistError' }>;
 
-  export type PersonEmailAddedEventDOD = EventDod<PersonAttrs, 'PersonEmailAddedEvent', undefined>;
+  export type PersonEmailAddedEventDOD = EventDod<PersonAttrs, 'PersonEmailAddedEvent', PersonARDT>;
 }

@@ -18,7 +18,7 @@ export function getSubjectResolves(runMode: RunMode): SubjectResolves {
       runMode: 'test',
       moduleName: 'SubjectModule',
       db,
-      eventRepo: new FakeClassImplements.TestEventRepository(db),
+      busMessageRepo: new FakeClassImplements.TestEventRepository(db),
       personRepo: new PersonRepositoryImpl(db),
     };
   }

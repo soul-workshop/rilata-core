@@ -33,7 +33,7 @@ export type PersonAttrs = {
   contacts: ContactsAttrs,
 }
 
-export type PersonMeta = DomainMeta<'PersonAR'>;
+export type PersonMeta = DomainMeta<'PersonAR', 'id'>;
 
 // при вызове у агрегата personAR.getHelper().getOutput() вернется объект без комментов техподдержки
 export type PersonParams = AggregateRootDataParams<

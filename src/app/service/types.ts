@@ -89,12 +89,8 @@ export type RequestDodValidator<
     GetValidationBody<S_PARAMS>
   >
 
-export type ServiceResult<
-  P extends GeneralBaseServiceParams
-> = Result<
-  P['errors'],
-  P['successOut']
->
+export type ServiceResult<P extends GeneralBaseServiceParams> =
+  Result<P['errors'], P['successOut']>
 
 export type GetServiceErrorsResult<
   P extends GeneralQueryServiceParams | GeneralCommandServiceParams

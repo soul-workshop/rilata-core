@@ -8,7 +8,7 @@ import { addPersonValidator } from './v-map';
 export class AddingPersonService extends CommandService<AddPersonServiceParams> {
   serviceName = 'addPerson' as const;
 
-  protected aRootName = 'PersonAR' as const;
+  aRootName = 'PersonAR' as const;
 
   protected supportedCallers = ['ModuleCaller', 'DomainUser'] as const;
 
@@ -19,10 +19,6 @@ export class AddingPersonService extends CommandService<AddPersonServiceParams> 
   ): Promise<ServiceResult<AddPersonServiceParams>> {
     const factory = new PersonFactory(this.moduleResolver.getLogger());
     const person = factory.create(input.attrs);
-    const eventRepo = this.moduleResolver.getEventRepository();
-    await Promise.all(person.getHelper().getEvents().map(
-      (e) => eventRepo.addEvent(e, person.getId()),
-    ));
     const repo = PersonRepository.instance(this.moduleResolver);
     return repo.addPerson(person);
   }

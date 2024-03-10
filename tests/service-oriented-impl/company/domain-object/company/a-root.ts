@@ -8,24 +8,16 @@ import { companyAttrsVMap } from '../../domain-data/company/v-map';
 export class CompanyAR extends AggregateRoot<CompanyParams> {
   protected helper: AggregateRootHelper<CompanyParams>;
 
-  protected attrs: CompanyAttrs;
-
-  protected logger: Logger;
-
-  constructor(attrs: CompanyAttrs, version: number, logger: Logger) {
+  constructor(protected attrs: CompanyAttrs, version: number, logger: Logger) {
     super();
-    this.logger = logger;
     this.checkInveriants(attrs);
-    this.attrs = attrs;
-    this.helper = new AggregateRootHelper<CompanyParams>('CompanyAR', attrs, version, [], logger);
+    this.helper = new AggregateRootHelper<CompanyParams>(
+      'CompanyAR', attrs, 'id', version, [], logger,
+    );
   }
 
   getShortName(): string {
     return `Компания: "${this.attrs.name}"`;
-  }
-
-  getId(): string {
-    return this.attrs.bin;
   }
 
   protected checkInveriants(attrs: CompanyAttrs): void {
@@ -34,7 +26,7 @@ export class CompanyAR extends AggregateRoot<CompanyParams> {
     );
     const invariantsResult = invariantValidator.validate(attrs);
     if (invariantsResult.isFailure()) {
-      throw this.logger.error('не соблюдены инварианты агрегата Company', {
+      throw this.helper.getLogger().error('не соблюдены инварианты агрегата Company', {
         companyAttrs: attrs,
         validatorValue: invariantsResult.value,
       });

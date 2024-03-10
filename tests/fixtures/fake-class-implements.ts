@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { storeDispatcher } from '../../src/app/async-store/store-dispatcher';
-import { DeliveryEventType } from '../../src/app/bus/types';
+import { DelivererToBus } from '../../src/app/bus/deliverer-to-bus';
+import { DeliveryBusMessage, DeliveryEvent } from '../../src/app/bus/types';
 import { EventRepository } from '../../src/app/database/event-repository';
 import { TestDatabase } from '../../src/app/database/test-database';
 import { TestRepository } from '../../src/app/database/test-repository';
 import { TestBatchRecords } from '../../src/app/database/types';
-import { EventDeliverer } from '../../src/app/event-deliverer/event-deliverer';
 import { VerifyTokenError } from '../../src/app/jwt/errors';
 import { TokenCreator } from '../../src/app/jwt/token-creator.interface';
 import { TokenVerifier } from '../../src/app/jwt/token-verifier.interface';
@@ -287,81 +287,90 @@ export namespace FakeClassImplements {
   }
 
   type EventRecord = {
-      id: UuidType,
-      name: string,
-      aRootId: UuidType,
-      event: GeneralEventDod,
+      busMesssageId: UuidType,
+      requestId: UuidType,
+      busMessageName: string,
+      payload: GeneralEventDod,
       published: boolean,
+      aRootName: string,
+      aRootId: UuidType,
     }
 
   export class TestEventRepository implements EventRepository {
-    protected eventDeliverer: EventDeliverer | undefined;
+    protected delivererToBus: DelivererToBus | undefined;
 
-    testRepo: TestMemoryRepository<'domain_event', EventRecord, 'id'>;
+    testRepo: TestMemoryRepository<'domain_event', EventRecord, 'busMesssageId'>;
 
     constructor(testDb: TestMemoryDatabase) {
-      this.testRepo = new TestMemoryRepository('domain_event', 'id', testDb);
+      this.testRepo = new TestMemoryRepository('domain_event', 'busMesssageId', testDb);
     }
 
     init(resovler: GeneralModuleResolver): void {}
-
-    async getEvent<E extends GeneralEventDod>(id: string): Promise<E | undefined> {
-      const result = await this.testRepo.find(id);
-      if (result) return result.event as E;
-      return undefined;
-    }
 
     async getAggregateEvents<A extends GeneralARDParams>(
       aRootId: UuidType,
     ): Promise<GetARParamsEvents<A>[]> {
       return (await this.testRepo.all())
         .filter((record) => record.aRootId === aRootId)
-        .map((record) => record.event) as GetARParamsEvents<A>;
+        .map((record) => record.payload) as GetARParamsEvents<A>;
     }
 
-    async addEvent(event: GeneralEventDod, aRootId: UuidType): Promise<void> {
-      this.testRepo.add({
-        id: event.meta.requestId,
-        name: event.meta.name,
-        event,
-        aRootId,
-        published: false,
-      });
+    async getBusMessage(busMessageId: string): Promise<GeneralEventDod | undefined> {
+      const record = await this.testRepo.find(busMessageId);
+      return record ? record.payload : undefined;
+    }
 
-      if (this.eventDeliverer) {
-        const deliverEvent: DeliveryEventType = {
-          event: JSON.stringify(event),
+    async addEvents(events: GeneralEventDod[]): Promise<void> {
+      events.forEach((event) => {
+        this.testRepo.add({
+          busMesssageId: event.meta.eventId,
           requestId: event.meta.requestId,
-          eventName: event.meta.name,
-          aRootId,
-        };
-        this.eventDeliverer.handle(deliverEvent);
-      }
+          busMessageName: event.meta.name,
+          payload: event,
+          aRootId: event.aRoot.attrs[event.aRoot.meta.idName],
+          published: false,
+          aRootName: event.aRoot.meta.name,
+        });
+
+        if (this.delivererToBus) {
+          const deliverEvent: DeliveryEvent = {
+            type: 'event',
+            busMessageId: event.meta.eventId,
+            busMessageName: event.meta.name,
+            requestId: event.meta.requestId,
+            payload: JSON.stringify(event),
+            aRootName: event.aRoot.meta.name,
+          };
+          this.delivererToBus.handle(deliverEvent);
+        }
+      });
     }
 
-    async isEventExist(requestId: string): Promise<boolean> {
+    async busMessageIsExist(requestId: string): Promise<boolean> {
       return Boolean(await this.testRepo.find(requestId));
     }
 
-    async getNotPublishedEvents(): Promise<DeliveryEventType[]> {
+    async getNotPublished(): Promise<DeliveryBusMessage[]> {
       return (await this.testRepo.all())
         .filter((rec) => rec.published === false)
         .map((rec) => ({
-          requestId: rec.id,
-          eventName: rec.name,
-          aRootId: rec.aRootId,
-          event: JSON.stringify(rec.event),
+          type: 'event',
+          busMessageId: rec.busMesssageId,
+          busMessageName: rec.busMessageName,
+          payload: JSON.stringify(rec.payload),
+          requestId: rec.busMesssageId,
+          aRootName: rec.aRootName,
         }));
     }
 
-    async markAsPublished(requestId: string): Promise<void> {
-      const record = await this.testRepo.find(requestId);
-      if (!record) throw Error(`not found event by id${requestId}`);
+    async markAsPublished(busMessageId: string): Promise<void> {
+      const record = await this.testRepo.find(busMessageId);
+      if (!record) throw Error(`not found event by id${busMessageId}`);
       record.published = true;
     }
 
-    subscribe(eventDeliverer: EventDeliverer): void {
-      this.eventDeliverer = eventDeliverer;
+    subscribe(delivererToBus: DelivererToBus): void {
+      this.delivererToBus = delivererToBus;
     }
   }
 }

@@ -27,7 +27,7 @@ export function getCompanyResolves(runMode: RunMode): CompanyResolves {
       runMode: 'test',
       moduleName: 'CompanyModule',
       db,
-      eventRepo,
+      busMessageRepo: eventRepo,
       companyRepo,
       subjectFacade: new SubjectFacadeOneServerImpl(),
       authFacade: new AuthFacadeOneServerImpl(),

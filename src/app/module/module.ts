@@ -10,13 +10,13 @@ import { ServerResolver } from '../server/server-resolver';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { StorePayload } from '../async-store/types';
 import { Caller } from '../caller';
-import { GeneralErrorDod, GeneralRequestDod } from '../../domain/domain-data/domain-types';
+import { GeneralEventDod } from '../../domain/domain-data/domain-types';
 import { failure } from '../../common/result/failure';
 import { Locale } from '../../domain/locale';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
-import { BadRequestError, InternalError, ServiceBaseErrors } from '../service/error-types';
-import { ResultDTO } from '../result-dto';
+import { BadRequestError, InternalError } from '../service/error-types';
 import { Result } from '../../common/result/types';
+import { AssertionException } from '../../common/exeptions';
 
 export abstract class Module {
   readonly abstract moduleType: ModuleType;
@@ -49,10 +49,6 @@ export abstract class Module {
     this.moduleResolver.stop();
   }
 
-  getServiceByName<S extends Service = Service>(name: S['serviceName']): S {
-    return this.services.find((s) => s.serviceName === name) as S;
-  }
-
   getModuleResolver(): GeneralModuleResolver {
     return this.moduleResolver;
   }
@@ -62,14 +58,14 @@ export abstract class Module {
   }
 
   async executeService<S extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
-    requestDod: GeneralRequestDod,
+    requestDod: S['input'],
     caller: Caller,
   ): Promise<ServiceResult<S>> {
     try {
-      const reqName = requestDod.meta.name;
-      const service = this.getServiceByName(reqName);
+      const serviceName = requestDod.meta.name;
+      const service = this.getServiceByName(serviceName);
       if (service === undefined) {
-        return this.notFindedServiceByName(reqName);
+        return this.notFindedServiceByName(serviceName);
       }
 
       const store: StorePayload = {
@@ -96,6 +92,42 @@ export abstract class Module {
       );
       return failure(err);
     }
+  }
+
+  async executeEventService(eventDod: GeneralEventDod): Promise<void> {
+    try {
+      const serviceName = eventDod.meta.name;
+      const service = this.getServiceByName(serviceName);
+      if (!service) {
+        const errStr = `not finded service by name: ${serviceName} in module: ${this.moduleName}`;
+        throw new AssertionException(errStr);
+      }
+      const caller = eventDod.caller.type === 'ModuleCaller'
+        ? eventDod.caller.user
+        : eventDod.caller;
+      const store: StorePayload = {
+        caller,
+        moduleResolver: this.moduleResolver,
+        requestId: eventDod.meta.requestId,
+        databaseErrorRestartAttempts: 1,
+      };
+      const threadStore = storeDispatcher.getThreadStore();
+      await threadStore.run(
+        store,
+        (serviceInput) => service.execute(serviceInput),
+        eventDod,
+      );
+    } catch (e) {
+      if (this.moduleResolver.getRunMode() === 'test') {
+        this.moduleResolver.getServerResolver().getServer().stop();
+        throw e;
+      }
+      throw this.moduleResolver.getLogger().fatalError('server internal error', eventDod, e as Error);
+    }
+  }
+
+  getServiceByName<S extends Service = Service>(name: S['serviceName']): S {
+    return this.services.find((s) => s.serviceName === name) as S;
   }
 
   protected notFindedServiceByName(reqName: string): Result<BadRequestError<Locale<'Bad request'>>, never> {

@@ -4,8 +4,6 @@ import { GeneralBaseServiceParams, ServiceResult } from './types';
 import { DatabaseObjectSavingError, OptimisticLockVersionMismatchError } from '../../common/exeptions';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { BaseService } from './base-service';
-import { AggregateRoot } from '../../domain/domain-object/aggregate-root';
-import { GeneralARDParams } from '../../domain/domain-data/params-types';
 
 /** Сервис, приводящий к изменению состояния приложения (доменной области) */
 export abstract class MuttableService<
@@ -67,12 +65,5 @@ export abstract class MuttableService<
       store.unitOfWorkId = undefined;
       throw e;
     }
-  }
-
-  protected async saveArootEvents(aRoot: AggregateRoot<GeneralARDParams>): Promise<void[]> {
-    const eventRepo = this.moduleResolver.getEventRepository();
-    return Promise.all(
-      aRoot.getHelper().getEvents().map((e) => eventRepo.addEvent(e, aRoot.getId())),
-    );
   }
 }

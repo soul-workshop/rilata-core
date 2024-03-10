@@ -15,7 +15,7 @@ import { getFullCompanyValidator } from './v-map';
 export class GetingFullCompanyService extends QueryService<GetFullCompanyServiceParams> {
   serviceName = 'GetFullCompanyRequestDod' as const;
 
-  protected aRootName = 'FullCompany' as const;
+  aRootName = 'FullCompany' as const;
 
   protected supportedCallers = ['DomainUser'] as const;
 

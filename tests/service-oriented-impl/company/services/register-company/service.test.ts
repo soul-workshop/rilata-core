@@ -3,6 +3,7 @@ import {
   describe, test, expect, beforeEach, spyOn, afterEach, Mock,
 } from 'bun:test';
 import { DomainUser } from '../../../../../src/app/caller';
+import { EventRepository } from '../../../../../src/app/database/event-repository';
 import { TestDatabase } from '../../../../../src/app/database/test-database';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
@@ -54,7 +55,7 @@ describe('register company saga service tests', async () => {
     addUserMock.mockRestore();
   });
 
-  describe('добавление компании с новой персоной админа (requestType = "newPerson")', () => {
+  describe('добавление компании с новой персоной админа requestType = newPerson', () => {
     const registerCompanyRequestDodAttrs: RegisterCompanyRequestDodAttrs = {
       person: {
         type: 'newPerson',
@@ -120,7 +121,7 @@ describe('register company saga service tests', async () => {
         admins: [newUserId],
       });
 
-      const eventRepo = resolver.getEventRepository();
+      const eventRepo = EventRepository.instance(resolver);
       const events = await eventRepo.getAggregateEvents(company.getId());
       expect(events.length).toBe(1);
       expect(events[0].meta.name).toBe('CompanyRegisteredEvent');
@@ -225,17 +226,19 @@ describe('register company saga service tests', async () => {
     test('успех, компания успешно добавлена, пользователь добавлен, персона существующая', async () => {
       // preparation mocks
       addPersonMock.mockImplementation(() => { throw Error('not be called'); });
-      getPersonMock.mockImplementation(async (iin, caller) => (
-        success({
-          id: existPersonId,
-          iin: '000111222333',
-          firstName: 'Will',
-          lastName: 'Smith',
-          contacts: {
-            phones: [],
-          },
-        })
-      ));
+      getPersonMock.mockImplementation(async (iin, caller) => {
+          return (
+              success({
+                  id: existPersonId,
+                  iin: '000111222333',
+                  firstName: 'Will',
+                  lastName: 'Smith',
+                  contacts: {
+                      phones: [],
+                  },
+              })
+          );
+      });
       addUserMock.mockResolvedValueOnce(success({ userId: newUserId }));
 
       // execute service
@@ -275,7 +278,7 @@ describe('register company saga service tests', async () => {
         admins: [newUserId],
       });
 
-      const eventRepo = resolver.getEventRepository();
+      const eventRepo = EventRepository.instance(resolver);
       const events = await eventRepo.getAggregateEvents(company.getId());
       expect(events.length).toBe(1);
       expect(events[0].meta.name).toBe('CompanyRegisteredEvent');

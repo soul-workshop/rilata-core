@@ -30,7 +30,7 @@ export type GetARParamsAggregateName<AR_PARAMS extends GeneralARDParams> =
 
 export type GetNoOutKeysFromARParams<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS extends AggregateRootDataParams<
-    DomainAttrs, DomainMeta<string>, GeneralActionParams, infer T
+    DomainAttrs, DomainMeta<string, string>, GeneralActionParams, infer T
   >
     ? T
     : never

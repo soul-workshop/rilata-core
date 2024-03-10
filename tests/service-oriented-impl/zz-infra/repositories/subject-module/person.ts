@@ -1,3 +1,5 @@
+import { EventRepository } from '../../../../../src/app/database/event-repository';
+import { ModuleResolver } from '../../../../../src/app/module/module-resolver';
 import { DatabaseObjectSavingError } from '../../../../../src/common/exeptions';
 import { Logger } from '../../../../../src/common/logger/logger';
 import { failure } from '../../../../../src/common/result/failure';
@@ -20,12 +22,15 @@ export class PersonRepositoryImpl implements PersonRepository {
 
   protected logger!: Logger;
 
+  protected resolver!: SubjectModuleResolver;
+
   constructor(testDb: FakeClassImplements.TestMemoryDatabase) {
     this.testRepo = new FakeClassImplements.TestMemoryRepository('person_repo', 'id', testDb);
   }
 
   init(resolver: SubjectModuleResolver): void {
     this.logger = resolver.getLogger();
+    this.resolver = resolver;
   }
 
   async addPerson(person: PersonAR): Promise<Result<PersonAlreadyExistsError, { id: string; }>> {
@@ -38,6 +43,8 @@ export class PersonRepositoryImpl implements PersonRepository {
         { iin: attrs.iin },
       ));
     }
+
+    this.addEvents(person);
 
     const result = await this.testRepo.add({
       ...attrs,
@@ -79,5 +86,11 @@ export class PersonRepositoryImpl implements PersonRepository {
       dtoUtility.excludeAttrs(result, 'version'),
       result.version,
     ));
+  }
+
+  protected async addEvents(person: PersonAR): Promise<void> {
+    const eventRepo = EventRepository.instance(this.resolver);
+    await eventRepo.addEvents(person.getHelper().getEvents());
+    person.getHelper().cleanEvents();
   }
 }

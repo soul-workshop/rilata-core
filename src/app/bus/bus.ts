@@ -1,10 +1,10 @@
 import { ServerResolver } from '../server/server-resolver';
-import { EventHandler, PublishedEvent, SubscribeToEvent } from './types';
+import { PublishBusMessage, SubcribeToBusMessage } from './types';
 
 export interface Bus {
-  subscribe(eventSubscribe: SubscribeToEvent, cb: EventHandler): Promise<void>
+  subscribe(eventSubscribe: SubcribeToBusMessage): Promise<void>
 
-  publish(eventPublish: PublishedEvent): Promise<void>
+  publish(eventPublish: PublishBusMessage): Promise<void>
 
   init(resolver: ServerResolver): Promise<void>
 

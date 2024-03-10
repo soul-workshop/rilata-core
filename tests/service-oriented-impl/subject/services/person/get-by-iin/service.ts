@@ -9,7 +9,7 @@ import { getPersonByIinValidator } from './v-map';
 export class GetingPersonByIinService extends QueryService<GetPersonByIinServiceParams> {
   serviceName = 'getPersonByIin' as const;
 
-  protected aRootName = 'PersonAR' as const;
+  aRootName = 'PersonAR' as const;
 
   protected supportedCallers = ['DomainUser', 'ModuleCaller'] as const;
 

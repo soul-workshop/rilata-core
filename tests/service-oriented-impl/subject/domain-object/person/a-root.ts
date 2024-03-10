@@ -6,13 +6,13 @@ import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
 export class PersonAR extends AggregateRoot<PersonParams> {
   protected helper: AggregateRootHelper<PersonParams>;
 
-  constructor(protected attrs: PersonAttrs, protected version: number, logger: Logger) {
+  constructor(protected attrs: PersonAttrs, version: number, logger: Logger) {
     super();
-    this.helper = new AggregateRootHelper('PersonAR', attrs, version, ['contacts.techSupportComments'], logger);
-  }
+    this.helper = new AggregateRootHelper(
+      'PersonAR', attrs, 'id', version, ['contacts.techSupportComments'], logger,
+    );
 
-  getId(): string {
-    return this.attrs.id;
+    // process aggregate root invariants see CompanyAR
   }
 
   /** возвращает в формате Иванов И. И. */

@@ -18,6 +18,4 @@ export class AuthModule extends Module {
   ];
 
   eventServices: GeneralEventService[] = [];
-
-  services: GeneraQueryService[] = [];
 }

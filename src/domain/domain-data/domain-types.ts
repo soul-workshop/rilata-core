@@ -4,8 +4,6 @@ import { DTO } from '../dto';
 import { Locale } from '../locale';
 import { GeneralARDParams } from './params-types';
 
-type Name = string;
-
 /** Domain Object Data */
 export type DomainAttrs = DTO;
 
@@ -15,18 +13,15 @@ export type ErrorType = 'domain-error' | 'app-error';
 
 export type DomainMeta<
   NAME extends string,
+  ID_NAME extends string,
 > = {
   name: NAME,
+  idName: ID_NAME,
   domainType: 'aggregate',
   version: number,
 }
 
-export type AggregateDataTransfer = {
-  attrs: unknown,
-  meta: DomainMeta<string>,
-}
-
-export type ARDT<ATTRS extends DTO, META extends DomainMeta<string> = DomainMeta<string>> = {
+export type ARDT<ATTRS extends DTO, META extends DomainMeta<string, keyof ATTRS & string>> = {
   attrs: ATTRS,
   meta: META,
 }
@@ -60,7 +55,7 @@ export type GeneralErrorDod = ErrorDod<string, Locale, ErrorType>;
 export type EventDod<
   ATTRS extends DomainAttrs,
   NAME extends string,
-  ARDTF extends AggregateDataTransfer | ARDT<DTO> | undefined,
+  ARDTF extends ARDT<DTO, DomainMeta<string, string>>,
   CALLER extends Caller = Caller
 > = {
   attrs: ATTRS,
@@ -73,11 +68,11 @@ export type EventDod<
     created: number,
   }
   caller: CALLER,
-  aRootAttrs: ARDTF,
+  aRoot: ARDTF,
 }
 
 export type GeneralEventDod = EventDod<
-  DomainAttrs, string, AggregateDataTransfer | ARDT<DTO> | undefined
+  DomainAttrs, string, ARDT<DTO, DomainMeta<string, string>>
 >;
 
 export type RequestDod <ATTRS extends DTO, NAME extends string> = {

@@ -1,5 +1,5 @@
 import { Bus } from '../bus/bus';
-import { EventDeliverer } from '../event-deliverer/event-deliverer';
+import { DelivererToBus } from '../bus/deliverer-to-bus';
 import { BusServerResolver } from '../server/bus-server-resolver';
 import { Module } from './module';
 import { ModuleResolver } from './module-resolver';
@@ -13,12 +13,12 @@ export abstract class BusModuleResolver<
   /** инициализация выполняется классом server */
   init(module: M, serverResolver: BusServerResolver): void {
     super.init(module, serverResolver);
-    this.getEventDeliverer().init(this);
+    this.getDelivererToBus().init(this);
   }
 
   getBus(): Bus {
     return this.serverResolver.getBus();
   }
 
-  abstract getEventDeliverer(): EventDeliverer
+  abstract getDelivererToBus(): DelivererToBus
 }

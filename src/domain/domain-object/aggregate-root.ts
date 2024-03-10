@@ -8,11 +8,12 @@ export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
 
   protected abstract attrs: PARAMS['attrs'];
 
-  /** Короткое доменное имя объекта.
-    Обычно используется для идентификации пользователем объекта в списке */
+  /** Обычно используется для идентификации пользователем объекта в списке */
   abstract getShortName(): string;
 
-  abstract getId(): string
+  getId(): string {
+    return this.helper.getId();
+  }
 
   getAttrs(conf: { copy: boolean } = { copy: true }): PARAMS['attrs'] {
     return conf.copy ? dtoUtility.deepCopy(this.attrs) : this.attrs;

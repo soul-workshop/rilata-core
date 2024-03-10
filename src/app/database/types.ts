@@ -1,10 +1,7 @@
 import { DTO } from '../../domain/dto';
-import { DeliveryEventType } from '../bus/types';
 import { TestRepository } from './test-repository';
 
-export type EventAsJson = string;
-
-export type DeliveryEventHandler = (deliveryEvent: DeliveryEventType) => Promise<void>
+export type BusPayloadAsJson = string;
 
 type GetTestRepoName<R extends TestRepository<string, DTO>> =
   R extends TestRepository<infer N, infer _> ? N : never

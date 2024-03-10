@@ -12,7 +12,7 @@ export type CompanyAttrs = {
   address?: string,
 }
 
-export type CompanyMeta = DomainMeta<'CompanyAR'>
+export type CompanyMeta = DomainMeta<'CompanyAR', 'id'>
 
 export type CompanyCmdARDT = ARDT<CompanyAttrs, CompanyMeta>
 
