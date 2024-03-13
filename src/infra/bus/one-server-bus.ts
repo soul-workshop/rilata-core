@@ -1,78 +1,43 @@
-import {
-  describe, test, expect, mock,
-} from 'bun:test';
-import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
-import { EventDod, GeneralEventDod } from '../../domain/domain-data/domain-types';
-import { OneServerBus } from './one-server-bus.test';
-import { BusEventPublish, BusEventSubscribe } from '../../app/bus/types';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { Bus } from '../../app/bus/bus';
+import { PublishBusMessage, SubcribeToBusMessage } from '../../app/bus/types';
+import { Module } from '../../app/module/module';
+import { BusServerResolver } from '../../app/server/bus-server-resolver';
+import { GeneralEventDod } from '../../domain/domain-data/domain-types';
 
-describe('one server bus tests', () => {
-  const sut = new OneServerBus();
+type ModuleName = string;
 
-  const eventDod: EventDod<{ name: string, old: number }, 'userAdded'> = {
-    attrs: {
-      name: 'Nick',
-      old: 24,
-    },
-    meta: {
-      eventId: '',
-      actionId: '',
-      name: 'userAdded',
-      moduleName: 'subject',
-      domainType: 'event',
-    },
-    caller: {
-      type: 'DomainUser',
-      userId: uuidUtility.getNewUUID(),
-    },
-    aRootAttrs: {
-      attrs: {
-        name: 'Nick',
-        old: 24,
-      },
-      meta: {
-        name: 'UserAR',
-        domainType: 'aggregate',
-        version: 0,
-      },
-    },
-  };
+export class OneServerBus implements Bus {
+  protected resolver!: BusServerResolver;
 
-  const eventAsJson = JSON.stringify(eventDod);
+  protected subscribers: Record<ModuleName, SubcribeToBusMessage[]> = {};
 
-  const eventSubscribe: BusEventSubscribe = {
-    moduleName: 'subject',
-    eventName: 'userAdded',
-  };
+  async init(resolver: BusServerResolver): Promise<void> {
+    this.resolver = resolver;
+  }
 
-  const eventPublish: BusEventPublish = {
-    moduleName: 'subject',
-    eventName: 'userAdded',
-    event: eventAsJson,
-  };
+  stop(): void {}
 
-  test('подписка и получение события', async () => {
-    const handlerMock = mock(async (event: GeneralEventDod): Promise<void> => {
-      expect(event.meta.moduleName).toBe('subject');
-      expect(event.meta.name).toBe('userAdded');
-    });
-    await sut.subscribe(eventSubscribe, handlerMock);
-    sut.publish(eventPublish);
-    expect(handlerMock).toHaveBeenCalledTimes(1);
-  });
+  async subscribe(eventSubscribe: SubcribeToBusMessage): Promise<void> {
+    this.getModule(eventSubscribe.publishModuleName); // check, module is runned;
+    this.getModule(eventSubscribe.handlerModuleName); // check, module is runned;
+    if (!(eventSubscribe.publishModuleName in this.subscribers)) {
+      this.subscribers[eventSubscribe.publishModuleName] = [];
+    }
+    this.subscribers[eventSubscribe.publishModuleName].push(eventSubscribe);
+  }
 
-  test('публикация, но обработчика на это событие нет', async () => {
-    const handlerMock = mock(async (event: GeneralEventDod): Promise<void> => {
-      expect(event.meta.moduleName).toBe('subject');
-      expect(event.meta.name).toBe('userAdded');
-    });
-    const notSubscribedEvent: BusEventPublish = {
-      moduleName: 'subject',
-      eventName: 'userNameChanged',
-      event: 'any event as json',
-    };
-    await sut.subscribe(eventSubscribe, handlerMock);
-    sut.publish(notSubscribedEvent);
-    expect(handlerMock).toHaveBeenCalledTimes(0);
-  });
-});
+  async publish(eventPublish: PublishBusMessage): Promise<void> {
+    const events = this.subscribers[eventPublish.publishModuleName];
+    if (!events) return;
+    const event = events.find((e) => e.busMessageName === eventPublish.busMessageName);
+    if (!event) return;
+
+    const eventDod = JSON.parse(eventPublish.payload) as GeneralEventDod;
+    await this.getModule(event.handlerModuleName).executeEventService(eventDod);
+  }
+
+  protected getModule(moduleName: ModuleName): Module {
+    return this.resolver.getServer().getModule(moduleName);
+  }
+}

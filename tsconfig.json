@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "module": "nodeNext",
+    "module": "nodenext",
     "target": "es2022",
-    "moduleResolution": "nodeNext",
+    "moduleResolution": "nodenext",
     "noEmit": true,
     "esModuleInterop": true,
     "noErrorTruncation": true,

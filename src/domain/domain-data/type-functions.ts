@@ -14,12 +14,12 @@ export type GetARParamsEvents<AR_PARAMS extends GeneralARDParams> =
     : never;
 
 export type GetARParamsEventNames<EVENT extends GeneralEventDod> =
-  EVENT extends EventDod<infer _, infer NAME>
+  EVENT extends EventDod<infer ATTRS, infer NAME, infer ARDT>
     ? NAME
     : never
 
 export type GetARParamsEventAttrs<EVENT extends GeneralEventDod> =
-  EVENT extends EventDod<infer ATTRS, infer _>
+  EVENT extends EventDod<infer ATTRS, infer NAME, infer ARDT>
     ? ATTRS
     : never
 
@@ -30,7 +30,7 @@ export type GetARParamsAggregateName<AR_PARAMS extends GeneralARDParams> =
 
 export type GetNoOutKeysFromARParams<AR_PARAMS extends GeneralARDParams> =
   AR_PARAMS extends AggregateRootDataParams<
-    DomainAttrs, DomainMeta<string>, GeneralActionParams, infer T
+    DomainAttrs, DomainMeta<string, string>, GeneralActionParams, infer T
   >
     ? T
     : never

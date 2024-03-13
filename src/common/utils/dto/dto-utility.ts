@@ -4,9 +4,11 @@
 import { DTO } from '../../../domain/dto';
 import { AssertionException } from '../../exeptions';
 import {
+  DeepPartial,
   ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDtoKeysByDotNotation,
 } from '../../type-functions';
 import { DeepAttr } from '../../types';
+import { dodUtility } from '../domain-object/dod-utility';
 
 export class dtoUtility {
   /** Возвращает копию объекта T, с исключенными атрибутами K. */
@@ -46,17 +48,26 @@ export class dtoUtility {
   * - Если copy=true возвращается копия объекта, иначе тот же объект */
   static replaceAttrs<
     T extends DTO,
-    P extends Partial<T>,
+    P extends DeepPartial<T>,
   >(obj: T, newValues: P, copy = true): T {
     const returnObj = copy ? this.deepCopy(obj) : obj;
-    Object.keys(obj).forEach((key) => {
-      if (
-        Object.keys(newValues).includes(key)
-        && newValues[key] !== undefined
-      ) {
-        returnObj[key as keyof T] = newValues[key] as typeof obj[typeof key];
+    Object.entries(newValues).forEach(([key, value]) => {
+      if (!(key in obj) || value === undefined) {
+        /* not added new keys and not replaced undefined value */
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        returnObj[key as keyof T] = this.replaceAttrs(obj[key], value, copy);
+      } else {
+        returnObj[key as keyof T] = value;
       }
     });
+    // Object.keys(obj).forEach((key) => {
+    //   if (
+    //     Object.keys(newValues).includes(key)
+    //     && newValues[key] !== undefined
+    //   ) {
+    //     returnObj[key as keyof T] = newValues[key] as typeof obj[typeof key];
+    //   }
+    // });
     return returnObj;
   }
 

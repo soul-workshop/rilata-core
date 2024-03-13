@@ -69,7 +69,10 @@ type GetValidator<NAME extends string, REQ extends boolean, IS_ARR extends boole
 
 export type ValidatorMap<DTO_TYPE extends DTO> = {
   [KEY in keyof DTO_TYPE & string]-?: unknown extends DTO_TYPE[KEY]
-    ? LiteralFieldValidator<KEY, boolean, boolean, unknown>
+    ? (
+      LiteralFieldValidator<KEY, boolean, boolean, string | number | boolean>
+      | DtoFieldValidator<KEY, boolean, boolean, DTO>
+    )
     : undefined extends DTO_TYPE[KEY]
       ? NonNullable<DTO_TYPE[KEY]> extends Array<infer ARR_TYPE>
         ? GetValidator<KEY, false, true, NonNullable<ARR_TYPE>>

@@ -1,11 +1,12 @@
 import { UuidType } from '../../common/types';
 import { Caller } from '../caller';
-import { ModuleResolver } from '../resolves/module-resolver';
+import { GeneralModuleResolver } from '../module/types';
 
 export type StorePayload = {
   caller: Caller,
-  moduleResolver: ModuleResolver,
-  actionId: UuidType,
+  moduleResolver: GeneralModuleResolver,
+  databaseErrorRestartAttempts: number;
+  requestId: UuidType,
   unitOfWorkId?: UuidType, // доступна только после commandService.execute();
 }
 

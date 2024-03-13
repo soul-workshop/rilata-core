@@ -8,8 +8,8 @@ export type LocaleHint = Record<string, unknown>;
     hint: { min: 18, max: 65 }
   }
 */
-export type Locale = {
+export type Locale<NAME extends string = string> = {
+  name: NAME,
   text: string,
   hint: LocaleHint,
-  name?: string,
 }

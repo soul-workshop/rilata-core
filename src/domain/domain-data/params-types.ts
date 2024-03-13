@@ -22,7 +22,7 @@ export type GeneralActionParams = ActionParams<
 /** полное описание доменного агрегата */
 export type AggregateRootDataParams<
   ATTRS extends DomainAttrs,
-  META extends DomainMeta<string>,
+  META extends DomainMeta<string, keyof ATTRS & string>,
   ACTIONS extends GeneralActionParams,
   NO_OUT_KEYS extends GetDtoKeysByDotNotation<ATTRS>[]
 > = {
@@ -33,7 +33,7 @@ export type AggregateRootDataParams<
 }
 
 export type GeneralARDParams = AggregateRootDataParams<
-  DomainAttrs, DomainMeta<string>, GeneralActionParams, GetDtoKeysByDotNotation<DTO>[]
+  DomainAttrs, DomainMeta<string, string>, GeneralActionParams, GetDtoKeysByDotNotation<DTO>[]
 >;
 
 export type DomainResult<AC_PARAMS extends GeneralActionParams> =

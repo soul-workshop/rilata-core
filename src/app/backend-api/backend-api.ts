@@ -2,6 +2,7 @@ import { Logger } from '../../common/logger/logger';
 import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
+import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { ResultDTO } from '../result-dto';
 import { BadRequestError } from '../service/error-types';
@@ -13,7 +14,7 @@ export abstract class BackendApi {
     constructor(protected logger: Logger) {}
 
     async request<SERVICE_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
-      actionDod: SERVICE_PARAMS['actionDod'],
+      requestDod: SERVICE_PARAMS['input'],
       jwtToken: string,
     ): Promise<ServiceResult<SERVICE_PARAMS>> {
       const backendResult = await fetch(this.moduleUrl, {
@@ -23,7 +24,7 @@ export abstract class BackendApi {
           Accept: 'application/json',
           Authorization: jwtToken,
         },
-        body: JSON.stringify(actionDod),
+        body: JSON.stringify(requestDod),
       });
 
       const resultDto = await backendResult.json() as ResultDTO<SERVICE_PARAMS['errors'], SERVICE_PARAMS['successOut']>;
@@ -36,18 +37,8 @@ export abstract class BackendApi {
       return this.notResultDto(resultDto);
     }
 
-    private notResultDto(value: unknown): Result<BadRequestError<Locale>, never> {
+    private notResultDto(value: unknown): Result<BadRequestError<Locale<'Bad request'>>, never> {
       this.logger.error('response value is not resultDto', value);
-      return failure({
-        locale: {
-          text: 'Ошибка интернета',
-          hint: {},
-        },
-        name: 'Bad request',
-        meta: {
-          errorType: 'app-error',
-          domainType: 'error',
-        },
-      });
+      return failure(dodUtility.getDomainError('Bad request', 'Ошибка сети', {}));
     }
 }

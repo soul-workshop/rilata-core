@@ -3,10 +3,11 @@ import {
   BadRequestError, InternalError, NotFoundError, PermissionDeniedError,
 } from './error-types';
 
-export const badRequestError: BadRequestError<Locale> = {
+export const badRequestError: BadRequestError<Locale<'Bad request'>> = {
   locale: {
     text: 'Bad request',
     hint: {},
+    name: 'Bad request',
   },
   name: 'Bad request',
   meta: {
@@ -15,10 +16,11 @@ export const badRequestError: BadRequestError<Locale> = {
   },
 };
 
-export const badRequestInvalidCommandNameError: BadRequestError<Locale> = {
+export const badRequestInvalidCommandNameError: BadRequestError<Locale<'Bad request'>> = {
   locale: {
     text: 'Bad request, invalid command name',
     hint: {},
+    name: 'Bad request',
   },
   name: 'Bad request',
   meta: {
@@ -27,10 +29,11 @@ export const badRequestInvalidCommandNameError: BadRequestError<Locale> = {
   },
 };
 
-export const notFoundError: NotFoundError<Locale> = {
+export const notFoundError: NotFoundError<Locale<'Not found'>> = {
   locale: {
     text: 'Page not found',
     hint: {},
+    name: 'Not found',
   },
   name: 'Not found',
   meta: {
@@ -39,10 +42,11 @@ export const notFoundError: NotFoundError<Locale> = {
   },
 };
 
-export const internalError: InternalError<Locale> = {
+export const internalError: InternalError<Locale<'Internal error'>> = {
   locale: {
     text: 'Internal error',
     hint: {},
+    name: 'Internal error',
   },
   name: 'Internal error',
   meta: {
@@ -51,10 +55,11 @@ export const internalError: InternalError<Locale> = {
   },
 };
 
-export const permissionDeniedError: PermissionDeniedError<Locale> = {
+export const permissionDeniedError: PermissionDeniedError<Locale<'Permission denied'>> = {
   locale: {
     text: 'Действие не доступно',
     hint: {},
+    name: 'Permission denied',
   },
   name: 'Permission denied',
   meta: {
@@ -63,10 +68,11 @@ export const permissionDeniedError: PermissionDeniedError<Locale> = {
   },
 };
 
-export const authPermissionDeniedError: PermissionDeniedError<Locale> = {
+export const authPermissionDeniedError: PermissionDeniedError<Locale<'Permission denied'>> = {
   locale: {
     text: 'Действие доступно только для аутентифицированных пользователей.',
     hint: {},
+    name: 'Permission denied',
   },
   name: 'Permission denied',
   meta: {

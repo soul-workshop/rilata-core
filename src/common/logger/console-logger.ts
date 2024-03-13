@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { AssertionException } from '../exeptions';
+import { BinaryKeyFlag } from '../utils/binary/binary-flag/binary-flag';
 import { Logger } from './logger';
+import { loggerModes } from './logger-modes';
 
 export class ConsoleLogger implements Logger {
   timeFormat: Intl.DateTimeFormatOptions = {
@@ -9,34 +11,47 @@ export class ConsoleLogger implements Logger {
     hourCycle: 'h24',
   };
 
-  async info(log: string): Promise<void> {
+  protected modeDispatcher: BinaryKeyFlag<typeof loggerModes>;
+
+  constructor(modes: Array<keyof typeof loggerModes> | 'all' | 'off' = 'all') {
+    this.modeDispatcher = new BinaryKeyFlag(loggerModes, modes);
+  }
+
+  info(log: string): void {
+    if (this.modeDispatcher.isOn(['info']) === false) return;
     this.toConsole(this.makeLogString('INFO', log));
   }
 
-  async warning(log: string, logAttrs?: unknown): Promise<void> {
+  warning(log: string, logAttrs?: unknown): void {
+    if (this.modeDispatcher.isOn(['warn']) === false) return;
     this.toConsole(this.makeLogString('WARNING', log), logAttrs);
   }
 
-  async assert(condition: boolean, log: string, logAttrs?: unknown): Promise<void> {
+  assert(condition: boolean, log: string, logAttrs?: unknown): void {
+    if (this.modeDispatcher.isOn(['assert']) === false) return;
     if (condition) return;
     throw this.fatalError(log, logAttrs);
   }
 
-  async error(log: string, logAttrs?: unknown, err?: Error): Promise<AssertionException> {
-    const errStack = err ? this.getErrStack(err) : {};
-    this.toConsole(
-      this.makeLogString('ERROR', log),
-      { ...errStack, logAttrs },
-    );
+  error(log: string, logAttrs?: unknown, err?: Error): AssertionException {
+    if (this.modeDispatcher.isOn(['error']) === false) {
+      const errStack = err ? this.getErrStack(err) : {};
+      this.toConsole(
+        this.makeLogString('ERROR', log),
+        { ...errStack, logAttrs },
+      );
+    }
     return new AssertionException(log);
   }
 
-  async fatalError(log: string, logAttrs?: unknown, err?: Error): Promise<AssertionException> {
-    const errStack = err ? this.getErrStack(err) : {};
-    this.toConsole(
-      this.makeLogString('FATAL_ERROR', log),
-      { ...errStack, logAttrs },
-    );
+  fatalError(log: string, logAttrs?: unknown, err?: Error): AssertionException {
+    if (this.modeDispatcher.isOn(['fatal']) === false) {
+      const errStack = err ? this.getErrStack(err) : {};
+      this.toConsole(
+        this.makeLogString('FATAL_ERROR', log),
+        { ...errStack, logAttrs },
+      );
+    }
     return new AssertionException(log);
   }
 
@@ -50,9 +65,13 @@ export class ConsoleLogger implements Logger {
   }
 
   private toConsole(text: string, logAttrs?: unknown): void {
-    console.log('----- console log start -------');
-    console.log(text);
-    console.log(JSON.stringify(logAttrs, null, 2));
-    console.log('----- console log end -------');
+    if (logAttrs === undefined) {
+      console.log(text);
+    } else {
+      console.log('----- console log start -------');
+      console.log(text);
+      console.log(JSON.stringify(logAttrs, null, 2));
+      console.log('----- console log end -------');
+    }
   }
 }

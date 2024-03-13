@@ -1,10 +1,12 @@
 import { UuidType } from '../../common/types';
-import { ModuleResolver } from '../resolves/module-resolver';
+import { GeneralModuleResolver } from '../module/types';
 
 type TransactionId = UuidType;
 
 export interface Database {
-  init(moduleResolver: ModuleResolver, ...args: unknown[]): Promise<void>
+  init(moduleResolver: GeneralModuleResolver, ...args: unknown[]): Promise<void>
+
+  stop(): void
 
   startTransaction(): Promise<TransactionId>
 
