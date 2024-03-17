@@ -1,6 +1,6 @@
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { RilataRequest } from '../controller/types';
-import { InvalidTokenError } from '../jwt/errors';
+import { IncorrectTokenError } from '../jwt/jwt-errors';
 import { ResultDTO } from '../result-dto';
 import { Middleware } from './middleware';
 
@@ -15,14 +15,14 @@ export class InjectCallerMiddleware extends Middleware {
     }
 
     rawToken = rawToken?.includes('Bearer ') ? rawToken.replace('Bearer ', '') : rawToken;
-    const verifyResult = this.serverResolver.getTokenVerifier().verifyToken(rawToken, 'access');
+    const verifyResult = this.serverResolver.getTokenVerifier().verifyToken(rawToken);
     if (verifyResult.isFailure()) {
-      const respBody: ResultDTO<InvalidTokenError, never> = {
+      const respBody: ResultDTO<IncorrectTokenError, never> = {
         success: false,
-        payload: dodUtility.getDomainError<InvalidTokenError>(
-          'InvalidTokenError',
+        payload: dodUtility.getDomainError<IncorrectTokenError>(
+          'IncorrectTokenError',
           'Невозможно расшифровать токен. Токен имеет не верный формат.',
-          { rawToken },
+          {},
         ),
         httpStatus: 400,
       };

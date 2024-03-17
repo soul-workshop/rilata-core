@@ -15,6 +15,7 @@ export function getAuthResolves(runMode: RunMode): AuthResolves {
 
   if (!authResolves) {
     authResolves = {
+      tokenSecretKey: 'your-256-bit-secret',
       runMode: 'test',
       moduleName: 'AuthModule',
       db,

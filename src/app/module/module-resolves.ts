@@ -4,6 +4,7 @@ import { RunMode } from '../types';
 import { Module } from './module';
 
 export type ModuleResolves<M extends Module> = {
+  tokenSecretKey: string,
   runMode: RunMode,
   moduleName: M['moduleName'],
   db: Database,

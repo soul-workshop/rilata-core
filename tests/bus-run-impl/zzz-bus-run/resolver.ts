@@ -1,5 +1,5 @@
 import { Bus } from '../../../src/app/bus/bus';
-import { TokenVerifier } from '../../../src/app/jwt/token-verifier.interface';
+import { TokenVerifier } from '../../../src/app/jwt/jwt-verifier';
 import { BusServerResolver } from '../../../src/app/server/bus-server-resolver';
 import { ServerConfig } from '../../../src/app/server/types';
 import { RunMode } from '../../../src/app/types';

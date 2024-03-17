@@ -1,6 +1,6 @@
 import { Logger } from '../../common/logger/logger';
 import { DTO } from '../../domain/dto';
-import { TokenVerifier } from '../jwt/token-verifier.interface';
+import { TokenVerifier } from '../jwt/jwt-verifier';
 import { RunMode } from '../types';
 import { RilataServer } from './server';
 

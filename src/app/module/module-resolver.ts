@@ -7,7 +7,7 @@ import { Logger } from '../../common/logger/logger';
 import { ModuleConfig } from './types';
 import { Facadable } from '../resolves/facadable';
 import { ModuleResolves } from './module-resolves';
-import { TokenVerifier } from '../jwt/token-verifier.interface';
+import { TokenVerifier } from '../jwt/jwt-verifier';
 import { DTO } from '../../domain/dto';
 import { ModuleResolveInstance } from '../resolves/types';
 

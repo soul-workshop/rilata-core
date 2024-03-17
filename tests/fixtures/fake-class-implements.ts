@@ -7,10 +7,9 @@ import { EventRepository } from '../../src/app/database/event-repository';
 import { TestDatabase } from '../../src/app/database/test-database';
 import { TestRepository } from '../../src/app/database/test-repository';
 import { TestBatchRecords } from '../../src/app/database/types';
-import { VerifyTokenError } from '../../src/app/jwt/errors';
-import { TokenCreator } from '../../src/app/jwt/token-creator.interface';
-import { TokenVerifier } from '../../src/app/jwt/token-verifier.interface';
-import { JWTTokens, TokenType } from '../../src/app/jwt/types';
+import { JwtErrors } from '../../src/app/jwt/jwt-errors';
+import { TokenCreator } from '../../src/app/jwt/jwt-creator';
+import { TokenVerifier } from '../../src/app/jwt/jwt-verifier';
 import { GeneralModuleResolver } from '../../src/app/module/types';
 import { failure } from '../../src/common/result/failure';
 import { success } from '../../src/common/result/success';
@@ -33,12 +32,11 @@ export namespace FakeClassImplements {
 
     verifyToken(
       rawToken: string,
-      tokenType: TokenType,
-    ): Result<VerifyTokenError, { userId: UuidType }> {
+    ): Result<JwtErrors, { userId: UuidType }> {
       const jwtTokens = JSON.parse(rawToken);
       const payload = JSON.parse(jwtTokens[tokenType]);
       if (uuidUtility.isValidValue(payload.userId) === false) {
-        return failure(dodUtility.getAppError<VerifyTokenError>(
+        return failure(dodUtility.getAppError<JwtErrors>(
           'NotValidTokenPayloadError',
           'Невалидная полезная нагрузка в токене.',
           { rawToken },

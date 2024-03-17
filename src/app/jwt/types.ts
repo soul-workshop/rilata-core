@@ -1,18 +1,5 @@
 import { DTO } from '../../domain/dto';
 
-export type TokenType = 'access' | 'refresh';
-
-export type PlainJWTPayload<PAYLOAD extends DTO> = {
-  tokenType: TokenType,
-  payload: PAYLOAD,
-};
-
-export type DecodedToken<PAYLOAD extends DTO> = PlainJWTPayload<PAYLOAD> & {
-  iat: number,
+export type JwtPayload<P extends DTO> = P & {
   exp: number,
-};
-
-export type JWTTokens = {
-  access: string,
-  refresh: string,
 }

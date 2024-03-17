@@ -11,6 +11,7 @@ export function getFrontProxyResolves(runMode: RunMode): FrontendProxyResolves {
   /** в read-module нет своих репозиториев, поэтому удалены ссылки на  */
   if (!frontProxyResolves) {
     frontProxyResolves = {
+      tokenSecretKey: 'your-256-bit-secret',
       moduleName: 'FrontProxyModule',
       runMode,
       companyFacade: new CompanyFacadeOneServerImpl(),

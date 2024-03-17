@@ -3,7 +3,7 @@ import { ModuleResolver } from '../../src/app/module/module-resolver';
 import { ModuleConfig, ModuleType } from '../../src/app/module/types';
 import { ServerResolver } from '../../src/app/server/server-resolver';
 import { Bus } from '../../src/app/bus/bus';
-import { TokenVerifier } from '../../src/app/jwt/token-verifier.interface';
+import { TokenVerifier } from '../../src/app/jwt/jwt-verifier';
 import { RunMode } from '../../src/app/types';
 import { ConsoleLogger } from '../../src/common/logger/console-logger';
 import { DTO } from '../../src/domain/dto';
