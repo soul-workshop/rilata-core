@@ -7,8 +7,11 @@ import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { UserRepository } from './domain-object/user/repo';
 import { AuthModule } from './module';
 import { AuthResolves } from './resolves';
+import { UserJwtPayload } from './services/user/user-authentification/s-params';
 
-export class AuthModuleResolver extends ModuleResolver<AuthModule, AuthResolves> {
+export class AuthModuleResolver extends ModuleResolver<
+  UserJwtPayload, AuthModule, AuthResolves
+> {
   protected moduleConfig: ModuleConfig = {
     ModuleUrl: '/api/auth-module/',
   };

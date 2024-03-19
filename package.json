@@ -11,9 +11,7 @@
     "lint": "bun eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {
-    "email-validator": "^2.0.4",
-    "jsonwebtoken": "^9.0.2",
-    "jwt-decode": "^3.1.2"
+    "email-validator": "^2.0.4"
   },
   "devDependencies": {
     "@types/bun": "^1.0.2",

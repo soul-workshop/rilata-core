@@ -11,8 +11,9 @@ import { InternalError, NotFoundError } from '../service/error-types';
 import { ResultDTO } from '../result-dto';
 import { ServerResolver } from './server-resolver';
 import { GeneralErrorDod } from '../../domain/domain-data/domain-types';
+import { DTO } from '../../domain/dto';
 
-export abstract class BunServer extends RilataServer {
+export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
   port: number | undefined;
 
   hostname: string | undefined;
@@ -25,7 +26,7 @@ export abstract class BunServer extends RilataServer {
 
   protected server: Server | undefined;
 
-  init(serverResolver: ServerResolver): void {
+  init(serverResolver: ServerResolver<JWT_P>): void {
     super.init(serverResolver);
 
     this.middlewareCtors.forEach((Ctor) => {
@@ -46,9 +47,10 @@ export abstract class BunServer extends RilataServer {
     super.stop();
   }
 
-  run(config?: { port?: number, hostname?: string }): void {
-    this.port = config?.port ?? 3000;
-    this.hostname = config?.hostname ?? 'localhost';
+  run(): void {
+    const { port, hostname } = this.resolver.getServerConfig();
+    this.port = port;
+    this.hostname = hostname;
     this.fetch = this.fetch.bind(this);
     this.server = Bun.serve(this as unknown as Serve<unknown>);
     this.logger.info(`Http server runned by address: ${this.hostname}:${this.port}`);

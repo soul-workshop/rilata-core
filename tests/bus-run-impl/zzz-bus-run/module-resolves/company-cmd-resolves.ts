@@ -22,7 +22,6 @@ export function getCompanyCmdResolves(runMode: RunMode): CompanyCmdResolves {
     eventRepo = new FakeClassImplements.TestEventRepository(db);
     companyRepo = new CompanyCmdRepositoryImpl(db);
     companyResolves = {
-      tokenSecretKey: 'your-256-bit-secret',
       runMode: 'test',
       moduleName: 'CompanyCmdModule',
       db,

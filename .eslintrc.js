@@ -9,6 +9,7 @@ module.exports = {
     'no-empty-function': 'off',
     'operator-linebreak': 'off',
     'function-paren-newline': 'off',
+    'object-curly-newline': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
   },
 };

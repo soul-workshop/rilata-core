@@ -42,11 +42,11 @@ export type GeneralBaseServiceParams = BaseServiceParams<
 
 export type QueryServiceParams<
   AR_PARAMS extends GeneralARDParams,
-  ACTION_DOD extends GeneralRequestDod, // что входит в service,
+  REQ_DOD extends GeneralRequestDod, // что входит в service,
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT extends GeneralErrorDod, // возвращаемый ответ в случае не успеха
 > = BaseServiceParams<
-  AR_PARAMS, ACTION_DOD, SUCCESS_OUT, FAIL_OUT, never
+  AR_PARAMS, REQ_DOD, SUCCESS_OUT, FAIL_OUT, never
 >
 export type GeneralQueryServiceParams = QueryServiceParams<
   GeneralARDParams, GeneralRequestDod, unknown, GeneralErrorDod
@@ -56,12 +56,12 @@ export type GeneraQueryService = QueryService<GeneralQueryServiceParams>;
 
 export type CommandServiceParams<
   AR_PARAMS extends GeneralARDParams,
-  ACTION_DOD extends GeneralRequestDod, // что входит в service,
+  REQ_DOD extends GeneralRequestDod, // что входит в service,
   SUCCESS_OUT, // ответ в случае успеха
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENTS extends GeneralEventDod[], // публикуемые доменные события
 > = BaseServiceParams<
-  AR_PARAMS, ACTION_DOD, SUCCESS_OUT, FAIL_OUT, EVENTS
+  AR_PARAMS, REQ_DOD, SUCCESS_OUT, FAIL_OUT, EVENTS
 >
 
 export type GeneralCommandServiceParams = CommandServiceParams<

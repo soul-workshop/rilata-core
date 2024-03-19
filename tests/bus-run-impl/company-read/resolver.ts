@@ -8,9 +8,12 @@ import { DelivererToBus } from '../../../src/app/bus/deliverer-to-bus';
 import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus.ts/timeout-callback-impl';
 import { EventRepository } from '../../../src/app/database/event-repository';
 import { BusMessageRepository } from '../../../src/app/database/bus-message-repository';
+import { UserJwtPayload } from '../../service-oriented-impl/auth/services/user/user-authentification/s-params';
 
 // eslint-disable-next-line max-len
-export class CompanyReadModuleResolver extends BusModuleResolver<CompanyReadModule, CompanyReadResolves> {
+export class CompanyReadModuleResolver extends BusModuleResolver<
+  UserJwtPayload, CompanyReadModule, CompanyReadResolves
+> {
   protected moduleConfig: ModuleConfig = {
     ModuleUrl: '/api/company-read-module/',
   };

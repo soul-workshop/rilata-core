@@ -25,4 +25,14 @@ export type TokenExpiredErrorBody = {
 /** Токен просрочен. */
 export type TokenExpiredError = ErrorDod<'TokenExpiredError', TokenExpiredErrorBody>;
 
-export type JwtErrors = IncorrectTokenError | NotValidTokenPayloadError | TokenExpiredError;
+export type JwtDecodeErrors = IncorrectTokenError | NotValidTokenPayloadError | TokenExpiredError;
+
+export type JwtVerifyBody = {
+    text: 'Токен не валидный',
+    hint: Record<string, never>,
+    name: 'JwtVerifyError',
+};
+/** Ошибка верификации. */
+export type JwtVerifyError = ErrorDod<'JwtVerifyError', JwtVerifyBody>;
+
+export type JwtVerifyErrors = JwtDecodeErrors | JwtVerifyError;

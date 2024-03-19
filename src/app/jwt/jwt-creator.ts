@@ -1,16 +1,7 @@
 import { DTO } from '../../domain/dto';
-import { GeneralModuleResolver } from '../module/types';
-import { Realisable } from '../resolves/realisable';
-import { JwtPayload } from './types';
+import { ServerResolver } from '../server/server-resolver';
 
-export interface TokenCreator<PAYLOAD extends DTO> {
-  init(resolver: GeneralModuleResolver): void
+export interface JwtCreator<PAYLOAD extends DTO> {
+  init(resolver: ServerResolver<PAYLOAD>): void
   createToken(payload: PAYLOAD): string;
-  getJwtPayload(payload: PAYLOAD): JwtPayload<PAYLOAD>;
 }
-
-export const TokenCreator = {
-  instance(realisable: Realisable): TokenCreator<DTO> {
-    return realisable.getRealisation(TokenCreator) as TokenCreator<DTO>;
-  },
-};

@@ -5,7 +5,6 @@ import { EventRepository } from '../../../src/app/database/event-repository';
 import { dodUtility } from '../../../src/common/utils/domain-object/dod-utility';
 import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
 import { uuidUtility } from '../../../src/common/utils/uuid/uuid-utility';
-import { FakeClassImplements } from '../../fixtures/fake-class-implements';
 import { AddCompanyRequestDod, AddCompanyRequestDodAttrs } from '../company-cmd/services/company/add-company/s.params';
 import { CompanyOutAttrs } from '../company-read/domain/company/params';
 import { CompanyReadRepository } from '../company-read/domain/company/repo';
@@ -19,7 +18,8 @@ describe('add company service tests', async () => {
   }
 
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testSever = await BusRunFixtures.getServer();
+  const testServer = await BusRunFixtures.getServer();
+  const serverResolver = testServer.getServerResolver();
 
   const addCompanyRequestDodAttrs: AddCompanyRequestDodAttrs = {
     name: 'Google corporation',
@@ -28,11 +28,9 @@ describe('add company service tests', async () => {
   const addCompanyRequestDod = dodUtility.getRequestDod<AddCompanyRequestDod>(
     'addCompany', addCompanyRequestDodAttrs, requestId,
   );
-
-  const tokenCreator = new FakeClassImplements.TestTokenVerifier();
-  const authToken = tokenCreator.getHashedToken(tokenCreator.createToken(
+  const authToken = serverResolver.getJwtCreator().createToken(
     { userId: '2a96aec7-1091-4449-8369-c3d9f91f1a56' },
-  ));
+  );
 
   test('успех, компания успешно добавлена, событие доставлено до read-module и успешно обработано', async () => {
     // execute service
@@ -41,12 +39,12 @@ describe('add company service tests', async () => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        authorization: authToken,
+        Authorization: authToken,
       },
       body: JSON.stringify(dtoUtility.deepCopy(addCompanyRequestDod)),
     });
 
-    const resp = await testSever.fetch(req);
+    const resp = await testServer.fetch(req);
     const respJson = await resp.json();
     const newCompanyId = respJson?.payload?.id;
 
@@ -59,7 +57,7 @@ describe('add company service tests', async () => {
     });
 
     // check event delivered and handled
-    const readResolver = testSever
+    const readResolver = testServer
       .getModule<CompanyReadModule>('CompanyReadModule')
       .getModuleResolver();
 

@@ -15,7 +15,6 @@ export function getSubjectResolves(runMode: RunMode): SubjectResolves {
 
   if (!subjectResolves) {
     subjectResolves = {
-      tokenSecretKey: 'your-256-bit-secret',
       runMode: 'test',
       moduleName: 'SubjectModule',
       db,

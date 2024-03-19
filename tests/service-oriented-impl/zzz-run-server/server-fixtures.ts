@@ -1,9 +1,11 @@
 import { TestBatchRecords } from '../../../src/app/database/types';
 import { Module } from '../../../src/app/module/module';
+import { ServerResolver } from '../../../src/app/server/server-resolver';
+import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
 import { UserRepositoryImpl } from '../zz-infra/repositories/auth-module/user';
 import { CompanyRepositoryImpl } from '../zz-infra/repositories/company-module/company';
 import { PersonRepositoryImpl } from '../zz-infra/repositories/subject-module/person';
-import { ServiceModulesResolver } from './resolver';
+import { serverResolves } from './resolves';
 import { ServiceModulesBunServer } from './server';
 
 export namespace ServiceModulesFixtures {
@@ -45,11 +47,11 @@ export namespace ServiceModulesFixtures {
     ],
   });
 
-  export async function getServer<M extends Module>(
+  export async function getServer<M extends Module<UserJwtPayload>>(
     runModules: M['moduleName'][] | 'all' = 'all',
   ): Promise<ServiceModulesBunServer> {
     const server = new ServiceModulesBunServer(runModules, 'test');
-    const serverResolver = new ServiceModulesResolver();
+    const serverResolver = new ServerResolver(serverResolves);
     server.init(serverResolver);
     return server;
   }
