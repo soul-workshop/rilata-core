@@ -4,7 +4,6 @@ import { Module } from '../module/module';
 import { RunMode } from '../types';
 import { ServerResolver } from '../server/server-resolver';
 import { Logger } from '../../common/logger/logger';
-import { ModuleConfig } from './types';
 import { Facadable } from '../resolves/facadable';
 import { ModuleResolves } from './module-resolves';
 import { JwtVerifier } from '../jwt/jwt-verifier';
@@ -19,8 +18,6 @@ implements Repositoriable, Realisable, Facadable {
   protected module!: M;
 
   protected serverResolver!: ServerResolver<JWT_P>;
-
-  protected abstract moduleConfig: ModuleConfig;
 
   abstract getRealisation(...args: unknown[]): ModuleResolveInstance
 
@@ -51,8 +48,8 @@ implements Repositoriable, Realisable, Facadable {
     return this.resolves.db;
   }
 
-  getModuleConfig(): ModuleConfig {
-    return this.moduleConfig;
+  getModuleUrl(): string {
+    return this.resolves.moduleUrl;
   }
 
   getJwtDecoder(): JwtDecoder<JWT_P> {

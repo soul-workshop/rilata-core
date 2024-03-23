@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ModuleResolver } from '../../../src/app/module/module-resolver';
-import { ModuleConfig } from '../../../src/app/module/types';
 import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { ServerResolver } from '../../../src/app/server/server-resolver';
 import { AuthFacade } from '../auth/facade';
@@ -13,10 +12,6 @@ import { FrontendProxyResolves } from './resolves';
 export class FrontendProxyModuleResolver extends ModuleResolver<
   UserJwtPayload, FrontProxyModule, FrontendProxyResolves
 > {
-  protected moduleConfig: ModuleConfig = {
-    ModuleUrl: '/api/frontend-proxy-module/',
-  };
-
   // override without db.init()
   init(module: FrontProxyModule, serverResolver: ServerResolver<UserJwtPayload>): void {
     this.module = module;

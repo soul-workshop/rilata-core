@@ -17,6 +17,7 @@ export function getSubjectResolves(runMode: RunMode): SubjectResolves {
     subjectResolves = {
       runMode: 'test',
       moduleName: 'SubjectModule',
+      moduleUrl: '/api/subject-module/',
       db,
       busMessageRepo: new FakeClassImplements.TestEventRepository(db),
       personRepo: new PersonRepositoryImpl(db),

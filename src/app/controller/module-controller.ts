@@ -16,7 +16,7 @@ export class ModuleController implements Controller {
   constructor(protected moduleResolver: GeneralModuleResolver) {}
 
   getUrl(): string {
-    return this.moduleResolver.getModuleConfig().ModuleUrl;
+    return this.moduleResolver.getModuleUrl();
   }
 
   async execute(req: RilataRequest): Promise<Response> {

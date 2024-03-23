@@ -1,4 +1,3 @@
-import { ModuleConfig } from '../../../src/app/module/types';
 import { CompanyCmdRepository } from './domain-object/company/repo';
 import { CompanyCmdModule } from './module';
 import { CompanyCmdResolves } from './resolves';
@@ -14,10 +13,6 @@ import { UserJwtPayload } from '../../service-oriented-impl/auth/services/user/u
 export class CompanyCmdModuleResolver extends BusModuleResolver<
   UserJwtPayload, CompanyCmdModule, CompanyCmdResolves
 > {
-  protected moduleConfig: ModuleConfig = {
-    ModuleUrl: '/api/company-cmd-module/',
-  };
-
   private delivererToBus = new TimeoutCallbackDelivererToBus();
 
   getRealisation(key: unknown): ModuleResolveInstance {
