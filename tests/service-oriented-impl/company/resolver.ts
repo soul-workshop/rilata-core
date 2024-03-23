@@ -8,8 +8,11 @@ import { AuthFacade } from '../auth/facade';
 import { SubjectFacade } from '../subject/facade';
 import { EventRepository } from '../../../src/app/database/event-repository';
 import { BusMessageRepository } from '../../../src/app/database/bus-message-repository';
+import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
 
-export class CompanyModuleResolver extends ModuleResolver<CompanyModule, CompanyResolves> {
+export class CompanyModuleResolver extends ModuleResolver<
+  UserJwtPayload, CompanyModule, CompanyResolves
+> {
   protected moduleConfig: ModuleConfig = {
     ModuleUrl: '/api/company-module/',
   };

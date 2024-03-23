@@ -17,8 +17,11 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { BadRequestError, InternalError } from '../service/error-types';
 import { Result } from '../../common/result/types';
 import { AssertionException } from '../../common/exeptions';
+import { DTO } from '../../domain/dto';
+import { ModuleResolver } from './module-resolver';
+import { ModuleResolves } from './module-resolves';
 
-export abstract class Module {
+export abstract class Module<JWT_P extends DTO> {
   readonly abstract moduleType: ModuleType;
 
   readonly abstract moduleName: string;
@@ -35,7 +38,10 @@ export abstract class Module {
 
   protected logger!: Logger;
 
-  init(moduleResolver: GeneralModuleResolver, serverResolver: ServerResolver): void {
+  init(
+    moduleResolver: ModuleResolver<JWT_P, Module<JWT_P>, ModuleResolves<Module<JWT_P>>>,
+    serverResolver: ServerResolver<JWT_P>,
+  ): void {
     this.moduleResolver = moduleResolver;
     moduleResolver.init(this, serverResolver);
     this.logger = moduleResolver.getLogger();

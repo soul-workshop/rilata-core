@@ -1,3 +1,4 @@
+import { DTO } from '../../domain/dto';
 import { Module } from './module';
 import { ModuleResolver } from './module-resolver';
 import { ModuleResolves } from './module-resolves';
@@ -9,4 +10,4 @@ export type ModuleConfig = {
   ModuleUrl: string,
 }
 
-export type GeneralModuleResolver = ModuleResolver<Module, ModuleResolves<Module>>
+export type GeneralModuleResolver = ModuleResolver<DTO, Module<DTO>, ModuleResolves<Module<DTO>>>

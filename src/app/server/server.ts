@@ -1,15 +1,16 @@
 import { Logger } from '../../common/logger/logger';
+import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
 import { RunMode } from '../types';
 import { ServerResolver } from './server-resolver';
 import { ModuleConstructors } from './types';
 
-export abstract class RilataServer {
-  protected abstract moduleTupleCtors: ModuleConstructors<Module>[];
+export abstract class RilataServer<JWT_P extends DTO> {
+  protected abstract moduleTupleCtors: ModuleConstructors<JWT_P>[];
 
-  protected runModules: Module[] = [];
+  protected runModules: Module<JWT_P>[] = [];
 
-  protected resolver!: ServerResolver;
+  protected resolver!: ServerResolver<JWT_P>;
 
   protected logger!: Logger;
 
@@ -18,7 +19,7 @@ export abstract class RilataServer {
     protected runMode: RunMode,
   ) {}
 
-  init(serverResolver: ServerResolver): void {
+  init(serverResolver: ServerResolver<JWT_P>): void {
     serverResolver.init(this);
     this.logger = serverResolver.getLogger();
     this.logger.info(`${this.constructor.name} server init started`);
@@ -32,7 +33,7 @@ export abstract class RilataServer {
     this.runModules.forEach((m) => m.stop());
   }
 
-  getModule<M extends Module>(name: M['moduleName']): M {
+  getModule<M extends Module<JWT_P>>(name: M['moduleName']): M {
     const module = this.runModules.find((m) => m.moduleName === name);
     if (module === undefined) {
       throw this.logger.error(`not finded module by name: ${name}`, this.runModules);
@@ -40,8 +41,12 @@ export abstract class RilataServer {
     return module as M;
   }
 
-  getModules(): Module[] {
+  getModules(): Module<JWT_P>[] {
     return this.runModules;
+  }
+
+  getServerResolver(): ServerResolver<JWT_P> {
+    return this.resolver;
   }
 
   protected initModules(): void {

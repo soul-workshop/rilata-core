@@ -1,19 +1,19 @@
 import { describe, test, expect } from 'bun:test';
 import { TestDatabase } from '../../../../src/app/database/test-database';
+import { ServerResolver } from '../../../../src/app/server/server-resolver';
 import { dodUtility } from '../../../../src/common/utils/domain-object/dod-utility';
-import { FakeClassImplements } from '../../../fixtures/fake-class-implements';
 import { AuthModule } from '../../auth/module';
 import { CompanyModule } from '../../company/module';
 import { GetCompanyRequestDod } from '../../company/services/get-company/s.params';
 import { SubjectModule } from '../../subject/module';
 import { GetPersonByIinRequestDod } from '../../subject/services/person/get-by-iin/s-params';
-import { ServiceModulesResolver } from '../resolver';
+import { serverResolves } from '../resolves';
 import { ServiceModulesBunServer } from '../server';
 import { ServiceModulesFixtures } from '../server-fixtures';
 
 describe('process http requests by server class', async () => {
   const sut = new ServiceModulesBunServer('all', 'test');
-  const serverResolver = new ServiceModulesResolver();
+  const serverResolver = new ServerResolver(serverResolves);
   sut.init(serverResolver);
 
   [
@@ -25,10 +25,9 @@ describe('process http requests by server class', async () => {
     db.addBatch(ServiceModulesFixtures.repoFixtures);
   });
 
-  const tokenCreator = new FakeClassImplements.TestTokenVerifier();
-  const authToken = tokenCreator.getHashedToken(tokenCreator.createToken(
+  const authToken = serverResolver.getJwtCreator().createToken(
     { userId: '2a96aec7-1091-4449-8369-c3d9f91f1a56' },
-  ));
+  );
 
   test('successfull, person by iin returned by http request', async () => {
     const requestDod = dodUtility.getRequestDod<GetPersonByIinRequestDod>(
@@ -41,7 +40,7 @@ describe('process http requests by server class', async () => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        authorization: authToken,
+        Authorization: authToken,
       },
       body: JSON.stringify(requestDod),
     });
@@ -72,7 +71,7 @@ describe('process http requests by server class', async () => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        authorization: authToken,
+        Authorization: authToken,
       },
     });
     const resp = await sut.fetch(req);
@@ -101,7 +100,7 @@ describe('process http requests by server class', async () => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        authorization: authToken,
+        Authorization: authToken,
       },
       body: JSON.stringify(someInputDto),
     });
@@ -135,7 +134,7 @@ describe('process http requests by server class', async () => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        authorization: authToken,
+        Authorization: authToken,
       },
       body: JSON.stringify(requestDod),
     });
@@ -165,7 +164,7 @@ describe('process http requests by server class', async () => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        authorization: authToken,
+        Authorization: authToken,
       },
       body: JSON.stringify(inputDto),
     });

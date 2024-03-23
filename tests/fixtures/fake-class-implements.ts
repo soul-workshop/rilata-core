@@ -7,16 +7,11 @@ import { EventRepository } from '../../src/app/database/event-repository';
 import { TestDatabase } from '../../src/app/database/test-database';
 import { TestRepository } from '../../src/app/database/test-repository';
 import { TestBatchRecords } from '../../src/app/database/types';
-import { VerifyTokenError } from '../../src/app/jwt/errors';
-import { TokenCreator } from '../../src/app/jwt/token-creator.interface';
-import { TokenVerifier } from '../../src/app/jwt/token-verifier.interface';
-import { JWTTokens, TokenType } from '../../src/app/jwt/types';
 import { GeneralModuleResolver } from '../../src/app/module/types';
 import { failure } from '../../src/common/result/failure';
 import { success } from '../../src/common/result/success';
 import { Result } from '../../src/common/result/types';
 import { UuidType } from '../../src/common/types';
-import { dodUtility } from '../../src/common/utils/domain-object/dod-utility';
 import { dtoUtility } from '../../src/common/utils/dto/dto-utility';
 import { uuidUtility } from '../../src/common/utils/uuid/uuid-utility';
 import { GeneralEventDod } from '../../src/domain/domain-data/domain-types';
@@ -25,40 +20,6 @@ import { GetARParamsEvents } from '../../src/domain/domain-data/type-functions';
 import { DTO } from '../../src/domain/dto';
 
 export namespace FakeClassImplements {
-  /** Упрощенная тестовая реализация jwt менеджера */
-  export class TestTokenVerifier
-  implements TokenVerifier<{ userId: UuidType }>,
-             TokenCreator<{ userId: UuidType }> {
-    init(resolver: GeneralModuleResolver): void {}
-
-    verifyToken(
-      rawToken: string,
-      tokenType: TokenType,
-    ): Result<VerifyTokenError, { userId: UuidType }> {
-      const jwtTokens = JSON.parse(rawToken);
-      const payload = JSON.parse(jwtTokens[tokenType]);
-      if (uuidUtility.isValidValue(payload.userId) === false) {
-        return failure(dodUtility.getAppError<VerifyTokenError>(
-          'NotValidTokenPayloadError',
-          'Невалидная полезная нагрузка в токене.',
-          { rawToken },
-        ));
-      }
-      return success(payload);
-    }
-
-    createToken(payload: { userId: UuidType; }): JWTTokens {
-      return {
-        access: JSON.stringify(payload),
-        refresh: 'someTokenValue',
-      };
-    }
-
-    getHashedToken(tokens: JWTTokens): string {
-      return JSON.stringify(tokens);
-    }
-  }
-
   export class TestMemoryDatabase implements TestDatabase {
     protected resolver!: GeneralModuleResolver;
 

@@ -1,11 +1,12 @@
+import { DTO } from '../../domain/dto';
 import { SubcribeToBusMessage } from '../bus/types';
 import { BunServer } from './bun-server';
 import { BusServerResolver } from './bus-server-resolver';
 
-export abstract class BusBunServer extends BunServer {
-  declare protected resolver: BusServerResolver;
+export abstract class BusBunServer<JWT_P extends DTO> extends BunServer<JWT_P> {
+  declare protected resolver: BusServerResolver<JWT_P>;
 
-  init(serverResolver: BusServerResolver): void {
+  init(serverResolver: BusServerResolver<JWT_P>): void {
     super.init(serverResolver);
     this.subscribeToBus();
   }

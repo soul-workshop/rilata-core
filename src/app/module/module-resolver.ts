@@ -7,15 +7,18 @@ import { Logger } from '../../common/logger/logger';
 import { ModuleConfig } from './types';
 import { Facadable } from '../resolves/facadable';
 import { ModuleResolves } from './module-resolves';
-import { TokenVerifier } from '../jwt/token-verifier.interface';
+import { JwtVerifier } from '../jwt/jwt-verifier';
 import { DTO } from '../../domain/dto';
 import { ModuleResolveInstance } from '../resolves/types';
+import { JwtDecoder } from '../jwt/jwt-decoder';
 
-export abstract class ModuleResolver<M extends Module, MR extends ModuleResolves<M>>
+export abstract class ModuleResolver<
+  JWT_P extends DTO, M extends Module<JWT_P>, MR extends ModuleResolves<M>,
+>
 implements Repositoriable, Realisable, Facadable {
   protected module!: M;
 
-  protected serverResolver!: ServerResolver;
+  protected serverResolver!: ServerResolver<JWT_P>;
 
   protected abstract moduleConfig: ModuleConfig;
 
@@ -28,7 +31,7 @@ implements Repositoriable, Realisable, Facadable {
   constructor(protected resolves: MR) {}
 
   /** инициализация выполняется классом server */
-  init(module: M, serverResolver: ServerResolver): void {
+  init(module: M, serverResolver: ServerResolver<JWT_P>): void {
     this.module = module;
     this.serverResolver = serverResolver;
 
@@ -40,7 +43,7 @@ implements Repositoriable, Realisable, Facadable {
     this.getDatabase().stop();
   }
 
-  getServerResolver(): ServerResolver {
+  getServerResolver(): ServerResolver<JWT_P> {
     return this.serverResolver;
   }
 
@@ -52,8 +55,12 @@ implements Repositoriable, Realisable, Facadable {
     return this.moduleConfig;
   }
 
-  getTokenVerifier(): TokenVerifier<DTO> {
-    return this.serverResolver.getTokenVerifier();
+  getJwtDecoder(): JwtDecoder<JWT_P> {
+    return this.serverResolver.getJwtDecoder();
+  }
+
+  getJwtVerifier(): JwtVerifier<JWT_P> {
+    return this.serverResolver.getJwtVerifier();
   }
 
   getLogger(): Logger {

@@ -4,11 +4,12 @@ import { BusMessageRepository } from '../../app/database/bus-message-repository'
 import { BusModuleResolver } from '../../app/module/bus-module-resolver';
 import { Module } from '../../app/module/module';
 import { ModuleResolves } from '../../app/module/module-resolves';
+import { DTO } from '../../domain/dto';
 
 export class TimeoutCallbackDelivererToBus implements DelivererToBus {
-  protected moduleResolver!: BusModuleResolver<Module, ModuleResolves<Module>>;
+  protected moduleResolver!: BusModuleResolver<DTO, Module<DTO>, ModuleResolves<Module<DTO>>>;
 
-  init(moduleResolver: BusModuleResolver<Module, ModuleResolves<Module>>): void {
+  init(moduleResolver: BusModuleResolver<DTO, Module<DTO>, ModuleResolves<Module<DTO>>>): void {
     this.moduleResolver = moduleResolver;
     BusMessageRepository.instance(moduleResolver).subscribe(this);
   }

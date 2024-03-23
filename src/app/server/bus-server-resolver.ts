@@ -1,10 +1,16 @@
+import { DTO } from '../../domain/dto';
 import { Bus } from '../bus/bus';
-import { RilataServer } from './server';
+import { BusBunServer } from './bus-server';
 import { ServerResolver } from './server-resolver';
+import { BusServerResolves } from './server-resolves';
 
-export abstract class BusServerResolver extends ServerResolver {
+export class BusServerResolver<JWT_P extends DTO> extends ServerResolver<JWT_P> {
+  constructor(protected resolves: BusServerResolves<JWT_P>) {
+    super(resolves);
+  }
+
   /** инициализация выполняется классом server */
-  init(server: RilataServer): void {
+  init(server: BusBunServer<JWT_P>): void {
     super.init(server);
     this.getBus().init(this);
   }
@@ -14,5 +20,7 @@ export abstract class BusServerResolver extends ServerResolver {
     this.getBus().stop();
   }
 
-  abstract getBus(): Bus
+  getBus(): Bus {
+    return this.resolves.bus;
+  }
 }

@@ -3,7 +3,6 @@ import { storeDispatcher } from '../../../src/app/async-store/store-dispatcher';
 import { InjectCallerMiddleware } from '../../../src/app/middleware/inject-caller';
 import { Middleware } from '../../../src/app/middleware/middleware';
 import { OnlyPostMethodMiddleware } from '../../../src/app/middleware/only-post-method';
-import { Module } from '../../../src/app/module/module';
 import { BusBunServer } from '../../../src/app/server/bus-server';
 import { BusServerResolver } from '../../../src/app/server/bus-server-resolver';
 import { ModuleConstructors } from '../../../src/app/server/types';
@@ -12,21 +11,22 @@ import { CompanyCmdModule } from '../company-cmd/module';
 import { CompanyCmdModuleResolver } from '../company-cmd/resolver';
 import { CompanyReadModule } from '../company-read/module';
 import { CompanyReadModuleResolver } from '../company-read/resolver';
+import { UserJwtPayload } from '../types';
 import { getCompanyCmdResolves } from './module-resolves/company-cmd-resolves';
 import { getCompanyReadResolves } from './module-resolves/company-read-resolves';
 
-export class BusRunServer extends BusBunServer {
+export class BusRunServer extends BusBunServer<UserJwtPayload> {
   protected middlewareCtors: Constructor<Middleware>[] = [
     OnlyPostMethodMiddleware,
     InjectCallerMiddleware,
   ];
 
-  protected moduleTupleCtors: ModuleConstructors<Module>[] = [
+  protected moduleTupleCtors: ModuleConstructors<UserJwtPayload>[] = [
     [CompanyCmdModule, CompanyCmdModuleResolver, getCompanyCmdResolves],
     [CompanyReadModule, CompanyReadModuleResolver, getCompanyReadResolves],
   ];
 
-  init(serverResolver: BusServerResolver): void {
+  init(serverResolver: BusServerResolver<UserJwtPayload>): void {
     super.init(serverResolver);
     this.logger.info('start set store dispatcher for server');
     storeDispatcher.setThreadStore(new AsyncLocalStorage());

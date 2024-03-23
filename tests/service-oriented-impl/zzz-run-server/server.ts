@@ -3,13 +3,13 @@ import { storeDispatcher } from '../../../src/app/async-store/store-dispatcher';
 import { InjectCallerMiddleware } from '../../../src/app/middleware/inject-caller';
 import { Middleware } from '../../../src/app/middleware/middleware';
 import { OnlyPostMethodMiddleware } from '../../../src/app/middleware/only-post-method';
-import { Module } from '../../../src/app/module/module';
 import { BunServer } from '../../../src/app/server/bun-server';
 import { ServerResolver } from '../../../src/app/server/server-resolver';
 import { ModuleConstructors } from '../../../src/app/server/types';
 import { Constructor } from '../../../src/common/types';
 import { AuthModule } from '../auth/module';
 import { AuthModuleResolver } from '../auth/resolver';
+import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
 import { CompanyModule } from '../company/module';
 import { CompanyModuleResolver } from '../company/resolver';
 import { SubjectModule } from '../subject/module';
@@ -21,20 +21,20 @@ import { getCompanyResolves } from './module-resolves/company-resolves';
 import { getFrontProxyResolves } from './module-resolves/front-proxy-resolves';
 import { getSubjectResolves } from './module-resolves/subject-resolves';
 
-export class ServiceModulesBunServer extends BunServer {
+export class ServiceModulesBunServer extends BunServer<UserJwtPayload> {
   protected middlewareCtors: Constructor<Middleware>[] = [
     OnlyPostMethodMiddleware,
     InjectCallerMiddleware,
   ];
 
-  protected moduleTupleCtors: ModuleConstructors<Module>[] = [
+  protected moduleTupleCtors: ModuleConstructors<UserJwtPayload>[] = [
     [AuthModule, AuthModuleResolver, getAuthResolves],
     [SubjectModule, SubjectModuleResolver, getSubjectResolves],
     [CompanyModule, CompanyModuleResolver, getCompanyResolves],
     [FrontProxyModule, FrontendProxyModuleResolver, getFrontProxyResolves],
   ];
 
-  init(serverResolver: ServerResolver): void {
+  init(serverResolver: ServerResolver<UserJwtPayload>): void {
     super.init(serverResolver);
     this.logger.info('start set store dispatcher for server');
     storeDispatcher.setThreadStore(new AsyncLocalStorage());
