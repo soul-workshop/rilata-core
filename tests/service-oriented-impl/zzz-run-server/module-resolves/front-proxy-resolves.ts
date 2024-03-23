@@ -12,6 +12,7 @@ export function getFrontProxyResolves(runMode: RunMode): FrontendProxyResolves {
   if (!frontProxyResolves) {
     frontProxyResolves = {
       moduleName: 'FrontProxyModule',
+      moduleUrl: '/api/frontend-proxy-module/',
       runMode,
       companyFacade: new CompanyFacadeOneServerImpl(),
       subjectFacade: new SubjectFacadeOneServerImpl(),

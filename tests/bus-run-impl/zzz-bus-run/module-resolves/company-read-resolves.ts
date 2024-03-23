@@ -24,6 +24,7 @@ export function getCompanyReadResolves(runMode: RunMode): CompanyReadResolves {
     companyResolves = {
       runMode: 'test',
       moduleName: 'CompanyReadModule',
+      moduleUrl: '/api/company-read-module/',
       db,
       busMessageRepo: eventRepo,
       companyRepo,

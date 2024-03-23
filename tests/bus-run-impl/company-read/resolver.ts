@@ -1,4 +1,3 @@
-import { ModuleConfig } from '../../../src/app/module/types';
 import { CompanyReadResolves } from './resolves';
 import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { CompanyReadModule } from './module';
@@ -14,10 +13,6 @@ import { UserJwtPayload } from '../../service-oriented-impl/auth/services/user/u
 export class CompanyReadModuleResolver extends BusModuleResolver<
   UserJwtPayload, CompanyReadModule, CompanyReadResolves
 > {
-  protected moduleConfig: ModuleConfig = {
-    ModuleUrl: '/api/company-read-module/',
-  };
-
   private delivererToBus = new TimeoutCallbackDelivererToBus();
 
   getRealisation(key: unknown): ModuleResolveInstance {

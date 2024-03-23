@@ -26,6 +26,7 @@ export function getCompanyResolves(runMode: RunMode): CompanyResolves {
     companyResolves = {
       runMode: 'test',
       moduleName: 'CompanyModule',
+      moduleUrl: '/api/company-module/',
       db,
       busMessageRepo: eventRepo,
       companyRepo,

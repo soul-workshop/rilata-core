@@ -17,6 +17,7 @@ export function getAuthResolves(runMode: RunMode): AuthResolves {
     authResolves = {
       runMode: 'test',
       moduleName: 'AuthModule',
+      moduleUrl: '/api/auth-module/',
       db,
       busMessageRepo: new FakeClassImplements.TestEventRepository(db),
       userRepo: new UserRepositoryImpl(db),

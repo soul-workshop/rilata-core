@@ -7,6 +7,7 @@ import { Module } from './module';
 export type ModuleResolves<M extends Module<DTO>> = {
   runMode: RunMode,
   moduleName: M['moduleName'],
+  moduleUrl: string,
   db: Database,
   busMessageRepo: BusMessageRepository<Record<string, unknown>>,
 }

@@ -1,5 +1,4 @@
 import { ModuleResolver } from '../../../src/app/module/module-resolver';
-import { ModuleConfig } from '../../../src/app/module/types';
 import { CompanyRepository } from './domain-object/company/repo';
 import { CompanyModule } from './module';
 import { CompanyResolves } from './resolves';
@@ -13,10 +12,6 @@ import { UserJwtPayload } from '../auth/services/user/user-authentification/s-pa
 export class CompanyModuleResolver extends ModuleResolver<
   UserJwtPayload, CompanyModule, CompanyResolves
 > {
-  protected moduleConfig: ModuleConfig = {
-    ModuleUrl: '/api/company-module/',
-  };
-
   getRealisation(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
