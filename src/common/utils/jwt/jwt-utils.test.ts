@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
-import { JwtHmacUtils } from './jwt-utils';
+import { JwtHmacHashUtils } from './jwt-utils';
 
 describe('jwt hmac utils tests', () => {
-  const sut = new JwtHmacUtils();
+  const sut = new JwtHmacHashUtils();
 
   describe('encode to base64Url and decode from base64Url cases', () => {
     test('success, string case', () => {

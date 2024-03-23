@@ -12,6 +12,7 @@ import { ServiceBaseErrors } from './error-types';
 import { QueryService } from './query-service';
 import { DTO } from '../../domain/dto';
 import { EventService } from './event-service';
+import { ResultDTO } from '../result-dto';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
 
@@ -92,9 +93,13 @@ export type RequestDodValidator<
 export type ServiceResult<P extends GeneralBaseServiceParams> =
   Result<P['errors'], P['successOut']>
 
-export type GetServiceErrorsResult<
+export type FullServiceResult<
   P extends GeneralQueryServiceParams | GeneralCommandServiceParams
-> = Result<P['errors'] | ServiceBaseErrors, never>
+> = Result<P['errors'] | ServiceBaseErrors, P['successOut']>
+
+export type FullServiceResultDTO<
+  P extends GeneralQueryServiceParams | GeneralCommandServiceParams
+> = ResultDTO<P['errors'] | ServiceBaseErrors, P['successOut']>
 
 export type GetServiceName<PARAMS extends GeneralBaseServiceParams> =
   PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams | GeneralEventServiceParams

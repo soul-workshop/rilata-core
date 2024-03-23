@@ -4,7 +4,7 @@ import { ServerResolver } from '../../app/server/server-resolver';
 import { failure } from '../../common/result/failure';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
-import { JwtHmacUtils } from '../../common/utils/jwt/jwt-utils';
+import { JwtHmacHashUtils } from '../../common/utils/jwt/jwt-utils';
 import { DTO } from '../../domain/dto';
 
 export class JwtVerifierImpl<PAYLOAD extends DTO> implements JwtVerifier<PAYLOAD> {
@@ -17,7 +17,7 @@ export class JwtVerifierImpl<PAYLOAD extends DTO> implements JwtVerifier<PAYLOAD
   verifyToken(rawToken: string): Result<JwtVerifyErrors, PAYLOAD> {
     const secret = this.resolver.getJwtSecretKey();
     const { algorithm } = this.resolver.getJwtConfig();
-    const jwtUtils = new JwtHmacUtils();
+    const jwtUtils = new JwtHmacHashUtils();
     if (!jwtUtils.verify(rawToken, secret, algorithm === 'HS256' ? 'sha256' : 'sha512')) {
       return failure(dodUtility.getDomainError<JwtVerifyError>(
         'JwtVerifyError',

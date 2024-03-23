@@ -1,7 +1,7 @@
 import { ErrorDod } from '../../domain/domain-data/domain-types';
 import { Locale } from '../../domain/locale';
 import { ArrayFieldErrors, FieldErrors } from '../../domain/validator/field-validator/types';
-import { JwtVerifyErrors } from '../jwt/jwt-errors';
+import { JwtDecodeErrors, JwtVerifyErrors } from '../jwt/jwt-errors';
 
 export type ValidationError = {
   errors: FieldErrors | ArrayFieldErrors,
@@ -31,6 +31,7 @@ export type ServiceBaseErrors =
   | PermissionDeniedError<Locale<'Permission denied'>>
   | InternalError<Locale<'Internal error'>>
   | ValidationError
+  | JwtDecodeErrors
   | JwtVerifyErrors;
 
 export type BackendBaseErrors = ServiceBaseErrors;

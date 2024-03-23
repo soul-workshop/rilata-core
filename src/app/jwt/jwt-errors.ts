@@ -22,10 +22,24 @@ export type TokenExpiredErrorBody = {
     hint: Record<string, never>,
     name: 'TokenExpiredError',
 };
+
 /** Токен просрочен. */
 export type TokenExpiredError = ErrorDod<'TokenExpiredError', TokenExpiredErrorBody>;
 
-export type JwtDecodeErrors = IncorrectTokenError | NotValidTokenPayloadError | TokenExpiredError;
+export type RefreshTokenExpiredErrorBody = {
+    text: 'Рефреш токен просрочен',
+    hint: Record<string, never>,
+    name: 'RefreshTokenExpiredError',
+};
+
+/** Токен просрочен. */
+export type RefreshTokenExpiredError = ErrorDod<'RefreshTokenExpiredError', RefreshTokenExpiredErrorBody>;
+
+export type JwtDecodeErrors =
+  IncorrectTokenError
+  | NotValidTokenPayloadError
+  | TokenExpiredError
+  | RefreshTokenExpiredError;
 
 export type JwtVerifyBody = {
     text: 'Токен не валидный',

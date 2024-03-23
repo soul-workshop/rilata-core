@@ -10,7 +10,7 @@ export class JwtDecoderImpl extends BaseJwtDecoder<UserJwtPayload> {
     this.expiredTimeShiftAsMs = 0;
   }
 
-  verifyPayloadBody(payload: UserJwtPayload): boolean {
+  payloadBodyIsValid(payload: UserJwtPayload): boolean {
     return uuidUtility.isValidValue(payload.userId);
   }
 }
