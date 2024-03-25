@@ -3,7 +3,7 @@ import { DTO } from '../../../domain/dto';
 
 type Base64Url = string;
 
-export class JwtHmacUtils<T extends DTO | string> {
+export class JwtHmacHashUtils<T extends DTO | string> {
   /** returned jwt token */
   sign(payload: T, secretKey: string, algorithm: 'sha256' | 'sha512'): string {
     const alg = algorithm === 'sha256' ? 'HS256' : 'HS512';

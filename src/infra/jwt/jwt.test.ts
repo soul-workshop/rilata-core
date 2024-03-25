@@ -27,7 +27,7 @@ class TestJwtDecoder extends BaseJwtDecoder<TestJwtPayload> {
     super();
   }
 
-  verifyPayloadBody(payload: TestJwtPayload): boolean {
+  payloadBodyIsValid(payload: TestJwtPayload): boolean {
     return uuidUtility.isValidValue(payload.userId);
   }
 

@@ -1,6 +1,6 @@
 import {
   IncorrectTokenError, JwtDecodeErrors,
-  NotValidTokenPayloadError, TokenExpiredError,
+  NotValidTokenPayloadError, RefreshTokenExpiredError, TokenExpiredError,
 } from '../../app/jwt/jwt-errors';
 import { JwtDecoder } from '../../app/jwt/jwt-decoder';
 import { DTO } from '../../domain/dto';
@@ -11,7 +11,7 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { JwtPayload } from '../../app/jwt/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { ServerResolver } from '../../app/server/server-resolver';
-import { JwtHmacUtils } from '../../common/utils/jwt/jwt-utils';
+import { JwtHmacHashUtils } from '../../common/utils/jwt/jwt-utils';
 
 /** Класс для декодирования JWT токена. */
 export abstract class BaseJwtDecoder<
@@ -21,8 +21,8 @@ export abstract class BaseJwtDecoder<
     Для бэка скорее всего 0, для фронта например 3000 */
   abstract expiredTimeShiftAsMs: number;
 
-  /** Проверить, что тело payload соответвует требуемому */
-  abstract verifyPayloadBody(payload: PAYLOAD): boolean
+  /** Возвращает ответ, что тело payload соответвует требуемому */
+  abstract payloadBodyIsValid(payload: PAYLOAD): boolean
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   init(resolver: ServerResolver<PAYLOAD>): void {}
@@ -35,10 +35,21 @@ export abstract class BaseJwtDecoder<
       || typeof decodedPayload?.rExp !== 'number'
     ) return this.getError('IncorrectTokenError');
 
-    if (this.dateIsExpired(decodedPayload)) return this.getError('TokenExpiredError');
+    if (this.accessDateIsExpired(decodedPayload)) return this.getError('TokenExpiredError');
 
     const payload = dtoUtility.excludeAttrs(decodedPayload, ['exp', 'rExp']) as unknown as PAYLOAD;
-    return this.verifyPayloadBody(payload) ? success(payload) : this.getError('NotValidTokenPayloadError');
+    return this.payloadBodyIsValid(payload) ? success(payload) : this.getError('NotValidTokenPayloadError');
+  }
+
+  accessDateIsExpired(rawOrPayload: string | JwtPayload<PAYLOAD>): boolean {
+    const decodedPayload = typeof rawOrPayload === 'string'
+      ? this.decodeJwt(rawOrPayload)
+      : rawOrPayload;
+    if (
+      !decodedPayload
+      || typeof decodedPayload?.exp !== 'number'
+    ) return true;
+    return (this.getNow() + this.expiredTimeShiftAsMs) - decodedPayload.exp > 0;
   }
 
   refreshDateIsExpired(rawToken: string): boolean {
@@ -70,24 +81,27 @@ export abstract class BaseJwtDecoder<
         {},
       )) as Result<E, never>;
     }
-    return failure(dodUtility.getDomainError<TokenExpiredError>(
-      'TokenExpiredError',
-      'Токен просрочен.',
+    if (name === 'TokenExpiredError') {
+      return failure(dodUtility.getDomainError<TokenExpiredError>(
+        'TokenExpiredError',
+        'Токен просрочен.',
+        {},
+      )) as Result<E, never>;
+    }
+    return failure(dodUtility.getDomainError<RefreshTokenExpiredError>(
+      'RefreshTokenExpiredError',
+      'Рефреш токен просрочен',
       {},
     )) as Result<E, never>;
   }
 
   protected decodeJwt(rawToken: string): JwtPayload<PAYLOAD> | undefined {
-    const jwtHmacUtils = new JwtHmacUtils();
+    const jwtHmacUtils = new JwtHmacHashUtils();
     try {
       const result = jwtHmacUtils.getPayload(rawToken);
       return typeof result !== 'object' ? undefined : result as JwtPayload<PAYLOAD>;
     } catch (err) {
       return undefined;
     }
-  }
-
-  protected dateIsExpired(payload: JwtPayload<PAYLOAD>): boolean {
-    return (this.getNow() + this.expiredTimeShiftAsMs) - payload.exp > 0;
   }
 }

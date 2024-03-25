@@ -11,4 +11,5 @@ export const STATUS_CODES: Record<BackendBaseErrors['name'], number> = {
   NotValidTokenPayloadError: 400,
   TokenExpiredError: 400,
   JwtVerifyError: 400,
+  RefreshTokenExpiredError: 400,
 };
