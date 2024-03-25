@@ -1,5 +1,3 @@
-import { RunMode } from '../../../../src/app/types';
-import { AssertionException } from '../../../../src/common/exeptions';
 import { AuthFacadeOneServerImpl } from '../../auth/one-server-facades/auth';
 import { CompanyFacadeOneServerImpl } from '../../company/infra/one-server-facade/company';
 import { SubjectFacadeOneServerImpl } from '../../subject/infra/one-server-facades/subject';
@@ -7,13 +5,12 @@ import { FrontendProxyResolves } from '../../z-front-proxy/resolves';
 
 let frontProxyResolves: FrontendProxyResolves;
 
-export function getFrontProxyResolves(runMode: RunMode): FrontendProxyResolves {
+export function getFrontProxyResolves(): FrontendProxyResolves {
   /** в read-module нет своих репозиториев, поэтому удалены ссылки на  */
   if (!frontProxyResolves) {
     frontProxyResolves = {
       moduleName: 'FrontProxyModule',
       moduleUrl: '/api/frontend-proxy-module/',
-      runMode,
       companyFacade: new CompanyFacadeOneServerImpl(),
       subjectFacade: new SubjectFacadeOneServerImpl(),
       authFacade: new AuthFacadeOneServerImpl(),
@@ -26,6 +23,5 @@ export function getFrontProxyResolves(runMode: RunMode): FrontendProxyResolves {
     };
   }
 
-  if (runMode === 'test') return frontProxyResolves;
-  throw new AssertionException('not implements other run modes');
+  return frontProxyResolves;
 }

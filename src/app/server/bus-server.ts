@@ -12,7 +12,7 @@ export abstract class BusBunServer<JWT_P extends DTO> extends BunServer<JWT_P> {
   }
 
   protected subscribeToBus(): void {
-    this.runModules.forEach((module) => {
+    this.modules.forEach((module) => {
       const bus = this.resolver.getBus();
       module.eventServices.forEach((service) => {
         const eventSubscribe: SubcribeToBusMessage = {

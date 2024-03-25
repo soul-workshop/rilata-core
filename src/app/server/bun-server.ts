@@ -1,4 +1,5 @@
 import { Serve, Server } from 'bun';
+import { AsyncLocalStorage } from 'async_hooks';
 import { RilataServer } from './server';
 import { Constructor } from '../../common/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
@@ -12,6 +13,7 @@ import { ResultDTO } from '../result-dto';
 import { ServerResolver } from './server-resolver';
 import { GeneralErrorDod } from '../../domain/domain-data/domain-types';
 import { DTO } from '../../domain/dto';
+import { storeDispatcher } from '../async-store/store-dispatcher';
 
 export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
   port: number | undefined;
@@ -28,17 +30,24 @@ export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
 
   init(serverResolver: ServerResolver<JWT_P>): void {
     super.init(serverResolver);
+    this.initStarted();
 
     this.middlewareCtors.forEach((Ctor) => {
       const middleware = new Ctor();
       middleware.init(serverResolver);
       this.middlewares.push(middleware);
     });
+    this.logger.info('all server middlewares loaded');
 
-    this.runModules.forEach((module) => {
+    this.modules.forEach((module) => {
       const controller = new ModuleController(module.getModuleResolver());
       this.controllers[controller.getUrl()] = controller;
     });
+    this.logger.info('all runned module controllers loaded');
+
+    storeDispatcher.setThreadStore(new AsyncLocalStorage());
+    this.logger.info('async local store dispatcher setted');
+    this.initFinished();
   }
 
   stop(): void {

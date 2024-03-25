@@ -5,14 +5,14 @@ import { TestDatabase } from '../../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
 import { UserRepositoryImpl } from '../../../../zz-infra/repositories/auth-module/user';
-import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures';
+import { serverStarter } from '../../../../zzz-run-server/starter';
 import { AuthModule } from '../../../module';
 import { GetUsersRequestDod } from './s-params';
 import { GetingUsersService } from './service';
 
 describe('get users service test', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testSever = await ServiceModulesFixtures.getServer<AuthModule>(['AuthModule']);
+  const testSever = serverStarter.start(['AuthModule']);
   const module = testSever.getModule<AuthModule>('AuthModule');
   const resolver = module.getModuleResolver();
   const store = setAndGetTestStoreDispatcher({

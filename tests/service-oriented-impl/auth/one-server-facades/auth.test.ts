@@ -2,12 +2,11 @@ import { describe, expect, test } from 'bun:test';
 import { DomainUser } from '../../../../src/app/caller';
 import { uuidUtility } from '../../../../src/common/utils/uuid/uuid-utility';
 import { CompanyModule } from '../../company/module';
-import { ServiceModulesFixtures } from '../../zzz-run-server/server-fixtures';
+import { serverStarter } from '../../zzz-run-server/starter';
 import { AuthFacade } from '../facade';
-import { AuthModule } from '../module';
 
 describe('auth facade tests', async () => {
-  const server = await ServiceModulesFixtures.getServer<AuthModule | CompanyModule>(['CompanyModule', 'AuthModule']);
+  const server = serverStarter.start(['CompanyModule', 'AuthModule']);
   const companyModule = server.getModule<CompanyModule>('CompanyModule');
   const companyResolver = companyModule.getModuleResolver();
 

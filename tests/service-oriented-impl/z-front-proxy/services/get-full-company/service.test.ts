@@ -7,13 +7,14 @@ import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-ut
 import { AuthModule } from '../../../auth/module';
 import { CompanyModule } from '../../../company/module';
 import { SubjectModule } from '../../../subject/module';
+import { serverStarter } from '../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures';
-import { FullCompany, FullUser } from '../../domain-data/full-company/params';
+import { FullCompany } from '../../domain-data/full-company/params';
 import { FrontProxyModule } from '../../module';
 import { GetFullCompanyRequestDod, GetFullCompanyServiceParams } from './s-params';
 
 describe('get full company service tests', async () => {
-  const testServer = await ServiceModulesFixtures.getServer('all');
+  const testServer = serverStarter.start('all');
   const requestId = '5611f332-f4d9-4c16-a561-04dabe864fc9';
   const sut = testServer.getModule<FrontProxyModule>('FrontProxyModule');
   const caller: DomainUser = { type: 'DomainUser', userId: 'daa253a3-4575-420a-9a64-11f466871cdc' };

@@ -2,6 +2,7 @@ import {
   describe, test, expect,
 } from 'bun:test';
 import { EventRepository } from '../../../src/app/database/event-repository';
+import { BusBunServer } from '../../../src/app/server/bus-server';
 import { dodUtility } from '../../../src/common/utils/domain-object/dod-utility';
 import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
 import { uuidUtility } from '../../../src/common/utils/uuid/uuid-utility';
@@ -9,7 +10,8 @@ import { AddCompanyRequestDod, AddCompanyRequestDodAttrs } from '../company-cmd/
 import { CompanyOutAttrs } from '../company-read/domain/company/params';
 import { CompanyReadRepository } from '../company-read/domain/company/repo';
 import { CompanyReadModule } from '../company-read/module';
-import { BusRunFixtures } from '../zzz-bus-run/server-fixtures';
+import { UserJwtPayload } from '../types';
+import { serverStarter } from './starter';
 
 describe('add company service tests', async () => {
   function timeout() {
@@ -18,7 +20,7 @@ describe('add company service tests', async () => {
   }
 
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testServer = await BusRunFixtures.getServer();
+  const testServer = serverStarter.start('all') as BusBunServer<UserJwtPayload>;
   const serverResolver = testServer.getServerResolver();
 
   const addCompanyRequestDodAttrs: AddCompanyRequestDodAttrs = {

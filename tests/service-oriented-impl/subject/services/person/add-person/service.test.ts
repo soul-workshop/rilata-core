@@ -6,6 +6,7 @@ import { TestDatabase } from '../../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
+import { serverStarter } from '../../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures';
 import { PersonAR } from '../../../domain-object/person/a-root';
 import { PersonRepository } from '../../../domain-object/person/repo';
@@ -16,7 +17,7 @@ import { AddingPersonService } from './service';
 
 describe('add person service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testSever = await ServiceModulesFixtures.getServer('all');
+  const testSever = serverStarter.start('all');
   const module = testSever.getModule<SubjectModule>('SubjectModule');
   const resolver = module.getModuleResolver();
   const store = setAndGetTestStoreDispatcher({

@@ -1,20 +1,19 @@
 import { describe, test, expect } from 'bun:test';
 import { TestDatabase } from '../../../../src/app/database/test-database';
-import { ServerResolver } from '../../../../src/app/server/server-resolver';
+import { BunServer } from '../../../../src/app/server/bun-server';
 import { dodUtility } from '../../../../src/common/utils/domain-object/dod-utility';
+import { UserJwtPayload } from '../../../bus-run-impl/types';
 import { AuthModule } from '../../auth/module';
 import { CompanyModule } from '../../company/module';
 import { GetCompanyRequestDod } from '../../company/services/get-company/s.params';
 import { SubjectModule } from '../../subject/module';
 import { GetPersonByIinRequestDod } from '../../subject/services/person/get-by-iin/s-params';
-import { serverResolves } from '../resolves';
-import { ServiceModulesBunServer } from '../server';
+import { serverStarter } from '../starter';
 import { ServiceModulesFixtures } from '../server-fixtures';
 
 describe('process http requests by server class', async () => {
-  const sut = new ServiceModulesBunServer('all', 'test');
-  const serverResolver = new ServerResolver(serverResolves);
-  sut.init(serverResolver);
+  const sut = serverStarter.start('all') as BunServer<UserJwtPayload>;
+  const serverResolver = sut.getServerResolver();
 
   [
     sut.getModule<SubjectModule>('SubjectModule'),

@@ -1,12 +1,12 @@
 import {
   beforeEach, describe, expect, spyOn, test,
 } from 'bun:test';
-import { DeliveryEvent } from '../../../../../../src/app/bus/types';
 import { EventRepository } from '../../../../../../src/app/database/event-repository';
 import { TestDatabase } from '../../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
+import { serverStarter } from '../../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures';
 import { UserRepository } from '../../../domain-object/user/repo';
 import { AuthModule } from '../../../module';
@@ -15,7 +15,7 @@ import { AddingUserService } from './service';
 
 describe('add user service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testSever = await ServiceModulesFixtures.getServer<AuthModule>(['AuthModule']);
+  const testSever = serverStarter.start(['AuthModule']);
   const module = testSever.getModule<AuthModule>('AuthModule');
   const resolver = module.getModuleResolver();
   const store = setAndGetTestStoreDispatcher({

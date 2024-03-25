@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AnyFunction } from 'bun';
 import {
   describe, test, expect, beforeEach, spyOn, afterEach, Mock,
@@ -15,6 +16,7 @@ import { AuthFacade } from '../../../auth/facade';
 import { PersonAlreadyExistsError, PersonDoesntExistByIinError } from '../../../subject/domain-object/person/repo-errors';
 import { SubjectFacade } from '../../../subject/facade';
 import { AddPersonRequestDodAttrs } from '../../../subject/services/person/add-person/s-params';
+import { serverStarter } from '../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures';
 import { CompanyAR } from '../../domain-object/company/a-root';
 import { CompanyRepository } from '../../domain-object/company/repo';
@@ -25,7 +27,7 @@ import { RegisteringCompanyService } from './service';
 
 describe('register company saga service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testSever = await ServiceModulesFixtures.getServer('all');
+  const testSever = serverStarter.start('all');
   const module = testSever.getModule<CompanyModule>('CompanyModule');
   const resolver = module.getModuleResolver();
   const store = setAndGetTestStoreDispatcher({
@@ -226,19 +228,17 @@ describe('register company saga service tests', async () => {
     test('успех, компания успешно добавлена, пользователь добавлен, персона существующая', async () => {
       // preparation mocks
       addPersonMock.mockImplementation(() => { throw Error('not be called'); });
-      getPersonMock.mockImplementation(async (iin, caller) => {
-          return (
-              success({
-                  id: existPersonId,
-                  iin: '000111222333',
-                  firstName: 'Will',
-                  lastName: 'Smith',
-                  contacts: {
-                      phones: [],
-                  },
-              })
-          );
-      });
+      getPersonMock.mockImplementation(async (iin, caller) => (
+        success({
+          id: existPersonId,
+          iin: '000111222333',
+          firstName: 'Will',
+          lastName: 'Smith',
+          contacts: {
+            phones: [],
+          },
+        })
+      ));
       addUserMock.mockResolvedValueOnce(success({ userId: newUserId }));
 
       // execute service

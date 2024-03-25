@@ -9,10 +9,11 @@ import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod
 import { GetPersonByIinRequestDod, GetPersonByIinOut } from './s-params';
 import { GetingPersonByIinService } from './service';
 import { PersonDoesntExistByIinError } from '../../../domain-object/person/repo-errors';
+import { serverStarter } from '../../../../zzz-run-server/starter';
 
 describe('get person by iin service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testSever = await ServiceModulesFixtures.getServer('all');
+  const testSever = serverStarter.start('all');
   const module = testSever.getModule<SubjectModule>('SubjectModule');
   const resolver = module.getModuleResolver();
   const store = setAndGetTestStoreDispatcher({

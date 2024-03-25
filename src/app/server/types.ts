@@ -4,12 +4,11 @@ import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
 import { ModuleResolver } from '../module/module-resolver';
 import { ModuleResolves } from '../module/module-resolves';
-import { RunMode } from '../types';
 
-export type ModuleConstructors<JWT_P extends DTO> = [
-  Constructor<Module<JWT_P>>,
-  Constructor<ModuleResolver<JWT_P, Module<JWT_P>, ModuleResolves<Module<JWT_P>>>>,
-  (runMode: RunMode) => ModuleResolves<Module<JWT_P>>,
+export type ModuleConstructors<M extends Module<DTO>> = [
+  Constructor<M>,
+  Constructor<ModuleResolver<DTO, M, ModuleResolves<M>>>,
+  ModuleResolves<M>,
 ];
 
 export type ServerConfig = {

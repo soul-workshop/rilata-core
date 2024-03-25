@@ -4,6 +4,7 @@ import {
 import { TestDatabase } from '../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../fixtures/test-thread-store-mock';
+import { serverStarter } from '../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures';
 import { CompanyAttrs } from '../../domain-data/company/params';
 import { CompanyDoesntExistByIdError } from '../../domain-object/company/repo-errors';
@@ -13,7 +14,7 @@ import { GetingCompanyService } from './service';
 
 describe('register company saga service tests', async () => {
   const requestId = '5611f332-f4d9-4c16-a561-04dabe864fc9';
-  const testServer = await ServiceModulesFixtures.getServer('all');
+  const testServer = serverStarter.start('all');
   const module = testServer.getModule<CompanyModule>('CompanyModule');
   const resolver = module.getModuleResolver();
   const store = setAndGetTestStoreDispatcher({

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { DomainUser } from '../../../../../src/app/caller';
 import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
 import { CompanyModule } from '../../../company/module';
-import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures';
+import { serverStarter } from '../../../zzz-run-server/starter';
 import { PersonAR } from '../../domain-object/person/a-root';
 import { PersonRepository } from '../../domain-object/person/repo';
 import { SubjectFacade } from '../../facade';
@@ -10,7 +10,7 @@ import { SubjectModule } from '../../module';
 import { AddPersonOut, AddPersonRequestDodAttrs } from '../../services/person/add-person/s-params';
 
 describe('subject facade tests', async () => {
-  const server = await ServiceModulesFixtures.getServer<SubjectModule | CompanyModule>([
+  const server = serverStarter.start([
     'SubjectModule',
     'CompanyModule',
   ]);
