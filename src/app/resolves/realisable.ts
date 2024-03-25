@@ -1,7 +1,5 @@
-import { ModuleResolveInstance } from './types';
-
 /** Объявляет интерфейс для получения объектов реализации модуля.
   Любые модули которые не являются репозиторием и фасадом. */
 export interface Realisable {
-  getRealisation(...args: unknown[]): ModuleResolveInstance
+  getRealisation(...args: unknown[]): unknown
 }

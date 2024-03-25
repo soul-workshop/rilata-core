@@ -19,7 +19,7 @@ implements Repositoriable, Realisable, Facadable {
 
   protected serverResolver!: ServerResolver<JWT_P>;
 
-  abstract getRealisation(...args: unknown[]): ModuleResolveInstance
+  abstract getRealisation(...args: unknown[]): unknown
 
   abstract getRepository(...args: unknown[]): ModuleResolveInstance
 
