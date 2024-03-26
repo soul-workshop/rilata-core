@@ -38,7 +38,7 @@ describe('binary flags tests', () => {
     expect(sut.isOn(['test', 'prod'])).toBe(false);
   });
 
-  test('binary flags tests, off mode', () => {
+  test('binary flags tests, all mode', () => {
     const sut = new BinaryKeyFlag(loggerModes, 'all');
     expect(sut.isOn(['dev'])).toBe(true);
     expect(sut.isOn(['info'])).toBe(true);

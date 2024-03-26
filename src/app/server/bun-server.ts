@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Serve, Server } from 'bun';
 import { AsyncLocalStorage } from 'async_hooks';
 import { RilataServer } from './server';
@@ -74,6 +75,9 @@ export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
       const controller = this.controllers[url.pathname];
       if (controller) return controller.execute(req);
 
+      // error TS2345: Argument of type 'import("url").URL' is not assignable to parameter of type 'URL'.
+      // Type 'URL' is missing the following properties from type 'URL': createObjectURL, revokeObjectURL, canParse
+      // @ts-ignore
       return this.getNotFoundError(url);
     } catch (e) {
       if (this.resolver.getRunMode() === 'test') throw e;
