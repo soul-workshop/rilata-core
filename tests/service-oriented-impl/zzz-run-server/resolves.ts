@@ -1,13 +1,13 @@
 import { ServerResolves } from '../../../src/app/server/server-resolves';
 import { ConsoleLogger } from '../../../src/common/logger/console-logger';
-import { getLogerMode } from '../../../src/common/logger/logger-modes';
+import { getLoggerMode } from '../../../src/common/logger/logger-modes';
 import { JwtCreatorImpl } from '../../../src/infra/jwt/jwt-creator';
 import { JwtVerifierImpl } from '../../../src/infra/jwt/jwt-verifier';
 import { UserJwtPayload } from '../../service-oriented-impl/auth/services/user/user-authentification/s-params';
 import { JwtDecoderImpl } from '../../service-oriented-impl/zz-infra/jwt/decoder';
 
 export const serverResolves: ServerResolves<UserJwtPayload> = {
-  logger: new ConsoleLogger(getLogerMode()),
+  logger: new ConsoleLogger(getLoggerMode()),
   runMode: 'test',
   jwtSecretKey: 'your-256-bit-secret',
   jwtConfig: {}, // default jwtConfig

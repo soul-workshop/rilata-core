@@ -6,7 +6,7 @@ export const loggerModes = {
   fatal: 0b10000,
 };
 
-export function getLogerMode(): Array<keyof typeof loggerModes> | 'all' | 'off' {
+export function getLoggerMode(): Array<keyof typeof loggerModes> | 'all' | 'off' {
   function isLogMode(value: string): value is keyof typeof loggerModes | 'all' | 'off' {
     return Object.keys(loggerModes).concat('all', 'off').includes(value);
   }

@@ -4,7 +4,7 @@ import { BusServerResolves } from '../../../src/app/server/server-resolves';
 import { ServerStarter } from '../../../src/app/server/server-starter';
 import { ModuleConstructors } from '../../../src/app/server/types';
 import { ConsoleLogger } from '../../../src/common/logger/console-logger';
-import { getLogerMode } from '../../../src/common/logger/logger-modes';
+import { getLoggerMode } from '../../../src/common/logger/logger-modes';
 import { Constructor } from '../../../src/common/types';
 import { OneServerBus } from '../../../src/infra/bus/one-server-bus';
 import { JwtCreatorImpl } from '../../../src/infra/jwt/jwt-creator';
@@ -28,7 +28,7 @@ class BusServerStarter extends ServerStarter<UserJwtPayload, AllServerModules> {
     resolves?: Partial<BusServerResolves<UserJwtPayload>>,
   ) {
     const defaultResolves: BusServerResolves<UserJwtPayload> = {
-      logger: new ConsoleLogger(getLogerMode()),
+      logger: new ConsoleLogger(getLoggerMode()),
       runMode: 'test',
       jwtSecretKey: 'your-256-bit-secret',
       jwtConfig: {}, // default jwtConfig
