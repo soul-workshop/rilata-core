@@ -13,6 +13,6 @@ export interface EventRepository extends BusMessageRepository<GeneralEventDod> {
 
 export const EventRepository = {
   instance(resolver: Repositoriable): EventRepository {
-    return resolver.getRepository(EventRepository) as EventRepository;
+    return resolver.resolveRepo(EventRepository) as EventRepository;
   },
 };

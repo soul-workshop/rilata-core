@@ -12,6 +12,6 @@ export interface CompanyReadRepository {
 
 export const CompanyReadRepository = {
   instance(resolver: Repositoriable): CompanyReadRepository {
-    return resolver.getRepository(CompanyReadRepository) as CompanyReadRepository;
+    return resolver.resolveRepo(CompanyReadRepository) as CompanyReadRepository;
   },
 };

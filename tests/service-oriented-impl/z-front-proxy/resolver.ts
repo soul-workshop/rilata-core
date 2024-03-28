@@ -21,15 +21,15 @@ export class FrontendProxyModuleResolver extends ModuleResolver<
     this.resolves.companyFacade.init(this);
   }
 
-  getRealisation(key: unknown): ModuleResolveInstance {
+  resolve(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
 
-  getRepository(key: unknown): ModuleResolveInstance {
+  resolveRepo(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('not be called in read module');
   }
 
-  getFacade(key: unknown): ModuleResolveInstance {
+  resolveFacade(key: unknown): ModuleResolveInstance {
     if (key === AuthFacade) return this.resolves.authFacade;
     if (key === SubjectFacade) return this.resolves.subjectFacade;
     if (key === CompanyFacade) return this.resolves.companyFacade;

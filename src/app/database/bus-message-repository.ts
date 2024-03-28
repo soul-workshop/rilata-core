@@ -21,6 +21,6 @@ export interface BusMessageRepository<R extends Record<string, unknown>> {
 type BusRepository = BusMessageRepository<Record<string, unknown>>;
 export const BusMessageRepository = {
   instance(resolver: Repositoriable): BusRepository {
-    return resolver.getRepository(BusMessageRepository) as BusRepository;
+    return resolver.resolveRepo(BusMessageRepository) as BusRepository;
   },
 };

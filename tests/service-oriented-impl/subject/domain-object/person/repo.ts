@@ -14,6 +14,6 @@ export interface PersonRepository {
 
 export const PersonRepository = {
   instance(resolver: Repositoriable): PersonRepository {
-    return resolver.getRepository(PersonRepository) as PersonRepository;
+    return resolver.resolveRepo(PersonRepository) as PersonRepository;
   },
 };

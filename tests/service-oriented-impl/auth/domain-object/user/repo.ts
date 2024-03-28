@@ -16,6 +16,6 @@ export interface UserRepository {
 
 export const UserRepository = {
   instance(resolver: Repositoriable): UserRepository {
-    return resolver.getRepository(UserRepository) as UserRepository;
+    return resolver.resolveRepo(UserRepository) as UserRepository;
   },
 };

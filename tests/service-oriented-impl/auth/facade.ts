@@ -14,6 +14,6 @@ export interface AuthFacade {
 
 export const AuthFacade = {
   instance(resolver: Facadable): AuthFacade {
-    return resolver.getFacade(AuthFacade) as AuthFacade;
+    return resolver.resolveFacade(AuthFacade) as AuthFacade;
   },
 };

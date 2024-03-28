@@ -19,11 +19,11 @@ implements Repositoriable, Realisable, Facadable {
 
   protected serverResolver!: ServerResolver<JWT_P>;
 
-  abstract getRealisation(...args: unknown[]): unknown
+  abstract resolve(...args: unknown[]): unknown
 
-  abstract getRepository(...args: unknown[]): ModuleResolveInstance
+  abstract resolveRepo(...args: unknown[]): ModuleResolveInstance
 
-  abstract getFacade(...args: unknown[]): ModuleResolveInstance
+  abstract resolveFacade(...args: unknown[]): ModuleResolveInstance
 
   constructor(protected resolves: MR) {}
 

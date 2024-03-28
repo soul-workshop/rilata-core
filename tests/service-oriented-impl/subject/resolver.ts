@@ -11,11 +11,11 @@ import { SubjectResolves } from './resolves';
 export class SubjectModuleResolver extends ModuleResolver<
   UserJwtPayload, SubjectModule, SubjectResolves
 > {
-  getRealisation(key: unknown): ModuleResolveInstance {
+  resolve(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
 
-  getRepository(key: unknown): ModuleResolveInstance {
+  resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === PersonRepository) return this.resolves.personRepo;
     if (key === EventRepository || key === BusMessageRepository) {
       return this.resolves.busMessageRepo;
@@ -23,7 +23,7 @@ export class SubjectModuleResolver extends ModuleResolver<
     throw Error(`not found repository by key: ${key}`);
   }
 
-  getFacade(key: unknown): ModuleResolveInstance {
+  resolveFacade(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getFacade not implemented.');
   }
 }

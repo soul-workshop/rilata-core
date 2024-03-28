@@ -13,6 +13,6 @@ export interface CompanyCmdRepository {
 
 export const CompanyCmdRepository = {
   instance(resolver: Repositoriable): CompanyCmdRepository {
-    return resolver.getRepository(CompanyCmdRepository) as CompanyCmdRepository;
+    return resolver.resolveRepo(CompanyCmdRepository) as CompanyCmdRepository;
   },
 };

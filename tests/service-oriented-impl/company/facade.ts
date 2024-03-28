@@ -12,6 +12,6 @@ export interface CompanyFacade {
 
 export const CompanyFacade = {
   instance(resolver: Facadable): CompanyFacade {
-    return resolver.getFacade(CompanyFacade) as CompanyFacade;
+    return resolver.resolveFacade(CompanyFacade) as CompanyFacade;
   },
 };

@@ -15,6 +15,6 @@ export interface SubjectFacade {
 
 export const SubjectFacade = {
   instance(resolver: Facadable): SubjectFacade {
-    return resolver.getFacade(SubjectFacade) as SubjectFacade;
+    return resolver.resolveFacade(SubjectFacade) as SubjectFacade;
   },
 };

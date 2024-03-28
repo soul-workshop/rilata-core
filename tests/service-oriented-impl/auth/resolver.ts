@@ -11,11 +11,11 @@ import { UserJwtPayload } from './services/user/user-authentification/s-params';
 export class AuthModuleResolver extends ModuleResolver<
   UserJwtPayload, AuthModule, AuthResolves
 > {
-  getRealisation(key: unknown): ModuleResolveInstance {
+  resolve(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
 
-  getRepository(key: unknown): ModuleResolveInstance {
+  resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === UserRepository) return this.resolves.userRepo;
     if (key === EventRepository || key === BusMessageRepository) {
       return this.resolves.busMessageRepo;
@@ -23,7 +23,7 @@ export class AuthModuleResolver extends ModuleResolver<
     throw this.getLogger().error(`not finded repository in key: ${key}`);
   }
 
-  getFacade(key: unknown): ModuleResolveInstance {
+  resolveFacade(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getFacade not implemented.');
   }
 }

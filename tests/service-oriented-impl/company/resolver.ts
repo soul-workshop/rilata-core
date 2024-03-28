@@ -12,11 +12,11 @@ import { UserJwtPayload } from '../auth/services/user/user-authentification/s-pa
 export class CompanyModuleResolver extends ModuleResolver<
   UserJwtPayload, CompanyModule, CompanyResolves
 > {
-  getRealisation(key: unknown): ModuleResolveInstance {
+  resolve(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
 
-  getRepository(key: unknown): ModuleResolveInstance {
+  resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === CompanyRepository) return this.resolves.companyRepo;
     if (key === EventRepository || key === BusMessageRepository) {
       return this.resolves.busMessageRepo;
@@ -24,7 +24,7 @@ export class CompanyModuleResolver extends ModuleResolver<
     throw this.getLogger().error(`not find repo to key: ${key}`);
   }
 
-  getFacade(key: unknown): ModuleResolveInstance {
+  resolveFacade(key: unknown): ModuleResolveInstance {
     if (key === AuthFacade) return this.resolves.authFacade;
     if (key === SubjectFacade) return this.resolves.subjectFacade;
     throw this.getLogger().error(`not find facade to key: ${key}`);

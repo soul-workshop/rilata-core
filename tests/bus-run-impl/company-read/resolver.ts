@@ -15,11 +15,11 @@ export class CompanyReadModuleResolver extends BusModuleResolver<
 > {
   private delivererToBus = new TimeoutCallbackDelivererToBus();
 
-  getRealisation(key: unknown): ModuleResolveInstance {
+  resolve(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
 
-  getRepository(key: unknown): ModuleResolveInstance {
+  resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === CompanyReadRepository) return this.resolves.companyRepo;
     if (key === EventRepository || key === BusMessageRepository) {
       return this.resolves.busMessageRepo;
@@ -27,7 +27,7 @@ export class CompanyReadModuleResolver extends BusModuleResolver<
     throw this.getLogger().error(`not find repo to key: ${key}`);
   }
 
-  getFacade(key: unknown): ModuleResolveInstance {
+  resolveFacade(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getFacade not implemented.');
   }
 
