@@ -52,7 +52,7 @@ const contactsVMap: ValidatorMap<ContactsAttrs> = {
   techSupportComments: new LiteralFieldValidator('techSupportComments', false, { isArray: true }, 'string', []),
 };
 
-export const personAttrsVMap: ValidatorMap<PersonAttrs> = {
+const personAttrsVMap: ValidatorMap<PersonAttrs> = {
   id: new UuidField('id'),
   iin: new CannotEmptyStringField('iin', true, [
     new RegexMatchesValueValidationRule(/^[0-9]{12}$/, 'Может быть только 12 цифр'),
@@ -66,6 +66,6 @@ export const personAttrsVMap: ValidatorMap<PersonAttrs> = {
   contacts: new DtoFieldValidator('contacts', true, { isArray: false }, 'dto', contactsVMap),
 };
 
-export const PersonInvariantsValidator = new DtoFieldValidator(
+export const personInvariantsValidator = new DtoFieldValidator(
   'personInvariants', true, { isArray: false }, 'dto', personAttrsVMap,
 );
