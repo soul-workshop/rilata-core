@@ -6,7 +6,7 @@ import { MaxCharsCountValidationRule } from '../../../../../src/domain/validator
 import { RegexMatchesValueValidationRule } from '../../../../../src/domain/validator/rules/validate-rules/string/regex-matches-value.field-v-rule';
 import { CompanyAttrs } from './params';
 
-const companyAttrsVMap: ValidatorMap<CompanyAttrs> = {
+export const companyAttrsVMap: ValidatorMap<CompanyAttrs> = {
   id: new UuidField('id'),
   name: new LiteralFieldValidator('name', true, { isArray: false }, 'string', [
     new MaxCharsCountValidationRule(50),
