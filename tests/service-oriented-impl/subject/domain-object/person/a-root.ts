@@ -1,18 +1,13 @@
 import { Logger } from '../../../../../src/common/logger/logger';
-import { AggregateRootHelper } from '../../../../../src/domain/domain-object/aggregate-helper';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
+import { PersonInvariantsValidator } from '../../domain-data/person/v-map';
 
 export class PersonAR extends AggregateRoot<PersonParams> {
-  protected helper: AggregateRootHelper<PersonParams>;
+  protected invariantsValidator = PersonInvariantsValidator;
 
-  constructor(protected attrs: PersonAttrs, version: number, logger: Logger) {
-    super();
-    this.helper = new AggregateRootHelper(
-      'PersonAR', attrs, 'id', version, ['contacts.techSupportComments'], logger,
-    );
-
-    // process aggregate root invariants see CompanyAR
+  constructor(attrs: PersonAttrs, version: number, logger: Logger) {
+    super(attrs, 'PersonAR', 'id', version, ['contacts.techSupportComments'], logger);
   }
 
   /** возвращает в формате Иванов И. И. */

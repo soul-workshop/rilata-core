@@ -49,7 +49,7 @@ describe('add user service tests', async () => {
     expect(event?.aRoot.attrs.userId).toBe(userAr.userId);
   });
 
-  test('успех, пользователь с таким id существует и service перезапустился', async () => {
+  test('провал, пользователь с таким id существует и service перезапустился', async () => {
     const inputDod = dodUtility.getRequestDod<AddUserRequestDod>(
       'addUser',
       { personIin: '111333555777' },

@@ -65,3 +65,7 @@ export const personAttrsVMap: ValidatorMap<PersonAttrs> = {
   ]),
   contacts: new DtoFieldValidator('contacts', true, { isArray: false }, 'dto', contactsVMap),
 };
+
+export const PersonInvariantsValidator = new DtoFieldValidator(
+  'personInvariants', true, { isArray: false }, 'dto', personAttrsVMap,
+);
