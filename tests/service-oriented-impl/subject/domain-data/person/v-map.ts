@@ -46,7 +46,7 @@ const emailVMap: ValidatorMap<EmailAttrs> = {
 };
 
 const contactsVMap: ValidatorMap<ContactsAttrs> = {
-  phones: new DtoFieldValidator('phones', false, { isArray: true, mustBeFilled: true }, 'dto', phoneVMap),
+  phones: new DtoFieldValidator('phones', false, { isArray: true }, 'dto', phoneVMap),
   emails: new DtoFieldValidator('emails', false, { isArray: true }, 'dto', emailVMap),
   address: new CannotEmptyStringField('address', false, []),
   techSupportComments: new LiteralFieldValidator('techSupportComments', false, { isArray: true }, 'string', []),

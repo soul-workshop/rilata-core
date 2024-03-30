@@ -12,20 +12,19 @@ export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
   /** Обычно используется для идентификации пользователем объекта в списке */
   abstract getShortName(): string;
 
-  protected abstract invariantsValidator: DtoFieldValidator<string, true, false, PARAMS['attrs']>
-
   constructor(
     protected attrs: PARAMS['attrs'],
+    invariantsValidator: DtoFieldValidator<string, true, false, PARAMS['attrs']>,
     aRootName: GetARParamsAggregateName<PARAMS>,
     idName: keyof PARAMS['attrs'] & string,
     version: number,
     outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,
     logger: Logger,
   ) {
-    this.checkInveriants(attrs);
     this.helper = new AggregateRootHelper<PARAMS>(
       attrs, aRootName, idName, version, outputExcludeAttrs, logger,
     );
+    this.checkInveriants(invariantsValidator, attrs);
   }
 
   getId(): string {
@@ -45,8 +44,11 @@ export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
     return this.helper;
   }
 
-  protected checkInveriants(attrs: PARAMS['attrs']): void {
-    const invariantsResult = this.invariantsValidator.validate(attrs);
+  protected checkInveriants(
+    validator: DtoFieldValidator<string, true, false, PARAMS['attrs']>,
+    attrs: PARAMS['attrs'],
+  ): void {
+    const invariantsResult = validator.validate(attrs);
     if (invariantsResult.isFailure()) {
       throw this.getHelper().getLogger().error(`не соблюдены инварианты агрегата ${this.constructor.name}`, {
         modelAttrs: attrs,

@@ -4,10 +4,8 @@ import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
 import { personInvariantsValidator } from '../../domain-data/person/v-map';
 
 export class PersonAR extends AggregateRoot<PersonParams> {
-  protected invariantsValidator = personInvariantsValidator;
-
   constructor(attrs: PersonAttrs, version: number, logger: Logger) {
-    super(attrs, 'PersonAR', 'id', version, ['contacts.techSupportComments'], logger);
+    super(attrs, personInvariantsValidator, 'PersonAR', 'id', version, ['contacts.techSupportComments'], logger);
   }
 
   /** возвращает в формате Иванов И. И. */

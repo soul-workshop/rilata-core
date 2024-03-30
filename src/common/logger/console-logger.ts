@@ -28,13 +28,12 @@ export class ConsoleLogger implements Logger {
   }
 
   assert(condition: boolean, log: string, logAttrs?: unknown): void {
-    if (this.modeDispatcher.isOn(['assert']) === false) return;
     if (condition) return;
     throw this.fatalError(log, logAttrs);
   }
 
   error(log: string, logAttrs?: unknown, err?: Error): AssertionException {
-    if (this.modeDispatcher.isOn(['error']) === false) {
+    if (this.modeDispatcher.isOn(['error'])) {
       const errStack = err ? this.getErrStack(err) : {};
       this.toConsole(
         this.makeLogString('ERROR', log),
@@ -45,7 +44,7 @@ export class ConsoleLogger implements Logger {
   }
 
   fatalError(log: string, logAttrs?: unknown, err?: Error): AssertionException {
-    if (this.modeDispatcher.isOn(['fatal']) === false) {
+    if (this.modeDispatcher.isOn(['fatal'])) {
       const errStack = err ? this.getErrStack(err) : {};
       this.toConsole(
         this.makeLogString('FATAL_ERROR', log),
