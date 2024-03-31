@@ -16,13 +16,13 @@ export abstract class BackendApi {
 
     /** делает запрос в бэкенд и возвращает результат.
       @param {Object} requestDod - объект типа RequestDod.
-      @param {string} jwtToken - jwt токен авторизации или рефреш.
+      @param {string} jwtToken - jwt токен авторизации (рефреш).
         Для неавторизованного запроса передать пустую строку. */
     async request<SERVICE_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
       requestDod: SERVICE_PARAMS['input'],
       jwtToken: string,
     ): Promise<FullServiceResult<SERVICE_PARAMS>> {
-      if (this.jwtDecoder.dateIsExpired(jwtToken)) {
+      if (jwtToken && this.jwtDecoder.dateIsExpired(jwtToken)) {
         return this.jwtDecoder.getError('TokenExpiredError');
       }
 
@@ -31,7 +31,7 @@ export abstract class BackendApi {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: jwtToken,
+          Authorization: jwtToken ? `Bearer ${jwtToken}` : '',
         },
         body: JSON.stringify(requestDod),
       });
