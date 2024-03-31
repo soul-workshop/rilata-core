@@ -26,6 +26,7 @@ describe('process http requests by server class', async () => {
 
   const authToken = serverResolver.getJwtCreator().createToken(
     { userId: '2a96aec7-1091-4449-8369-c3d9f91f1a56' },
+    'access',
   );
 
   test('successfull, person by iin returned by http request', async () => {

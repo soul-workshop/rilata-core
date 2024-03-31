@@ -6,7 +6,6 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { DTO } from '../../domain/dto';
 import { Locale } from '../../domain/locale';
 import { JwtDecoder } from '../jwt/jwt-decoder';
-import { ResultDTO } from '../result-dto';
 import { BadRequestError } from '../service/error-types';
 import { FullServiceResult, FullServiceResultDTO, GeneralCommandServiceParams, GeneralQueryServiceParams } from '../service/types';
 
@@ -15,17 +14,15 @@ export abstract class BackendApi {
 
     constructor(protected jwtDecoder: JwtDecoder<DTO>, protected logger: Logger) {}
 
-    /** переход в страницу авторизации */
-    abstract moveToUserAuth(): void
-
+    /** делает запрос в бэкенд и возвращает результат.
+      @param {Object} requestDod - объект типа RequestDod.
+      @param {string} jwtToken - jwt токен авторизации (рефреш).
+        Для неавторизованного запроса передать пустую строку. */
     async request<SERVICE_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
       requestDod: SERVICE_PARAMS['input'],
       jwtToken: string,
     ): Promise<FullServiceResult<SERVICE_PARAMS>> {
-      if (this.jwtDecoder.accessDateIsExpired(jwtToken)) {
-        if (this.jwtDecoder.refreshDateIsExpired(jwtToken)) {
-          return this.jwtDecoder.getError('RefreshTokenExpiredError');
-        }
+      if (jwtToken && this.jwtDecoder.dateIsExpired(jwtToken)) {
         return this.jwtDecoder.getError('TokenExpiredError');
       }
 
@@ -34,7 +31,7 @@ export abstract class BackendApi {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: jwtToken,
+          Authorization: jwtToken ? `Bearer ${jwtToken}` : '',
         },
         body: JSON.stringify(requestDod),
       });

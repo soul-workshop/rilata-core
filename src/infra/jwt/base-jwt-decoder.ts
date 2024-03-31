@@ -1,6 +1,6 @@
 import {
   IncorrectTokenError, JwtDecodeErrors,
-  NotValidTokenPayloadError, RefreshTokenExpiredError, TokenExpiredError,
+  NotValidTokenPayloadError, TokenExpiredError,
 } from '../../app/jwt/jwt-errors';
 import { JwtDecoder } from '../../app/jwt/jwt-decoder';
 import { DTO } from '../../domain/dto';
@@ -8,10 +8,11 @@ import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
-import { JwtPayload } from '../../app/jwt/types';
+import { JwtPayload, JwtType } from '../../app/jwt/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { ServerResolver } from '../../app/server/server-resolver';
 import { JwtHmacHashUtils } from '../../common/utils/jwt/jwt-utils';
+import { UnionToTuple } from '../../common/utils/tuple/types';
 
 /** Класс для декодирования JWT токена. */
 export abstract class BaseJwtDecoder<
@@ -29,19 +30,23 @@ export abstract class BaseJwtDecoder<
 
   getTokenPayload(rawToken: string): Result<JwtDecodeErrors, PAYLOAD> {
     const decodedPayload = this.decodeJwt(rawToken);
-    if (
-      !decodedPayload
-      || typeof decodedPayload?.exp !== 'number'
-      || typeof decodedPayload?.rExp !== 'number'
-    ) return this.getError('IncorrectTokenError');
+    if (decodedPayload === undefined) return this.getError('IncorrectTokenError');
 
-    if (this.accessDateIsExpired(decodedPayload)) return this.getError('TokenExpiredError');
+    if (this.dateIsExpired(decodedPayload)) return this.getError('TokenExpiredError');
 
-    const payload = dtoUtility.excludeAttrs(decodedPayload, ['exp', 'rExp']) as unknown as PAYLOAD;
+    // @ts-ignore - error TS2322: Type '"typ"' is not assignable to type '"exp"'
+    const keys: UnionToTuple<keyof JwtPayload<Record<never, unknown>>> = ['exp', 'typ'];
+    const payload = dtoUtility.excludeAttrs(decodedPayload, keys) as unknown as PAYLOAD;
     return this.payloadBodyIsValid(payload) ? success(payload) : this.getError('NotValidTokenPayloadError');
   }
 
-  accessDateIsExpired(rawOrPayload: string | JwtPayload<PAYLOAD>): boolean {
+  getTokenType(rawToken: string): JwtType | undefined {
+    const decodedPayload = this.decodeJwt(rawToken);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return decodedPayload?.typ;
+  }
+
+  dateIsExpired(rawOrPayload: string | JwtPayload<PAYLOAD>): boolean {
     const decodedPayload = typeof rawOrPayload === 'string'
       ? this.decodeJwt(rawOrPayload)
       : rawOrPayload;
@@ -50,15 +55,6 @@ export abstract class BaseJwtDecoder<
       || typeof decodedPayload?.exp !== 'number'
     ) return true;
     return (this.getNow() + this.expiredTimeShiftAsMs) - decodedPayload.exp > 0;
-  }
-
-  refreshDateIsExpired(rawToken: string): boolean {
-    const payload = this.decodeJwt(rawToken);
-    return (
-      !payload
-      || typeof payload?.rExp !== 'number'
-      || this.getNow() - payload.rExp > 0
-    );
   }
 
   /** Добавлено для возможности мока в тестах */
@@ -81,16 +77,9 @@ export abstract class BaseJwtDecoder<
         {},
       )) as Result<E, never>;
     }
-    if (name === 'TokenExpiredError') {
-      return failure(dodUtility.getDomainError<TokenExpiredError>(
-        'TokenExpiredError',
-        'Токен просрочен.',
-        {},
-      )) as Result<E, never>;
-    }
-    return failure(dodUtility.getDomainError<RefreshTokenExpiredError>(
-      'RefreshTokenExpiredError',
-      'Рефреш токен просрочен',
+    return failure(dodUtility.getDomainError<TokenExpiredError>(
+      'TokenExpiredError',
+      'Токен просрочен.',
       {},
     )) as Result<E, never>;
   }
@@ -99,7 +88,13 @@ export abstract class BaseJwtDecoder<
     const jwtHmacUtils = new JwtHmacHashUtils();
     try {
       const result = jwtHmacUtils.getPayload(rawToken);
-      return typeof result !== 'object' ? undefined : result as JwtPayload<PAYLOAD>;
+      return (
+        !result
+        || typeof result !== 'object'
+        || typeof result?.exp !== 'number'
+        || typeof result?.typ !== 'string'
+        || ['access', 'refresh'].includes(result.typ) === false
+      ) ? undefined : result as JwtPayload<PAYLOAD>;
     } catch (err) {
       return undefined;
     }

@@ -8,7 +8,6 @@ import {
   ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDtoKeysByDotNotation,
 } from '../../type-functions';
 import { DeepAttr } from '../../types';
-import { dodUtility } from '../domain-object/dod-utility';
 
 export class dtoUtility {
   /** Возвращает копию объекта T, с исключенными атрибутами K. */
