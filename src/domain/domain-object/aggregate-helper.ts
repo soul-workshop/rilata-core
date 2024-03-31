@@ -17,8 +17,8 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
   private domainEvents: GetARParamsEvents<PARAMS>[] = [];
 
   constructor(
-    protected aRootName: GetARParamsAggregateName<PARAMS>,
     protected attrs: PARAMS['attrs'],
+    protected aRootName: GetARParamsAggregateName<PARAMS>,
     protected idName: keyof PARAMS['attrs'] & string,
     protected version: number,
     protected outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,

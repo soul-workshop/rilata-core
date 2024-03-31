@@ -1,3 +1,4 @@
+import { DtoFieldValidator } from '../../../../../src/domain/validator/field-validator/dto-field-validator';
 import { LiteralFieldValidator } from '../../../../../src/domain/validator/field-validator/literal-field-validator';
 import { UuidField } from '../../../../../src/domain/validator/field-validator/prepared-fields/string/uuid-field';
 import { ValidatorMap } from '../../../../../src/domain/validator/field-validator/types';
@@ -24,3 +25,7 @@ export const companyAttrsVMap: ValidatorMap<CompanyAttrs> = {
     new UUIDFormatValidationRule(),
   ]),
 };
+
+export const companyInvariantsValidator = new DtoFieldValidator(
+  'comanyInvariants', true, { isArray: false }, 'dto', companyAttrsVMap,
+);
