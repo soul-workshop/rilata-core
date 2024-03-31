@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-use-before-define */
 import { DTO } from '../domain/dto';
-import { UnionToArray } from './utils/tuple/types';
+import { UnionToTuple } from './utils/tuple/types';
 
 /**
  * По ключам REPLACEDKEYS заменяет значения атрибутов объекта OBJECT
@@ -100,8 +100,8 @@ export type ExcludeDeepDtoAttrs<D extends DTO, DOT_NOTATION extends GetDomainAtt
   DOT_NOTATION extends Array<any>
     ? ExcludeDeepDotNotationAttrs<D, DOT_NOTATION>
     : DOT_NOTATION extends ReadonlyArray<infer TUPLE_TYPE>
-      ? ExcludeDeepDotNotationAttrs<D, UnionToArray<TUPLE_TYPE>>
-      : ExcludeDeepDotNotationAttrs<D, UnionToArray<DOT_NOTATION>>
+      ? ExcludeDeepDotNotationAttrs<D, UnionToTuple<TUPLE_TYPE>>
+      : ExcludeDeepDotNotationAttrs<D, UnionToTuple<DOT_NOTATION>>
 
 /** Исключить из DTO | DTO[] атрибуты заданные в точечной нотации.
   Пример: ExcludeDeepAttrs<{a: {b: {c: string, f?: string}}, e: number}, ['a.b.c', 'e']>

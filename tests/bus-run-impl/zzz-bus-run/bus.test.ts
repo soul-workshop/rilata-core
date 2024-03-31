@@ -32,6 +32,7 @@ describe('add company service tests', async () => {
   );
   const authToken = serverResolver.getJwtCreator().createToken(
     { userId: '2a96aec7-1091-4449-8369-c3d9f91f1a56' },
+    'access',
   );
 
   test('успех, компания успешно добавлена, событие доставлено до read-module и успешно обработано', async () => {

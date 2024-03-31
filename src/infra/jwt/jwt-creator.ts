@@ -1,5 +1,5 @@
 import { JwtCreator } from '../../app/jwt/jwt-creator';
-import { JwtPayload } from '../../app/jwt/types';
+import { JwtPayload, JwtType } from '../../app/jwt/types';
 import { ServerResolver } from '../../app/server/server-resolver';
 import { JwtHmacHashUtils } from '../../common/utils/jwt/jwt-utils';
 import { DTO } from '../../domain/dto';
@@ -11,23 +11,28 @@ export class JwtCreatorImpl<PAYLOAD extends DTO> implements JwtCreator<PAYLOAD> 
     this.resolver = resolver;
   }
 
-  createToken(payload: PAYLOAD): string {
+  createToken(payload: PAYLOAD, type: JwtType): string {
     const secret = this.resolver.getJwtSecretKey();
     const { algorithm } = this.resolver.getJwtConfig();
     const jwtUtils = new JwtHmacHashUtils();
-    return jwtUtils.sign(this.getJwtPayload(payload), secret, algorithm === 'HS256' ? 'sha256' : 'sha512');
+    return jwtUtils.sign(
+      this.getJwtPayload(payload, type),
+      secret,
+      algorithm === 'HS256' ? 'sha256' : 'sha512',
+    );
   }
 
-  protected getJwtPayload(payload: PAYLOAD): JwtPayload<PAYLOAD> {
-    const { jwtLifetimeAsHour, jwtRefreshLifetimeAsHour } = this.resolver.getJwtConfig();
+  protected getJwtPayload(
+    payload: PAYLOAD, typ: JwtType,
+  ): JwtPayload<PAYLOAD> {
+    const expiredAsHour = typ === 'access'
+      ? this.resolver.getJwtConfig().jwtLifetimeAsHour
+      : this.resolver.getJwtConfig().jwtRefreshLifetimeAsHour;
     const iat = this.resolver.getJwtDecoder().getNow();
 
-    const jwtLifetimeAsMs = jwtLifetimeAsHour * 60 * 60 * 1000;
+    const jwtLifetimeAsMs = expiredAsHour * 60 * 60 * 1000;
     const exp = iat + jwtLifetimeAsMs;
 
-    const jwtRefreshLifetimeAsMs = jwtRefreshLifetimeAsHour * 60 * 60 * 1000;
-    const rExp = iat + jwtRefreshLifetimeAsMs;
-
-    return { ...payload, exp, rExp };
+    return { ...payload, exp, typ };
   }
 }
