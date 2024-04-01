@@ -20,7 +20,7 @@ export abstract class BaseJwtDecoder<
 > implements JwtDecoder<PAYLOAD> {
   /** Уменьшает время реального истечения токена на указанное значение.
     Для бэка скорее всего 0, для фронта например 3000 */
-  abstract expiredTimeShiftAsMs: number;
+  protected abstract expiredTimeShiftAsMs: number;
 
   /** Возвращает ответ, что тело payload соответвует требуемому */
   abstract payloadBodyIsValid(payload: PAYLOAD): boolean

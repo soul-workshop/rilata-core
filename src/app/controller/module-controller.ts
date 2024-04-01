@@ -19,14 +19,14 @@ export class ModuleController implements Controller {
     return this.moduleResolver.getModuleUrl();
   }
 
-  async execute(req: RilataRequest): Promise<Response> {
+  async execute(req: RilataRequest, headers?: Record<string, string>): Promise<Response> {
     const jsonBodyResult = await this.getJsonBody(req);
-    if (jsonBodyResult.isFailure()) return this.getFailureResult(jsonBodyResult.value);
+    if (jsonBodyResult.isFailure()) return this.getFailureResponse(jsonBodyResult.value);
     const reqJsonBody = jsonBodyResult.value;
 
     const checkResult = this.checkRequestDodBody(reqJsonBody);
     if (checkResult.isFailure()) {
-      return this.getFailureResult(checkResult.value);
+      return this.getFailureResponse(checkResult.value, headers);
     }
     const requestDod = checkResult.value;
 
@@ -34,10 +34,10 @@ export class ModuleController implements Controller {
       .getModule()
       .executeService(requestDod, req.caller);
     if (serviceResult.isSuccess()) {
-      return this.getSuccessResult(serviceResult.value);
+      return this.getSuccessResponse(serviceResult.value, headers);
     }
     const err = (serviceResult as Result<ServiceBaseErrors, never>).value;
-    return this.getFailureResult(err);
+    return this.getFailureResponse(err);
   }
 
   // eslint-disable-next-line max-len
@@ -53,7 +53,30 @@ export class ModuleController implements Controller {
     }
   }
 
-  protected getSuccessResult(payload: unknown): Response {
+  // eslint-disable-next-line max-len
+  protected checkRequestDodBody(input: unknown): Result<typeof badRequestError, GeneralRequestDod> {
+    if (typeof input !== 'object' || input === null) {
+      return this.getErr('Тело запроса должно быть объектом');
+    }
+
+    if (
+      (input as any)?.meta?.name === undefined
+      || (input as any)?.meta?.requestId === undefined
+      || (input as any)?.meta?.domainType !== 'request'
+    ) {
+      return this.getErr('Полезная нагрузка запроса не является объектом requestDod');
+    }
+
+    if (
+      !(input as any).attrs
+      || typeof (input as any).attrs !== 'object'
+    ) {
+      return this.getErr('Не найдены атрибуты (attrs) объекта requestDod');
+    }
+    return success(input as GeneralRequestDod);
+  }
+
+  protected getSuccessResponse(payload: unknown, headers?: Record<string, string>): Response {
     const resultDto: ResultDTO<never, unknown> = {
       httpStatus: 200,
       success: true,
@@ -61,33 +84,11 @@ export class ModuleController implements Controller {
     };
     return new Response(JSON.stringify(resultDto), {
       status: resultDto.httpStatus,
+      headers: this.getHeaders(headers),
     });
   }
 
-  // eslint-disable-next-line max-len
-  protected checkRequestDodBody(input: unknown): Result<typeof badRequestError, GeneralRequestDod> {
-    function getErr(errText: string): Result<typeof badRequestError, never> {
-      const err = dtoUtility.replaceAttrs(badRequestError, { locale: {
-        text: errText,
-      } });
-      return failure(err);
-    }
-
-    if (typeof input !== 'object' || input === null) {
-      return getErr('Тело запроса должно быть объектом');
-    }
-
-    if ((input as any)?.meta?.name === undefined) {
-      return getErr('Полезная нагрузка запроса не является объектом requestDod');
-    }
-
-    if ((input as any).attrs === undefined) {
-      return getErr('Не найдены атрибуты (attrs) объекта requestDod');
-    }
-    return success(input as GeneralRequestDod);
-  }
-
-  protected getFailureResult(err: ServiceBaseErrors): Response {
+  protected getFailureResponse(err: ServiceBaseErrors, headers?: Record<string, string>): Response {
     const resultDto: ResultDTO<ServiceBaseErrors, never> = {
       httpStatus: STATUS_CODES[err.name] ?? 400,
       success: false,
@@ -95,6 +96,22 @@ export class ModuleController implements Controller {
     };
     return new Response(JSON.stringify(resultDto), {
       status: resultDto.httpStatus,
+      headers: this.getHeaders(headers),
     });
+  }
+
+  protected getHeaders(headers?: Record<string, string>): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...headers ?? {},
+    };
+  }
+
+  protected getErr(errText: string): Result<typeof badRequestError, never> {
+    const err = dtoUtility.replaceAttrs(badRequestError, { locale: {
+      text: errText,
+    } });
+    return failure(err);
   }
 }
