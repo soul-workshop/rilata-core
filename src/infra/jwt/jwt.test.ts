@@ -242,7 +242,14 @@ describe('all jwt tests', () => {
   describe('verify jwt tests', () => {
     const sut = backendJwtResolver.getJwtVerifier();
 
-    test('успех, верификация прошла усешно', () => {
+    test('успех, верификация access прошла усешно', () => {
+      const refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjIyNDQzNTUzMDIsInR5cCI6InJlZnJlc2gifQ.hqUjb_WCnBqiNDrtH8Pkn7RsKAbgFEyrDkJKXz48wrU';
+      const verifyResult = sut.verifyToken(refreshToken);
+      expect(verifyResult.isSuccess()).toBeTrue();
+      expect(verifyResult.value).toEqual({ userId: '536e7463-b24d-4e7b-bad9-2bd2ed8011fd' });
+    });
+
+    test('успех, верификация refresh прошла усешно', () => {
       const verifyResult = sut.verifyToken(correctToken);
       expect(verifyResult.isSuccess()).toBeTrue();
       expect(verifyResult.value).toEqual({ userId: '536e7463-b24d-4e7b-bad9-2bd2ed8011fd' });

@@ -6,7 +6,8 @@ import { JwtPayload, JwtType } from './types';
 
 export interface JwtDecoder<PAYLOAD extends DTO> {
   init(resolver: ServerResolver<PAYLOAD>): void
-  /** Декодировать токен и получить его payload. Не проверяется валидность токена. */
+  /** Декодировать токен и получить его payload.
+    Не проверяется валидность (соответствие секретному шифрованию). */
   getTokenPayload(rawToken: string): Result<JwtDecodeErrors, PAYLOAD>;
 
   getTokenType(rawToken: string): JwtType | undefined;
