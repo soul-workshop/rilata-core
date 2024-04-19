@@ -14,7 +14,7 @@ export function getAuthResolves(): AuthResolves {
   if (!authResolves) {
     authResolves = {
       moduleName: 'AuthModule',
-      moduleUrl: '/api/auth-module/',
+      moduleUrls: ['/api/auth-module/'],
       db,
       busMessageRepo: new FakeClassImplements.TestEventRepository(db),
       userRepo: new UserRepositoryImpl(db),

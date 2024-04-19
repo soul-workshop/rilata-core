@@ -57,8 +57,8 @@ implements Repositoriable, Realisable, Facadable {
     return this.resolves.db;
   }
 
-  getModuleUrl(): string {
-    return this.resolves.moduleUrl;
+  getModuleUrls(): string[] {
+    return this.resolves.moduleUrls;
   }
 
   getJwtDecoder(): JwtDecoder<JWT_P> {

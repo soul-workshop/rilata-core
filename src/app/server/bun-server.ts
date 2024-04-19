@@ -2,7 +2,6 @@
 import { Serve, Server } from 'bun';
 import { AsyncLocalStorage } from 'async_hooks';
 import { RilataServer } from './server';
-import { Constructor } from '../../common/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { Controller } from '../controller/controller';
@@ -21,11 +20,11 @@ export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
 
   hostname: string | undefined;
 
-  protected abstract middlewareCtors: Constructor<Middleware>[]
+  protected abstract middlewares: Middleware[];
 
-  protected middlewares: Middleware[] = [];
+  protected abstract controllers: Controller[];
 
-  protected controllers: Record<string, Controller> = {};
+  protected urls: Record<string, Controller> = {};
 
   protected server: Server | undefined;
 
@@ -33,16 +32,21 @@ export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
     super.init(serverResolver);
     this.initStarted();
 
-    this.middlewareCtors.forEach((Ctor) => {
-      const middleware = new Ctor();
+    this.middlewares.forEach((middleware) => {
       middleware.init(serverResolver);
-      this.middlewares.push(middleware);
     });
     this.logger.info('all server middlewares loaded');
 
     this.modules.forEach((module) => {
-      const controller = new ModuleController(module.getModuleResolver());
-      this.controllers[controller.getUrl()] = controller;
+      const controller = new ModuleController();
+      controller.init(module.getModuleResolver());
+      this.controllers.push(controller);
+    });
+
+    this.controllers.forEach((controller) => {
+      controller.getUrls().forEach((url) => {
+        this.urls[url] = controller;
+      });
     });
     this.logger.info('all runned module controllers loaded');
 
@@ -72,7 +76,7 @@ export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
       const middlewaresResult = this.processMiddlewares(req);
       if (middlewaresResult !== undefined) return middlewaresResult;
 
-      const controller = this.controllers[url.pathname];
+      const controller = this.urls[url.pathname];
       if (controller) return controller.execute(req);
 
       // error TS2345: Argument of type 'import("url").URL' is not assignable to parameter of type 'URL'.

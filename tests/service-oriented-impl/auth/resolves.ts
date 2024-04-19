@@ -3,6 +3,6 @@ import { UserRepository } from './domain-object/user/repo';
 import { AuthModule } from './module';
 
 export type AuthResolves = ModuleResolves<AuthModule> & {
-  moduleUrl: '/api/auth-module/',
+  moduleUrls: ['/api/auth-module/'],
   userRepo: UserRepository,
 }

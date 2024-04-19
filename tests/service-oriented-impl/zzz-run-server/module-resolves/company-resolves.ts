@@ -23,7 +23,7 @@ export function getCompanyResolves(): CompanyResolves {
     companyRepo = new CompanyRepositoryImpl(db);
     companyResolves = {
       moduleName: 'CompanyModule',
-      moduleUrl: '/api/company-module/',
+      moduleUrls: ['/api/company-module/'],
       db,
       busMessageRepo: eventRepo,
       companyRepo,
