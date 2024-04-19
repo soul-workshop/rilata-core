@@ -25,6 +25,15 @@ implements Repositoriable, Realisable, Facadable {
 
   abstract resolveFacade(...args: unknown[]): ModuleResolveInstance
 
+  getDirPath(): string {
+    // @ts-ignore
+    return import.meta.dir; // path/to/file
+  }
+
+  getRootPath(): string {
+    return this.serverResolver.getRootPath();
+  }
+
   constructor(protected resolves: MR) {}
 
   /** инициализация выполняется классом server */

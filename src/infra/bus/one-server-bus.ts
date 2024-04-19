@@ -31,7 +31,7 @@ export class OneServerBus implements Bus {
   async publish(eventPublish: PublishBusMessage): Promise<void> {
     const events = this.subscribers[eventPublish.publishModuleName];
     if (!events) return;
-    const event = events.find((e) => e.busMessageName === eventPublish.busMessageName);
+    const event = events.find((e) => e.busMessageName === eventPublish.name);
     if (!event) return;
 
     const eventDod = JSON.parse(eventPublish.payload) as GeneralEventDod;

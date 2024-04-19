@@ -44,8 +44,8 @@ describe('add user service tests', async () => {
     const eventRepo = EventRepository.instance(resolver);
     const events = await eventRepo.getNotPublished();
     expect(events.length).toBe(1);
-    const eventId = events[0].busMessageId;
-    const event = await eventRepo.getBusMessage(eventId);
+    const eventId = events[0].id;
+    const event = await eventRepo.get(eventId);
     expect(event?.aRoot.attrs.userId).toBe(userAr.userId);
   });
 
@@ -74,8 +74,8 @@ describe('add user service tests', async () => {
     const eventRepo = EventRepository.instance(resolver);
     const events = await eventRepo.getNotPublished();
     expect(events.length).toBe(1);
-    const eventId = events[0].busMessageId;
-    const event = await eventRepo.getBusMessage(eventId);
+    const eventId = events[0].id;
+    const event = await eventRepo.get(eventId);
     expect(event?.aRoot.attrs.userId).toBe(userAr.userId);
 
     // reexecute service by DatabaseObjectSavingError exception

@@ -4,11 +4,9 @@ import { TestRepository } from './test-repository';
 import { TestBatchRecords } from './types';
 
 export interface TestDatabase extends Database {
-  addRepository(repo: TestRepository<string, DTO>): void
-
   addBatch<R extends TestRepository<string, DTO>>(
     batchRecords: TestBatchRecords<R>
   ): Promise<void>
 
-  clear(): Promise<void[]>
+  clear(): Promise<void | void[]>
 }

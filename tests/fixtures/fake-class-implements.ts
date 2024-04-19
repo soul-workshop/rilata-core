@@ -276,7 +276,7 @@ export namespace FakeClassImplements {
         .map((record) => record.payload) as GetARParamsEvents<A>;
     }
 
-    async getBusMessage(busMessageId: string): Promise<GeneralEventDod | undefined> {
+    async get(busMessageId: string): Promise<GeneralEventDod | undefined> {
       const record = await this.testRepo.find(busMessageId);
       return record ? record.payload : undefined;
     }
@@ -296,8 +296,8 @@ export namespace FakeClassImplements {
         if (this.delivererToBus) {
           const deliverEvent: DeliveryEvent = {
             type: 'event',
-            busMessageId: event.meta.eventId,
-            busMessageName: event.meta.name,
+            id: event.meta.eventId,
+            name: event.meta.name,
             requestId: event.meta.requestId,
             payload: JSON.stringify(event),
             aRootName: event.aRoot.meta.name,
@@ -307,7 +307,7 @@ export namespace FakeClassImplements {
       });
     }
 
-    async busMessageIsExist(requestId: string): Promise<boolean> {
+    async isExist(requestId: string): Promise<boolean> {
       return Boolean(await this.testRepo.find(requestId));
     }
 

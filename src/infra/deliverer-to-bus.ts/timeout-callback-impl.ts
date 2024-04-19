@@ -24,7 +24,7 @@ export class TimeoutCallbackDelivererToBus implements DelivererToBus {
     setTimeout(async () => {
       await this.moduleResolver.getBus().publish(publishEvent);
       const busMsgRepo = BusMessageRepository.instance(this.moduleResolver);
-      busMsgRepo.markAsPublished(deliveryEvent.busMessageId);
+      busMsgRepo.markAsPublished(deliveryEvent.id);
     }, 0);
   }
 }
