@@ -13,10 +13,14 @@ import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
 
 export class ModuleController implements Controller {
-  constructor(protected moduleResolver: GeneralModuleResolver) {}
+  protected moduleResolver!: GeneralModuleResolver;
 
-  getUrl(): string {
-    return this.moduleResolver.getModuleUrl();
+  init(moduleResolver: GeneralModuleResolver): void {
+    this.moduleResolver = moduleResolver;
+  }
+
+  getUrls(): string[] {
+    return this.moduleResolver.getModuleUrls();
   }
 
   async execute(req: RilataRequest, headers?: Record<string, string>): Promise<Response> {
@@ -42,6 +46,13 @@ export class ModuleController implements Controller {
 
   // eslint-disable-next-line max-len
   protected async getJsonBody(req: RilataRequest): Promise<Result<typeof badRequestError, unknown>> {
+    if (req.method !== 'POST') {
+      const err = dtoUtility.replaceAttrs(badRequestError, { locale: {
+        text: 'Поддерживаются только post запросы',
+      } });
+      return failure(err);
+    }
+
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return success(await req.json());
