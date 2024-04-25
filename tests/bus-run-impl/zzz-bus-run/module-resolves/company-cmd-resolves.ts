@@ -21,7 +21,7 @@ export function getCompanyCmdResolves(): CompanyCmdResolves {
     companyRepo = new CompanyCmdRepositoryImpl(db);
     companyResolves = {
       moduleName: 'CompanyCmdModule',
-      moduleUrl: '/api/company-cmd-module/',
+      moduleUrls: ['/api/company-cmd-module/'],
       db,
       busMessageRepo: eventRepo,
       companyRepo,

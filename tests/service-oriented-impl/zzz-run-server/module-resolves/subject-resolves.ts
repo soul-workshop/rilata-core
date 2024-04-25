@@ -14,7 +14,7 @@ export function getSubjectResolves(): SubjectResolves {
   if (!subjectResolves) {
     subjectResolves = {
       moduleName: 'SubjectModule',
-      moduleUrl: '/api/subject-module/',
+      moduleUrls: ['/api/subject-module/'],
       db,
       busMessageRepo: new FakeClassImplements.TestEventRepository(db),
       personRepo: new PersonRepositoryImpl(db),

@@ -5,7 +5,7 @@ import { Module } from './module';
 
 export type ModuleResolves<M extends Module<DTO>> = {
   moduleName: M['moduleName'],
-  moduleUrl: string, // example: '/api/company-module/'
+  moduleUrls: string[], // example: ['/api/company-module/']
   db: Database,
   busMessageRepo: BusMessageRepository<Record<string, unknown>>,
 }

@@ -5,7 +5,7 @@ import { SubjectFacade } from '../subject/facade';
 import { CompanyModule } from './module';
 
 export type CompanyResolves = ModuleResolves<CompanyModule> & {
-  moduleUrl: '/api/company-module/',
+  moduleUrls: ['/api/company-module/'],
   companyRepo: CompanyRepository,
   subjectFacade: SubjectFacade,
   authFacade: AuthFacade,

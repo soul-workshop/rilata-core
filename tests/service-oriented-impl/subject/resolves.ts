@@ -3,6 +3,6 @@ import { PersonRepository } from './domain-object/person/repo';
 import { SubjectModule } from './module';
 
 export type SubjectResolves = ModuleResolves<SubjectModule> & {
-  moduleUrl: '/api/subject-module/',
+  moduleUrls: ['/api/subject-module/'],
   personRepo: PersonRepository,
 }
