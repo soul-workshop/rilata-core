@@ -10,7 +10,7 @@ describe('sqlite create and migrate tests', () => {
   db.open(); // open sqlite db
 
   test('успех. бд и таблицы созданы', () => {
-    const tableNamesAsArrObj = db.sqliteDb.query('select name from sqlite_master where type="table"').all();
+    const tableNamesAsArrObj = db.sqliteDb.query('SELECT name FROM sqlite_master WHERE type="table"').all();
     const tableNames = tableNamesAsArrObj.map((tName) => (tName as any).name);
     expect(tableNames).toEqual(['migrations', 'users', 'posts', 'events']);
   });
@@ -36,7 +36,7 @@ describe('sqlite create and migrate tests', () => {
   test('успех, поля таблицы posts добавлены, миграция сработала', () => {
     const postColAsArrObj = db.sqliteDb.query('PRAGMA table_info("posts")').all();
     const postColNames = postColAsArrObj.map((col) => (col as any).name);
-    expect(postColNames).toEqual(['postId', 'name', 'body', 'authorId', 'category']);
+    expect(postColNames).toEqual(['postId', 'name', 'body', 'desc', 'authorId', 'published', 'version', 'category']);
 
     const migrations = db.sqliteDb.query('SELECT * FROM migrations').all();
     expect(migrations.length).toBe(1);
@@ -70,7 +70,7 @@ describe('sqlite create and migrate tests', () => {
     const postColAsArrObj = failDb.sqliteDb.query('PRAGMA table_info("posts")').all();
     const postColNames = postColAsArrObj.map((col) => (col as any).name);
     // not added column
-    expect(postColNames).toEqual(['postId', 'name', 'body', 'authorId']);
+    expect(postColNames).toEqual(['postId', 'name', 'body', 'desc', 'authorId', 'published', 'version']);
 
     const migrations = failDb.sqliteDb.query('SELECT * FROM migrations').all();
     // not added in migrations table

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-use-before-define */
+import { TestBatchRecords } from '../../../../app/database/types';
 import { GeneralModuleResolver } from '../../../../app/module/types';
 import { ConsoleLogger } from '../../../../common/logger/console-logger';
 import { getLoggerMode } from '../../../../common/logger/logger-modes';
@@ -40,14 +41,10 @@ export namespace SqliteTestFixtures {
   export type UserAttrs = {
     userId: string,
     login: string,
-    passHash: string,
+    hash: string,
   }
 
-  export type UserRecord = UserAttrs & {
-    version: number,
-  }
-
-  export class UserRepository extends BunSqliteRepository<'users', UserRecord> {
+  export class UserRepository extends BunSqliteRepository<'users', UserAttrs> {
     tableName = 'users' as const;
 
     migrationWRows: MigrateRow[] = [];
@@ -67,8 +64,10 @@ export namespace SqliteTestFixtures {
     postId: string,
     name: string,
     body: string,
+    desc?: string,
     category: 'music' | 'cinema' | 'art',
     authorId: string,
+    published: boolean,
   }
 
   export type PostRecord = PostAttrs & {
@@ -87,26 +86,26 @@ export namespace SqliteTestFixtures {
     ];
 
     create(): void {
-      this.db.sqliteDb.run(
-        `CREATE TABLE ${this.tableName} (
-          postId TEXT PRIMARY KEY,
-          name TEXT NOT NULL,
-          body TEXT NOT NULL,
-          authorId TEXT NOT NULL
-        );`,
-      );
+      const sql = `CREATE TABLE ${this.tableName} (
+        postId TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        body TEXT NOT NULL,
+        desc TEXT,
+        authorId TEXT NOT NULL,
+        published BOOLEAN DEFAULT 0 NOT NULL,
+        version INTEGER DEFAULT 0 NOT NULL
+      );`;
+      this.db.sqliteDb.run(sql);
     }
   }
 
-  export const userAttrs = { userId: 'e4aaf44c-f727-4b00-b9e1-fcba0feb98c0', telegramId: 555 };
-  export const userProfileAttrs = {
-    login: 'Nur',
-    nickName: 'Nur',
-    name: 'Nurbolat',
+  export const userAttrs: UserAttrs = {
+    userId: 'e4aaf44c-f727-4b00-b9e1-fcba0feb98c0',
+    login: 'Nick',
+    hash: 'fff',
   };
   export const userArAttrs = {
     ...userAttrs,
-    profile: userProfileAttrs,
   };
 
   export const events: GeneralEventDod[] = [
@@ -135,7 +134,7 @@ export namespace SqliteTestFixtures {
       },
     },
     {
-      attrs: userProfileAttrs,
+      attrs: userAttrs,
       meta: {
         eventId: 'de63b084-e565-4090-8972-225f36cd6c2b',
         requestId: '7300da3b-545c-492c-b31b-213c02620ed5',
@@ -159,4 +158,54 @@ export namespace SqliteTestFixtures {
       },
     },
   ];
+
+  export const batchRecords: TestBatchRecords<UserRepository | PostRepository> = {
+    users: [
+      {
+        userId: '08ea51a1-6d14-42bf-81de-a94a809e3286',
+        login: 'Bill',
+        hash: 'fff',
+      },
+      {
+        userId: '38d929f5-d20d-47f3-8844-eb1986ee46ae',
+        login: 'f1rstFx',
+        hash: 'hhh',
+      },
+      {
+        userId: '131b499e-927d-477c-9d97-c2ae6104985e',
+        login: 'Nick',
+        hash: 'ccc',
+      },
+    ],
+    posts: [
+      {
+        postId: '09cdf3d6-93ef-44be-8a3d-2e9da3982049',
+        name: 'About thinks',
+        body: 'very long text about thinks',
+        category: 'cinema',
+        authorId: '131b499e-927d-477c-9d97-c2ae6104985e',
+        published: true,
+        version: 0,
+      },
+      {
+        postId: '131b499e-927d-477c-9d97-c2ae6104985e',
+        name: 'Film Interstellar',
+        body: 'long recense',
+        desc: 'very nice film',
+        category: 'cinema',
+        authorId: '38d929f5-d20d-47f3-8844-eb1986ee46ae',
+        published: false,
+        version: 0,
+      },
+      {
+        postId: 'fb369b27-ec5e-452f-b454-e48db4bf6ab4',
+        name: 'Avatar not cool film, imho',
+        body: 'long recense',
+        category: 'cinema',
+        authorId: '131b499e-927d-477c-9d97-c2ae6104985e',
+        published: false,
+        version: 0,
+      },
+    ],
+  };
 }

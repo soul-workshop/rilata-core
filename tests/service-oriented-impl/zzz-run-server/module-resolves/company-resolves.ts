@@ -1,4 +1,3 @@
-import { EventRepository } from '../../../../src/app/database/event-repository';
 import { FakeClassImplements } from '../../../fixtures/fake-class-implements';
 import { AuthFacadeOneServerImpl } from '../../auth/one-server-facades/auth';
 import { CompanyRepository } from '../../company/domain-object/company/repo';
@@ -12,7 +11,7 @@ let companyResolves: CompanyResolves;
 
 let db: FakeClassImplements.TestMemoryDatabase;
 
-let eventRepo: EventRepository;
+let eventRepo: FakeClassImplements.TestEventRepository;
 
 let companyRepo: CompanyRepository;
 

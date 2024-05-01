@@ -21,10 +21,6 @@ export abstract class BunSqliteRepository<
 
   constructor(protected db: BunSqliteDatabase) {}
 
-  addBatch(records: R[]): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
   async clear(): Promise<void> {
     this.db.sqliteDb.run(`DELETE FROM ${this.tableName}`);
   }
@@ -32,6 +28,35 @@ export abstract class BunSqliteRepository<
   init(resolver: GeneralModuleResolver): void {
     this.resolver = resolver;
     this.logger = resolver.getLogger();
+  }
+
+  async addBatch(records: R[]): Promise<void> {
+    if (records.length === 0) return;
+    const colNames = this.getColumnNames(records);
+
+    const sql = `INSERT INTO ${this.tableName} (${colNames.join(', ')}) VALUES ${this.getRecordValues(colNames, records)}`;
+    this.db.sqliteDb.run(sql);
+  }
+
+  protected getColumnNames(records: R[]): (keyof R)[] {
+    const set = new Set<keyof R>();
+    records.forEach((rec) => Object.keys(rec).forEach((key) => set.add(key)));
+    return Array.from(set);
+  }
+
+  protected getRecordValues(colNames: (keyof R)[], records: R[]): string {
+    return records
+      .map((rec) => colNames.map((nm) => this.castRecordValue(rec[nm])).join(', '))
+      .map((recAsStr) => `(${recAsStr})`)
+      .join(', ');
+  }
+
+  protected castRecordValue(value: unknown): unknown {
+    const type = typeof value;
+    if (type === 'string') return `"${value}"`;
+    if (type === 'boolean') return value ? 1 : 0;
+    if (type === 'undefined') return 'null';
+    return value;
   }
 
   /** Выполнить миграцию для репозитория */

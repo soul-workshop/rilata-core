@@ -81,10 +81,14 @@ export abstract class BunSqliteDatabase implements TestDatabase {
     return repo as R;
   }
 
-  addBatch<R extends BunSqliteRepository<string, DTO>>(
+  async addBatch<R extends BunSqliteRepository<string, DTO>>(
     batchRecords: TestBatchRecords<R>,
   ): Promise<void> {
-    throw new Error('Method not implemented.');
+    const promises = Object.entries(batchRecords).map(([tableName, records]) => {
+      const repo = this.getRepository(tableName);
+      return repo.addBatch(records as DTO[]);
+    });
+    await Promise.all(promises);
   }
 
   async clear(): Promise<void> {

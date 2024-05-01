@@ -7,5 +7,5 @@ export type ModuleResolves<M extends Module<DTO>> = {
   moduleName: M['moduleName'],
   moduleUrls: string[], // example: ['/api/company-module/']
   db: Database,
-  busMessageRepo: BusMessageRepository<Record<string, unknown>>,
+  busMessageRepo: BusMessageRepository,
 }
