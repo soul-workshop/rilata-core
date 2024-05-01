@@ -24,7 +24,7 @@ export function getCompanyResolves(): CompanyResolves {
       moduleName: 'CompanyModule',
       moduleUrls: ['/api/company-module/'],
       db,
-      busMessageRepo: eventRepo,
+      eventRepo,
       companyRepo,
       subjectFacade: new SubjectFacadeOneServerImpl(),
       authFacade: new AuthFacadeOneServerImpl(),

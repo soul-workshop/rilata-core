@@ -108,7 +108,7 @@ export abstract class BunSqliteDatabase implements TestDatabase {
   }
 
   getFilePath(): string {
-    return this.resolver.getDirPath(); // default: path to module dir
+    return this.resolver.getModulePath(); // default: path to module dir
   }
 
   getFullFileName(): string {

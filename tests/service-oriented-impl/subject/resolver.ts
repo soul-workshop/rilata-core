@@ -18,7 +18,7 @@ export class SubjectModuleResolver extends ModuleResolver<
   resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === PersonRepository) return this.resolves.personRepo;
     if (key === EventRepository || key === BusMessageRepository) {
-      return this.resolves.busMessageRepo;
+      return this.resolves.eventRepo;
     }
     throw Error(`not found repository by key: ${key}`);
   }

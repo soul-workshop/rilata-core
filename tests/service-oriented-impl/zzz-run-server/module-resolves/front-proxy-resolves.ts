@@ -17,9 +17,6 @@ export function getFrontProxyResolves(): FrontendProxyResolves {
       get db(): never {
         throw Error('read module not supported work with database, only facades');
       },
-      get busMessageRepo(): never {
-        throw Error('read module not supported work with database, only facades');
-      },
     };
   }
 

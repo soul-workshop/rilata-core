@@ -16,7 +16,7 @@ export function getSubjectResolves(): SubjectResolves {
       moduleName: 'SubjectModule',
       moduleUrls: ['/api/subject-module/'],
       db,
-      busMessageRepo: new FakeClassImplements.TestEventRepository(db),
+      eventRepo: new FakeClassImplements.TestEventRepository(db),
       personRepo: new PersonRepositoryImpl(db),
     };
   }
