@@ -3,6 +3,7 @@
 import { storeDispatcher } from '../../src/app/async-store/store-dispatcher';
 import { DelivererToBus } from '../../src/app/bus/deliverer-to-bus';
 import { DeliveryBusMessage, DeliveryEvent } from '../../src/app/bus/types';
+import { BusMessageRepository } from '../../src/app/database/bus-message-repository';
 import { EventRepository } from '../../src/app/database/event-repository';
 import { TestDatabase } from '../../src/app/database/test-database';
 import { TestRepository } from '../../src/app/database/test-repository';
@@ -257,7 +258,7 @@ export namespace FakeClassImplements {
       aRootId: UuidType,
     }
 
-  export class TestEventRepository implements EventRepository {
+  export class TestEventRepository implements EventRepository, BusMessageRepository {
     protected delivererToBus: DelivererToBus | undefined;
 
     testRepo: TestMemoryRepository<'domain_event', EventRecord, 'busMesssageId'>;
@@ -276,8 +277,8 @@ export namespace FakeClassImplements {
         .map((record) => record.payload) as GetARParamsEvents<A>;
     }
 
-    async getBusMessage(busMessageId: string): Promise<GeneralEventDod | undefined> {
-      const record = await this.testRepo.find(busMessageId);
+    async findEvent(id: string): Promise<GeneralEventDod | undefined> {
+      const record = await this.testRepo.find(id);
       return record ? record.payload : undefined;
     }
 
@@ -296,18 +297,20 @@ export namespace FakeClassImplements {
         if (this.delivererToBus) {
           const deliverEvent: DeliveryEvent = {
             type: 'event',
-            busMessageId: event.meta.eventId,
-            busMessageName: event.meta.name,
+            id: event.meta.eventId,
+            name: event.meta.name,
             requestId: event.meta.requestId,
+            isPublished: 0,
             payload: JSON.stringify(event),
             aRootName: event.aRoot.meta.name,
+            aRootId: event.aRoot.attrs[event.aRoot.meta.idName],
           };
           this.delivererToBus.handle(deliverEvent);
         }
       });
     }
 
-    async busMessageIsExist(requestId: string): Promise<boolean> {
+    async isExist(requestId: string): Promise<boolean> {
       return Boolean(await this.testRepo.find(requestId));
     }
 
@@ -316,11 +319,13 @@ export namespace FakeClassImplements {
         .filter((rec) => rec.published === false)
         .map((rec) => ({
           type: 'event',
-          busMessageId: rec.busMesssageId,
-          busMessageName: rec.busMessageName,
+          id: rec.busMesssageId,
+          name: rec.busMessageName,
           payload: JSON.stringify(rec.payload),
           requestId: rec.busMesssageId,
+          isPublished: 0,
           aRootName: rec.aRootName,
+          aRootId: rec.aRootId,
         }));
     }
 

@@ -19,7 +19,7 @@ export type RegisterCompanyRequestDodAttrs = {
   company: Omit<RegisterCompanyDomainCommand, 'employees' | 'admins'>,
 }
 
-export type RegisterCompanyRequestDod = RequestDod<RegisterCompanyRequestDodAttrs, 'registerCompany'>
+export type RegisterCompanyRequestDod = RequestDod<'registerCompany', RegisterCompanyRequestDodAttrs>
 
 export type RegisterCompanyOut = { id: string }
 

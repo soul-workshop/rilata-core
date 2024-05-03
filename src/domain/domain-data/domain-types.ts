@@ -53,8 +53,8 @@ export type ErrorDod<
 export type GeneralErrorDod = ErrorDod<string, Locale, ErrorType>;
 
 export type EventDod<
-  ATTRS extends DomainAttrs,
   NAME extends string,
+  ATTRS extends DomainAttrs,
   ARDTF extends ARDT<DTO, DomainMeta<string, string>>,
   CALLER extends Caller = Caller
 > = {
@@ -72,10 +72,10 @@ export type EventDod<
 }
 
 export type GeneralEventDod = EventDod<
-  DomainAttrs, string, ARDT<DTO, DomainMeta<string, string>>
+  string, DomainAttrs, ARDT<DTO, DomainMeta<string, string>>
 >;
 
-export type RequestDod <ATTRS extends DTO, NAME extends string> = {
+export type RequestDod<NAME extends string, ATTRS extends DTO> = {
   meta: {
     name: NAME,
     requestId: UuidType,
@@ -84,4 +84,4 @@ export type RequestDod <ATTRS extends DTO, NAME extends string> = {
   attrs: ATTRS,
 }
 
-export type GeneralRequestDod = RequestDod<DTO, string>;
+export type GeneralRequestDod = RequestDod<string, DTO>;

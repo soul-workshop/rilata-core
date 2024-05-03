@@ -25,9 +25,17 @@ implements Repositoriable, Realisable, Facadable {
 
   abstract resolveFacade(...args: unknown[]): ModuleResolveInstance
 
+  getModulePath(): string {
+    // @ts-ignore
+    return import.meta.dir; // path/to/file
+  }
+
+  getProjectPath(): string {
+    return this.serverResolver.getProjectPath();
+  }
+
   constructor(protected resolves: MR) {}
 
-  /** инициализация выполняется классом server */
   init(module: M, serverResolver: ServerResolver<JWT_P>): void {
     this.module = module;
     this.serverResolver = serverResolver;

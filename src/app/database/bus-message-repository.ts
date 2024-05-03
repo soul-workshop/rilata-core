@@ -4,21 +4,17 @@ import { DeliveryBusMessage } from '../bus/types';
 import { GeneralModuleResolver } from '../module/types';
 import { Repositoriable } from '../resolves/repositoriable';
 
-export interface BusMessageRepository<R extends Record<string, unknown>> {
+export interface BusMessageRepository {
   init(resovler: GeneralModuleResolver): void
-
-  getBusMessage(busMesssageId: UuidType): Promise<R | undefined>
-
-  busMessageIsExist(id: UuidType): Promise<boolean>
 
   getNotPublished(): Promise<DeliveryBusMessage[]>
 
-  markAsPublished(id: UuidType): Promise<void>
+  markAsPublished(id: UuidType): Promise<unknown>
 
-  subscribe(delivererToBus: DelivererToBus): void
+  subscribe(delivererToBus: DelivererToBus): unknown
 }
 
-type BusRepository = BusMessageRepository<Record<string, unknown>>;
+type BusRepository = BusMessageRepository;
 export const BusMessageRepository = {
   instance(resolver: Repositoriable): BusRepository {
     return resolver.resolveRepo(BusMessageRepository) as BusRepository;

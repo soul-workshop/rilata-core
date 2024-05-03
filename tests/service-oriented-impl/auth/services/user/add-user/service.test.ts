@@ -42,11 +42,9 @@ describe('add user service tests', async () => {
     expect(uuidUtility.isValidValue(userAr.userId)).toBe(true);
 
     const eventRepo = EventRepository.instance(resolver);
-    const events = await eventRepo.getNotPublished();
+    const events = await eventRepo.getAggregateEvents(userAr.userId);
     expect(events.length).toBe(1);
-    const eventId = events[0].busMessageId;
-    const event = await eventRepo.getBusMessage(eventId);
-    expect(event?.aRoot.attrs.userId).toBe(userAr.userId);
+    expect(events[0].aRoot.attrs.userId).toBe(userAr.userId);
   });
 
   test('провал, пользователь с таким id существует и service перезапустился', async () => {
@@ -72,11 +70,9 @@ describe('add user service tests', async () => {
     const userAr = result.value as AddUserOut;
 
     const eventRepo = EventRepository.instance(resolver);
-    const events = await eventRepo.getNotPublished();
+    const events = await eventRepo.getAggregateEvents(userAr.userId);
     expect(events.length).toBe(1);
-    const eventId = events[0].busMessageId;
-    const event = await eventRepo.getBusMessage(eventId);
-    expect(event?.aRoot.attrs.userId).toBe(userAr.userId);
+    expect(events[0].aRoot.attrs.userId).toBe(userAr.userId);
 
     // reexecute service by DatabaseObjectSavingError exception
     expect(repoAddUserMock).toHaveBeenCalledTimes(2);

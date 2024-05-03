@@ -49,6 +49,13 @@ export type UnionToTuple<T, A extends unknown[] = []> = IsUnion<T> extends true
   ? UnionToTuple<Exclude<T, PopUnion<T>>, [PopUnion<T>, ...A]>
   : [T, ...A];
 
+export type TupleToUnion<T> =
+  T extends ReadonlyArray<infer RAT>
+    ? RAT
+    : T extends Array<infer AT>
+      ? AT
+      : never
+
 interface Person {
   name: string;
   age: number;

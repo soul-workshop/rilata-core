@@ -1,3 +1,4 @@
+import { EventRepository } from '../../../src/app/database/event-repository';
 import { ModuleResolves } from '../../../src/app/module/module-resolves';
 import { AuthFacade } from '../auth/facade';
 import { CompanyRepository } from '../company/domain-object/company/repo';
@@ -9,4 +10,5 @@ export type CompanyResolves = ModuleResolves<CompanyModule> & {
   companyRepo: CompanyRepository,
   subjectFacade: SubjectFacade,
   authFacade: AuthFacade,
+  eventRepo: EventRepository,
 }

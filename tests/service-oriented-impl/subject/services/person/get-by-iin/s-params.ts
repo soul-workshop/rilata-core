@@ -7,7 +7,7 @@ export type GetPersonByIinRequestDodAttrs = {
   iin: string,
 }
 
-export type GetPersonByIinRequestDod = RequestDod<GetPersonByIinRequestDodAttrs, 'getPersonByIin'>
+export type GetPersonByIinRequestDod = RequestDod<'getPersonByIin', GetPersonByIinRequestDodAttrs>
 
 export type GetPersonByIinOut = PersonOutAttrs
 

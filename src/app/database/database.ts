@@ -4,7 +4,7 @@ import { GeneralModuleResolver } from '../module/types';
 type TransactionId = UuidType;
 
 export interface Database {
-  init(moduleResolver: GeneralModuleResolver, ...args: unknown[]): Promise<void>
+  init(moduleResolver: GeneralModuleResolver, ...args: unknown[]): void
 
   stop(): void
 

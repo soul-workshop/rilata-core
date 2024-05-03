@@ -19,7 +19,7 @@ export class CompanyModuleResolver extends ModuleResolver<
   resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === CompanyRepository) return this.resolves.companyRepo;
     if (key === EventRepository || key === BusMessageRepository) {
-      return this.resolves.busMessageRepo;
+      return this.resolves.eventRepo;
     }
     throw this.getLogger().error(`not find repo to key: ${key}`);
   }

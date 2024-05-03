@@ -24,15 +24,17 @@ export type SubcribeToAggregate = SubcribeToMessageBody & {
 /** Тип для подписки в шину */
 export type SubcribeToBusMessage = SubcribeToMessage | SubcribeToEvent | SubcribeToAggregate;
 
-type MessageBodyType = {
-  busMessageId: UuidType,
-  busMessageName: string,
+export type MessageBodyType = {
+  id: UuidType,
+  name: string,
   payload: BusPayloadAsJson,
   requestId: UuidType,
+  isPublished: 0 | 1,
 }
 
-type EventBodyType = MessageBodyType & {
+export type EventBodyType = MessageBodyType & {
   aRootName: string,
+  aRootId: string,
 }
 
 export type DeliveryMessage = MessageBodyType & {

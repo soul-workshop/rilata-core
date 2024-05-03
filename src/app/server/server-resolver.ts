@@ -26,6 +26,15 @@ export class ServerResolver<JWT_P extends DTO> {
     });
   }
 
+  getServerPath(): string {
+    // @ts-ignore
+    return import.meta.dir; // path/to/file
+  }
+
+  getProjectPath(): string {
+    return process.cwd(); // path/to/project
+  }
+
   getServer(): RilataServer<JWT_P> {
     return this.server;
   }

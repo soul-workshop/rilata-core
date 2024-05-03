@@ -18,7 +18,7 @@ export class AuthModuleResolver extends ModuleResolver<
   resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === UserRepository) return this.resolves.userRepo;
     if (key === EventRepository || key === BusMessageRepository) {
-      return this.resolves.busMessageRepo;
+      return this.resolves.eventRepo;
     }
     throw this.getLogger().error(`not finded repository in key: ${key}`);
   }

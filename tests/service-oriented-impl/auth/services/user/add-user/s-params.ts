@@ -7,13 +7,13 @@ export type AddUserRequestDodAttrs = {
   personIin: UuidType,
 }
 
-export type AddUserRequestDod = RequestDod<AddUserRequestDodAttrs, 'addUser'>
+export type AddUserRequestDod = RequestDod<'addUser', AddUserRequestDodAttrs>
 
 export type AddUserOut = {
   userId: UuidType
 }
 
-export type UserAddedEvent = EventDod<AddUserRequestDodAttrs, 'UserAddedEvent', UserARDT>
+export type UserAddedEvent = EventDod<'UserAddedEvent', AddUserRequestDodAttrs, UserARDT>
 
 export type AddUserServiceParams = CommandServiceParams<
   UserParams,

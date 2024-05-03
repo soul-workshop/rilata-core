@@ -1,17 +1,17 @@
 import { DTO } from '../../domain/dto';
 import { Bus } from '../bus/bus';
 import { DelivererToBus } from '../bus/deliverer-to-bus';
+import { BusMessageRepository } from '../database/bus-message-repository';
 import { BusServerResolver } from '../server/bus-server-resolver';
+import { BusModuleResolves } from './bus-module-resolves';
 import { Module } from './module';
 import { ModuleResolver } from './module-resolver';
-import { ModuleResolves } from './module-resolves';
 
 export abstract class BusModuleResolver<
-  JWT_P extends DTO, M extends Module<JWT_P>, MR extends ModuleResolves<M>
+  JWT_P extends DTO, M extends Module<JWT_P>, MR extends BusModuleResolves<M>
 > extends ModuleResolver<JWT_P, M, MR> {
   declare protected serverResolver: BusServerResolver<JWT_P>;
 
-  /** инициализация выполняется классом server */
   init(module: M, serverResolver: BusServerResolver<JWT_P>): void {
     super.init(module, serverResolver);
     this.getDelivererToBus().init(this);
@@ -19,6 +19,10 @@ export abstract class BusModuleResolver<
 
   getBus(): Bus {
     return this.serverResolver.getBus();
+  }
+
+  getBusMessageRepository(): BusMessageRepository {
+    return this.resolves.busMessageRepo;
   }
 
   abstract getDelivererToBus(): DelivererToBus

@@ -1,4 +1,3 @@
-import { EventRepository } from '../../../../src/app/database/event-repository';
 import { FakeClassImplements } from '../../../fixtures/fake-class-implements';
 import { CompanyCmdRepository } from '../../company-cmd/domain-object/company/repo';
 import { CompanyCmdResolves } from '../../company-cmd/resolves';
@@ -10,7 +9,7 @@ let companyResolves: CompanyCmdResolves;
 
 let db: FakeClassImplements.TestMemoryDatabase;
 
-let eventRepo: EventRepository;
+let eventRepo: FakeClassImplements.TestEventRepository;
 
 let companyRepo: CompanyCmdRepository;
 

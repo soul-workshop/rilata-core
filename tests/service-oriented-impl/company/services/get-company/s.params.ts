@@ -4,7 +4,7 @@ import { RequestDod } from '../../../../../src/domain/domain-data/domain-types';
 import { CompanyAttrs, CompanyParams } from '../../domain-data/company/params';
 import { CompanyDoesntExistByIdError } from '../../domain-object/company/repo-errors';
 
-export type GetCompanyRequestDod = RequestDod<{ id: UuidType }, 'getCompany'>;
+export type GetCompanyRequestDod = RequestDod<'getCompany', { id: UuidType }>;
 
 export type GetCompanyOut = CompanyAttrs;
 

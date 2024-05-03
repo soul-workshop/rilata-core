@@ -7,7 +7,7 @@ export type GetUsersRequestDodAttrs = {
   userIds: UuidType[],
 }
 
-export type GetUsersRequestDod = RequestDod<GetUsersRequestDodAttrs, 'getUsers'>
+export type GetUsersRequestDod = RequestDod<'getUsers', GetUsersRequestDodAttrs>
 
 export type GetUsersOut = UserAttrs[]
 
