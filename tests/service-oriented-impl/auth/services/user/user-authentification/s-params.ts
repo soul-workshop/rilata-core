@@ -14,7 +14,7 @@ export type UserJwtPayload = {
   userId: UuidType,
 }
 
-export type UserAuthentificationRequestDod = RequestDod<UserAuthentificationRequestAttrs, 'userAuthentificate'>;
+export type UserAuthentificationRequestDod = RequestDod<'userAuthentificate', UserAuthentificationRequestAttrs>;
 
 export type UserAuthentificationOut = string;
 

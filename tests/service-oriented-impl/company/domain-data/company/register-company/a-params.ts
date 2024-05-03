@@ -9,8 +9,8 @@ export type RegisterCompanyDomainCommand = Omit<CompanyAttrs, 'id'>
 export type RegisterCompanyOut = CompanyAR
 
 export type CompanyRegisteredEvent = EventDod<
-  RegisterCompanyDomainCommand,
   'CompanyRegisteredEvent',
+  RegisterCompanyDomainCommand,
   CompanyCmdARDT
 >
 

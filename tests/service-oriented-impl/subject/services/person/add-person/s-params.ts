@@ -7,13 +7,13 @@ import { PersonAlreadyExistsError } from '../../../domain-object/person/repo-err
 
 export type AddPersonRequestDodAttrs = AddingPersonActionAttrs
 
-export type AddPersonRequestDod = RequestDod<AddPersonRequestDodAttrs, 'addPerson'>
+export type AddPersonRequestDod = RequestDod<'addPerson', AddPersonRequestDodAttrs>
 
 export type AddPersonOut = { id: UuidType }
 
 export type AddPersonEvent = EventDod<
-  AddPersonRequestDodAttrs,
   'PersonAddedEvent',
+  AddPersonRequestDodAttrs,
   PersonARDT
 >
 

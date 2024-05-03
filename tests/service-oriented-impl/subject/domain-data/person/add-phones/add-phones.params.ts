@@ -6,7 +6,7 @@ export type AddPhonesActionDod = { phones: PhoneAttrs[] };
 
 type PersonPhonesAddedEventAttrs = PhoneAttrs[]
 
-export type PersonPhonesAddedEvent = EventDod<PersonPhonesAddedEventAttrs, 'PersonPhoneAddedEvent', PersonARDT>;
+export type PersonPhonesAddedEvent = EventDod<'PersonPhoneAddedEvent', PersonPhonesAddedEventAttrs, PersonARDT>;
 
 export type AddPhoneActionParams = ActionParams<
   AddPhonesActionDod,

@@ -6,7 +6,7 @@ import { CompanyAlreadyExistError } from '../../../domain-object/company/repo-er
 
 export type AddCompanyRequestDodAttrs = AddCompanyDomainCommand;
 
-export type AddCompanyRequestDod = RequestDod<AddCompanyRequestDodAttrs, 'addCompany'>
+export type AddCompanyRequestDod = RequestDod<'addCompany', AddCompanyRequestDodAttrs>
 
 export type AddCompanyOut = { id: string }
 

@@ -4,7 +4,7 @@ import { PersonARDT, PersonAttrs } from '../params';
 
 export type AddingPersonActionAttrs = Omit<PersonAttrs, 'id' | 'contacts'>;
 
-export type PersonAddedEvent = EventDod<PersonAttrs, 'PersonAddedEvent', PersonARDT>;
+export type PersonAddedEvent = EventDod<'PersonAddedEvent', PersonAttrs, PersonARDT>;
 
 export type AddPersonActionParams = ActionParams<
   AddingPersonActionAttrs,

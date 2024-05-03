@@ -1,7 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { Database as SqliteDb } from 'bun:sqlite';
 import { TestDatabase } from '../../../app/database/test-database';
-import { TestRepository } from '../../../app/database/test-repository';
 import { TestBatchRecords } from '../../../app/database/types';
 import { GeneralModuleResolver } from '../../../app/module/types';
 import { Logger } from '../../../common/logger/logger';

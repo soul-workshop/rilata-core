@@ -7,7 +7,7 @@ export type GetFullCompanyRequestDodAttrs = {
   id: string,
 }
 
-export type GetFullCompanyRequestDod = RequestDod<GetFullCompanyRequestDodAttrs, 'GetFullCompanyRequestDod'>
+export type GetFullCompanyRequestDod = RequestDod<'GetFullCompanyRequestDod', GetFullCompanyRequestDodAttrs>
 
 export type GetFullCompanyOut = FullCompany
 

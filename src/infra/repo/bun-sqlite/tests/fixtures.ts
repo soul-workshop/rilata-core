@@ -1,10 +1,17 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-use-before-define */
 import { TestBatchRecords } from '../../../../app/database/types';
 import { GeneralModuleResolver } from '../../../../app/module/types';
+import { CommandService } from '../../../../app/service/command-service';
+import { CommandServiceParams, RequestDodValidator, ServiceResult } from '../../../../app/service/types';
 import { ConsoleLogger } from '../../../../common/logger/console-logger';
 import { getLoggerMode } from '../../../../common/logger/logger-modes';
-import { GeneralEventDod } from '../../../../domain/domain-data/domain-types';
+import { UuidType } from '../../../../common/types';
+import { TupleToObject, TupleToUnion } from '../../../../common/utils/tuple/types';
+import { ARDT, DomainMeta, ErrorDod, EventDod, GeneralEventDod, RequestDod } from '../../../../domain/domain-data/domain-types';
+import { AggregateRootDataParams } from '../../../../domain/domain-data/params-types';
+import { DtoFieldValidator } from '../../../../domain/validator/field-validator/dto-field-validator';
+import { LiteralFieldValidator } from '../../../../domain/validator/field-validator/literal-field-validator';
+import { StringChoiceFieldValidator } from '../../../../domain/validator/field-validator/prepared-fields/string/choice';
+import { StringChoiceValidationRule } from '../../../../domain/validator/rules/validate-rules/string/string-choice.v-rule';
 import { BunSqliteDatabase } from '../database';
 import { SqliteEventRepository } from '../repositories/event';
 import { BunSqliteRepository } from '../repository';
@@ -60,12 +67,16 @@ export namespace SqliteTestFixtures {
     }
   }
 
+  const postCategories = ['music', 'cinema', 'art'] as const;
+
+  type PostCategories = TupleToUnion<typeof postCategories>;
+
   export type PostAttrs = {
     postId: string,
     name: string,
     body: string,
     desc?: string,
-    category: 'music' | 'cinema' | 'art',
+    category: PostCategories,
     authorId: string,
     published: boolean,
   }
@@ -73,6 +84,12 @@ export namespace SqliteTestFixtures {
   export type PostRecord = PostAttrs & {
     version: number,
   }
+
+  type PostDomainMeta = DomainMeta<'PostAr', 'postId'>
+
+  type PostArParams = AggregateRootDataParams<PostAttrs, PostDomainMeta, never, []>
+
+  type PostARDT = ARDT<PostAttrs, PostDomainMeta>
 
   export class PostRepository extends BunSqliteRepository<'posts', PostRecord> {
     tableName = 'posts' as const;
@@ -96,6 +113,58 @@ export namespace SqliteTestFixtures {
         version INTEGER DEFAULT 0 NOT NULL
       );`;
       this.db.sqliteDb.run(sql);
+    }
+  }
+
+  type AddPostRequestDodAttrs = {
+    name: string,
+    body: string,
+    desc?: string,
+    category: PostCategories,
+  }
+
+  type AddPostRequestDod = RequestDod<'addPost', AddPostRequestDodAttrs>
+
+  type AddPostOut = { postId: UuidType }
+
+  type AddPostError = ErrorDod<'AddPostError', {
+    name: 'AddPostError',
+    text: 'Не получилось добавить пост',
+    hint: Record<string, never>,
+  }>
+
+  type PostAddedEvent = EventDod<'PostAdded', AddPostRequestDodAttrs, PostARDT>
+
+  type AddPostServiceParams = CommandServiceParams<
+    PostArParams,
+    AddPostRequestDod,
+    AddPostOut,
+    AddPostError,
+    PostAddedEvent[]
+  >
+
+  const addPostValidator: RequestDodValidator<AddPostServiceParams> = new DtoFieldValidator(
+    'addPost', true, { isArray: false }, 'dto', {
+      name: new LiteralFieldValidator('name', true, { isArray: false }, 'string', []),
+      body: new LiteralFieldValidator('body', true, { isArray: false }, 'string', []),
+      category: new LiteralFieldValidator('category', true, { isArray: false }, 'string', [
+        new StringChoiceValidationRule(postCategories),
+      ]),
+      desc: new LiteralFieldValidator('desc', false, { isArray: false }, 'string', []),
+    },
+  );
+
+  export class AddPostService extends CommandService<AddPostServiceParams> {
+    serviceName = 'addPost' as const;
+
+    aRootName = 'PostAr' as const;
+
+    protected supportedCallers = ['DomainUser'] as const;
+
+    protected validator = addPostValidator;
+
+    protected runDomain(input: AddPostRequestDod): Promise<ServiceResult<AddPostServiceParams>> {
+      throw new Error('Method not implemented.');
     }
   }
 
