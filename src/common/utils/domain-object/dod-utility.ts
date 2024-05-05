@@ -1,5 +1,6 @@
 import { storeDispatcher } from '../../../app/async-store/store-dispatcher';
 import { Caller } from '../../../app/caller';
+import { ValidationError } from '../../../app/service/error-types';
 import { GeneralRequestDod, GeneralErrorDod, GeneralEventDod } from '../../../domain/domain-data/domain-types';
 import { UuidType } from '../../types';
 import { dtoUtility } from '../dto/dto-utility';
@@ -85,6 +86,17 @@ class DodUtility {
       },
       attrs,
     } as A;
+  }
+
+  getValidationError<E extends ValidationError>(errors: E['errors']): E {
+    return {
+      errors,
+      name: 'Validation error',
+      meta: {
+        domainType: 'error',
+        errorType: 'app-error',
+      },
+    } as E;
   }
 
   protected getCurrentRequestId(): string {

@@ -1,7 +1,8 @@
 /* eslint-disable no-use-before-define */
 import { Logger } from '../../common/logger/logger';
 import {
-  GeneralCommandService, GeneralCommandServiceParams, GeneralEventService,
+    GeneralCommandService,
+  GeneralCommandServiceParams, GeneralEventService,
   GeneralQueryServiceParams, GeneraQueryService, ServiceResult,
 } from '../service/types';
 import { Service } from '../service/service';
@@ -17,14 +18,14 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { BadRequestError, InternalError } from '../service/error-types';
 import { Result } from '../../common/result/types';
 import { AssertionException } from '../../common/exeptions';
-import { DTO } from '../../domain/dto';
-import { ModuleResolver } from './module-resolver';
-import { ModuleResolves } from './module-resolves';
+import { ModuleResolver } from './resolver';
+import { ModuleResolves } from './resolves';
+import { GeneralServerResolver } from '../server/types';
 
-export abstract class Module<JWT_P extends DTO> {
-  readonly abstract moduleType: ModuleType;
-
+export abstract class Module {
   readonly abstract moduleName: string;
+
+  readonly abstract moduleType: ModuleType;
 
   readonly abstract queryServices: GeneraQueryService[]
 
@@ -34,13 +35,13 @@ export abstract class Module<JWT_P extends DTO> {
 
   protected moduleResolver!: GeneralModuleResolver;
 
-  protected services!: Service[];
+  protected services!: Service<GeneralModuleResolver>[];
 
   protected logger!: Logger;
 
   init(
-    moduleResolver: ModuleResolver<JWT_P, Module<JWT_P>, ModuleResolves<Module<JWT_P>>>,
-    serverResolver: ServerResolver<JWT_P>,
+    moduleResolver: GeneralModuleResolver,
+    serverResolver: GeneralServerResolver,
   ): void {
     this.moduleResolver = moduleResolver;
     moduleResolver.init(this, serverResolver);
@@ -75,6 +76,7 @@ export abstract class Module<JWT_P extends DTO> {
       }
 
       const store: StorePayload = {
+        serviceName,
         caller,
         moduleResolver: this.moduleResolver,
         requestId: requestDod.meta.requestId,
@@ -112,6 +114,7 @@ export abstract class Module<JWT_P extends DTO> {
         ? eventDod.caller.user
         : eventDod.caller;
       const store: StorePayload = {
+        serviceName,
         caller,
         moduleResolver: this.moduleResolver,
         requestId: eventDod.meta.requestId,

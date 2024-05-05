@@ -1,29 +1,18 @@
-import { Logger } from '../../common/logger/logger';
 import { DTO } from '../../domain/dto';
-import { JwtCreator } from '../jwt/jwt-creator';
-import { JwtDecoder } from '../jwt/jwt-decoder';
-import { JwtVerifier } from '../jwt/jwt-verifier';
-import { RunMode } from '../types';
 import { RilataServer } from './server';
 import { ServerResolves } from './server-resolves';
-import { JwtConfig, ServerConfig } from './types';
+import { ServerConfig } from './types';
 
-export class ServerResolver<JWT_P extends DTO> {
-  // eslint-disable-next-line no-use-before-define
-  protected server!: RilataServer<JWT_P>;
+export class ServerResolver<RES extends ServerResolves<DTO>> {
+  protected server!: RilataServer;
 
-  constructor(protected resolves: ServerResolves<JWT_P>) {}
+  constructor(protected resolves: RES) {}
 
   /** инициализация выполняется классом server */
-  init(server: RilataServer<JWT_P>): void {
+  init(server: RilataServer): void {
     this.server = server;
-    [
-      this.resolves.jwtVerifier,
-      this.resolves.jwtDecoder,
-      this.resolves.jwtCreator,
-    ].forEach((initiable) => {
-      initiable.init(this);
-    });
+
+    this.initResolves();
   }
 
   getServerPath(): string {
@@ -35,12 +24,16 @@ export class ServerResolver<JWT_P extends DTO> {
     return process.cwd(); // path/to/project
   }
 
-  getServer(): RilataServer<JWT_P> {
+  getServer(): RilataServer {
     return this.server;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   stop(): void {}
+
+  getServerResolves(): RES {
+    return this.resolves;
+  }
 
   getServerConfig(): Required<ServerConfig> {
     return {
@@ -50,35 +43,23 @@ export class ServerResolver<JWT_P extends DTO> {
     };
   }
 
-  getJwtDecoder(): JwtDecoder<JWT_P> {
+  getJwtDecoder(): RES['jwtDecoder'] {
     return this.resolves.jwtDecoder;
   }
 
-  getJwtVerifier(): JwtVerifier<JWT_P> {
+  getJwtVerifier(): RES['jwtVerifier'] {
     return this.resolves.jwtVerifier;
   }
 
-  getJwtCreator(): JwtCreator<JWT_P> {
+  getJwtCreator(): RES['jwtCreator'] {
     return this.resolves.jwtCreator;
   }
 
-  getJwtSecretKey(): string {
-    return this.resolves.jwtSecretKey;
-  }
-
-  getJwtConfig(): Required<JwtConfig> {
-    return {
-      algorithm: this.resolves.jwtConfig?.algorithm ?? 'HS256',
-      jwtLifetimeAsHour: this.resolves.jwtConfig?.jwtLifetimeAsHour ?? 24,
-      jwtRefreshLifetimeAsHour: this.resolves.jwtConfig?.jwtRefreshLifetimeAsHour ?? (24 * 3),
-    };
-  }
-
-  getLogger(): Logger {
+  getLogger(): RES['logger'] {
     return this.resolves.logger;
   }
 
-  getRunMode(): RunMode {
+  getRunMode(): RES['runMode'] {
     return this.resolves.runMode;
   }
 
@@ -88,5 +69,14 @@ export class ServerResolver<JWT_P extends DTO> {
 
   protected initFinished(): void {
     this.getLogger().info(`finish init server resolver ${this.constructor.name}`);
+  }
+
+  protected initResolves(): void {
+    Object.values(this.resolves).forEach((resolveItem) => {
+      if (
+        (resolveItem as any).init
+        && typeof (resolveItem as any).init === 'function'
+      ) (resolveItem as any).init(this);
+    });
   }
 }

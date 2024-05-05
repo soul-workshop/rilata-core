@@ -2,16 +2,15 @@ import { CompanyReadResolves } from './resolves';
 import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { CompanyReadModule } from './module';
 import { CompanyReadRepository } from './domain/company/repo';
-import { BusModuleResolver } from '../../../src/app/module/bus-module-resolver';
 import { DelivererToBus } from '../../../src/app/bus/deliverer-to-bus';
 import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus.ts/timeout-callback-impl';
-import { EventRepository } from '../../../src/app/database/event-repository';
 import { UserJwtPayload } from '../../service-oriented-impl/auth/services/user/user-authentification/s-params';
+import { UowModuleResolver } from '../../../src/app/module/uow.module/resolver';
+import { BusModuleResolver } from '../../../src/app/module/bus.resolver';
 
-// eslint-disable-next-line max-len
-export class CompanyReadModuleResolver extends BusModuleResolver<
+export class CompanyReadModuleResolver extends UowModuleResolver<
   UserJwtPayload, CompanyReadModule, CompanyReadResolves
-> {
+> implements BusModuleResolver {
   private delivererToBus = new TimeoutCallbackDelivererToBus();
 
   resolve(key: unknown): ModuleResolveInstance {

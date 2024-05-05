@@ -30,7 +30,7 @@ describe('sqlite create and migrate tests', () => {
   test('успех, поля таблицы users добавлены', () => {
     const colAsArrObj = db.sqliteDb.query('PRAGMA table_info("users")').all();
     const colNames = colAsArrObj.map((col) => (col as any).name);
-    expect(colNames).toEqual(['userId', 'login', 'hash']);
+    expect(colNames).toEqual(['userId', 'login', 'hash', 'posts']);
   });
 
   test('успех, поля таблицы posts добавлены, миграция сработала', () => {
@@ -44,7 +44,7 @@ describe('sqlite create and migrate tests', () => {
   });
 
   test('провал, миграция таблицы и запись в таблицу миграции проходит в одной транзакции', () => {
-    class FailMigratePostRepository extends SqliteTestFixtures.PostRepository {
+    class FailMigratePostRepository extends SqliteTestFixtures.PostRepositorySqlite {
       getMigrationSql(migration: MigrateRow): string {
         const { id, description, sql } = migration;
         // last column value is null => fail;
@@ -53,7 +53,7 @@ describe('sqlite create and migrate tests', () => {
     }
     class FailBlogDatabase extends SqliteTestFixtures.BlogDatabase {
       protected repositoryCtors = [
-        SqliteTestFixtures.UserRepository,
+        SqliteTestFixtures.UserRepositorySqlite,
         FailMigratePostRepository,
       ];
     }

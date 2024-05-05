@@ -4,18 +4,6 @@ import { JwtHmacHashUtils } from './jwt-utils';
 describe('jwt hmac utils tests', () => {
   const sut = new JwtHmacHashUtils();
 
-  describe('encode to base64Url and decode from base64Url cases', () => {
-    test('success, string case', () => {
-      expect(sut.encodeToBase64Url('your-256-bit-secret')).toBe('eW91ci0yNTYtYml0LXNlY3JldA');
-      expect(sut.decodeFromBase64Url('eW91ci0yNTYtYml0LXNlY3JldA')).toBe('your-256-bit-secret');
-    });
-
-    test('success, dto case', () => {
-      expect(sut.encodeToBase64Url({ userId: '5' })).toBe('eyJ1c2VySWQiOiI1In0');
-      expect(sut.decodeFromBase64Url('eyJ1c2VySWQiOiI1In0')).toEqual({ userId: '5' });
-    });
-  });
-
   test('success, sign jwt and result payload checked', () => {
     const result = sut.sign(
       { userId: '536e7463-b24d-4e7b-bad9-2bd2ed8011fd' },

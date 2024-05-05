@@ -1,9 +1,13 @@
+import { SQLQueryBindings } from 'bun:sqlite';
+import { storeDispatcher } from '../../../app/async-store/store-dispatcher';
 import { TestRepository } from '../../../app/database/test-repository';
 import { GeneralModuleResolver } from '../../../app/module/types';
 import { Logger } from '../../../common/logger/logger';
+import { UuidType } from '../../../common/types';
+import { dtoUtility } from '../../../common/utils/dto/dto-utility';
 import { DTO } from '../../../domain/dto';
 import { BunSqliteDatabase } from './database';
-import { MigrateRow } from './types';
+import { BunSqliteTransactionData, MigrateRow } from './types';
 
 export abstract class BunSqliteRepository<
   TN extends string, R extends DTO
@@ -32,31 +36,37 @@ export abstract class BunSqliteRepository<
 
   async addBatch(records: R[]): Promise<void> {
     if (records.length === 0) return;
-    const colNames = this.getColumnNames(records);
 
-    const sql = `INSERT INTO ${this.tableName} (${colNames.join(', ')}) VALUES ${this.getRecordValues(colNames, records)}`;
-    this.db.sqliteDb.run(sql);
+    const colNames = dtoUtility.getUniqueKeys(records);
+    const rawNames = colNames.join(', ');
+    const rawValues = colNames.map((n) => `$${n}`).join(',');
+
+    const sql = `INSERT INTO ${this.tableName} (${rawNames}) VALUES (${rawValues})`;
+    const transaction = this.db.sqliteDb.transaction(() => {
+      records.forEach((rec) => {
+        // почему то без приведения выводит ошибку типов!!!
+        const bindings = this.getObjectBindings(rec) as unknown as SQLQueryBindings[];
+        this.db.sqliteDb.prepare(sql, bindings).run();
+      });
+    });
+    transaction();
   }
 
-  protected getColumnNames(records: R[]): (keyof R)[] {
-    const set = new Set<keyof R>();
-    records.forEach((rec) => Object.keys(rec).forEach((key) => set.add(key)));
-    return Array.from(set);
+  /** Возвращает объект приведенный для привязки */
+  protected getObjectBindings(obj: Record<string, unknown>): SQLQueryBindings {
+    const casted = dtoUtility.editValues(obj, (v) => this.castValue(v));
+    return dtoUtility.editKeys(casted, (k) => `$${k}`);
   }
 
-  protected getRecordValues(colNames: (keyof R)[], records: R[]): string {
-    return records
-      .map((rec) => colNames.map((nm) => this.castRecordValue(rec[nm])).join(', '))
-      .map((recAsStr) => `(${recAsStr})`)
-      .join(', ');
-  }
-
-  protected castRecordValue(value: unknown): unknown {
-    const type = typeof value;
-    if (type === 'string') return `"${value}"`;
-    if (type === 'boolean') return value ? 1 : 0;
-    if (type === 'undefined') return 'null';
-    return value;
+  protected castValue(value: unknown): string | number | boolean | null {
+    if (
+      typeof value === 'string'
+    || typeof value === 'number'
+    || typeof value === 'boolean'
+    || value === null
+    ) return value;
+    if (value === undefined) return null;
+    return `"${JSON.stringify(value)}"`;
   }
 
   /** Выполнить миграцию для репозитория */

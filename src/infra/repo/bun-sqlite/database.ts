@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { Database as SqliteDb } from 'bun:sqlite';
-import { TestDatabase } from '../../../app/database/test-database';
+import { TestDatabase } from '../../../app/database/test.database';
 import { TestBatchRecords } from '../../../app/database/types';
 import { GeneralModuleResolver } from '../../../app/module/types';
 import { Logger } from '../../../common/logger/logger';
@@ -118,18 +118,6 @@ export abstract class BunSqliteDatabase implements TestDatabase {
 
   stop(): void {
     this.sqliteDb?.close();
-  }
-
-  startTransaction(): Promise<string> {
-    throw new Error('Method not implemented.');
-  }
-
-  commit(transactionId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
-  rollback(transactionId: string): Promise<void> {
-    throw new Error('Method not implemented.');
   }
 
   protected openSqliteDb(): void {

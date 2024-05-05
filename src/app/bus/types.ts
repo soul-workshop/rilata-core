@@ -1,8 +1,6 @@
 import { UuidType } from '../../common/types';
 import { BusPayloadAsJson } from '../database/types';
 
-export type EventBusMessageType = 'event' | 'aggregate';
-
 type SubcribeToMessageBody = {
   busMessageName: string,
   publishModuleName: string,

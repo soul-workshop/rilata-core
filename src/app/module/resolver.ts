@@ -1,29 +1,30 @@
 import { Repositoriable } from '../resolves/repositoriable';
 import { Realisable } from '../resolves/realisable';
-import { Module } from '../module/module';
-import { RunMode } from '../types';
 import { ServerResolver } from '../server/server-resolver';
-import { Logger } from '../../common/logger/logger';
 import { Facadable } from '../resolves/facadable';
-import { ModuleResolves } from './module-resolves';
-import { JwtVerifier } from '../jwt/jwt-verifier';
+import { ModuleResolves } from './resolves';
 import { DTO } from '../../domain/dto';
 import { ModuleResolveInstance } from '../resolves/types';
-import { JwtDecoder } from '../jwt/jwt-decoder';
+import { GetModuleType } from './types';
+import { ServerResolves } from '../server/server-resolves';
+import { Module } from './module';
+import { GetServerResolves } from '../server/types';
 
 export abstract class ModuleResolver<
-  JWT_P extends DTO, M extends Module<JWT_P>, MR extends ModuleResolves<M>,
+  S_RES extends ServerResolver<ServerResolves<DTO>>, MR extends ModuleResolves<Module>,
 >
 implements Repositoriable, Realisable, Facadable {
-  protected module!: M;
+  protected module!: GetModuleType<MR>;
 
-  protected serverResolver!: ServerResolver<JWT_P>;
+  protected serverResolver!: S_RES;
 
   abstract resolve(...args: unknown[]): unknown
 
   abstract resolveRepo(...args: unknown[]): ModuleResolveInstance
 
   abstract resolveFacade(...args: unknown[]): ModuleResolveInstance
+
+  constructor(protected resolves: MR) {}
 
   getModulePath(): string {
     // @ts-ignore
@@ -34,9 +35,7 @@ implements Repositoriable, Realisable, Facadable {
     return this.serverResolver.getProjectPath();
   }
 
-  constructor(protected resolves: MR) {}
-
-  init(module: M, serverResolver: ServerResolver<JWT_P>): void {
+  init(module: GetModuleType<MR>, serverResolver: S_RES): void {
     this.module = module;
     this.serverResolver = serverResolver;
 
@@ -48,44 +47,36 @@ implements Repositoriable, Realisable, Facadable {
     this.getDatabase().stop();
   }
 
-  getServerResolver(): ServerResolver<JWT_P> {
+  getServerResolver(): S_RES {
     return this.serverResolver;
+  }
+
+  getModuleResolves(): MR {
+    return this.resolves;
+  }
+
+  getLogger(): GetServerResolves<S_RES>['logger'] {
+    return this.serverResolver.getLogger();
   }
 
   getDatabase(): MR['db'] {
     return this.resolves.db;
   }
 
-  getModuleUrls(): string[] {
+  getModuleUrls(): MR['moduleUrls'] {
     return this.resolves.moduleUrls;
   }
 
-  getJwtDecoder(): JwtDecoder<JWT_P> {
-    return this.serverResolver.getJwtDecoder();
-  }
-
-  getJwtVerifier(): JwtVerifier<JWT_P> {
-    return this.serverResolver.getJwtVerifier();
-  }
-
-  getLogger(): Logger {
-    return this.serverResolver.getLogger();
-  }
-
-  getRunMode(): RunMode {
-    return this.serverResolver.getRunMode();
-  }
-
-  getModuleName(): string {
+  getModuleName(): MR['moduleName'] {
     return this.resolves.moduleName;
   }
 
-  getModule(): M {
+  getModule(): GetModuleType<MR> {
     return this.module;
   }
 
   protected initResolves(): void {
-    Object.entries(this.resolves).forEach(([key, resolveItem]) => {
+    Object.values(this.resolves).forEach((resolveItem) => {
       if (
         (resolveItem as any).init
         && typeof (resolveItem as any).init === 'function'

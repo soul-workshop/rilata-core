@@ -6,12 +6,8 @@ import {
   GeneralErrorDod, GeneralEventDod, GeneralRequestDod,
 } from '../../domain/domain-data/domain-types';
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
-import { ModuleType } from '../module/types';
-import { CommandService } from './command-service';
+import { GeneralModuleResolver, ModuleType } from '../module/types';
 import { ServiceBaseErrors } from './error-types';
-import { QueryService } from './query-service';
-import { DTO } from '../../domain/dto';
-import { EventService } from './event-service';
 import { ResultDTO } from '../result-dto';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
@@ -23,9 +19,21 @@ export type GetAppEventDod<EVENTS extends GeneralEventDod[], M_TYPE extends Modu
       ? Array<GetArrayType<EVENTS> & { event: 'read-event' }>
       : EVENTS
 
+export type ServiceParams<
+  IN extends GeneralRequestDod, // что входит в service,
+  SUCCESS_OUT, // ответ клиенту в случае успеха
+  FAIL_OUT, // возвращаемый ответ в случае не успеха
+> = {
+  input: IN,
+  successOut: SUCCESS_OUT,
+  errors: FAIL_OUT,
+}
+
+export type GeneralServiceParams = ServiceParams<GeneralRequestDod, unknown, unknown>
+
 export type BaseServiceParams<
   AR_PARAMS extends GeneralARDParams,
-  IN extends DTO, // что входит в service,
+  IN extends GeneralRequestDod | GeneralEventDod, // что входит в service,
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT, // возвращаемый ответ в случае не успеха
   EVENTS, // публикуемые доменные события
@@ -38,7 +46,7 @@ export type BaseServiceParams<
 }
 
 export type GeneralBaseServiceParams = BaseServiceParams<
-  GeneralARDParams, DTO, unknown, unknown, unknown
+  GeneralARDParams, GeneralRequestDod | GeneralEventDod, unknown, unknown, unknown
 >
 
 export type QueryServiceParams<
@@ -53,7 +61,7 @@ export type GeneralQueryServiceParams = QueryServiceParams<
   GeneralARDParams, GeneralRequestDod, unknown, GeneralErrorDod
 >;
 
-export type GeneraQueryService = QueryService<GeneralQueryServiceParams>;
+export type GeneraQueryService = QueryService<GeneralQueryServiceParams, GeneralModuleResolver>;
 
 export type CommandServiceParams<
   AR_PARAMS extends GeneralARDParams,
@@ -69,7 +77,9 @@ export type GeneralCommandServiceParams = CommandServiceParams<
   GeneralARDParams, GeneralRequestDod, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
-export type GeneralCommandService = CommandService<GeneralCommandServiceParams>;
+export type GeneralCommandService = CommandService<
+  GeneralCommandServiceParams, GeneralModuleResolver
+>;
 
 export type EventServiceParams<
   AR_PARAMS extends GeneralARDParams,
@@ -80,7 +90,9 @@ export type EventServiceParams<
 export type GeneralEventServiceParams =
   EventServiceParams<GeneralARDParams, GeneralEventDod, GeneralEventDod[]>
 
-export type GeneralEventService = EventService<GeneralEventServiceParams>;
+export type GeneralEventService = EventService<
+  GeneralEventServiceParams, GeneralModuleResolver
+>;
 
 export type RequestDodValidator<
   S_PARAMS extends GeneralBaseServiceParams

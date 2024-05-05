@@ -5,7 +5,7 @@ import { JwtCreator } from '../jwt/jwt-creator';
 import { JwtDecoder } from '../jwt/jwt-decoder';
 import { JwtVerifier } from '../jwt/jwt-verifier';
 import { RunMode } from '../types';
-import { JwtConfig, ServerConfig } from './types';
+import { ServerConfig } from './types';
 
 export type ServerResolves<JWT_P extends DTO> = {
   logger: Logger,
@@ -13,8 +13,6 @@ export type ServerResolves<JWT_P extends DTO> = {
   jwtDecoder: JwtDecoder<JWT_P>,
   jwtVerifier: JwtVerifier<JWT_P>,
   jwtCreator: JwtCreator<JWT_P>,
-  jwtSecretKey: string,
-  jwtConfig: JwtConfig,
   serverConfig: ServerConfig,
 }
 

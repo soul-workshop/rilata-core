@@ -1,6 +1,6 @@
 import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
 import { DomainUser } from '../../../../../src/app/caller';
-import { CommandService } from '../../../../../src/app/service/command-service';
+import { UowCommandService } from '../../../../../src/app/service/command-service';
 import { ValidationError } from '../../../../../src/app/service/error-types';
 import { RequestDodValidator, ServiceResult } from '../../../../../src/app/service/types';
 import { failure } from '../../../../../src/common/result/failure';
@@ -22,7 +22,7 @@ import {
 } from './s.params';
 import { RegisterCompanyValidator } from './v.map';
 
-export class RegisteringCompanyService extends CommandService<CompanyRegisteredServiceParams> {
+export class RegisteringCompanyService extends UowCommandService<CompanyRegisteredServiceParams> {
   serviceName = 'registerCompany' as const;
 
   aRootName = 'CompanyAR' as const;

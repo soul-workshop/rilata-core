@@ -1,11 +1,11 @@
-import { CommandService } from '../../../../../../src/app/service/command-service';
+import { UowCommandService } from '../../../../../../src/app/service/command-service';
 import { ServiceResult } from '../../../../../../src/app/service/types';
 import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
 import { UserRepository, UserRepositoryRecord } from '../../../domain-object/user/repo';
 import { AddUserRequestDod, AddUserServiceParams } from './s-params';
 import { addUserValidator } from './v-map';
 
-export class AddingUserService extends CommandService<AddUserServiceParams> {
+export class AddingUserService extends UowCommandService<AddUserServiceParams> {
   serviceName = 'addUser' as const;
 
   aRootName = 'UserAR' as const;

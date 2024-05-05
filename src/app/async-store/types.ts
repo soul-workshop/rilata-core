@@ -3,6 +3,7 @@ import { Caller } from '../caller';
 import { GeneralModuleResolver } from '../module/types';
 
 export type StorePayload = {
+  serviceName: string,
   caller: Caller,
   moduleResolver: GeneralModuleResolver,
   databaseErrorRestartAttempts: number;

@@ -2,14 +2,28 @@ import { loggerModes } from '../../common/logger/logger-modes';
 import { Constructor } from '../../common/types';
 import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
-import { ModuleResolver } from '../module/module-resolver';
-import { ModuleResolves } from '../module/module-resolves';
+import { ModuleResolves } from '../module/resolves';
+import { GeneralModuleResolver } from '../module/types';
+import { ServerResolver } from './server-resolver';
+import { ServerResolves } from './server-resolves';
 
-export type ModuleConstructors<M extends Module<DTO>> = [
+export type ModuleConstructors<M extends Module> = [
   Constructor<M>,
-  Constructor<ModuleResolver<DTO, M, ModuleResolves<M>>>,
+  Constructor<GeneralModuleResolver>,
   ModuleResolves<M>,
 ];
+
+export type GeneralServerResolver = ServerResolver<ServerResolves<DTO>>
+
+export type GetJwtType<RSR extends GeneralServerResolver> =
+  RSR extends ServerResolver<infer RSS>
+    ? RSS extends ServerResolves<infer JWT_T>
+      ? JWT_T
+      : never
+    : never
+
+export type GetServerResolves<SR extends GeneralServerResolver> =
+  SR extends ServerResolver<infer T> ? T : never
 
 export type ServerConfig = {
   hostname?: string, // default localhost

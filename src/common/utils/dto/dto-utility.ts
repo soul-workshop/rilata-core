@@ -9,9 +9,9 @@ import {
 } from '../../type-functions';
 import { DeepAttr } from '../../types';
 
-export class dtoUtility {
+class DtoUtility {
   /** Возвращает копию объекта T, с исключенными атрибутами K. */
-  static excludeAttrs<
+  excludeAttrs<
     T extends DTO,
     K extends keyof T | ReadonlyArray<keyof T>
   >(obj: T, excludeAttrs: K, copy = true): ExcludeDtoAttrs<T, K> {
@@ -29,7 +29,7 @@ export class dtoUtility {
   /** Возвращает копию объекта , расширенный атрибутами с объекта P.
   * - Если P[key]=undefined, то значение [key] тоже станет undefined.
   * - Если типы T[key] и P[key] не одинаковы, то вернется объект с типом P[key] */
-  static extendAttrs<
+  extendAttrs<
     T extends DTO,
     P extends DTO,
   >(obj: T, newValues: P, copy = true): ExtendDtoAttrs<T, P> {
@@ -45,7 +45,7 @@ export class dtoUtility {
   *   новые атрибуты объявленные в P не добавляются.
   * - Если P[key] имеет значение undefined, то значение остается старым.
   * - Если copy=true возвращается копия объекта, иначе тот же объект */
-  static replaceAttrs<
+  replaceAttrs<
     T extends DTO,
     P extends DeepPartial<T>,
   >(obj: T, newValues: P, copy = true): T {
@@ -59,14 +59,6 @@ export class dtoUtility {
         returnObj[key as keyof T] = value;
       }
     });
-    // Object.keys(obj).forEach((key) => {
-    //   if (
-    //     Object.keys(newValues).includes(key)
-    //     && newValues[key] !== undefined
-    //   ) {
-    //     returnObj[key as keyof T] = newValues[key] as typeof obj[typeof key];
-    //   }
-    // });
     return returnObj;
   }
 
@@ -77,7 +69,7 @@ export class dtoUtility {
    * @see Source project, ts-deepcopy https://github.com/ykdr2017/ts-deepcopy
    * @see Code pen https://codepen.io/erikvullings/pen/ejyBYg
    */
-  static deepCopy<T extends DTO>(target: T): T {
+  deepCopy<T extends DTO>(target: T): T {
     if (target === null) {
       return target;
     }
@@ -105,7 +97,7 @@ export class dtoUtility {
   *   т.е: ['name', 'phone.number'] вернет копию объекта без
   *   атрибута 'name' в основном объекте и без атрибута 'number'
   *   во вложенном объекте 'phone'. */
-  static excludeDeepAttrs<
+  excludeDeepAttrs<
     ATTRS extends DTO,
     EXC extends GetDtoKeysByDotNotation<ATTRS> | GetDtoKeysByDotNotation<ATTRS>[]
   >(obj: ATTRS, excludedAttrs: EXC): ExcludeDeepDtoAttrs<ATTRS, EXC> {
@@ -142,7 +134,7 @@ export class dtoUtility {
    * @param object1
    * @param object2
   */
-  static mergeObjects<T extends {[key: string]: Exclude<any, null>}>(
+  mergeObjects<T extends {[key: string]: Exclude<any, null>}>(
     object1: Readonly<T>,
     object2: Readonly<T>,
   ): T {
@@ -156,7 +148,7 @@ export class dtoUtility {
     return res;
   }
 
-  static getValueByDeepAttr<T>(
+  getValueByDeepAttr<T>(
     dto: DTO,
     key: DeepAttr,
     throwError = false,
@@ -190,26 +182,32 @@ export class dtoUtility {
     }
   }
 
-  static isDTO(value: unknown): value is DTO {
+  /** Возвращает массив уникальных ключей объектов */
+  getUniqueKeys(objects: DTO[]): string[] {
+    const set = new Set<string>();
+    objects.forEach((obj) => Object.keys(obj).forEach((key) => set.add(key)));
+    return Array.from(set);
+  }
+
+  /** Возвращает копию объекта с измененными ключами. Работает только для объекта первого уровня. */
+  editKeys(object: DTO, cb: (key: string) => string): DTO {
+    const result: DTO = {};
+    Object.entries(object).forEach(([key, value]) => { result[cb(key)] = value; });
+    return result;
+  }
+
+  /** Возвращает копию объекта с измененными значениями. Только для объекта первого уровня. */
+  editValues<T>(object: DTO, cb: (value: unknown) => T): Record<string, T> {
+    const result: Record<string, T> = {};
+    Object.entries(object).forEach(([key, value]) => { result[key] = cb(value); });
+    return result;
+  }
+
+  isDTO(value: unknown): value is DTO {
     return value !== undefined
       && value !== null
       && value.constructor === Object;
   }
-
-  static cleanFromUndefinedAndEmptyObjects = ((): (obj: DTO) => DTO => {
-    const cleanFromUndefinedValues = (obj: DTO): DTO => JSON.parse(JSON.stringify(obj));
-    const cleanFromEmptyObjects = (obj: DTO): DTO => {
-      for (const k in obj) {
-        if (typeof obj[k] !== 'object' || Array.isArray(obj[k])) {
-          continue;
-        }
-        cleanFromEmptyObjects(obj[k]);
-        if (Object.keys(obj[k]).length === 0) {
-          delete obj[k];
-        }
-      }
-      return obj;
-    };
-    return (obj: DTO): DTO => cleanFromEmptyObjects(cleanFromUndefinedValues(obj));
-  })();
 }
+
+export const dtoUtility = new DtoUtility();

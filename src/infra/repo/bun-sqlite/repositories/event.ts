@@ -9,7 +9,7 @@ import { GetARParamsEvents } from '../../../../domain/domain-data/type-functions
 import { BunSqliteRepository } from '../repository';
 import { MigrateRow } from '../types';
 
-export class SqliteEventRepository
+export class EventRepositorySqlite
   extends BunSqliteRepository<'events', GeneralEventDod> implements EventRepository, BusMessageRepository {
   tableName = 'events' as const;
 

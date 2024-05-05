@@ -1,6 +1,4 @@
-import { EventBusMessageType } from '../../../../../src/app/bus/types';
-import { EventRepository } from '../../../../../src/app/database/event-repository';
-import { EventService } from '../../../../../src/app/service/event-service';
+import { EventService } from '../../../../../src/app/service/command-service/event.service';
 import { ServiceResult } from '../../../../../src/app/service/types';
 import { success } from '../../../../../src/common/result/success';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
@@ -9,7 +7,9 @@ import { CompanyReadRepository } from '../../domain/company/repo';
 import { CompanyAddedServiceParams } from './s-params';
 
 export class CompanyAddedService extends EventService<CompanyAddedServiceParams> {
-  eventBusMessateType: EventBusMessageType = 'event';
+  protected executeWithTransaction(input: CompanyAddedEvent): Promise<ServiceResult<CompanyAddedServiceParams>> {
+      throw new Error('Method not implemented.');
+  }
 
   publishModuleName = 'CompanyCmdModule'; // moduleName where event published
 

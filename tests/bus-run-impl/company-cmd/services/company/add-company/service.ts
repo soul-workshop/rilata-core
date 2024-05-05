@@ -1,5 +1,5 @@
 import { storeDispatcher } from '../../../../../../src/app/async-store/store-dispatcher';
-import { CommandService } from '../../../../../../src/app/service/command-service';
+import { UowCommandService } from '../../../../../../src/app/service/command-service/uow-command.service';
 import { ServiceResult } from '../../../../../../src/app/service/types';
 import { failure } from '../../../../../../src/common/result/failure';
 import { success } from '../../../../../../src/common/result/success';
@@ -13,7 +13,7 @@ import {
 } from './s.params';
 import { addCompanyValidator } from './v.map';
 
-export class AddingCompanyService extends CommandService<AddCompanyServiceParams> {
+export class AddingCompanyService extends UowCommandService<AddCompanyServiceParams> {
   serviceName = 'addCompany' as const;
 
   aRootName = 'CompanyAR' as const;

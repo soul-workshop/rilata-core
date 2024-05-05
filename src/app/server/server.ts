@@ -3,7 +3,7 @@ import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
 import { ServerResolver } from './server-resolver';
 
-export abstract class RilataServer<JWT_P extends DTO> {
+export abstract class RilataServer {
   protected resolver!: ServerResolver<JWT_P>;
 
   protected logger!: Logger;

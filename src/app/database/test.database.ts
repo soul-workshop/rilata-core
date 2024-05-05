@@ -1,9 +1,8 @@
 import { DTO } from '../../domain/dto';
-import { Database } from './database';
-import { TestRepository } from './test-repository';
+import { TestRepository } from './test.repository';
 import { TestBatchRecords } from './types';
 
-export interface TestDatabase extends Database {
+export interface TestDatabase {
   addBatch<R extends TestRepository<string, DTO>>(
     batchRecords: TestBatchRecords<R>
   ): Promise<void>

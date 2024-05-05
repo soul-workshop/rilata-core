@@ -3,7 +3,7 @@ import { DeliveryEvent } from '../../../../app/bus/types';
 import { GetDtoKeysByDotNotation } from '../../../../common/type-functions';
 import { dtoUtility } from '../../../../common/utils/dto/dto-utility';
 import { GeneralEventDod } from '../../../../domain/domain-data/domain-types';
-import { SqliteEventRepository } from '../repositories/event';
+import { EventRepositorySqlite } from '../repositories/event';
 import { SqliteTestFixtures } from './fixtures';
 
 describe('bun sql event repository tests', () => {
@@ -12,7 +12,7 @@ describe('bun sql event repository tests', () => {
   db.init(resolver); // init and resolves db and repositories
   db.createDb(); // create sqlite db and tables
   db.open(); // open sqlite db
-  const sut = db.getRepository<SqliteEventRepository>('events');
+  const sut = db.getRepository<EventRepositorySqlite>('events');
 
   beforeEach(async () => {
     await db.clear();

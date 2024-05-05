@@ -10,3 +10,10 @@ export type MigratinsRecord = MigrateRow & {
   tableName: string,
   migratedAt: number,
 }
+
+export type BunSqliteTransactionData = {
+  cb: () => void;
+  transactionId: UuidType,
+  transactioinDescription: string,
+  repositoryName: string,
+}
