@@ -54,7 +54,6 @@ export class ModuleController implements Controller {
     }
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return success(await req.json());
     } catch (e) {
       const err = dtoUtility.replaceAttrs(badRequestError, { locale: {

@@ -2,18 +2,18 @@
 import { Bus } from '../../app/bus/bus';
 import { PublishBusMessage, SubcribeToBusMessage } from '../../app/bus/types';
 import { Module } from '../../app/module/module';
-import { BusServerResolver } from '../../app/server/bus-server-resolver';
+import { GeneralServerResolver } from '../../app/server/types';
 import { GeneralEventDod } from '../../domain/domain-data/domain-types';
 import { DTO } from '../../domain/dto';
 
 type ModuleName = string;
 
 export class OneServerBus implements Bus {
-  protected resolver!: BusServerResolver<DTO>;
+  protected resolver!: GeneralServerResolver;
 
   protected subscribers: Record<ModuleName, SubcribeToBusMessage[]> = {};
 
-  async init(resolver: BusServerResolver<DTO>): Promise<void> {
+  async init(resolver: GeneralServerResolver): Promise<void> {
     this.resolver = resolver;
   }
 
@@ -38,7 +38,7 @@ export class OneServerBus implements Bus {
     await this.getModule(event.handlerModuleName).executeEventService(eventDod);
   }
 
-  protected getModule(moduleName: ModuleName): Module<DTO> {
+  protected getModule(moduleName: ModuleName): Module {
     return this.resolver.getServer().getModule(moduleName);
   }
 }

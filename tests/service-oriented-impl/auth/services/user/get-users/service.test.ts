@@ -1,7 +1,7 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { TestDatabase } from '../../../../../../src/app/database/test-database';
+import { TestDatabase } from '../../../../../../src/app/database/test.database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
 import { UserRepositoryImpl } from '../../../../zz-infra/repositories/auth-module/user';
@@ -15,14 +15,14 @@ describe('get users service test', async () => {
   const testSever = serverStarter.start(['AuthModule']);
   const module = testSever.getModule<AuthModule>('AuthModule');
   const resolver = module.getModuleResolver();
-  const store = setAndGetTestStoreDispatcher({
+  setAndGetTestStoreDispatcher({
     requestId,
     moduleResolver: resolver,
   }).getStoreOrExepction();
-  const sut = module.getServiceByName<GetingUsersService>('getUsers');
+  const sut = module.getServiceByInputDodName<GetingUsersService>('getUsers');
 
   beforeEach(async () => {
-    const db = resolver.getDatabase() as TestDatabase;
+    const db = resolver.getDatabase() as unknown as TestDatabase<true>;
     await db.clear();
     await db.addBatch<UserRepositoryImpl['testRepo']>({
       user_repo: [

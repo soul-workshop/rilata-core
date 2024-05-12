@@ -1,8 +1,8 @@
 import { CommandServiceParams } from '../../../../../../src/app/service/types';
 import { UuidType } from '../../../../../../src/common/types';
-import { RequestDod, EventDod } from '../../../../../../src/domain/domain-data/domain-types';
-import { AddingPersonActionAttrs } from '../../../domain-data/person/add-person/a-params';
-import { PersonARDT, PersonParams } from '../../../domain-data/person/params';
+import { RequestDod } from '../../../../../../src/domain/domain-data/domain-types';
+import { AddingPersonActionAttrs, PersonAddedEvent } from '../../../domain-data/person/add-person/a-params';
+import { PersonParams } from '../../../domain-data/person/params';
 import { PersonAlreadyExistsError } from '../../../domain-object/person/repo-errors';
 
 export type AddPersonRequestDodAttrs = AddingPersonActionAttrs
@@ -11,16 +11,11 @@ export type AddPersonRequestDod = RequestDod<'addPerson', AddPersonRequestDodAtt
 
 export type AddPersonOut = { id: UuidType }
 
-export type AddPersonEvent = EventDod<
-  'PersonAddedEvent',
-  AddPersonRequestDodAttrs,
-  PersonARDT
->
-
 export type AddPersonServiceParams = CommandServiceParams<
+  'AddingPersonService',
   PersonParams,
   AddPersonRequestDod,
   AddPersonOut,
   PersonAlreadyExistsError,
-  AddPersonEvent[]
+  PersonAddedEvent[]
 >

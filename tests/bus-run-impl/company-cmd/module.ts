@@ -1,18 +1,16 @@
+import { Module } from '../../../src/app/module/module';
 import { ModuleType } from '../../../src/app/module/types';
-import { UowModule } from '../../../src/app/module/uow.module/module';
-import { UowCommandService } from '../../../src/app/service/command-service/uow-command.service';
-import { GeneralCommandServiceParams, GeneralEventService, GeneraQueryService } from '../../../src/app/service/types';
-import { UserJwtPayload } from '../types';
+import { GeneralEventService, GeneraQueryService } from '../../../src/app/service/types';
 import { AddingCompanyService } from './services/company/add-company/service';
 
-export class CompanyCmdModule extends UowModule<UserJwtPayload> {
+export class CompanyCmdModule extends Module {
   moduleName = 'CompanyCmdModule' as const;
 
   moduleType: ModuleType = 'command-module' as const;
 
   queryServices: GeneraQueryService[] = [];
 
-  commandServices: UowCommandService<GeneralCommandServiceParams>[] = [
+  commandServices = [
     new AddingCompanyService(),
   ];
 

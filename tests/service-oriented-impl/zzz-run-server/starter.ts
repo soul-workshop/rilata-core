@@ -1,5 +1,4 @@
 import { ServerStarter } from '../../../src/app/server/server-starter';
-import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
 import { serverResolves } from './resolves';
 import { ServiceModulesBunServer } from './server';
 import { AuthModule } from '../auth/module';
@@ -17,7 +16,7 @@ import { getSubjectResolves } from './module-resolves/subject-resolves';
 
 type AllServerModules = AuthModule | SubjectModule | CompanyModule | FrontProxyModule;
 
-export const serverStarter = new ServerStarter<UserJwtPayload, AllServerModules>(
+export const serverStarter = new ServerStarter<AllServerModules>(
   ServiceModulesBunServer,
   serverResolves,
   [

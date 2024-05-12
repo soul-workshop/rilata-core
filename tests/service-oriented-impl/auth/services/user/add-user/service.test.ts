@@ -1,8 +1,6 @@
 import {
   beforeEach, describe, expect, spyOn, test,
 } from 'bun:test';
-import { EventRepository } from '../../../../../../src/app/database/event-repository';
-import { TestDatabase } from '../../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
@@ -12,19 +10,21 @@ import { UserRepository } from '../../../domain-object/user/repo';
 import { AuthModule } from '../../../module';
 import { AddUserRequestDod, AddUserOut } from './s-params';
 import { AddingUserService } from './service';
+import { TestDatabase } from '../../../../../../src/app/database/test.database';
+import { EventRepository } from '../../../../../../src/app/database/event.repository';
 
 describe('add user service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start(['AuthModule']);
   const module = testSever.getModule<AuthModule>('AuthModule');
   const resolver = module.getModuleResolver();
-  const store = setAndGetTestStoreDispatcher({
+  setAndGetTestStoreDispatcher({
     requestId,
     moduleResolver: resolver,
   }).getStoreOrExepction();
 
   beforeEach(async () => {
-    const db = resolver.getDatabase() as TestDatabase;
+    const db = resolver.getDatabase() as unknown as TestDatabase<true>;
     await db.clear();
     await db.addBatch(ServiceModulesFixtures.repoFixtures);
   });
@@ -35,7 +35,7 @@ describe('add user service tests', async () => {
       { personIin: '111333555777' },
       requestId,
     );
-    const sut = module.getServiceByName<AddingUserService>('addUser');
+    const sut = module.getServiceByInputDodName<AddingUserService>('addUser');
     const result = await sut.execute(inputDod);
     expect(result.isSuccess()).toBe(true);
     const userAr = result.value as AddUserOut;
@@ -63,7 +63,7 @@ describe('add user service tests', async () => {
 
     const repoAddUserMock = spyOn(UserRepository.instance(resolver), 'addUser');
     randomUuidMock.mockClear();
-    const sut = module.getServiceByName<AddingUserService>('addUser');
+    const sut = module.getServiceByInputDodName<AddingUserService>('addUser');
     const result = await sut.execute(inputDod);
 
     expect(result.isSuccess()).toBe(true);

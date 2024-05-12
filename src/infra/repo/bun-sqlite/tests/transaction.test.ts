@@ -1,33 +1,39 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, spyOn, test } from 'bun:test';
 import { setAndGetTestStoreDispatcher } from '../../../../../tests/fixtures/test-thread-store-mock';
 import { DomainUser } from '../../../../app/caller';
+import { EventRepository } from '../../../../app/database/event.repository';
 import { dodUtility } from '../../../../common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../common/utils/uuid/uuid-utility';
 import { SqliteTestFixtures } from './fixtures';
 
 describe('bun sqlite db transaction tests', () => {
-  const db = new SqliteTestFixtures.BlogDatabase();
-  const { resolver } = SqliteTestFixtures;
-  db.init(resolver); // init and resolves db and repositories
-  db.createDb(); // create sqlite db and tables
-  db.open(); // open sqlite db
+  const { fakeModuleResolver } = SqliteTestFixtures;
 
   const sut = new SqliteTestFixtures.AddPostService();
-  sut.init(resolver);
 
   const caller: DomainUser = {
     type: 'DomainUser',
     userId: '08ea51a1-6d14-42bf-81de-a94a809e3286',
   };
-  const store = setAndGetTestStoreDispatcher({ caller, moduleResolver: resolver });
+  setAndGetTestStoreDispatcher({
+    caller,
+    moduleResolver: fakeModuleResolver,
+    serviceName: 'AddingPostService',
+    moduleName: 'PostModule',
+  });
 
-  test('успех, транзакция двух репозиториев проходит успешно', async () => {
+  test('успех, транзакция трех репозиториев проходит успешно', async () => {
+    SqliteTestFixtures.db.clear();
+    SqliteTestFixtures.db.addBatch(SqliteTestFixtures.batchRecords);
+
     const requestDodAttrs: SqliteTestFixtures.AddPostServiceParams['input']['attrs'] = {
-      name: 'Рецензия на пожалуй лучший фильм года "Итерстеллар"',
+      name: 'Рецензия на пожалуй лучший фильм года "Интерстеллар"',
       body: 'Длинный текст с рецензией на фильм',
       category: 'cinema',
     };
-    const requestDod = dodUtility.getRequestDod<SqliteTestFixtures.AddPostServiceParams['input']>('addPost', requestDodAttrs);
+    const requestDod = dodUtility.getRequestDod<
+      SqliteTestFixtures.AddPostServiceParams['input']
+    >('addPost', requestDodAttrs);
 
     const result = await sut.execute(requestDod);
     expect(result.isSuccess()).toBe(true);
@@ -35,30 +41,109 @@ describe('bun sqlite db transaction tests', () => {
     expect(Object.keys(value)).toEqual(['postId']);
     expect(uuidUtility.isValidValue(value.postId)).toBe(true);
 
-    const postRepo = SqliteTestFixtures.PostRepository.instance(resolver);
-    const post = await postRepo.findPost(value.postId);
+    const postRepo = SqliteTestFixtures.PostRepository.instance(fakeModuleResolver);
+    const post = postRepo.findPost(value.postId);
     expect(post).not.toBeUndefined();
     expect((post as SqliteTestFixtures.PostAttrs)).toEqual({
       postId: value.postId,
-      name: 'Рецензия на пожалуй лучший фильм года "Итерстеллар"',
+      name: 'Рецензия на пожалуй лучший фильм года "Интерстеллар"',
       body: 'Длинный текст с рецензией на фильм',
       category: 'cinema',
       authorId: caller.userId,
       published: false,
     });
 
-    const userRepo = SqliteTestFixtures.UserRepository.instance(resolver);
-    const user = await userRepo.findUser(caller.userId);
+    const userRepo = SqliteTestFixtures.UserRepository.instance(fakeModuleResolver);
+    const user = userRepo.findUser(caller.userId);
     expect(user).not.toBeUndefined();
-    expect((user as SqliteTestFixtures.UserAttrs)).toEqual({
+    expect(user as SqliteTestFixtures.UserAttrs).toEqual({
       userId: '08ea51a1-6d14-42bf-81de-a94a809e3286',
       login: 'Bill',
       hash: 'fff',
       posts: [value.postId],
     });
+
+    const evenRepo = EventRepository.instance<false>(fakeModuleResolver);
+    const events = evenRepo.getAggregateEvents(value.postId);
+    expect(events.length).toBe(1);
+    expect(events).toEqual([
+      {
+        attrs: {
+          ...requestDodAttrs,
+        },
+        meta: {
+          eventId: events[0].meta.eventId,
+          requestId: events[0].meta.requestId,
+          name: 'PostAdded',
+          moduleName: 'PostModule',
+          serviceName: 'AddingPostService',
+          domainType: 'event',
+          created: events[0].meta.created,
+        },
+        caller: {
+          type: 'DomainUser',
+          userId: '08ea51a1-6d14-42bf-81de-a94a809e3286',
+        },
+        aRoot: {
+          attrs: {
+            ...requestDodAttrs,
+            authorId: '08ea51a1-6d14-42bf-81de-a94a809e3286',
+            postId: value.postId,
+            published: false,
+          },
+          meta: {
+            name: 'PostAr',
+            idName: 'postId',
+            domainType: 'aggregate',
+            version: 0,
+          },
+        },
+      },
+    ]);
   });
 
-  test('провал, первая транзакция происходит, вторая проваливается что приводит к отмене первого', () => {
-    expect(true).toBe(false);
+  test('провал, первая транзакция происходит, вторая проваливается что приводит к отмене первого', async () => {
+    SqliteTestFixtures.db.clear();
+    SqliteTestFixtures.db.addBatch(SqliteTestFixtures.batchRecords);
+
+    const requestDodAttrs: SqliteTestFixtures.AddPostServiceParams['input']['attrs'] = {
+      name: 'Рецензия на пожалуй лучший фильм года "Интерстеллар"',
+      body: 'heh',
+      category: 'cinema',
+    };
+    const requestDod = dodUtility.getRequestDod<
+      SqliteTestFixtures.AddPostServiceParams['input']
+    >('addPost', requestDodAttrs);
+
+    const userRepo = SqliteTestFixtures.UserRepository.instance(fakeModuleResolver);
+    const userAddPostSpy = spyOn(userRepo, 'addPost');
+    const postRepo = SqliteTestFixtures.PostRepository.instance(fakeModuleResolver);
+    const postAddPostSpy = spyOn(postRepo, 'addPost');
+    const eventRepo = EventRepository.instance(fakeModuleResolver);
+    const eventAddEventsSpy = spyOn(eventRepo, 'addEvents');
+    eventAddEventsSpy.mockReset();
+
+    try {
+      await sut.execute(requestDod);
+      throw Error('will not be runned');
+    } catch (e) {
+      expect(String(e)).toContain('CHECK constraint failed: LENGTH(body) > 5');
+    }
+    expect(userAddPostSpy).toHaveBeenCalledTimes(2);
+    expect(userAddPostSpy.mock.calls[0].length).toBe(2);
+    expect(postAddPostSpy).toHaveBeenCalledTimes(2);
+    expect(postAddPostSpy.mock.calls[0].length).toBe(1);
+    expect(eventAddEventsSpy).toHaveBeenCalledTimes(0);
+
+    const user = userRepo.findUser(caller.userId);
+    expect(user).toEqual({
+      userId: caller.userId,
+      login: 'Bill',
+      hash: 'fff',
+      posts: [],
+    });
+
+    const posts = postRepo.findUserPosts(caller.userId);
+    expect(posts.length).toBe(0);
   });
 });

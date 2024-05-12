@@ -10,12 +10,11 @@ import { RilataRequest } from '../controller/types';
 import { Middleware } from '../middleware/middleware';
 import { InternalError, NotFoundError } from '../service/error-types';
 import { ResultDTO } from '../result-dto';
-import { ServerResolver } from './server-resolver';
 import { GeneralErrorDod } from '../../domain/domain-data/domain-types';
-import { DTO } from '../../domain/dto';
 import { storeDispatcher } from '../async-store/store-dispatcher';
+import { GeneralServerResolver } from './types';
 
-export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
+export abstract class BunServer extends RilataServer {
   port: number | undefined;
 
   hostname: string | undefined;
@@ -28,7 +27,7 @@ export abstract class BunServer<JWT_P extends DTO> extends RilataServer<JWT_P> {
 
   protected server: Server | undefined;
 
-  init(serverResolver: ServerResolver<JWT_P>): void {
+  init(serverResolver: GeneralServerResolver): void {
     super.init(serverResolver);
     this.initStarted();
 

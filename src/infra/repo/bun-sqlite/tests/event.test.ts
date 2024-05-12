@@ -7,22 +7,19 @@ import { EventRepositorySqlite } from '../repositories/event';
 import { SqliteTestFixtures } from './fixtures';
 
 describe('bun sql event repository tests', () => {
-  const db = new SqliteTestFixtures.BlogDatabase();
-  const { resolver } = SqliteTestFixtures;
-  db.init(resolver); // init and resolves db and repositories
-  db.createDb(); // create sqlite db and tables
-  db.open(); // open sqlite db
+  const { fakeModuleResolver } = SqliteTestFixtures;
+  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.BlogDatabase;
   const sut = db.getRepository<EventRepositorySqlite>('events');
 
-  beforeEach(async () => {
-    await db.clear();
+  beforeEach(() => {
+    db.clear();
   });
 
   describe('add events tests', () => {
-    test('успех, события добавлены', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
+    test('успех, события добавлены', () => {
+      sut.addEvents(SqliteTestFixtures.events);
 
-      const notPublishedDeliveries = await sut.getNotPublished();
+      const notPublishedDeliveries = sut.getNotPublished();
       expect(notPublishedDeliveries.length).toBe(2);
       expect(notPublishedDeliveries).toEqual([
         {
@@ -48,7 +45,7 @@ describe('bun sql event repository tests', () => {
       ]);
     });
 
-    test('провал, тест транзакции, ошибка в одном из событий приводит к отмене всех, ', async () => {
+    test('провал, тест транзакции, ошибка в одном из событий приводит к отмене всех, ', () => {
       const failEvent = dtoUtility.deepCopy(SqliteTestFixtures.events[1]);
       failEvent.aRoot.meta.name = (undefined as unknown as string);
       const failEvents = [
@@ -56,21 +53,21 @@ describe('bun sql event repository tests', () => {
         failEvent,
       ];
       try {
-        await sut.addEvents(failEvents);
+        sut.addEvents(failEvents);
         throw Error('not be called');
       // eslint-disable-next-line keyword-spacing, no-empty
       } catch(e) {
         expect(String(e)).toContain('constraint failed');
       }
 
-      const notPublishedDeliveries = await sut.getNotPublished();
+      const notPublishedDeliveries = sut.getNotPublished();
       expect(notPublishedDeliveries.length).toBe(0);
     });
 
-    test('успех, вызов добавления событий с пустым списком не приводит к изменениям', async () => {
-      await sut.addEvents([]);
+    test('успех, вызов добавления событий с пустым списком не приводит к изменениям', () => {
+      sut.addEvents([]);
 
-      const notPublishedDeliveries = await sut.getNotPublished();
+      const notPublishedDeliveries = sut.getNotPublished();
       expect(notPublishedDeliveries.length).toBe(0);
     });
   });
@@ -86,13 +83,13 @@ describe('bun sql event repository tests', () => {
         'aRoot.meta.idName',
       ];
       const addEventsSpy = spyOn(sut, 'addEvents');
-      notNullableFields.forEach(async (fldName) => {
+      notNullableFields.forEach((fldName) => {
         const addEvent = dtoUtility.excludeDeepAttrs(event, fldName) as GeneralEventDod;
         try {
-          await sut.addEvents([addEvent]);
+          sut.addEvents([addEvent]);
           throw Error(`not be called, fieldName: ${fldName}`);
         } catch (e) {
-          expect(String(e)).toBe('Error: constraint failed');
+          expect(String(e)).toContain('SQLiteError: NOT NULL constraint failed: ');
         }
       });
       expect(addEventsSpy).toHaveBeenCalledTimes(5);
@@ -116,27 +113,27 @@ describe('bun sql event repository tests', () => {
       };
     }
 
-    test('успех, возвращаются несколько не опубликованных событий', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
-      const result = await sut.getNotPublished();
+    test('успех, возвращаются несколько не опубликованных событий', () => {
+      sut.addEvents(SqliteTestFixtures.events);
+      const result = sut.getNotPublished();
       expect(result.length).toBe(2);
       expect(result[0]).toEqual(getDeliveryEvent(event1));
       expect(result[1]).toEqual(getDeliveryEvent(event2));
     });
 
-    test('успех, возвращается одно событие', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
-      expect(await sut.markAsPublished(event2.meta.eventId)).toEqual({ count: 1 });
-      const result = await sut.getNotPublished();
+    test('успех, возвращается одно событие', () => {
+      sut.addEvents(SqliteTestFixtures.events);
+      expect(sut.markAsPublished(event2.meta.eventId)).toEqual({ count: 1 });
+      const result = sut.getNotPublished();
       expect(result.length).toBe(1);
       expect(result[0]).toEqual(getDeliveryEvent(event1));
     });
 
-    test('успех, не опубликованных событий нет', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
-      expect(await sut.markAsPublished(event1.meta.eventId)).toEqual({ count: 1 });
-      expect(await sut.markAsPublished(event2.meta.eventId)).toEqual({ count: 1 });
-      const result = await sut.getNotPublished();
+    test('успех, не опубликованных событий нет', () => {
+      sut.addEvents(SqliteTestFixtures.events);
+      expect(sut.markAsPublished(event1.meta.eventId)).toEqual({ count: 1 });
+      expect(sut.markAsPublished(event2.meta.eventId)).toEqual({ count: 1 });
+      const result = sut.getNotPublished();
       expect(result.length).toBe(0);
     });
   });
@@ -144,65 +141,65 @@ describe('bun sql event repository tests', () => {
   describe('mark event as published tests', () => {
     const { events } = SqliteTestFixtures;
 
-    test('успех, событие промаркировано как опубликованное', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
-      expect((await sut.getNotPublished()).length).toBe(2);
+    test('успех, событие промаркировано как опубликованное', () => {
+      sut.addEvents(SqliteTestFixtures.events);
+      expect((sut.getNotPublished()).length).toBe(2);
 
       const markEventId = events[0].meta.eventId;
-      const result = await sut.markAsPublished(markEventId);
+      const result = sut.markAsPublished(markEventId);
       expect(result.count).toBe(1);
 
-      const notPublishedEvents = await sut.getNotPublished();
+      const notPublishedEvents = sut.getNotPublished();
       expect(notPublishedEvents.length).toBe(1);
       const notMarkedEventId = events[1].meta.eventId;
       expect(notPublishedEvents[0].id).toBe(notMarkedEventId);
     });
 
-    test('успех, все события промаркированы как опубликованные', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
-      const notPublishedEvents = await sut.getNotPublished();
+    test('успех, все события промаркированы как опубликованные', () => {
+      sut.addEvents(SqliteTestFixtures.events);
+      const notPublishedEvents = sut.getNotPublished();
       expect(notPublishedEvents.length).toBe(2);
 
-      await sut.markAsPublished(notPublishedEvents[0].id);
-      await sut.markAsPublished(notPublishedEvents[1].id);
+      sut.markAsPublished(notPublishedEvents[0].id);
+      sut.markAsPublished(notPublishedEvents[1].id);
 
-      const emptyEvents = await sut.getNotPublished();
+      const emptyEvents = sut.getNotPublished();
       expect(emptyEvents.length).toBe(0);
     });
 
-    test('если id события нет, то это игнорируется', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
-      const notPublishedEvents = await sut.getNotPublished();
+    test('если id события нет, то это игнорируется', () => {
+      sut.addEvents(SqliteTestFixtures.events);
+      const notPublishedEvents = sut.getNotPublished();
       expect(notPublishedEvents.length).toBe(2);
 
-      await Promise.all(notPublishedEvents.map(async (deliveryEvent) => {
-        await sut.markAsPublished(deliveryEvent.id);
-      }));
+      notPublishedEvents.map((deliveryEvent) => (
+        sut.markAsPublished(deliveryEvent.id)
+      ));
 
-      const emptyEvents = await sut.getNotPublished();
+      const emptyEvents = sut.getNotPublished();
       expect(emptyEvents.length).toBe(0);
     });
 
-    test('повторная маркировка как опубликованное не приводит к изменениям', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
-      const notPublishedEvents = await sut.getNotPublished();
+    test('повторная маркировка как опубликованное не приводит к изменениям', () => {
+      sut.addEvents(SqliteTestFixtures.events);
+      const notPublishedEvents = sut.getNotPublished();
       expect(notPublishedEvents.length).toBe(2);
 
-      expect(await sut.markAsPublished(notPublishedEvents[0].id)).toEqual({ count: 1 });
-      expect(await sut.markAsPublished(notPublishedEvents[1].id)).toEqual({ count: 1 });
-      const emptyEvents = await sut.getNotPublished();
+      expect(sut.markAsPublished(notPublishedEvents[0].id)).toEqual({ count: 1 });
+      expect(sut.markAsPublished(notPublishedEvents[1].id)).toEqual({ count: 1 });
+      const emptyEvents = sut.getNotPublished();
       expect(emptyEvents.length).toBe(0);
 
       // повторно...
-      expect(await sut.markAsPublished(notPublishedEvents[0].id)).toEqual({ count: 1 });
-      expect(await sut.markAsPublished(notPublishedEvents[1].id)).toEqual({ count: 1 });
+      expect(sut.markAsPublished(notPublishedEvents[0].id)).toEqual({ count: 1 });
+      expect(sut.markAsPublished(notPublishedEvents[1].id)).toEqual({ count: 1 });
     });
   });
 
   describe('finding event tests', () => {
-    async function checkEvents(isExist: boolean): Promise<void> {
-      const res1 = await sut.findEvent(SqliteTestFixtures.events[0].meta.eventId);
-      const res2 = await sut.findEvent(SqliteTestFixtures.events[1].meta.eventId);
+    function checkEvents(isExist: boolean): void {
+      const res1 = sut.findEvent(SqliteTestFixtures.events[0].meta.eventId);
+      const res2 = sut.findEvent(SqliteTestFixtures.events[1].meta.eventId);
       if (isExist) {
         expect(res1).not.toBeUndefined();
         expect(res1).toEqual(SqliteTestFixtures.events[0]);
@@ -214,14 +211,14 @@ describe('bun sql event repository tests', () => {
       }
     }
 
-    test('случай когда возвращается событие', async () => {
-      await checkEvents(false); // проверяем до, события есть
-      await sut.addEvents(SqliteTestFixtures.events);
-      await checkEvents(true); // проверяем после, событий нет
+    test('случай когда возвращается событие', () => {
+      checkEvents(false); // проверяем до, события есть
+      sut.addEvents(SqliteTestFixtures.events);
+      checkEvents(true); // проверяем после, событий нет
     });
 
-    test('случай, когда событий нет', async () => {
-      await checkEvents(false); // событий нет
+    test('случай, когда событий нет', () => {
+      checkEvents(false); // событий нет
     });
   });
 
@@ -229,16 +226,16 @@ describe('bun sql event repository tests', () => {
     const eventId1 = SqliteTestFixtures.events[0].meta.eventId;
     const eventId2 = SqliteTestFixtures.events[1].meta.eventId;
 
-    test('случай когда событие есть, возвращается истина', async () => {
-      await sut.addEvents(SqliteTestFixtures.events);
+    test('случай когда событие есть, возвращается истина', () => {
+      sut.addEvents(SqliteTestFixtures.events);
 
-      expect(await sut.isExist(eventId1)).toBe(true);
-      expect(await sut.isExist(eventId2)).toBe(true);
+      expect(sut.isExist(eventId1)).toBe(true);
+      expect(sut.isExist(eventId2)).toBe(true);
     });
 
-    test('случай когда события нет, возвращается ложь', async () => {
-      expect(await sut.isExist(eventId1)).toBe(false);
-      expect(await sut.isExist(eventId2)).toBe(false);
+    test('случай когда события нет, возвращается ложь', () => {
+      expect(sut.isExist(eventId1)).toBe(false);
+      expect(sut.isExist(eventId2)).toBe(false);
     });
   });
 });

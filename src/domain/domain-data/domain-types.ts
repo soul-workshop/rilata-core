@@ -26,6 +26,8 @@ export type ARDT<ATTRS extends DTO, META extends DomainMeta<string, keyof ATTRS 
   meta: META,
 }
 
+export type GeneralARDT = ARDT<DTO, DomainMeta<string, string>>
+
 /** формат агрегата для передачи данных  */
 export type OutputAggregateDataTransfer<
   PARAMS extends GeneralARDParams
@@ -54,8 +56,10 @@ export type GeneralErrorDod = ErrorDod<string, Locale, ErrorType>;
 
 export type EventDod<
   NAME extends string,
+  S_NAME extends string,
+  M_NAME extends string,
   ATTRS extends DomainAttrs,
-  ARDTF extends ARDT<DTO, DomainMeta<string, string>>,
+  ARDTF extends GeneralARDT,
   CALLER extends Caller = Caller
 > = {
   attrs: ATTRS,
@@ -63,7 +67,8 @@ export type EventDod<
     eventId: UuidType,
     requestId: UuidType,
     name: NAME,
-    moduleName: string,
+    moduleName: M_NAME,
+    serviceName: S_NAME,
     domainType: 'event',
     created: number,
   }
@@ -72,7 +77,7 @@ export type EventDod<
 }
 
 export type GeneralEventDod = EventDod<
-  string, DomainAttrs, ARDT<DTO, DomainMeta<string, string>>
+  string, string, string, DomainAttrs, ARDT<DTO, DomainMeta<string, string>>
 >;
 
 export type RequestDod<NAME extends string, ATTRS extends DTO> = {

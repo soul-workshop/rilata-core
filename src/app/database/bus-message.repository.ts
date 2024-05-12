@@ -3,18 +3,19 @@ import { DelivererToBus } from '../bus/deliverer-to-bus';
 import { DeliveryBusMessage } from '../bus/types';
 import { GeneralModuleResolver } from '../module/types';
 import { Repositoriable } from '../resolves/repositoriable';
+import { Asyncable } from '../types';
 
-export interface BusMessageRepository {
+export interface BusMessageRepository<ASYNC extends boolean> {
   init(resovler: GeneralModuleResolver): void
 
-  getNotPublished(): Promise<DeliveryBusMessage[]>
+  getNotPublished(): Asyncable<ASYNC, DeliveryBusMessage[]>
 
-  markAsPublished(id: UuidType): Promise<unknown>
+  markAsPublished(id: UuidType): Asyncable<ASYNC, unknown>
 
   subscribe(delivererToBus: DelivererToBus): unknown
 }
 
-type BusRepository = BusMessageRepository;
+type BusRepository = BusMessageRepository<boolean>;
 export const BusMessageRepository = {
   instance(resolver: Repositoriable): BusRepository {
     return resolver.resolveRepo(BusMessageRepository) as BusRepository;

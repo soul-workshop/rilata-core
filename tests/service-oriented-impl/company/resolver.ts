@@ -1,16 +1,14 @@
-import { ModuleResolver } from '../../../src/app/module/module-resolver';
 import { CompanyRepository } from './domain-object/company/repo';
-import { CompanyModule } from './module';
 import { CompanyResolves } from './resolves';
 import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { AuthFacade } from '../auth/facade';
 import { SubjectFacade } from '../subject/facade';
-import { EventRepository } from '../../../src/app/database/event-repository';
-import { BusMessageRepository } from '../../../src/app/database/bus-message-repository';
-import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
+import { ModuleResolver } from '../../../src/app/module/m-resolver';
+import { GeneralServerResolver } from '../../../src/app/server/types';
+import { EventRepository } from '../../../src/app/database/event.repository';
 
 export class CompanyModuleResolver extends ModuleResolver<
-  UserJwtPayload, CompanyModule, CompanyResolves
+  GeneralServerResolver, CompanyResolves
 > {
   resolve(key: unknown): ModuleResolveInstance {
     throw this.getLogger().error('Method getRealisation not implemented.');
@@ -18,7 +16,7 @@ export class CompanyModuleResolver extends ModuleResolver<
 
   resolveRepo(key: unknown): ModuleResolveInstance {
     if (key === CompanyRepository) return this.resolves.companyRepo;
-    if (key === EventRepository || key === BusMessageRepository) {
+    if (key === EventRepository) {
       return this.resolves.eventRepo;
     }
     throw this.getLogger().error(`not find repo to key: ${key}`);

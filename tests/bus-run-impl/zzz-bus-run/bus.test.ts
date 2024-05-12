@@ -1,7 +1,7 @@
 import {
-  describe, test, expect,
+  describe, test, expect, afterAll,
 } from 'bun:test';
-import { EventRepository } from '../../../src/app/database/event-repository';
+import { EventRepository } from '../../../src/app/database/event.repository';
 import { BusBunServer } from '../../../src/app/server/bus-server';
 import { dodUtility } from '../../../src/common/utils/domain-object/dod-utility';
 import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
@@ -10,7 +10,6 @@ import { AddCompanyRequestDod, AddCompanyRequestDodAttrs } from '../company-cmd/
 import { CompanyOutAttrs } from '../company-read/domain/company/params';
 import { CompanyReadRepository } from '../company-read/domain/company/repo';
 import { CompanyReadModule } from '../company-read/module';
-import { UserJwtPayload } from '../types';
 import { serverStarter } from './starter';
 
 describe('add company service tests', async () => {
@@ -20,8 +19,13 @@ describe('add company service tests', async () => {
   }
 
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
-  const testServer = serverStarter.start('all') as BusBunServer<UserJwtPayload>;
+  const testServer = serverStarter.start('all') as BusBunServer;
+  testServer.run();
   const serverResolver = testServer.getServerResolver();
+
+  afterAll(() => {
+    testServer.stop();
+  });
 
   const addCompanyRequestDodAttrs: AddCompanyRequestDodAttrs = {
     name: 'Google corporation',
@@ -64,7 +68,8 @@ describe('add company service tests', async () => {
       .getModule<CompanyReadModule>('CompanyReadModule')
       .getModuleResolver();
 
-    await timeout(); // run all timouts
+    // выполним setTimeout, чтобы выполнились все отложенные задачи
+    await timeout();
 
     const readRepo = CompanyReadRepository.instance(readResolver);
     const result = await readRepo.getByBin('222333444555');
@@ -92,6 +97,7 @@ describe('add company service tests', async () => {
           domainType: 'event',
           eventId: event.meta.eventId,
           moduleName: 'CompanyReadModule',
+          serviceName: 'CompanyAddedService',
           name: 'CompanyAddedEvent',
           requestId: 'c22fd027-a94b-4728-90eb-f6d4f96992c2',
           created: event.meta.created,

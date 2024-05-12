@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DTO } from '../../domain/dto';
-import { TestRepository } from './test-repository';
+import { TestRepository } from './test.repository';
 
 export type BusPayloadAsJson = string;
 
-type GetTestRepoName<R extends TestRepository<string, DTO>> =
-  R extends TestRepository<infer N, infer _> ? N : never
+type GetTestRepoName<R extends TestRepository<string, DTO, boolean>> =
+  R extends TestRepository<infer N, infer _, infer _> ? N : never
 
-type GetTestRepoRecord<R extends TestRepository<string, DTO>> =
-  R extends TestRepository<infer _, infer REC> ? REC : never
+type GetTestRepoRecord<R extends TestRepository<string, DTO, boolean>> =
+  R extends TestRepository<infer _, infer REC, infer _> ? REC : never
 
-export type TestBatchRecords<R extends TestRepository<string, DTO>> =
+export type TestBatchRecords<R extends TestRepository<string, DTO, boolean>> =
   Record<GetTestRepoName<R>, GetTestRepoRecord<R>[]>

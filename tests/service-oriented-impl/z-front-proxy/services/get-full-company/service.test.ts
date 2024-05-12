@@ -2,7 +2,6 @@ import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
 import { DomainUser } from '../../../../../src/app/caller';
-import { TestDatabase } from '../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
 import { AuthModule } from '../../../auth/module';
 import { CompanyModule } from '../../../company/module';
@@ -12,6 +11,7 @@ import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures'
 import { FullCompany } from '../../domain-data/full-company/params';
 import { FrontProxyModule } from '../../module';
 import { GetFullCompanyRequestDod, GetFullCompanyServiceParams } from './s-params';
+import { TestDatabase } from '../../../../../src/app/database/test.database';
 
 describe('get full company service tests', async () => {
   const testServer = serverStarter.start('all');
@@ -25,7 +25,7 @@ describe('get full company service tests', async () => {
       testServer.getModule<SubjectModule>('SubjectModule'),
       testServer.getModule<CompanyModule>('CompanyModule'),
     ].forEach(async (module) => {
-      const db = module.getModuleResolver().getDatabase() as TestDatabase;
+      const db = module.getModuleResolver().getDatabase() as unknown as TestDatabase<true>;
       await db.clear();
       await db.addBatch(ServiceModulesFixtures.repoFixtures);
     });

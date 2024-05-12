@@ -2,10 +2,10 @@ import { loggerModes } from '../../common/logger/logger-modes';
 import { Constructor } from '../../common/types';
 import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
-import { ModuleResolves } from '../module/resolves';
+import { ModuleResolves } from '../module/m-resolves';
 import { GeneralModuleResolver } from '../module/types';
-import { ServerResolver } from './server-resolver';
-import { ServerResolves } from './server-resolves';
+import { ServerResolver } from './s-resolver';
+import { ServerResolves } from './s-resolves';
 
 export type ModuleConstructors<M extends Module> = [
   Constructor<M>,
@@ -32,7 +32,7 @@ export type ServerConfig = {
 }
 
 export type JwtConfig = {
-  algorithm?: 'HS256' | 'HS512', // default 'HS256'
-  jwtLifetimeAsHour?: number, // default 1 day (24)
-  jwtRefreshLifetimeAsHour?: number // default 3 day (24*3)
+  algorithm: 'HS256' | 'HS512', // default 'HS256'
+  jwtLifetimeAsHour: number, // default 1 day (24)
+  jwtRefreshLifetimeAsHour: number
 }

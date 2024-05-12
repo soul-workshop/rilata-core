@@ -24,6 +24,7 @@ export type RegisterCompanyRequestDod = RequestDod<'registerCompany', RegisterCo
 export type RegisterCompanyOut = { id: string }
 
 export type CompanyRegisteredServiceParams = CommandServiceParams<
+  'RegisteringCompanyService',
   CompanyParams,
   RegisterCompanyRequestDod,
   RegisterCompanyOut,

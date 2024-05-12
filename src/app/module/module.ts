@@ -1,13 +1,12 @@
 /* eslint-disable no-use-before-define */
 import { Logger } from '../../common/logger/logger';
 import {
-    GeneralCommandService,
+  GeneralCommandService,
   GeneralCommandServiceParams, GeneralEventService,
   GeneralQueryServiceParams, GeneraQueryService, ServiceResult,
 } from '../service/types';
 import { Service } from '../service/service';
 import { GeneralModuleResolver, ModuleType } from './types';
-import { ServerResolver } from '../server/server-resolver';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { StorePayload } from '../async-store/types';
 import { Caller } from '../caller';
@@ -18,8 +17,6 @@ import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { BadRequestError, InternalError } from '../service/error-types';
 import { Result } from '../../common/result/types';
 import { AssertionException } from '../../common/exeptions';
-import { ModuleResolver } from './resolver';
-import { ModuleResolves } from './resolves';
 import { GeneralServerResolver } from '../server/types';
 
 export abstract class Module {
@@ -49,7 +46,6 @@ export abstract class Module {
     this.logger.info(`  | resolver for module ${this.moduleName} inited successfully`);
 
     this.services = [...this.queryServices, ...this.commandServices, ...this.eventServices];
-    this.services.forEach((service) => service.init(moduleResolver));
   }
 
   stop(): void {
@@ -65,34 +61,35 @@ export abstract class Module {
   }
 
   async executeService<S extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
-    requestDod: S['input'],
+    inputDod: S['input'],
     caller: Caller,
   ): Promise<ServiceResult<S>> {
     try {
-      const serviceName = requestDod.meta.name;
-      const service = this.getServiceByName(serviceName);
+      const inputDodName = inputDod.meta.name;
+      const service = this.getServiceByInputDodName(inputDodName);
       if (service === undefined) {
-        return this.notFindedServiceByName(serviceName);
+        return this.notFindedServiceByName(inputDodName);
       }
 
       const store: StorePayload = {
-        serviceName,
+        serviceName: inputDodName,
+        moduleName: this.moduleName,
         caller,
         moduleResolver: this.moduleResolver,
-        requestId: requestDod.meta.requestId,
+        requestId: inputDod.meta.requestId,
         databaseErrorRestartAttempts: 1,
       };
       const threadStore = storeDispatcher.getThreadStore();
       return threadStore.run(
         store,
         (serviceInput) => service.execute(serviceInput),
-        requestDod,
+        inputDod,
       ) as unknown as ServiceResult<S>;
     } catch (e) {
-      if (this.moduleResolver.getRunMode().includes('test')) {
+      if (this.moduleResolver.getServerResolver().getRunMode().includes('test')) {
         throw e;
       }
-      this.moduleResolver.getLogger().fatalError('server internal error', { requestDod, caller }, e as Error);
+      this.moduleResolver.getLogger().fatalError('server internal error', { requestDod: inputDod, caller }, e as Error);
       const err = dodUtility.getAppError<InternalError<Locale<'Internal error'>>>(
         'Internal error',
         'Извините, на сервере произошла ошибка',
@@ -105,7 +102,7 @@ export abstract class Module {
   async executeEventService(eventDod: GeneralEventDod): Promise<void> {
     try {
       const serviceName = eventDod.meta.name;
-      const service = this.getServiceByName(serviceName);
+      const service = this.getServiceByInputDodName(serviceName);
       if (!service) {
         const errStr = `not finded service by name: ${serviceName} in module: ${this.moduleName}`;
         throw new AssertionException(errStr);
@@ -115,6 +112,7 @@ export abstract class Module {
         : eventDod.caller;
       const store: StorePayload = {
         serviceName,
+        moduleName: this.moduleName,
         caller,
         moduleResolver: this.moduleResolver,
         requestId: eventDod.meta.requestId,
@@ -127,7 +125,7 @@ export abstract class Module {
         eventDod,
       );
     } catch (e) {
-      if (this.moduleResolver.getRunMode() === 'test') {
+      if (this.moduleResolver.getServerResolver().getRunMode() === 'test') {
         this.moduleResolver.getServerResolver().getServer().stop();
         throw e;
       }
@@ -135,8 +133,8 @@ export abstract class Module {
     }
   }
 
-  getServiceByName<S extends Service = Service>(name: S['serviceName']): S {
-    return this.services.find((s) => s.serviceName === name) as S;
+  getServiceByInputDodName<S extends Service<GeneralModuleResolver>>(name: S['inputDodName']): S {
+    return this.services.find((s) => s.inputDodName === name) as S;
   }
 
   protected notFindedServiceByName(reqName: string): Result<BadRequestError<Locale<'Bad request'>>, never> {

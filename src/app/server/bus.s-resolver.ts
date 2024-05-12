@@ -1,5 +1,5 @@
 import { Bus } from '../bus/bus';
 
-export interface BusServerResolver {
+export interface BusServerResolver{
   getBus(): Bus
 }

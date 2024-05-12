@@ -1,8 +1,8 @@
-import { BusServerResolver } from '../../../src/app/server/bus-server-resolver';
-import { ServerResolver } from '../../../src/app/server/server-resolver';
-import { BusServerResolves } from '../../../src/app/server/server-resolves';
+import { BusServerResolver } from '../../../src/app/server/bus.s-resolver';
+import { ServerResolver } from '../../../src/app/server/s-resolver';
+import { BusServerResolves, ServerResolves } from '../../../src/app/server/s-resolves';
 import { ServerStarter } from '../../../src/app/server/server-starter';
-import { ModuleConstructors } from '../../../src/app/server/types';
+import { GeneralServerResolver, JwtConfig, ModuleConstructors } from '../../../src/app/server/types';
 import { ConsoleLogger } from '../../../src/common/logger/console-logger';
 import { getLoggerMode } from '../../../src/common/logger/logger-modes';
 import { Constructor } from '../../../src/common/types';
@@ -17,11 +17,19 @@ import { CompanyReadModuleResolver } from '../company-read/resolver';
 import { UserJwtPayload } from '../types';
 import { getCompanyCmdResolves } from './module-resolves/company-cmd-resolves';
 import { getCompanyReadResolves } from './module-resolves/company-read-resolves';
+import { BusRunServerResolver } from './s-resolver';
 import { BusRunServer } from './server';
 
 type AllServerModules = CompanyCmdModule | CompanyReadModule;
 
-class BusServerStarter extends ServerStarter<UserJwtPayload, AllServerModules> {
+const jwtSecret = 'your-256-bit-secret';
+const jwtConfig: JwtConfig = {
+  algorithm: 'HS256',
+  jwtLifetimeAsHour: 24,
+  jwtRefreshLifetimeAsHour: 24 * 3,
+};
+
+class BusServerStarter extends ServerStarter<AllServerModules> {
   constructor(
     ServerCtor: Constructor<BusRunServer>,
     ModuleCtors: ModuleConstructors<AllServerModules>[],
@@ -30,19 +38,17 @@ class BusServerStarter extends ServerStarter<UserJwtPayload, AllServerModules> {
     const defaultResolves: BusServerResolves<UserJwtPayload> = {
       logger: new ConsoleLogger(getLoggerMode()),
       runMode: 'test',
-      jwtSecretKey: 'your-256-bit-secret',
-      jwtConfig: {}, // default jwtConfig
       jwtDecoder: new JwtDecoderImpl(),
-      jwtVerifier: new JwtVerifierImpl(),
-      jwtCreator: new JwtCreatorImpl(),
+      jwtVerifier: new JwtVerifierImpl(jwtSecret, jwtConfig),
+      jwtCreator: new JwtCreatorImpl(jwtSecret, jwtConfig),
       serverConfig: { loggerModes: 'off' }, // default serverConfig,
       bus: new OneServerBus(),
     };
     super(ServerCtor, { ...defaultResolves, ...resolves }, ModuleCtors);
   }
 
-  getResolver(): ServerResolver<UserJwtPayload> {
-    return new BusServerResolver(this.resolves as BusServerResolves<UserJwtPayload>);
+  createResolver(): BusRunServerResolver {
+    return new BusRunServerResolver(this.resolves as BusServerResolves<UserJwtPayload>);
   }
 }
 

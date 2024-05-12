@@ -1,20 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Repositoriable } from '../resolves/repositoriable';
 import { Realisable } from '../resolves/realisable';
-import { ServerResolver } from '../server/server-resolver';
 import { Facadable } from '../resolves/facadable';
-import { ModuleResolves } from './resolves';
 import { DTO } from '../../domain/dto';
 import { ModuleResolveInstance } from '../resolves/types';
-import { GetModuleType } from './types';
-import { ServerResolves } from '../server/server-resolves';
+import { GetModule } from './types';
 import { Module } from './module';
 import { GetServerResolves } from '../server/types';
+import { ServerResolver } from '../server/s-resolver';
+import { ServerResolves } from '../server/s-resolves';
+import { ModuleResolves } from './m-resolves';
 
 export abstract class ModuleResolver<
   S_RES extends ServerResolver<ServerResolves<DTO>>, MR extends ModuleResolves<Module>,
 >
 implements Repositoriable, Realisable, Facadable {
-  protected module!: GetModuleType<MR>;
+  protected module!: GetModule<MR>;
 
   protected serverResolver!: S_RES;
 
@@ -35,7 +36,7 @@ implements Repositoriable, Realisable, Facadable {
     return this.serverResolver.getProjectPath();
   }
 
-  init(module: GetModuleType<MR>, serverResolver: S_RES): void {
+  init(module: GetModule<MR>, serverResolver: S_RES): void {
     this.module = module;
     this.serverResolver = serverResolver;
 
@@ -71,7 +72,7 @@ implements Repositoriable, Realisable, Facadable {
     return this.resolves.moduleName;
   }
 
-  getModule(): GetModuleType<MR> {
+  getModule(): GetModule<MR> {
     return this.module;
   }
 

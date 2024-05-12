@@ -3,11 +3,10 @@ import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
-import { Locale } from '../../domain/locale';
 import { CallerType } from '../caller';
 import {
-  ServiceResult, RequestDodValidator,
-  GetServiceName, GeneralBaseServiceParams,
+  ServiceResult, InputDodValidator,
+  GeneralBaseServiceParams, GetModuleName,
 } from './types';
 import { Service } from './service';
 import { ValidationError } from './error-types';
@@ -18,13 +17,17 @@ import { permissionDeniedError } from './constants';
 export abstract class BaseService<
   P extends GeneralBaseServiceParams, RES extends GeneralModuleResolver
 > extends Service<RES> {
-  abstract override serviceName: GetServiceName<P>;
+  abstract override moduleName: GetModuleName<RES>;
+
+  abstract override serviceName: P['serviceName'];
+
+  abstract override inputDodName: P['input']['meta']['name'];
 
   abstract override aRootName: P['aRootName'];
 
   protected abstract supportedCallers: ReadonlyArray<CallerType>;
 
-  protected abstract validator: RequestDodValidator<P>;
+  protected abstract validator: InputDodValidator<P['input']>;
 
   /** Выполнить сервис */
   async execute(input: P['input']): Promise<ServiceResult<P>> {

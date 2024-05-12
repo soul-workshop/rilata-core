@@ -1,9 +1,12 @@
 import { DTO } from '../../domain/dto';
+import { Asyncable } from '../types';
 
-export interface TestRepository<TABLE_NAME extends string, RECORDS extends DTO> {
+export interface TestRepository<
+  TABLE_NAME extends string, RECORDS extends DTO, ASYNC extends boolean
+> {
   tableName: TABLE_NAME,
 
-  addBatch(records: RECORDS[]): Promise<void>
+  addBatch(records: RECORDS[]): Asyncable<ASYNC, void>
 
-  clear(): Promise<void>
+  clear(): Asyncable<ASYNC, void>
 }

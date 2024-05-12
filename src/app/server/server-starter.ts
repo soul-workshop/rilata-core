@@ -1,42 +1,41 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Constructor } from '../../common/types';
 import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
-import { ModuleResolver } from '../module/module-resolver';
-import { ModuleResolves } from '../module/module-resolves';
 import { RilataServer } from './server';
-import { ServerResolver } from './server-resolver';
-import { BusServerResolves, ServerResolves } from './server-resolves';
-import { ModuleConstructors } from './types';
+import { ServerResolver } from './s-resolver';
+import { ServerResolves } from './s-resolves';
+import { GeneralServerResolver, ModuleConstructors } from './types';
 
-export class ServerStarter<JWT_P extends DTO, M extends Module<JWT_P>> {
+export class ServerStarter<M extends Module> {
+  protected server!: RilataServer;
+
+  protected serverResolver: GeneralServerResolver;
+
   constructor(
-    protected ServerCtor: Constructor<RilataServer<JWT_P>>,
-    protected resolves: ServerResolves<JWT_P> | BusServerResolves<JWT_P>,
+    protected ServerCtor: Constructor<RilataServer>,
+    protected resolves:ServerResolves<DTO>,
     protected ModuleCtors: ModuleConstructors<M>[],
-  ) {}
-
-  protected server!: RilataServer<JWT_P>;
-
-  start(runModules: M['moduleName'][] | 'all'): RilataServer<JWT_P> {
-    const resolver = this.getResolver();
-    const modules = this.getModules(runModules, resolver);
-    this.startServer(modules, resolver);
-    return this.server;
+  ) {
+    this.serverResolver = this.createResolver();
   }
 
-  protected startServer(modules: M[], resolver: ServerResolver<JWT_P>): void {
-    this.server = new this.ServerCtor(modules);
-    this.server.init(resolver);
-  }
-
-  protected getResolver(): ServerResolver<JWT_P> {
+  createResolver(): ServerResolver<ServerResolves<DTO>> {
     return new ServerResolver(this.resolves);
   }
 
-  protected getModules(
-    runModuleNames: M['moduleName'][] | 'all',
-    serverResolver: ServerResolver<JWT_P>,
-  ): M[] {
+  start(runModules: M['moduleName'][] | 'all'): RilataServer {
+    const modules = this.getModules(runModules);
+    this.startServer(modules);
+    return this.server;
+  }
+
+  protected startServer(modules: M[]): void {
+    this.server = new this.ServerCtor(modules);
+    this.server.init(this.serverResolver);
+  }
+
+  protected getModules(runModuleNames: M['moduleName'][] | 'all'): M[] {
     const { logger } = this.resolves;
     if (runModuleNames === 'all') {
       runModuleNames = this.ModuleCtors.map(([Mctor, _1, _2]) => Mctor.name);
@@ -55,8 +54,8 @@ export class ServerStarter<JWT_P extends DTO, M extends Module<JWT_P>> {
       const [ModuleCtor, ModuleResolverCtor, resolves] = Ctors;
       const module = new ModuleCtor();
       // eslint-disable-next-line max-len
-      const moduleResolver = new ModuleResolverCtor(resolves) as ModuleResolver<JWT_P, M, ModuleResolves<M>>;
-      module.init(moduleResolver, serverResolver);
+      const moduleResolver = new ModuleResolverCtor(resolves);
+      module.init(moduleResolver, this.serverResolver);
 
       logger.info(`  | end init module: ${name}`);
       return module;

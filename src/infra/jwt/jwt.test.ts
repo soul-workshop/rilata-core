@@ -6,7 +6,8 @@ import { UserId } from '../../../src/common/types';
 import { JwtCreator } from '../../app/jwt/jwt-creator';
 import { JwtDecoder } from '../../app/jwt/jwt-decoder';
 import { JwtVerifier } from '../../app/jwt/jwt-verifier';
-import { ServerResolver } from '../../app/server/server-resolver';
+import { ServerResolver } from '../../app/server/s-resolver';
+import { ServerResolves } from '../../app/server/s-resolves';
 import { JwtConfig } from '../../app/server/types';
 import { ConsoleLogger } from '../../common/logger/console-logger';
 import { Logger } from '../../common/logger/logger';
@@ -21,6 +22,12 @@ type TestJwtPayload = {
 
 const jwtExpiredTime = new Date('1970-01-26T23:25:55.302Z').getTime(); // 2244355302
 const refreshJwtExpiredTime = new Date('1970-01-28T23:25:55.302Z').getTime(); // 2417155302
+const jwtSecret = 'your-256-bit-secret';
+const jwtConfig: JwtConfig = {
+  algorithm: 'HS256',
+  jwtLifetimeAsHour: 24,
+  jwtRefreshLifetimeAsHour: 24 * 3,
+};
 
 class TestJwtDecoder extends BaseJwtDecoder<TestJwtPayload> {
   constructor(public expiredTimeShiftAsMs: number) {
@@ -36,10 +43,12 @@ class TestJwtDecoder extends BaseJwtDecoder<TestJwtPayload> {
   }
 }
 
-function getJwtFakeResolver(expiredTimeShiftAsMs: number): ServerResolver<TestJwtPayload> {
+function getJwtFakeResolver(
+  expiredTimeShiftAsMs: number,
+): ServerResolver<ServerResolves<TestJwtPayload>> {
   const decoder = new TestJwtDecoder(expiredTimeShiftAsMs);
-  const creator = new JwtCreatorImpl<TestJwtPayload>();
-  const verifier = new JwtVerifierImpl<TestJwtPayload>();
+  const creator = new JwtCreatorImpl<TestJwtPayload>(jwtSecret, jwtConfig);
+  const verifier = new JwtVerifierImpl<TestJwtPayload>(jwtSecret, jwtConfig);
 
   const resolver = {
     getLogger(): Logger {
@@ -69,7 +78,7 @@ function getJwtFakeResolver(expiredTimeShiftAsMs: number): ServerResolver<TestJw
         jwtRefreshLifetimeAsHour: 24 * 3,
       };
     },
-  } as unknown as ServerResolver<TestJwtPayload>;
+  } as unknown as ServerResolver<ServerResolves<TestJwtPayload>>;
 
   decoder.init(resolver);
   creator.init(resolver);
@@ -225,7 +234,7 @@ describe('all jwt tests', () => {
     const decoder = backendJwtResolver.getJwtDecoder();
 
     test('успех, токен создан успешно', () => {
-      const jwtLifeTimeAsMs = backendJwtResolver.getJwtConfig().jwtLifetimeAsHour * 60 * 60 * 1000;
+      const jwtLifeTimeAsMs = jwtConfig.jwtLifetimeAsHour * 60 * 60 * 1000;
       const getNowMock = spyOn(decoder, 'getNow').mockReturnValueOnce(jwtExpiredTime - jwtLifeTimeAsMs);
       getNowMock.mockClear();
       const jwt = sut.createToken({ userId: '536e7463-b24d-4e7b-bad9-2bd2ed8011fd' }, 'access');

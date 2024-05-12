@@ -1,7 +1,6 @@
 import {
   describe, test, expect, beforeEach,
 } from 'bun:test';
-import { TestDatabase } from '../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../fixtures/test-thread-store-mock';
 import { serverStarter } from '../../../zzz-run-server/starter';
@@ -11,19 +10,20 @@ import { CompanyDoesntExistByIdError } from '../../domain-object/company/repo-er
 import { CompanyModule } from '../../module';
 import { GetCompanyRequestDod } from './s.params';
 import { GetingCompanyService } from './service';
+import { TestDatabase } from '../../../../../src/app/database/test.database';
 
 describe('register company saga service tests', async () => {
   const requestId = '5611f332-f4d9-4c16-a561-04dabe864fc9';
   const testServer = serverStarter.start('all');
   const module = testServer.getModule<CompanyModule>('CompanyModule');
   const resolver = module.getModuleResolver();
-  const store = setAndGetTestStoreDispatcher({
+  setAndGetTestStoreDispatcher({
     requestId,
     moduleResolver: resolver,
   });
 
   beforeEach(() => {
-    const db = resolver.getDatabase() as TestDatabase;
+    const db = resolver.getDatabase() as unknown as TestDatabase<true>;
     db.clear();
     db.addBatch(ServiceModulesFixtures.repoFixtures);
   });
@@ -35,7 +35,7 @@ describe('register company saga service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByName<GetingCompanyService>('getCompany');
+    const sut = module.getServiceByInputDodName<GetingCompanyService>('getCompany');
 
     const result = await sut.execute(getCompanyRequestDod);
     expect(result.isSuccess()).toBe(true);
@@ -50,7 +50,7 @@ describe('register company saga service tests', async () => {
   });
 
   test('провал, нет такой компании', async () => {
-    const sut = module.getServiceByName<GetingCompanyService>('getCompany');
+    const sut = module.getServiceByInputDodName<GetingCompanyService>('getCompany');
 
     const notFindedRequestDod = dodUtility.getRequestDod<GetCompanyRequestDod>(
       'getCompany',

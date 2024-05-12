@@ -4,8 +4,6 @@ import {
   describe, test, expect, beforeEach, spyOn, afterEach, Mock,
 } from 'bun:test';
 import { DomainUser } from '../../../../../src/app/caller';
-import { EventRepository } from '../../../../../src/app/database/event-repository';
-import { TestDatabase } from '../../../../../src/app/database/test-database';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
@@ -24,17 +22,19 @@ import { CompanyAlreadyExistError } from '../../domain-object/company/repo-error
 import { CompanyModule } from '../../module';
 import { RegisterCompanyRequestDod, RegisterCompanyOut, RegisterCompanyRequestDodAttrs } from './s.params';
 import { RegisteringCompanyService } from './service';
+import { TestDatabase } from '../../../../../src/app/database/test.database';
+import { EventRepository } from '../../../../../src/app/database/event.repository';
 
 describe('register company saga service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start('all');
   const module = testSever.getModule<CompanyModule>('CompanyModule');
   const resolver = module.getModuleResolver();
-  const store = setAndGetTestStoreDispatcher({
+  setAndGetTestStoreDispatcher({
     requestId,
     moduleResolver: resolver,
   }).getStoreOrExepction();
-  const sut = module.getServiceByName<RegisteringCompanyService>('registerCompany');
+  const sut = module.getServiceByInputDodName<RegisteringCompanyService>('registerCompany');
 
   const subjectFacade = SubjectFacade.instance(resolver);
   const authFacade = AuthFacade.instance(resolver);
@@ -43,7 +43,7 @@ describe('register company saga service tests', async () => {
   let addUserMock: Mock<AnyFunction>;
 
   beforeEach(async () => {
-    const db = resolver.getDatabase() as TestDatabase;
+    const db = resolver.getDatabase() as unknown as TestDatabase<true>;
     await db.clear();
     await db.addBatch(ServiceModulesFixtures.repoFixtures);
     addPersonMock = spyOn(subjectFacade, 'addPerson');

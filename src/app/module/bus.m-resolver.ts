@@ -5,7 +5,7 @@ import { BusMessageRepository } from '../database/bus-message.repository';
 export interface BusModuleResolver {
   getBus(): Bus
 
-  getBusMessageRepository(): BusMessageRepository
+  getBusMessageRepository(): BusMessageRepository<boolean>
 
   getDelivererToBus(): DelivererToBus
 }

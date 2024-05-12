@@ -12,6 +12,7 @@ export type GetUsersRequestDod = RequestDod<'getUsers', GetUsersRequestDodAttrs>
 export type GetUsersOut = UserAttrs[]
 
 export type GetUsersServiceParams = QueryServiceParams<
+  'GettingUserService',
   UserParams,
   GetUsersRequestDod,
   GetUsersOut,

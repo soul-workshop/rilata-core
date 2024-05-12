@@ -1,17 +1,15 @@
 import { SQLQueryBindings } from 'bun:sqlite';
-import { storeDispatcher } from '../../../app/async-store/store-dispatcher';
-import { TestRepository } from '../../../app/database/test-repository';
+import { TestRepository } from '../../../app/database/test.repository';
 import { GeneralModuleResolver } from '../../../app/module/types';
 import { Logger } from '../../../common/logger/logger';
-import { UuidType } from '../../../common/types';
 import { dtoUtility } from '../../../common/utils/dto/dto-utility';
 import { DTO } from '../../../domain/dto';
 import { BunSqliteDatabase } from './database';
-import { BunSqliteTransactionData, MigrateRow } from './types';
+import { MigrateRow } from './types';
 
 export abstract class BunSqliteRepository<
   TN extends string, R extends DTO
-> implements TestRepository<TN, R> {
+> implements TestRepository<TN, R, false> {
   abstract tableName: TN;
 
   protected resolver!: GeneralModuleResolver;
@@ -25,7 +23,7 @@ export abstract class BunSqliteRepository<
 
   constructor(protected db: BunSqliteDatabase) {}
 
-  async clear(): Promise<void> {
+  clear(): void {
     this.db.sqliteDb.run(`DELETE FROM ${this.tableName}`);
   }
 
@@ -34,19 +32,20 @@ export abstract class BunSqliteRepository<
     this.logger = resolver.getLogger();
   }
 
-  async addBatch(records: R[]): Promise<void> {
+  addBatch(records: R[]): void {
     if (records.length === 0) return;
 
     const colNames = dtoUtility.getUniqueKeys(records);
-    const rawNames = colNames.join(', ');
-    const rawValues = colNames.map((n) => `$${n}`).join(',');
 
-    const sql = `INSERT INTO ${this.tableName} (${rawNames}) VALUES (${rawValues})`;
     const transaction = this.db.sqliteDb.transaction(() => {
       records.forEach((rec) => {
-        // почему то без приведения выводит ошибку типов!!!
-        const bindings = this.getObjectBindings(rec) as unknown as SQLQueryBindings[];
-        this.db.sqliteDb.prepare(sql, bindings).run();
+        const valueNames = colNames.map((nm) => (
+          this.isObject(rec[nm]) ? `json($${nm})` : `$${nm}`
+        ));
+        const bindings = this.getObjectBindings(rec);
+
+        const sql = `INSERT INTO ${this.tableName} (${colNames.join(',')}) VALUES (${valueNames.join(',')})`;
+        this.db.sqliteDb.prepare(sql).run(bindings);
       });
     });
     transaction();
@@ -54,19 +53,12 @@ export abstract class BunSqliteRepository<
 
   /** Возвращает объект приведенный для привязки */
   protected getObjectBindings(obj: Record<string, unknown>): SQLQueryBindings {
-    const casted = dtoUtility.editValues(obj, (v) => this.castValue(v));
+    const casted = dtoUtility.editValues(obj, (v) => (this.isObject(v) ? JSON.stringify(v) : v));
     return dtoUtility.editKeys(casted, (k) => `$${k}`);
   }
 
-  protected castValue(value: unknown): string | number | boolean | null {
-    if (
-      typeof value === 'string'
-    || typeof value === 'number'
-    || typeof value === 'boolean'
-    || value === null
-    ) return value;
-    if (value === undefined) return null;
-    return `"${JSON.stringify(value)}"`;
+  protected isObject(value: unknown): boolean {
+    return typeof value === 'object' && value !== null;
   }
 
   /** Выполнить миграцию для репозитория */

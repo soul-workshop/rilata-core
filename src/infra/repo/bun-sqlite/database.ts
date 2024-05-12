@@ -1,19 +1,17 @@
 /* eslint-disable no-use-before-define */
 import { Database as SqliteDb } from 'bun:sqlite';
 import { TestDatabase } from '../../../app/database/test.database';
+import { TestRepository } from '../../../app/database/test.repository';
 import { TestBatchRecords } from '../../../app/database/types';
 import { GeneralModuleResolver } from '../../../app/module/types';
 import { Logger } from '../../../common/logger/logger';
 import { DTO } from '../../../domain/dto';
-import { MigrationsRepository } from './repositories/migrations';
+import { MigrationsSqliteRepository } from './repositories/migrations';
 import { BunSqliteRepository } from './repository';
+import { BunRepoCtor } from './types';
 
-type RepoCtor = new (db: BunSqliteDatabase) => BunSqliteRepository<string, DTO>;
-
-export abstract class BunSqliteDatabase implements TestDatabase {
-  protected abstract repositoryCtors: RepoCtor[];
-
-  migrationRepo: MigrationsRepository;
+export abstract class BunSqliteDatabase implements TestDatabase<false> {
+  migrationRepo: MigrationsSqliteRepository;
 
   protected resolver!: GeneralModuleResolver;
 
@@ -28,16 +26,20 @@ export abstract class BunSqliteDatabase implements TestDatabase {
 
   protected repositories: BunSqliteRepository<string, DTO>[] = [];
 
-  constructor() {
-    this.migrationRepo = new MigrationsRepository(this);
+  constructor(protected RepositoriesCtors: BunRepoCtor[]) {
+    this.migrationRepo = new MigrationsSqliteRepository(this);
+    this.repositories = RepositoriesCtors.map((Ctor) => new Ctor(this));
   }
 
   init(moduleResolver: GeneralModuleResolver): void {
     this.resolver = moduleResolver;
     this.logger = this.resolver.getLogger();
-    this.repositories = this.repositoryCtors.map((Ctor) => new Ctor(this));
     this.migrationRepo.init(moduleResolver);
     this.repositories.forEach((repo) => repo.init(moduleResolver));
+  }
+
+  addRepository(repo: BunSqliteRepository<string, DTO>): void {
+    this.repositories.push(repo);
   }
 
   /** Создать файл БД и таблицы. */
@@ -80,17 +82,16 @@ export abstract class BunSqliteDatabase implements TestDatabase {
     return repo as R;
   }
 
-  async addBatch<R extends BunSqliteRepository<string, DTO>>(
+  addBatch<R extends TestRepository<string, DTO, false>>(
     batchRecords: TestBatchRecords<R>,
-  ): Promise<void> {
-    const promises = Object.entries(batchRecords).map(([tableName, records]) => {
+  ): void {
+    Object.entries(batchRecords).map(([tableName, records]) => {
       const repo = this.getRepository(tableName);
       return repo.addBatch(records as DTO[]);
     });
-    await Promise.all(promises);
   }
 
-  async clear(): Promise<void> {
+  clear(): void {
     const transaction = this.sqliteDb.transaction(() => {
       this.repositories.forEach((repo) => {
         if (repo.tableName !== 'migrations') {
@@ -111,7 +112,7 @@ export abstract class BunSqliteDatabase implements TestDatabase {
   }
 
   getFullFileName(): string {
-    return this.resolver.getRunMode() === 'test'
+    return this.resolver.getServerResolver().getRunMode() === 'test'
       ? ':memory:'
       : `${this.getFilePath()}/${this.getFileName()}`;
   }
@@ -123,7 +124,7 @@ export abstract class BunSqliteDatabase implements TestDatabase {
   protected openSqliteDb(): void {
     if (!this.sqliteDbInstance) {
       this.sqliteDbInstance = new SqliteDb(this.getFullFileName());
-      this.logger.info(`-| sqlite db by name "${this.getFileName()}" for module "${this.resolver.getModuleName()}" created`);
+      this.logger.info(`-| sqlite db by name "${this.getFileName()}" for module "${this.resolver.getModuleName()}" opened`);
     }
   }
 }

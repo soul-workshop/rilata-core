@@ -17,6 +17,8 @@ typeof storeDispatcher {
     requestId: store.requestId ?? uuidUtility.getNewUUID(),
     databaseErrorRestartAttempts: store.databaseErrorRestartAttempts ?? 1,
     unitOfWorkId: store.unitOfWorkId,
+    serviceName: store.serviceName ?? 'AddingUserService',
+    moduleName: store.moduleName ?? 'SubjectModule',
   };
 
   storeDispatcher.setThreadStore({

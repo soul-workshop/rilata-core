@@ -1,8 +1,8 @@
 import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
 import { DomainUser } from '../../../../../src/app/caller';
-import { UowCommandService } from '../../../../../src/app/service/command-service';
 import { ValidationError } from '../../../../../src/app/service/error-types';
-import { RequestDodValidator, ServiceResult } from '../../../../../src/app/service/types';
+import { CommandService } from '../../../../../src/app/service/concrete-service/command.service';
+import { InputDodValidator, ServiceResult } from '../../../../../src/app/service/types';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { Result } from '../../../../../src/common/result/types';
@@ -16,22 +16,32 @@ import { RegisterCompanyDomainCommand } from '../../domain-data/company/register
 import { CompanyARFactory } from '../../domain-object/company/factory';
 import { CompanyRepository } from '../../domain-object/company/repo';
 import { CompanyAlreadyExistError } from '../../domain-object/company/repo-errors';
+import { CompanyModuleResolver } from '../../resolver';
 import {
   CompanyRegisteredServiceParams, RegisterCompanyOut, RegisterCompanyRequestDod,
   RegisterCompanyRequestDodAttrs,
 } from './s.params';
 import { RegisterCompanyValidator } from './v.map';
+import { UowTransactionStrategy } from '../../../../../src/app/service/transaction-strategy/uow.strategy';
 
-export class RegisteringCompanyService extends UowCommandService<CompanyRegisteredServiceParams> {
-  serviceName = 'registerCompany' as const;
+export class RegisteringCompanyService extends CommandService<
+  CompanyRegisteredServiceParams, CompanyModuleResolver
+> {
+  moduleName = 'CompanyModule' as const;
+
+  serviceName = 'RegisteringCompanyService' as const;
+
+  inputDodName = 'registerCompany' as const;
 
   aRootName = 'CompanyAR' as const;
 
+  protected transactionStrategy = new UowTransactionStrategy(true);
+
   protected supportedCallers = ['DomainUser'] as const;
 
-  declare protected validator: RequestDodValidator<CompanyRegisteredServiceParams>;
+  declare protected validator: InputDodValidator<RegisterCompanyRequestDod>;
 
-  protected async runDomain(
+  async runDomain(
     input: RegisterCompanyRequestDod,
   ): Promise<ServiceResult<CompanyRegisteredServiceParams>> {
     const { caller } = storeDispatcher.getStoreOrExepction();
@@ -65,7 +75,7 @@ export class RegisteringCompanyService extends UowCommandService<CompanyRegister
     return success(undefined);
   }
 
-  protected async processPerson(
+  async processPerson(
     input: RegisterCompanyRequestDodAttrs,
     caller: DomainUser,
   ): Promise<Result<PersonAlreadyExistsError | PersonDoesntExistByIinError, string>> {

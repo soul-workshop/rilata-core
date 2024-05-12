@@ -1,16 +1,15 @@
 import { Logger } from '../../common/logger/logger';
-import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
-import { ServerResolver } from './server-resolver';
+import { GeneralServerResolver } from './types';
 
 export abstract class RilataServer {
-  protected resolver!: ServerResolver<JWT_P>;
+  protected resolver!: GeneralServerResolver;
 
   protected logger!: Logger;
 
-  constructor(protected modules: Module<JWT_P>[]) {}
+  constructor(protected modules: Module[]) {}
 
-  init(serverResolver: ServerResolver<JWT_P>): void {
+  init(serverResolver: GeneralServerResolver): void {
     serverResolver.init(this);
     this.logger = serverResolver.getLogger();
     this.resolver = serverResolver;
@@ -21,7 +20,7 @@ export abstract class RilataServer {
     this.modules.forEach((m) => m.stop());
   }
 
-  getModule<M extends Module<JWT_P>>(name: M['moduleName']): M {
+  getModule<M extends Module>(name: M['moduleName']): M {
     const module = this.modules.find((m) => m.moduleName === name);
     if (module === undefined) {
       throw this.logger.error(`not finded module by name: ${name}`, this.modules);
@@ -29,11 +28,11 @@ export abstract class RilataServer {
     return module as M;
   }
 
-  getModules(): Module<JWT_P>[] {
+  getModules(): Module[] {
     return this.modules;
   }
 
-  getServerResolver(): ServerResolver<JWT_P> {
+  getServerResolver(): GeneralServerResolver {
     return this.resolver;
   }
 

@@ -1,4 +1,4 @@
-import { EventRepository } from '../../../../../src/app/database/event-repository';
+import { EventRepository } from '../../../../../src/app/database/event.repository';
 import { DatabaseObjectSavingError } from '../../../../../src/common/exeptions';
 import { Logger } from '../../../../../src/common/logger/logger';
 import { failure } from '../../../../../src/common/result/failure';
@@ -59,7 +59,7 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async addEvent(attrs: UserRepositoryRecord): Promise<void> {
-    const event = dodUtility.getEvent<UserAddedEvent>(
+    const event = dodUtility.getEventDod<UserAddedEvent>(
       'UserAddedEvent',
       attrs,
       {

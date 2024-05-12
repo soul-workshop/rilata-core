@@ -1,11 +1,10 @@
-import { DTO } from '../../domain/dto';
 import { RilataRequest } from '../controller/types';
-import { ServerResolver } from '../server/server-resolver';
+import { GeneralServerResolver } from '../server/types';
 
 export abstract class Middleware {
-  protected serverResolver!: ServerResolver<DTO>;
+  protected serverResolver!: GeneralServerResolver;
 
-  init(resolver: ServerResolver<DTO>): void {
+  init(resolver: GeneralServerResolver): void {
     this.serverResolver = resolver;
   }
 

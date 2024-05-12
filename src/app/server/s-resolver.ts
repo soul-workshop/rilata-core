@@ -1,6 +1,6 @@
 import { DTO } from '../../domain/dto';
 import { RilataServer } from './server';
-import { ServerResolves } from './server-resolves';
+import { ServerResolves } from './s-resolves';
 import { ServerConfig } from './types';
 
 export class ServerResolver<RES extends ServerResolves<DTO>> {

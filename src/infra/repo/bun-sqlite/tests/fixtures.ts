@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-len */
 /* eslint-disable no-use-before-define */
 import { storeDispatcher } from '../../../../app/async-store/store-dispatcher';
 import { DomainUser } from '../../../../app/caller';
-import { EventRepository } from '../../../../app/database/event-repository';
+import { EventRepository } from '../../../../app/database/event.repository';
 import { TestBatchRecords } from '../../../../app/database/types';
 import { GeneralModuleResolver } from '../../../../app/module/types';
 import { Repositoriable } from '../../../../app/resolves/repositoriable';
-import { UowCommandService } from '../../../../app/service/command-service';
-import { CommandServiceParams, RequestDodValidator, ServiceResult } from '../../../../app/service/types';
+import { GeneralServerResolver } from '../../../../app/server/types';
+import { CommandService } from '../../../../app/service/concrete-service/command.service';
+import { BunSqliteStrategy } from '../../../../app/service/transaction-strategy/bun-sqlite.strategy';
+import { CommandServiceParams, InputDodValidator, ServiceResult } from '../../../../app/service/types';
 import { DatabaseObjectSavingError } from '../../../../common/exeptions';
 import { ConsoleLogger } from '../../../../common/logger/console-logger';
 import { getLoggerMode } from '../../../../common/logger/logger-modes';
@@ -19,43 +22,22 @@ import { TupleToUnion } from '../../../../common/utils/tuple/types';
 import { uuidUtility } from '../../../../common/utils/uuid/uuid-utility';
 import { ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '../../../../domain/domain-data/domain-types';
 import { AggregateRootDataParams } from '../../../../domain/domain-data/params-types';
+import { DTO } from '../../../../domain/dto';
 import { DtoFieldValidator } from '../../../../domain/validator/field-validator/dto-field-validator';
 import { LiteralFieldValidator } from '../../../../domain/validator/field-validator/literal-field-validator';
 import { StringChoiceValidationRule } from '../../../../domain/validator/rules/validate-rules/string/string-choice.v-rule';
 import { BunSqliteDatabase } from '../database';
 import { EventRepositorySqlite } from '../repositories/event';
 import { BunSqliteRepository } from '../repository';
-import { MigrateRow } from '../types';
+import { BunRepoCtor, MigrateRow } from '../types';
 
 export namespace SqliteTestFixtures {
   // ++++++++++++++++++ database and repositories section ++++++++++++++++++++
 
-  export class BlogDatabase extends BunSqliteDatabase {
-    protected repositoryCtors = [
-      UserRepositorySqlite,
-      PostRepositorySqlite,
-      EventRepositorySqlite,
-    ];
-  }
-
-  export type UserAttrs = {
-    userId: string,
-    login: string,
-    hash: string,
-    posts: UuidType[],
-  }
-
-  export type UserRecord = {
-    userId: string,
-    login: string,
-    hash: string,
-    posts: string,
-  }
-
   export interface UserRepository {
     init(resolver: GeneralModuleResolver): void
-    addPost(userId: string, postId: UuidType): Promise<void>
-    findUser(userId: UuidType): Promise<UserAttrs | undefined>
+    addPost(userId: string, postId: UuidType): void
+    findUser(userId: UuidType): UserAttrs | undefined
   }
 
   export const UserRepository = {
@@ -75,7 +57,7 @@ export namespace SqliteTestFixtures {
           userId TEXT PRIMARY KEY,
           login TEXT(50) NOT NULL,
           hash TEXT NOT NULL,
-          posts TEXT DEFAULT ""
+          posts TEXT
         );`,
       );
     }
@@ -84,17 +66,10 @@ export namespace SqliteTestFixtures {
       if (uuidUtility.isValidValue(postId) === false) {
         throw this.logger.error(`not valid post id: ${postId}`);
       }
-      const userAttrs = this.db.sqliteDb.query(
-        `SELECT userId, posts FROM ${this.tableName} WHERE userId="${userId}"`,
-      ).get() as { userId: string, posts: string };
-      if (!userAttrs) {
-        throw this.logger.error(`not finded user by id: ${userId}`);
-      }
-      const posts = userAttrs.posts.split(',');
-      posts.push(postId);
+      this.db.sqliteDb.prepare('UPDATE users SET posts = json_insert(posts, "$[#]", $postId) WHERE userId=$userId; ').run({ $postId: postId, $userId: userId });
     }
 
-    async findUser(userId: string): Promise<UserAttrs | undefined> {
+    findUser(userId: string): UserAttrs | undefined {
       const sql = `SELECT * from ${this.tableName} WHERE userId="${userId}"`;
       const attrs = this.db.sqliteDb.query(sql).get() as UserRecord | null;
       if (!attrs) return undefined;
@@ -121,8 +96,10 @@ export namespace SqliteTestFixtures {
     published: boolean,
   }
 
-  export type PostRecord = PostAttrs & {
+  export type PostRecord = Omit<PostAttrs, 'published' | 'desc'> & {
     version: number,
+    published: 0 | 1,
+    desc: string | null
   }
 
   type PostDomainMeta = DomainMeta<'PostAr', 'postId'>
@@ -133,8 +110,9 @@ export namespace SqliteTestFixtures {
 
   export interface PostRepository {
     init(resolver: GeneralModuleResolver): void
-    addPost(attrs: Omit<PostAttrs, 'published'>): Promise<void>
-    findPost(postId: UuidType): Promise<PostAttrs | undefined>
+    addPost(attrs: Omit<PostAttrs, 'published'>): void
+    findPost(postId: UuidType): PostAttrs | undefined
+    findUserPosts(userId: UuidType): PostAttrs[];
   }
 
   export const PostRepository = {
@@ -160,22 +138,75 @@ export namespace SqliteTestFixtures {
       const sql = `CREATE TABLE ${this.tableName} (
         postId TEXT PRIMARY KEY,
         name TEXT NOT NULL,
-        body TEXT NOT NULL,
+        body TEXT NOT NULL CHECK(LENGTH(body) > 5),
         desc TEXT,
         authorId TEXT NOT NULL,
         published BOOLEAN DEFAULT 0 NOT NULL,
-        version INTEGER DEFAULT 0 NOT NULL
+        version INTEGER DEFAULT 0 NOT NULL,
+        FOREIGN KEY (authorId) REFERENCES users(userId)
       );`;
       this.db.sqliteDb.run(sql);
     }
 
-    addPost(attrs: Omit<PostAttrs, 'published'>): Promise<void> {
-      throw new Error('Method not implemented.');
+    addPost(attrs: Omit<PostAttrs, 'published'>): void {
+      const sql = this.db.sqliteDb.prepare(`
+        INSERT INTO posts
+        (postId, name, body, desc, authorId, category, published, version)
+        VALUES ($postId, $name, $body, $desc, $authorId, $category, $published, $version);
+      `);
+      sql.run(this.getObjectBindings({ ...attrs, published: false, version: 0 }));
     }
 
-    findPost(postId: string): Promise<PostAttrs | undefined> {
-      throw new Error('Method not implemented.');
+    findPost(postId: string): PostAttrs | undefined {
+      const postRecord = this.db.sqliteDb.prepare(`
+        SELECT *
+        FROM ${this.tableName}
+        WHERE postId = $postId
+      `).get({ $postId: postId }) as PostRecord;
+      if (postRecord) return this.recordToAttrs(postRecord);
+      return undefined;
     }
+
+    findUserPosts(userId: string): PostAttrs[] {
+      const posts = this.db.sqliteDb.prepare(`
+        SELECT *
+        FROM ${this.tableName}
+        WHERE authorId = $userId
+      `).all({ $userId: userId }) as PostRecord[];
+      return posts.map((p) => this.recordToAttrs(p));
+    }
+
+    protected recordToAttrs(record: PostRecord): PostAttrs {
+      const excludeAttrs = record.desc !== null ? 'version' : ['version', 'desc'] as const;
+      return {
+        ...dtoUtility.excludeAttrs(record, excludeAttrs),
+        published: Boolean(record.published),
+      };
+    }
+  }
+
+  export class BlogDatabase extends BunSqliteDatabase {
+    constructor(repoCtors?: BunRepoCtor[]) {
+      super(repoCtors ?? [
+        UserRepositorySqlite,
+        PostRepositorySqlite,
+        EventRepositorySqlite,
+      ]);
+    }
+  }
+
+  export type UserAttrs = {
+    userId: string,
+    login: string,
+    hash: string,
+    posts: UuidType[],
+  }
+
+  export type UserRecord = {
+    userId: string,
+    login: string,
+    hash: string,
+    posts: string,
   }
 
   // ++++++++++++++++++ service section ++++++++++++++++++++
@@ -191,9 +222,12 @@ export namespace SqliteTestFixtures {
 
   type AddPostOut = { postId: UuidType }
 
-  type PostAddedEvent = EventDod<'PostAdded', AddPostRequestDodAttrs, PostARDT>
+  type PostAddedEvent = EventDod<
+    'PostAdded', 'AddingPostService', 'PostModule', AddPostRequestDodAttrs, PostARDT
+  >
 
   export type AddPostServiceParams = CommandServiceParams<
+    'AddingPostService',
     PostArParams,
     AddPostRequestDod,
     AddPostOut,
@@ -201,7 +235,7 @@ export namespace SqliteTestFixtures {
     PostAddedEvent[]
   >
 
-  const addPostValidator: RequestDodValidator<AddPostServiceParams> = new DtoFieldValidator(
+  const addPostValidator: InputDodValidator<AddPostRequestDod> = new DtoFieldValidator(
     'addPost', true, { isArray: false }, 'dto', {
       name: new LiteralFieldValidator('name', true, { isArray: false }, 'string', []),
       body: new LiteralFieldValidator('body', true, { isArray: false }, 'string', []),
@@ -212,8 +246,14 @@ export namespace SqliteTestFixtures {
     },
   );
 
-  export class AddPostService extends UowCommandService<AddPostServiceParams> {
-    serviceName = 'addPost' as const;
+  export class AddPostService extends CommandService<AddPostServiceParams, GeneralModuleResolver> {
+    protected transactionStrategy = new BunSqliteStrategy();
+
+    moduleName = 'PostModule';
+
+    inputDodName = 'addPost' as const;
+
+    serviceName = 'AddingPostService' as const;
 
     aRootName = 'PostAr' as const;
 
@@ -221,7 +261,7 @@ export namespace SqliteTestFixtures {
 
     protected validator = addPostValidator;
 
-    protected async runDomain(input: AddPostRequestDod): Promise<ServiceResult<AddPostServiceParams>> {
+    runDomain(input: AddPostRequestDod): ServiceResult<AddPostServiceParams> {
       const caller = storeDispatcher.getStoreOrExepction().caller as DomainUser;
       const postId = uuidUtility.getNewUUID();
 
@@ -229,7 +269,7 @@ export namespace SqliteTestFixtures {
       const postRepo = PostRepository.instance(this.moduleResolver);
       const eventRepo = EventRepository.instance(this.moduleResolver);
       try {
-        await userRepo.addPost(caller.userId, postId);
+        userRepo.addPost(caller.userId, postId);
 
         const postAttrs: PostAttrs = {
           postId,
@@ -237,7 +277,7 @@ export namespace SqliteTestFixtures {
           authorId: caller.userId,
           published: false,
         };
-        await postRepo.addPost(postAttrs);
+        postRepo.addPost(postAttrs);
 
         const postArdt: PostARDT = {
           attrs: { ...postAttrs, published: false },
@@ -248,10 +288,12 @@ export namespace SqliteTestFixtures {
             version: 0,
           },
         };
-        const event = dodUtility.getEvent<PostAddedEvent>('PostAdded', input.attrs, postArdt);
-        await eventRepo.addEvents([event]);
+        const event = dodUtility.getEventDod<PostAddedEvent>('PostAdded', input.attrs, postArdt);
+        eventRepo.addEvents([event]);
       } catch (e) {
-        this.logger.error('')
+        if (storeDispatcher.getStoreOrExepction().databaseErrorRestartAttempts === 0) {
+          throw e;
+        }
         throw new DatabaseObjectSavingError('fail add user post or post record to repository');
       }
 
@@ -264,12 +306,9 @@ export namespace SqliteTestFixtures {
   }
 
   // ++++++++++++++++++ resolver mock section ++++++++++++++++++++
-  const db = new BlogDatabase();
-  const userRepo = new UserRepositorySqlite(db);
-  const postRepo = new PostRepositorySqlite(db);
-  const eventRepo = new EventRepositorySqlite(db);
+  export const db = new BlogDatabase();
 
-  export const resolver = {
+  export const fakeModuleResolver = {
     getDirPath(): string {
       // @ts-ignore
       return import.meta.dir;
@@ -287,17 +326,29 @@ export namespace SqliteTestFixtures {
       return 'SubjectModule';
     },
 
+    getServerResolver(): GeneralServerResolver {
+      return {
+        getRunMode() {
+          return 'test';
+        },
+      } as GeneralServerResolver;
+    },
+
     resolveRepo(key: unknown): unknown {
-      if (key === UserRepository) return userRepo;
-      if (key === PostRepository) return postRepo;
-      if (key === EventRepository) return eventRepo;
+      if (key === UserRepository) return db.getRepository<UserRepositorySqlite>('users');
+      if (key === PostRepository) return db.getRepository<PostRepositorySqlite>('posts');
+      if (key === EventRepository) return db.getRepository<EventRepositorySqlite>('events');
       throw Error(`not found key: ${key}`);
     },
 
-    getDatabase(): typeof db {
+    getDatabase(): BlogDatabase {
       return db;
     },
   } as unknown as GeneralModuleResolver;
+
+  db.init(fakeModuleResolver); // init and resolves db and repositories
+  db.createDb(); // create sqlite db and tables
+  db.open(); // open sqlite db
 
   // ++++++++++++++++++ fixture data section ++++++++++++++++++++
 
@@ -318,6 +369,7 @@ export namespace SqliteTestFixtures {
         eventId: '35c226f6-a150-4987-9b15-1ed3f52f90fa',
         requestId: '7300da3b-545c-492c-b31b-213c02620ed5',
         name: 'addUser',
+        serviceName: 'AddingUserService',
         moduleName: 'SubjectModule',
         domainType: 'event',
         created: 1712388395101,
@@ -342,6 +394,7 @@ export namespace SqliteTestFixtures {
         eventId: 'de63b084-e565-4090-8972-225f36cd6c2b',
         requestId: '7300da3b-545c-492c-b31b-213c02620ed5',
         name: 'userProfileCreated',
+        serviceName: 'CreatingUserProfile',
         moduleName: 'SubjectModule',
         domainType: 'event',
         created: 1712388395101,

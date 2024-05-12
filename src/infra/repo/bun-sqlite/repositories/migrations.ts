@@ -2,7 +2,7 @@
 import { BunSqliteRepository } from '../repository';
 import { MigrateRow } from '../types';
 
-export class MigrationsRepository extends BunSqliteRepository<'migrations', MigrateRow> {
+export class MigrationsSqliteRepository extends BunSqliteRepository<'migrations', MigrateRow> {
   tableName = 'migrations' as const;
 
   migrationWRows: MigrateRow[] = [];
@@ -19,5 +19,5 @@ export class MigrationsRepository extends BunSqliteRepository<'migrations', Migr
     );
   }
 
-  async clear(): Promise<void> {} // записи таблицы миграции не очищаются
+  clear(): void {} // записи таблицы миграции не очищаются
 }

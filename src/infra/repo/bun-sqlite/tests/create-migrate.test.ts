@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, test, expect } from 'bun:test';
+import { EventRepositorySqlite } from '../repositories/event';
 import { MigrateRow } from '../types';
 import { SqliteTestFixtures } from './fixtures';
 
 describe('sqlite create and migrate tests', () => {
-  const db = new SqliteTestFixtures.BlogDatabase();
-  const { resolver } = SqliteTestFixtures;
-  db.init(resolver); // init and resolves db and repositories
-  db.createDb(); // create sqlite db and tables
-  db.open(); // open sqlite db
+  const { fakeModuleResolver } = SqliteTestFixtures;
+  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.BlogDatabase;
 
   test('успех. бд и таблицы созданы', () => {
     const tableNamesAsArrObj = db.sqliteDb.query('SELECT name FROM sqlite_master WHERE type="table"').all();
@@ -43,23 +42,25 @@ describe('sqlite create and migrate tests', () => {
     expect((migrations as MigrateRow[])[0].id).toBe('9c3b4923-20e3-4d29-bf37-8170103d49c0');
   });
 
-  test('провал, миграция таблицы и запись в таблицу миграции проходит в одной транзакции', () => {
+  test('провал, тест транзакции, запись миграции в таблицу posts, migrations не проходит из за ошибки записи в таблицу migrations', () => {
     class FailMigratePostRepository extends SqliteTestFixtures.PostRepositorySqlite {
-      getMigrationSql(migration: MigrateRow): string {
+      protected getMigrationSql(migration: MigrateRow): string {
         const { id, description, sql } = migration;
         // last column value is null => fail;
         return `INSERT INTO migrations VALUES ('${id}', '${description}', '${sql}', 'posts', null)`;
       }
     }
     class FailBlogDatabase extends SqliteTestFixtures.BlogDatabase {
-      protected repositoryCtors = [
-        SqliteTestFixtures.UserRepositorySqlite,
-        FailMigratePostRepository,
-      ];
+      constructor() {
+        super([
+          SqliteTestFixtures.UserRepositorySqlite,
+          FailMigratePostRepository,
+        ]);
+      }
     }
 
     const failDb = new FailBlogDatabase();
-    failDb.init(resolver);
+    failDb.init(fakeModuleResolver);
     try {
       failDb.createDb();
       throw Error('not be called');

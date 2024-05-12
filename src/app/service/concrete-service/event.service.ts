@@ -1,20 +1,24 @@
 import { success } from '../../../common/result/success';
 import { Result } from '../../../common/result/types';
+import { BusMessageType } from '../../bus/types';
 import { GeneralModuleResolver } from '../../module/types';
 import { BaseService } from '../base.service';
 import { TransactionStrategy } from '../transaction-strategy/strategy';
 import { GeneralEventServiceParams, ServiceResult } from '../types';
 
 export abstract class EventService<
-  P extends GeneralEventServiceParams, RES extends GeneralModuleResolver
+  P extends GeneralEventServiceParams,
+  RES extends GeneralModuleResolver
 > extends BaseService<P, RES> {
-  get moduleName(): string {
-    return this.moduleResolver.getModuleName();
-  }
+  abstract busMessageType: BusMessageType;
+
+  abstract eventModuleName: P['input']['meta']['moduleName'];
+
+  abstract eventServiceName: P['input']['meta']['serviceName'];
 
   protected validator!: never;
 
-  protected supportedCallers = ['DomainUser', 'AnonymousUser'] as const;
+  protected supportedCallers!: never;
 
   protected abstract transactionStrategy: TransactionStrategy;
 
@@ -33,7 +37,9 @@ export abstract class EventService<
     return result;
   }
 
-  protected checkValidations(input: P['input']): Result<never, undefined> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected runInitialChecks(input: P['input']): Result<never, undefined> {
+    // Для событий не выполняется проверка разрешений и валидации
     return success(undefined);
   }
 }

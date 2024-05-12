@@ -8,9 +8,7 @@ export class BunSqliteStrategy extends TransactionStrategy {
   >(service: S, input: IN): RET {
     const store = storeDispatcher.getStoreOrExepction();
     const db = store.moduleResolver.getDatabase() as BunSqliteDatabase;
-    const transactionFn = db.sqliteDb.transaction(() => {
-      service.runDomain(input);
-    });
+    const transactionFn = db.sqliteDb.transaction(() => service.runDomain(input));
     return transactionFn();
   }
 }
