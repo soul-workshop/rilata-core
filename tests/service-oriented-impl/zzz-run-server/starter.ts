@@ -13,11 +13,13 @@ import { getAuthResolves } from './module-resolves/auth-resolves';
 import { getCompanyResolves } from './module-resolves/company-resolves';
 import { getFrontProxyResolves } from './module-resolves/front-proxy-resolves';
 import { getSubjectResolves } from './module-resolves/subject-resolves';
+import { ServerResolver } from '../../../src/app/server/s-resolver';
 
 type AllServerModules = AuthModule | SubjectModule | CompanyModule | FrontProxyModule;
 
 export const serverStarter = new ServerStarter<AllServerModules>(
   ServiceModulesBunServer,
+  ServerResolver,
   serverResolves,
   [
     [AuthModule, AuthModuleResolver, getAuthResolves()],

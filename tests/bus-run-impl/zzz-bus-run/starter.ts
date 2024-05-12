@@ -29,9 +29,10 @@ const jwtConfig: JwtConfig = {
   jwtRefreshLifetimeAsHour: 24 * 3,
 };
 
-class BusServerStarter extends ServerStarter<AllServerModules> {
+class BusRunServerStarter extends ServerStarter<AllServerModules> {
   constructor(
     ServerCtor: Constructor<BusRunServer>,
+    ServerResolverCtor: Constructor<BusRunServerResolver>,
     ModuleCtors: ModuleConstructors<AllServerModules>[],
     resolves?: Partial<BusServerResolves<UserJwtPayload>>,
   ) {
@@ -44,16 +45,13 @@ class BusServerStarter extends ServerStarter<AllServerModules> {
       serverConfig: { loggerModes: 'off' }, // default serverConfig,
       bus: new OneServerBus(),
     };
-    super(ServerCtor, { ...defaultResolves, ...resolves }, ModuleCtors);
-  }
-
-  createResolver(): BusRunServerResolver {
-    return new BusRunServerResolver(this.resolves as BusServerResolves<UserJwtPayload>);
+    super(ServerCtor, ServerResolverCtor, { ...defaultResolves, ...resolves }, ModuleCtors);
   }
 }
 
-export const serverStarter = new BusServerStarter(
+export const serverStarter = new BusRunServerStarter(
   BusRunServer,
+  BusRunServerResolver,
   [
     [CompanyCmdModule, CompanyCmdModuleResolver, getCompanyCmdResolves()],
     [CompanyReadModule, CompanyReadModuleResolver, getCompanyReadResolves()],

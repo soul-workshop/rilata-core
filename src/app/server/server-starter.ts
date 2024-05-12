@@ -3,39 +3,29 @@ import { Constructor } from '../../common/types';
 import { DTO } from '../../domain/dto';
 import { Module } from '../module/module';
 import { RilataServer } from './server';
-import { ServerResolver } from './s-resolver';
 import { ServerResolves } from './s-resolves';
 import { GeneralServerResolver, ModuleConstructors } from './types';
 
 export class ServerStarter<M extends Module> {
   protected server!: RilataServer;
 
-  protected serverResolver: GeneralServerResolver;
+  protected serverResolver!: GeneralServerResolver;
 
   constructor(
     protected ServerCtor: Constructor<RilataServer>,
+    protected ServerResolverCtor: Constructor<GeneralServerResolver>,
     protected resolves:ServerResolves<DTO>,
     protected ModuleCtors: ModuleConstructors<M>[],
-  ) {
-    this.serverResolver = this.createResolver();
-  }
+  ) {}
 
-  createResolver(): ServerResolver<ServerResolves<DTO>> {
-    return new ServerResolver(this.resolves);
-  }
-
-  start(runModules: M['moduleName'][] | 'all'): RilataServer {
-    const modules = this.getModules(runModules);
-    this.startServer(modules);
+  start(runModuleNames: M['moduleName'][] | 'all'): RilataServer {
+    this.serverResolver = new this.ServerResolverCtor(this.resolves);
+    this.server = new this.ServerCtor(this.runModules(runModuleNames));
+    this.server.init(this.serverResolver);
     return this.server;
   }
 
-  protected startServer(modules: M[]): void {
-    this.server = new this.ServerCtor(modules);
-    this.server.init(this.serverResolver);
-  }
-
-  protected getModules(runModuleNames: M['moduleName'][] | 'all'): M[] {
+  protected runModules(runModuleNames: M['moduleName'][] | 'all'): M[] {
     const { logger } = this.resolves;
     if (runModuleNames === 'all') {
       runModuleNames = this.ModuleCtors.map(([Mctor, _1, _2]) => Mctor.name);
