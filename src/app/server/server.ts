@@ -11,6 +11,7 @@ export abstract class RilataServer {
 
   init(serverResolver: GeneralServerResolver): void {
     serverResolver.init(this);
+    // инициализация модулей производится server-starter-ом
     this.logger = serverResolver.getLogger();
     this.resolver = serverResolver;
   }
