@@ -1,4 +1,4 @@
-import { Caller } from '../../../app/caller';
+import { Caller } from '../../../app/controller/types';
 import { AssertionException } from '../../exeptions';
 import { UserId } from '../../types';
 

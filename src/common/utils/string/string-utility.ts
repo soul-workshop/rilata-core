@@ -1,5 +1,5 @@
 /* eslint-disable default-param-last */
-export class StringUtility {
+class StringUtility {
   /**
    * Обрезать строку вырезав с обоих сторон переданные символы.
    */

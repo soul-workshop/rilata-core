@@ -1,5 +1,5 @@
 import { UuidType } from '../../common/types';
-import { Caller } from '../caller';
+import { Caller } from '../controller/types';
 import { GeneralModuleResolver } from '../module/types';
 
 export type StorePayload = {

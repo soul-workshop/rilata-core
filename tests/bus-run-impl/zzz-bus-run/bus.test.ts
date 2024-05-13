@@ -3,7 +3,7 @@ import {
 } from 'bun:test';
 import { EventRepository } from '../../../src/app/database/event.repository';
 import { BusBunServer } from '../../../src/app/server/bus-server';
-import { dodUtility } from '../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../src/common/utils/dod/dod-utility';
 import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
 import { uuidUtility } from '../../../src/common/utils/uuid/uuid-utility';
 import { AddCompanyRequestDod, AddCompanyRequestDodAttrs } from '../company-cmd/services/company/add-company/s.params';

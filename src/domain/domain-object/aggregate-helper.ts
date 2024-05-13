@@ -1,4 +1,3 @@
-import { Caller } from '../../app/caller';
 import { UuidType } from '../../common/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { GeneralARDParams } from '../domain-data/params-types';
@@ -7,9 +6,9 @@ import {
   GetARParamsAggregateName, GetARParamsEventAttrs, GetARParamsEventNames,
   GetARParamsEvents, GetNoOutKeysFromARParams,
 } from '../domain-data/type-functions';
-import { storeDispatcher } from '../../app/async-store/store-dispatcher';
 import { Logger } from '../../common/logger/logger';
-import { dodUtility } from '../../common/utils/domain-object/dod-utility';
+import { Caller } from '../../app/controller/types';
+import { dodUtility } from '../../common/utils/dod/dod-utility';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */

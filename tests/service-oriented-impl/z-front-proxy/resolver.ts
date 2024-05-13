@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ModuleResolver } from '../../../src/app/module/m-resolver';
-import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { ServerResolver } from '../../../src/app/server/s-resolver';
 import { ServerResolves } from '../../../src/app/server/s-resolves';
 import { AuthFacade } from '../auth/facade';
@@ -24,15 +23,15 @@ export class FrontendProxyModuleResolver extends ModuleResolver<
     this.resolves.companyFacade.init(this);
   }
 
-  resolve(key: unknown): ModuleResolveInstance {
+  resolve(key: unknown): unknown {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
 
-  resolveRepo(key: unknown): ModuleResolveInstance {
+  resolveRepo(key: unknown): unknown {
     throw this.getLogger().error('not be called in read module');
   }
 
-  resolveFacade(key: unknown): ModuleResolveInstance {
+  resolveFacade(key: unknown): unknown {
     if (key === AuthFacade) return this.resolves.authFacade;
     if (key === SubjectFacade) return this.resolves.subjectFacade;
     if (key === CompanyFacade) return this.resolves.companyFacade;

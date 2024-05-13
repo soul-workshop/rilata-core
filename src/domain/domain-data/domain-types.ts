@@ -1,4 +1,4 @@
-import { Caller } from '../../app/caller';
+import { Caller } from '../../app/controller/types';
 import { UuidType } from '../../common/types';
 import { DTO } from '../dto';
 import { Locale } from '../locale';

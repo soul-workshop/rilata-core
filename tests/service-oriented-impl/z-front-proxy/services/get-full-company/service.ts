@@ -1,5 +1,5 @@
 import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
-import { DomainUser } from '../../../../../src/app/caller';
+import { DomainUser } from '../../../../../src/app/controller/types';
 import { QueryService } from '../../../../../src/app/service/concrete-service/query.service';
 import { ServiceResult } from '../../../../../src/app/service/types';
 import { failure } from '../../../../../src/common/result/failure';

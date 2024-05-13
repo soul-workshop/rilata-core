@@ -1,8 +1,8 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { DomainUser } from '../../../../../src/app/caller';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { DomainUser } from '../../../../../src/app/controller/types';
+import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
 import { AuthModule } from '../../../auth/module';
 import { CompanyModule } from '../../../company/module';
 import { SubjectModule } from '../../../subject/module';

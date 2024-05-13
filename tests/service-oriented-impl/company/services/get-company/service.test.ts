@@ -1,7 +1,7 @@
 import {
   describe, test, expect, beforeEach,
 } from 'bun:test';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../fixtures/test-thread-store-mock';
 import { serverStarter } from '../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures';

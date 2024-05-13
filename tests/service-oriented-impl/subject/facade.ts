@@ -1,6 +1,6 @@
-import { Caller, DomainUser } from '../../../src/app/caller';
+import { Caller, DomainUser } from '../../../src/app/controller/types';
 import { GeneralModuleResolver } from '../../../src/app/module/types';
-import { Facadable } from '../../../src/app/resolves/facadable';
+import { Facadable } from '../../../src/app/resolve/facadable';
 import { ServiceResult } from '../../../src/app/service/types';
 import { AddPersonRequestDodAttrs, AddPersonServiceParams } from './services/person/add-person/s-params';
 import { GetPersonByIinServiceParams } from './services/person/get-by-iin/s-params';

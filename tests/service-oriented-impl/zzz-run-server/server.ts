@@ -1,5 +1,5 @@
 import { Controller } from '../../../src/app/controller/controller';
-import { InjectCallerMiddleware } from '../../../src/app/middleware/inject-caller';
+import { InjectCallerMiddleware } from '../../../src/app/http.index';
 import { BunServer } from '../../../src/app/server/bun-server';
 import { AboutController } from './controllers/about';
 

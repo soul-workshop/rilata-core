@@ -1,8 +1,8 @@
-import { DomainUser, ModuleCaller } from '../../../../../src/app/caller';
+import { DomainUser, ModuleCaller } from '../../../../../src/app/controller/types';
 import { GeneralModuleResolver } from '../../../../../src/app/module/types';
 import { ServiceResult } from '../../../../../src/app/service/types';
 import { UuidType } from '../../../../../src/common/types';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
 import { CompanyFacade } from '../../facade';
 import { CompanyModule } from '../../module';
 import { GetCompanyRequestDod, GetCompanyServiceParams } from '../../services/get-company/s.params';

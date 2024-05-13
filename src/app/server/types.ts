@@ -7,6 +7,8 @@ import { GeneralModuleResolver } from '../module/types';
 import { ServerResolver } from './s-resolver';
 import { ServerResolves } from './s-resolves';
 
+export type RunMode = 'test' | 'dev' | 'prod';
+
 export type ModuleConstructors<M extends Module> = [
   Constructor<M>,
   Constructor<GeneralModuleResolver>,

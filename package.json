@@ -1,6 +1,6 @@
 {
   "name": "rilata",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "",
   "author": "GIS Expert",
   "license": "ISC",
@@ -12,6 +12,16 @@
   },
   "dependencies": {
     "email-validator": "^2.0.4"
+  },
+  "exports": {
+    "./utils": "./src/common/utils/index.ts",
+    "./common": "./src/common/index.ts",
+    "./domain": "./src/domain/index.ts",
+    "./validator": "./src/domain/validator/index.ts",
+    "./db": "./src/app/db.index.ts",
+    "./base": "./src/app/base.index.ts",
+    "./http": ".src/app/http.index.ts",
+    "./bus": ".src/app/bus.index.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.0.2",

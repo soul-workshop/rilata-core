@@ -1,6 +1,6 @@
 import { UuidType } from '../../../common/types';
-import { Asyncable } from '../../types';
 import { Database } from '../database';
+import { Asyncable } from '../types';
 
 type TransactionId = UuidType;
 

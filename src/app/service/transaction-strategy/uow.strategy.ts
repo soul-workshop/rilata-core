@@ -1,6 +1,6 @@
 import { Result } from '../../../common/result/types';
 import { storeDispatcher } from '../../async-store/store-dispatcher';
-import { UnitOfWorkDatabase } from '../../database/module-database/uow.database';
+import { UnitOfWorkDatabase } from '../../database/transaction/uow.database';
 import { TransactionStrategy } from './strategy';
 
 export class UowTransactionStrategy<ASYNC extends boolean>

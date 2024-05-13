@@ -1,5 +1,5 @@
 import { storeDispatcher } from '../../../app/async-store/store-dispatcher';
-import { Caller } from '../../../app/caller';
+import { Caller } from '../../../app/controller/types';
 import { ValidationError } from '../../../app/service/error-types';
 import { GeneralRequestDod, GeneralErrorDod, GeneralEventDod } from '../../../domain/domain-data/domain-types';
 import { UuidType } from '../../types';

@@ -3,10 +3,9 @@ import { AnyFunction } from 'bun';
 import {
   describe, test, expect, beforeEach, spyOn, afterEach, Mock,
 } from 'bun:test';
-import { DomainUser } from '../../../../../src/app/caller';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
 import { dtoUtility } from '../../../../../src/common/utils/dto/dto-utility';
 import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../fixtures/test-thread-store-mock';
@@ -24,6 +23,7 @@ import { RegisterCompanyRequestDod, RegisterCompanyOut, RegisterCompanyRequestDo
 import { RegisteringCompanyService } from './service';
 import { TestDatabase } from '../../../../../src/app/database/test.database';
 import { EventRepository } from '../../../../../src/app/database/event.repository';
+import { DomainUser } from '../../../../../src/app/controller/types';
 
 describe('register company saga service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
