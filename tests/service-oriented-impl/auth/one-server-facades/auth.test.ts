@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { DomainUser } from '../../../../src/app/caller';
+import { DomainUser } from '../../../../src/app/controller/types';
 import { uuidUtility } from '../../../../src/common/utils/uuid/uuid-utility';
 import { CompanyModule } from '../../company/module';
 import { serverStarter } from '../../zzz-run-server/starter';

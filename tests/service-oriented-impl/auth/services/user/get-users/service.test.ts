@@ -2,7 +2,7 @@ import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
 import { TestDatabase } from '../../../../../../src/app/database/test.database';
-import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
 import { UserRepositoryImpl } from '../../../../zz-infra/repositories/auth-module/user';
 import { serverStarter } from '../../../../zzz-run-server/starter';

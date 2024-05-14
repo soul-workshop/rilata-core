@@ -4,7 +4,7 @@ import {
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
 import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures';
 import { SubjectModule } from '../../../module';
-import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
 import { GetPersonByIinRequestDod, GetPersonByIinOut } from './s-params';
 import { GetingPersonByIinService } from './service';
 import { PersonDoesntExistByIinError } from '../../../domain-object/person/repo-errors';

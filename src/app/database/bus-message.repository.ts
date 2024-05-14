@@ -2,8 +2,8 @@ import { UuidType } from '../../common/types';
 import { DelivererToBus } from '../bus/deliverer-to-bus';
 import { DeliveryBusMessage } from '../bus/types';
 import { GeneralModuleResolver } from '../module/types';
-import { Repositoriable } from '../resolves/repositoriable';
-import { Asyncable } from '../types';
+import { Repositoriable } from '../resolve/repositoriable';
+import { Asyncable } from './types';
 
 export interface BusMessageRepository<ASYNC extends boolean> {
   init(resovler: GeneralModuleResolver): void

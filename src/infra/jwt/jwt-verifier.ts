@@ -5,7 +5,7 @@ import { ServerResolves } from '../../app/server/s-resolves';
 import { JwtConfig } from '../../app/server/types';
 import { failure } from '../../common/result/failure';
 import { Result } from '../../common/result/types';
-import { dodUtility } from '../../common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../common/utils/dod/dod-utility';
 import { JwtHmacHashUtils } from '../../common/utils/jwt/jwt-utils';
 import { DTO } from '../../domain/dto';
 

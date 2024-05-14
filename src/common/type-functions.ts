@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-use-before-define */
 import { DTO } from '../domain/dto';
-import { UnionToTuple } from './utils/tuple/types';
+import { UnionToTuple } from './tuple-types';
 
 /**
  * По ключам REPLACEDKEYS заменяет значения атрибутов объекта OBJECT

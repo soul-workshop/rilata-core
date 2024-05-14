@@ -8,12 +8,12 @@ import { DTO } from '../../domain/dto';
 import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
-import { dodUtility } from '../../common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../common/utils/dod/dod-utility';
 import { JwtPayload, JwtType } from '../../app/jwt/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { JwtHmacHashUtils } from '../../common/utils/jwt/jwt-utils';
-import { UnionToTuple } from '../../common/utils/tuple/types';
 import { GeneralServerResolver } from '../../app/server/types';
+import { UnionToTuple } from '../../common/tuple-types';
 
 /** Класс для декодирования JWT токена. */
 export abstract class BaseJwtDecoder<

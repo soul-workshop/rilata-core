@@ -2,17 +2,16 @@
 import { Serve, Server } from 'bun';
 import { AsyncLocalStorage } from 'async_hooks';
 import { RilataServer } from './server';
-import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { Locale } from '../../domain/locale';
 import { Controller } from '../controller/controller';
 import { ModuleController } from '../controller/module-controller';
-import { RilataRequest } from '../controller/types';
+import { ResultDTO, RilataRequest } from '../controller/types';
 import { Middleware } from '../middleware/middleware';
 import { InternalError, NotFoundError } from '../service/error-types';
-import { ResultDTO } from '../result-dto';
 import { GeneralErrorDod } from '../../domain/domain-data/domain-types';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { GeneralServerResolver } from './types';
+import { dodUtility } from '../../common/utils/dod/dod-utility';
 
 export abstract class BunServer extends RilataServer {
   port: number | undefined;

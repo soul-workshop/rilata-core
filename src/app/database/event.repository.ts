@@ -3,8 +3,8 @@ import { GeneralEventDod } from '../../domain/domain-data/domain-types';
 import { GeneralARDParams } from '../../domain/domain-data/params-types';
 import { GetARParamsEvents } from '../../domain/domain-data/type-functions';
 import { GeneralModuleResolver } from '../module/types';
-import { Repositoriable } from '../resolves/repositoriable';
-import { Asyncable } from '../types';
+import { Repositoriable } from '../resolve/repositoriable';
+import { Asyncable } from './types';
 
 export interface EventRepository<ASYNC extends boolean> {
   init(resovler: GeneralModuleResolver): void

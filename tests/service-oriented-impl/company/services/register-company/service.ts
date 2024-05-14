@@ -1,5 +1,5 @@
 import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
-import { DomainUser } from '../../../../../src/app/caller';
+import { DomainUser } from '../../../../../src/app/controller/types';
 import { ValidationError } from '../../../../../src/app/service/error-types';
 import { CommandService } from '../../../../../src/app/service/concrete-service/command.service';
 import { InputDodValidator, ServiceResult } from '../../../../../src/app/service/types';
@@ -7,7 +7,7 @@ import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { Result } from '../../../../../src/common/result/types';
 import { UuidType } from '../../../../../src/common/types';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
 import { dtoUtility } from '../../../../../src/common/utils/dto/dto-utility';
 import { AuthFacade } from '../../../auth/facade';
 import { PersonAlreadyExistsError, PersonDoesntExistByIinError } from '../../../subject/domain-object/person/repo-errors';

@@ -1,7 +1,6 @@
-import { RilataRequest } from '../controller/types';
-import { JwtVerifyErrors } from '../jwt/jwt-errors';
-import { ResultDTO } from '../result-dto';
-import { Middleware } from './middleware';
+import { ResultDTO, RilataRequest } from '../../controller/types';
+import { JwtVerifyErrors } from '../../jwt/jwt-errors';
+import { Middleware } from '../middleware';
 
 export class InjectCallerMiddleware extends Middleware {
   process(req: RilataRequest): Response | undefined {

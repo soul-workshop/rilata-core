@@ -2,8 +2,6 @@
 import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
-import { dodUtility } from '../../common/utils/domain-object/dod-utility';
-import { CallerType } from '../caller';
 import {
   ServiceResult, InputDodValidator,
   GeneralBaseServiceParams, GetModuleName,
@@ -13,6 +11,8 @@ import { ValidationError } from './error-types';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { GeneralModuleResolver } from '../module/types';
 import { permissionDeniedError } from './constants';
+import { CallerType } from '../controller/types';
+import { dodUtility } from '../../common/utils/dod/dod-utility';
 
 export abstract class BaseService<
   P extends GeneralBaseServiceParams, RES extends GeneralModuleResolver
@@ -64,6 +64,7 @@ export abstract class BaseService<
     if ((input as any).attrs === undefined) {
       throw this.logger.error('validate implemented only requestDod and eventDod');
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = this.validator.validate((input as any).attrs);
 
     if (result.isFailure()) {

@@ -4,8 +4,7 @@ import { Bus } from '../bus/bus';
 import { JwtCreator } from '../jwt/jwt-creator';
 import { JwtDecoder } from '../jwt/jwt-decoder';
 import { JwtVerifier } from '../jwt/jwt-verifier';
-import { RunMode } from '../types';
-import { ServerConfig } from './types';
+import { RunMode, ServerConfig } from './types';
 
 export type ServerResolves<JWT_P extends DTO> = {
   logger: Logger,

@@ -1,5 +1,5 @@
 import { GeneralModuleResolver } from '../../../../../src/app/module/types';
-import { Repositoriable } from '../../../../../src/app/resolves/repositoriable';
+import { Repositoriable } from '../../../../../src/app/resolve/repositoriable';
 import { Result } from '../../../../../src/common/result/types';
 import { CompanyDoesntExistByBinError } from '../../../company-cmd/domain-object/company/repo-errors';
 import { CompanyOutAttrs } from './params';

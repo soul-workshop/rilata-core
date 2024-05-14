@@ -9,15 +9,15 @@ import { Service } from '../service/service';
 import { GeneralModuleResolver, ModuleType } from './types';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { StorePayload } from '../async-store/types';
-import { Caller } from '../caller';
 import { GeneralEventDod } from '../../domain/domain-data/domain-types';
 import { failure } from '../../common/result/failure';
 import { Locale } from '../../domain/locale';
-import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { BadRequestError, InternalError } from '../service/error-types';
 import { Result } from '../../common/result/types';
 import { AssertionException } from '../../common/exeptions';
 import { GeneralServerResolver } from '../server/types';
+import { Caller } from '../controller/types';
+import { dodUtility } from '../../common/utils/dod/dod-utility';
 
 export abstract class Module {
   readonly abstract moduleName: string;

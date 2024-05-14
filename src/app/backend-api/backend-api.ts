@@ -2,7 +2,7 @@ import { Logger } from '../../common/logger/logger';
 import { failure } from '../../common/result/failure';
 import { success } from '../../common/result/success';
 import { Result } from '../../common/result/types';
-import { dodUtility } from '../../common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../common/utils/dod/dod-utility';
 import { DTO } from '../../domain/dto';
 import { Locale } from '../../domain/locale';
 import { JwtDecoder } from '../jwt/jwt-decoder';

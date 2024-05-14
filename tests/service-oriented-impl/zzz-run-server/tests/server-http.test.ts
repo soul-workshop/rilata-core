@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'bun:test';
 import { BunServer } from '../../../../src/app/server/bun-server';
-import { dodUtility } from '../../../../src/common/utils/domain-object/dod-utility';
 import { AuthModule } from '../../auth/module';
 import { CompanyModule } from '../../company/module';
 import { GetCompanyRequestDod } from '../../company/services/get-company/s.params';
@@ -9,6 +8,7 @@ import { GetPersonByIinRequestDod } from '../../subject/services/person/get-by-i
 import { serverStarter } from '../starter';
 import { ServiceModulesFixtures } from '../server-fixtures';
 import { TestDatabase } from '../../../../src/app/database/test.database';
+import { dodUtility } from '../../../../src/common/utils/index';
 
 describe('process http requests by server class', async () => {
   const sut = serverStarter.start('all') as BunServer;

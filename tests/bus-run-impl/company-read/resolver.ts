@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CompanyReadResolves } from './resolves';
-import { ModuleResolveInstance } from '../../../src/app/resolves/types';
 import { CompanyReadRepository } from './domain/company/repo';
 import { DelivererToBus } from '../../../src/app/bus/deliverer-to-bus';
 import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus.ts/timeout-callback-impl';
@@ -23,18 +22,18 @@ export class CompanyReadModuleResolver extends ModuleResolver<
     this.resolves.busMessageRepo.subscribe(this.delivererToBus);
   }
 
-  resolve(key: unknown): ModuleResolveInstance {
+  resolve(key: unknown): unknown {
     throw this.getLogger().error('Method getRealisation not implemented.');
   }
 
-  resolveRepo(key: unknown): ModuleResolveInstance {
+  resolveRepo(key: unknown): unknown {
     if (key === CompanyReadRepository) return this.resolves.companyRepo;
     if (key === EventRepository) return this.resolves.eventRepo;
     if (key === BusMessageRepository) return this.resolves.busMessageRepo;
     throw this.getLogger().error(`not find repo to key: ${key}`);
   }
 
-  resolveFacade(key: unknown): ModuleResolveInstance {
+  resolveFacade(key: unknown): unknown {
     throw this.getLogger().error('Method getFacade not implemented.');
   }
 

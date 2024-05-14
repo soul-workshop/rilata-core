@@ -2,11 +2,11 @@
 /* eslint-disable max-len */
 /* eslint-disable no-use-before-define */
 import { storeDispatcher } from '../../../../app/async-store/store-dispatcher';
-import { DomainUser } from '../../../../app/caller';
+import { DomainUser } from '../../../../app/controller/types';
 import { EventRepository } from '../../../../app/database/event.repository';
 import { TestBatchRecords } from '../../../../app/database/types';
 import { GeneralModuleResolver } from '../../../../app/module/types';
-import { Repositoriable } from '../../../../app/resolves/repositoriable';
+import { Repositoriable } from '../../../../app/resolve/repositoriable';
 import { GeneralServerResolver } from '../../../../app/server/types';
 import { CommandService } from '../../../../app/service/concrete-service/command.service';
 import { BunSqliteStrategy } from '../../../../app/service/transaction-strategy/bun-sqlite.strategy';
@@ -15,14 +15,13 @@ import { DatabaseObjectSavingError } from '../../../../common/exeptions';
 import { ConsoleLogger } from '../../../../common/logger/console-logger';
 import { getLoggerMode } from '../../../../common/logger/logger-modes';
 import { success } from '../../../../common/result/success';
+import { TupleToUnion } from '../../../../common/tuple-types';
 import { UuidType } from '../../../../common/types';
-import { dodUtility } from '../../../../common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../common/utils/dod/dod-utility';
 import { dtoUtility } from '../../../../common/utils/dto/dto-utility';
-import { TupleToUnion } from '../../../../common/utils/tuple/types';
 import { uuidUtility } from '../../../../common/utils/uuid/uuid-utility';
 import { ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '../../../../domain/domain-data/domain-types';
 import { AggregateRootDataParams } from '../../../../domain/domain-data/params-types';
-import { DTO } from '../../../../domain/dto';
 import { DtoFieldValidator } from '../../../../domain/validator/field-validator/dto-field-validator';
 import { LiteralFieldValidator } from '../../../../domain/validator/field-validator/literal-field-validator';
 import { StringChoiceValidationRule } from '../../../../domain/validator/rules/validate-rules/string/string-choice.v-rule';

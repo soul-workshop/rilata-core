@@ -1,7 +1,7 @@
-import { DomainUser, ModuleCaller } from '../../../../../src/app/caller';
+import { DomainUser, ModuleCaller } from '../../../../../src/app/controller/types';
 import { GeneralModuleResolver } from '../../../../../src/app/module/types';
 import { ServiceResult } from '../../../../../src/app/service/types';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
 import { SubjectFacade } from '../../facade';
 import { SubjectModule } from '../../module';
 import { AddPersonRequestDod, AddPersonRequestDodAttrs, AddPersonServiceParams } from '../../services/person/add-person/s-params';

@@ -5,7 +5,7 @@ import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
 import { Result } from '../../../../../src/common/result/types';
 import { UuidType } from '../../../../../src/common/types';
-import { dodUtility } from '../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
 import { FakeClassImplements } from '../../../../fixtures/fake-class-implements';
 import { UserRepository, UserRepositoryRecord } from '../../../auth/domain-object/user/repo';
 import { UserDoesNotExistByIdError } from '../../../auth/domain-object/user/repo-errors';

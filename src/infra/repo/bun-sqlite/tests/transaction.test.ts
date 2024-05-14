@@ -1,8 +1,8 @@
 import { describe, expect, spyOn, test } from 'bun:test';
 import { setAndGetTestStoreDispatcher } from '../../../../../tests/fixtures/test-thread-store-mock';
-import { DomainUser } from '../../../../app/caller';
+import { DomainUser } from '../../../../app/controller/types';
 import { EventRepository } from '../../../../app/database/event.repository';
-import { dodUtility } from '../../../../common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../common/utils/dod/dod-utility';
 import { uuidUtility } from '../../../../common/utils/uuid/uuid-utility';
 import { SqliteTestFixtures } from './fixtures';
 

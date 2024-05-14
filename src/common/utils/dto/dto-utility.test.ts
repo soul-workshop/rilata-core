@@ -548,7 +548,7 @@ describe('dtoUtility class', () => {
     });
   });
 
-  describe('Метод getAttrNames', () => {
+  describe('Метод getUniqueKeys', () => {
     test('одинаковые ключи', () => {
       const input = [{ a: 5, b: 5 }, { a: 7 }];
       expect(dtoUtility.getUniqueKeys(input)).toEqual(['a', 'b']);

@@ -10,10 +10,10 @@ import {
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 import { GeneralModuleResolver, GetModuleResolves, ModuleType } from '../module/types';
 import { ServiceBaseErrors } from './error-types';
-import { ResultDTO } from '../result-dto';
 import { QueryService } from './concrete-service/query.service';
 import { CommandService } from './concrete-service/command.service';
 import { EventService } from './concrete-service/event.service';
+import { ResultDTO } from '../controller/types';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
 

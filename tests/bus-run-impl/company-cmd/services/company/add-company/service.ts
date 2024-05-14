@@ -5,7 +5,7 @@ import { ServiceResult } from '../../../../../../src/app/service/types';
 import { failure } from '../../../../../../src/common/result/failure';
 import { success } from '../../../../../../src/common/result/success';
 import { Result } from '../../../../../../src/common/result/types';
-import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
 import { CompanyCmdARFactory } from '../../../domain-object/company/factory';
 import { CompanyCmdRepository } from '../../../domain-object/company/repo';
 import { CompanyAlreadyExistError } from '../../../domain-object/company/repo-errors';

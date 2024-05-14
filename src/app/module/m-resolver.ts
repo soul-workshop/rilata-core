@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Repositoriable } from '../resolves/repositoriable';
-import { Realisable } from '../resolves/realisable';
-import { Facadable } from '../resolves/facadable';
+import { Repositoriable } from '../resolve/repositoriable';
+import { Realisable } from '../resolve/realisable';
+import { Facadable } from '../resolve/facadable';
 import { DTO } from '../../domain/dto';
-import { ModuleResolveInstance } from '../resolves/types';
 import { GetModule } from './types';
 import { Module } from './module';
 import { GetServerResolves } from '../server/types';
@@ -21,9 +20,9 @@ implements Repositoriable, Realisable, Facadable {
 
   abstract resolve(...args: unknown[]): unknown
 
-  abstract resolveRepo(...args: unknown[]): ModuleResolveInstance
+  abstract resolveRepo(...args: unknown[]): unknown
 
-  abstract resolveFacade(...args: unknown[]): ModuleResolveInstance
+  abstract resolveFacade(...args: unknown[]): unknown
 
   constructor(protected resolves: MR) {}
 

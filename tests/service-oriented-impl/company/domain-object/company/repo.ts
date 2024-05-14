@@ -1,4 +1,4 @@
-import { Repositoriable } from '../../../../../src/app/resolves/repositoriable';
+import { Repositoriable } from '../../../../../src/app/resolve/repositoriable';
 import { Result } from '../../../../../src/common/result/types';
 import { UuidType } from '../../../../../src/common/types';
 import { CompanyModuleResolver } from '../../resolver';

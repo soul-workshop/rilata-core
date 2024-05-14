@@ -4,7 +4,6 @@ import { PublishBusMessage, SubcribeToBusMessage } from '../../app/bus/types';
 import { Module } from '../../app/module/module';
 import { GeneralServerResolver } from '../../app/server/types';
 import { GeneralEventDod } from '../../domain/domain-data/domain-types';
-import { DTO } from '../../domain/dto';
 
 type ModuleName = string;
 

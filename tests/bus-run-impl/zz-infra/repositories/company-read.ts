@@ -4,7 +4,7 @@ import { Logger } from '../../../../src/common/logger/logger';
 import { failure } from '../../../../src/common/result/failure';
 import { success } from '../../../../src/common/result/success';
 import { Result } from '../../../../src/common/result/types';
-import { dodUtility } from '../../../../src/common/utils/domain-object/dod-utility';
+import { dodUtility } from '../../../../src/common/utils/dod/dod-utility';
 import { FakeClassImplements } from '../../../fixtures/fake-class-implements';
 import { CompanyDoesntExistByBinError } from '../../company-cmd/domain-object/company/repo-errors';
 import { CompanyOutAttrs } from '../../company-read/domain/company/params';
