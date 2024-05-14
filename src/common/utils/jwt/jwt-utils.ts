@@ -33,3 +33,5 @@ export class JwtHmacHashUtils<T extends DTO | string> {
     return hmac.digest('base64url');
   }
 }
+
+export const jwtHmacHashUtils = new JwtHmacHashUtils();

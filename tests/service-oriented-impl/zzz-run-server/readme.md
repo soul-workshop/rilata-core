@@ -17,7 +17,7 @@
 После запуска тестового сервера, вы можете выполнять запросы. При этом каждый запрос вам необходимо подписать токеном авторизации добавляемого, в заголовок запроса (Headers).  
 > Ниже приведен токен авторизации, действительный до 2050 года для данного тестового сервера.  
 
-`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjI1MjY4NTIzNTUzMDIsInJFeHAiOjI1MjY4NTIzNTUzMDJ9._UYd-o7eVRHfdBYv7L18NlFtmLh_QzZ2Foa6Nq8Y6oE`.
+`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjI1MjY4NTIzNTUzMDIsInR5cCI6ImFjY2VzcyJ9.Fj0xoztJyN52K9prR8w1Jo0B_7rImJ6e2RsCnAARfR8`.
 
 Для запуска вы можете использовать различные инструменты: postman, curl или через консоль браузера
 
@@ -39,7 +39,7 @@ fetch('http://localhost:3000/api/subject-module/', {
   headers: {
     'Content-type': 'application/json; charset=UTF-8',
     Accept: 'application/json',
-    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjI1MjY4NTIzNTUzMDIsInJFeHAiOjI1MjY4NTIzNTUzMDJ9._UYd-o7eVRHfdBYv7L18NlFtmLh_QzZ2Foa6Nq8Y6oE',
+    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjI1MjY4NTIzNTUzMDIsInR5cCI6ImFjY2VzcyJ9.Fj0xoztJyN52K9prR8w1Jo0B_7rImJ6e2RsCnAARfR8',
   }
 })
 .then(res => res.json())
@@ -72,7 +72,7 @@ fetch('http://localhost:3000/api/subject-module/', {
 headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjI1MjY4NTIzNTUzMDIsInJFeHAiOjI1MjY4NTIzNTUzMDJ9._UYd-o7eVRHfdBYv7L18NlFtmLh_QzZ2Foa6Nq8Y6oE',
+    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjI1MjY4NTIzNTUzMDIsInR5cCI6ImFjY2VzcyJ9.Fj0xoztJyN52K9prR8w1Jo0B_7rImJ6e2RsCnAARfR8',
 }
 ```
 
