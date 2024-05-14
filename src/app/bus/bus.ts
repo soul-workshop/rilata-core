@@ -1,5 +1,4 @@
-import { DTO } from '../../domain/dto';
-import { ServerResolver } from '../server/server-resolver';
+import { GeneralServerResolver } from '../server/types';
 import { PublishBusMessage, SubcribeToBusMessage } from './types';
 
 export interface Bus {
@@ -7,7 +6,7 @@ export interface Bus {
 
   publish(eventPublish: PublishBusMessage): Promise<void>
 
-  init(resolver: ServerResolver<DTO>): Promise<void>
+  init(resolver: GeneralServerResolver): Promise<void>
 
   stop(): void
 }

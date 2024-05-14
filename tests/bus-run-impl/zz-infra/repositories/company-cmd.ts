@@ -1,5 +1,5 @@
 import { storeDispatcher } from '../../../../src/app/async-store/store-dispatcher';
-import { EventRepository } from '../../../../src/app/database/event-repository';
+import { EventRepository } from '../../../../src/app/database/event.repository';
 import { DatabaseObjectSavingError } from '../../../../src/common/exeptions';
 import { Logger } from '../../../../src/common/logger/logger';
 import { failure } from '../../../../src/common/result/failure';

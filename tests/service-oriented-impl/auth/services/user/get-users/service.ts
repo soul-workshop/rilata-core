@@ -1,14 +1,21 @@
-import { QueryService } from '../../../../../../src/app/service/query-service';
+import { QueryService } from '../../../../../../src/app/service/concrete-service/query.service';
 import { ServiceResult } from '../../../../../../src/app/service/types';
 import { success } from '../../../../../../src/common/result/success';
 import { dtoUtility } from '../../../../../../src/common/utils/dto/dto-utility';
 import { UserAttrs } from '../../../domain-data/user/params';
 import { UserRepository } from '../../../domain-object/user/repo';
+import { AuthModuleResolver } from '../../../resolver';
 import { GetUsersRequestDod, GetUsersServiceParams } from './s-params';
 import { getUsersValidator } from './v-map';
 
-export class GetingUsersService extends QueryService<GetUsersServiceParams> {
-  serviceName = 'getUsers' as const;
+export class GetingUsersService extends QueryService<
+  GetUsersServiceParams, AuthModuleResolver
+> {
+  inputDodName = 'getUsers' as const;
+
+  moduleName = 'AuthModule' as const;
+
+  serviceName = 'GettingUserService' as const;
 
   aRootName = 'UserAR' as const;
 
@@ -16,7 +23,7 @@ export class GetingUsersService extends QueryService<GetUsersServiceParams> {
 
   protected validator = getUsersValidator;
 
-  protected async runDomain(
+  async runDomain(
     input: GetUsersRequestDod,
   ): Promise<ServiceResult<GetUsersServiceParams>> {
     const userRepo = UserRepository.instance(this.moduleResolver);

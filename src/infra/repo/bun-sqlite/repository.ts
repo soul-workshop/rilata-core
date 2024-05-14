@@ -1,13 +1,15 @@
-import { TestRepository } from '../../../app/database/test-repository';
+import { SQLQueryBindings } from 'bun:sqlite';
+import { TestRepository } from '../../../app/database/test.repository';
 import { GeneralModuleResolver } from '../../../app/module/types';
 import { Logger } from '../../../common/logger/logger';
+import { dtoUtility } from '../../../common/utils/dto/dto-utility';
 import { DTO } from '../../../domain/dto';
 import { BunSqliteDatabase } from './database';
 import { MigrateRow } from './types';
 
 export abstract class BunSqliteRepository<
   TN extends string, R extends DTO
-> implements TestRepository<TN, R> {
+> implements TestRepository<TN, R, false> {
   abstract tableName: TN;
 
   protected resolver!: GeneralModuleResolver;
@@ -21,7 +23,7 @@ export abstract class BunSqliteRepository<
 
   constructor(protected db: BunSqliteDatabase) {}
 
-  async clear(): Promise<void> {
+  clear(): void {
     this.db.sqliteDb.run(`DELETE FROM ${this.tableName}`);
   }
 
@@ -30,33 +32,33 @@ export abstract class BunSqliteRepository<
     this.logger = resolver.getLogger();
   }
 
-  async addBatch(records: R[]): Promise<void> {
+  addBatch(records: R[]): void {
     if (records.length === 0) return;
-    const colNames = this.getColumnNames(records);
 
-    const sql = `INSERT INTO ${this.tableName} (${colNames.join(', ')}) VALUES ${this.getRecordValues(colNames, records)}`;
-    this.db.sqliteDb.run(sql);
+    const colNames = dtoUtility.getUniqueKeys(records);
+
+    const transaction = this.db.sqliteDb.transaction(() => {
+      records.forEach((rec) => {
+        const valueNames = colNames.map((nm) => (
+          this.isObject(rec[nm]) ? `json($${nm})` : `$${nm}`
+        ));
+        const bindings = this.getObjectBindings(rec);
+
+        const sql = `INSERT INTO ${this.tableName} (${colNames.join(',')}) VALUES (${valueNames.join(',')})`;
+        this.db.sqliteDb.prepare(sql).run(bindings);
+      });
+    });
+    transaction();
   }
 
-  protected getColumnNames(records: R[]): (keyof R)[] {
-    const set = new Set<keyof R>();
-    records.forEach((rec) => Object.keys(rec).forEach((key) => set.add(key)));
-    return Array.from(set);
+  /** Возвращает объект приведенный для привязки */
+  protected getObjectBindings(obj: Record<string, unknown>): SQLQueryBindings {
+    const casted = dtoUtility.editValues(obj, (v) => (this.isObject(v) ? JSON.stringify(v) : v));
+    return dtoUtility.editKeys(casted, (k) => `$${k}`);
   }
 
-  protected getRecordValues(colNames: (keyof R)[], records: R[]): string {
-    return records
-      .map((rec) => colNames.map((nm) => this.castRecordValue(rec[nm])).join(', '))
-      .map((recAsStr) => `(${recAsStr})`)
-      .join(', ');
-  }
-
-  protected castRecordValue(value: unknown): unknown {
-    const type = typeof value;
-    if (type === 'string') return `"${value}"`;
-    if (type === 'boolean') return value ? 1 : 0;
-    if (type === 'undefined') return 'null';
-    return value;
+  protected isObject(value: unknown): boolean {
+    return typeof value === 'object' && value !== null;
   }
 
   /** Выполнить миграцию для репозитория */

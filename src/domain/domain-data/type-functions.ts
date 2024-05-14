@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AggregateRootDataParams, GeneralActionParams, GeneralARDParams } from './params-types';
 import {
-  DomainAttrs, DomainMeta, EventDod, GeneralEventDod,
+  DomainAttrs, DomainMeta, EventDod, GeneralARDT, GeneralEventDod,
 } from './domain-types';
+import { DTO } from '../dto';
 
 export type GetARParamsAttrs<AR_PARAMS extends GeneralARDParams> = AR_PARAMS['attrs'];
 
@@ -14,12 +15,12 @@ export type GetARParamsEvents<AR_PARAMS extends GeneralARDParams> =
     : never;
 
 export type GetARParamsEventNames<EVENT extends GeneralEventDod> =
-  EVENT extends EventDod<infer NAME, infer ATTRS, infer ARDT>
+  EVENT extends EventDod<infer NAME, string, string, DTO, GeneralARDT>
     ? NAME
     : never
 
 export type GetARParamsEventAttrs<EVENT extends GeneralEventDod> =
-  EVENT extends EventDod<infer NAME, infer ATTRS, infer ARDT>
+  EVENT extends EventDod<string, string, string, infer ATTRS, GeneralARDT>
     ? ATTRS
     : never
 

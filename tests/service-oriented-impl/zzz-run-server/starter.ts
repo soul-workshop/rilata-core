@@ -1,5 +1,4 @@
 import { ServerStarter } from '../../../src/app/server/server-starter';
-import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
 import { serverResolves } from './resolves';
 import { ServiceModulesBunServer } from './server';
 import { AuthModule } from '../auth/module';
@@ -14,11 +13,13 @@ import { getAuthResolves } from './module-resolves/auth-resolves';
 import { getCompanyResolves } from './module-resolves/company-resolves';
 import { getFrontProxyResolves } from './module-resolves/front-proxy-resolves';
 import { getSubjectResolves } from './module-resolves/subject-resolves';
+import { ServerResolver } from '../../../src/app/server/s-resolver';
 
 type AllServerModules = AuthModule | SubjectModule | CompanyModule | FrontProxyModule;
 
-export const serverStarter = new ServerStarter<UserJwtPayload, AllServerModules>(
+export const serverStarter = new ServerStarter<AllServerModules>(
   ServiceModulesBunServer,
+  ServerResolver,
   serverResolves,
   [
     [AuthModule, AuthModuleResolver, getAuthResolves()],

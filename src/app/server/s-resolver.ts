@@ -1,0 +1,82 @@
+import { DTO } from '../../domain/dto';
+import { RilataServer } from './server';
+import { ServerResolves } from './s-resolves';
+import { ServerConfig } from './types';
+
+export class ServerResolver<RES extends ServerResolves<DTO>> {
+  protected server!: RilataServer;
+
+  constructor(protected resolves: RES) {}
+
+  /** инициализация выполняется классом server */
+  init(server: RilataServer): void {
+    this.server = server;
+
+    this.initResolves();
+  }
+
+  getServerPath(): string {
+    // @ts-ignore
+    return import.meta.dir; // path/to/file
+  }
+
+  getProjectPath(): string {
+    return process.cwd(); // path/to/project
+  }
+
+  getServer(): RilataServer {
+    return this.server;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  stop(): void {}
+
+  getServerResolves(): RES {
+    return this.resolves;
+  }
+
+  getServerConfig(): Required<ServerConfig> {
+    return {
+      hostname: this.resolves.serverConfig.hostname ?? 'localhost',
+      port: this.resolves.serverConfig.port ?? 3000,
+      loggerModes: this.resolves.serverConfig.loggerModes ?? 'all',
+    };
+  }
+
+  getJwtDecoder(): RES['jwtDecoder'] {
+    return this.resolves.jwtDecoder;
+  }
+
+  getJwtVerifier(): RES['jwtVerifier'] {
+    return this.resolves.jwtVerifier;
+  }
+
+  getJwtCreator(): RES['jwtCreator'] {
+    return this.resolves.jwtCreator;
+  }
+
+  getLogger(): RES['logger'] {
+    return this.resolves.logger;
+  }
+
+  getRunMode(): RES['runMode'] {
+    return this.resolves.runMode;
+  }
+
+  protected initStarted(): void {
+    this.getLogger().info(`start init server resolver ${this.constructor.name}`);
+  }
+
+  protected initFinished(): void {
+    this.getLogger().info(`finish init server resolver ${this.constructor.name}`);
+  }
+
+  protected initResolves(): void {
+    Object.values(this.resolves).forEach((resolveItem) => {
+      if (
+        (resolveItem as any).init
+        && typeof (resolveItem as any).init === 'function'
+      ) (resolveItem as any).init(this);
+    });
+  }
+}

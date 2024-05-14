@@ -1,8 +1,6 @@
 import { describe, test, expect } from 'bun:test';
-import { TestDatabase } from '../../../../src/app/database/test-database';
 import { BunServer } from '../../../../src/app/server/bun-server';
 import { dodUtility } from '../../../../src/common/utils/domain-object/dod-utility';
-import { UserJwtPayload } from '../../../bus-run-impl/types';
 import { AuthModule } from '../../auth/module';
 import { CompanyModule } from '../../company/module';
 import { GetCompanyRequestDod } from '../../company/services/get-company/s.params';
@@ -10,9 +8,10 @@ import { SubjectModule } from '../../subject/module';
 import { GetPersonByIinRequestDod } from '../../subject/services/person/get-by-iin/s-params';
 import { serverStarter } from '../starter';
 import { ServiceModulesFixtures } from '../server-fixtures';
+import { TestDatabase } from '../../../../src/app/database/test.database';
 
 describe('process http requests by server class', async () => {
-  const sut = serverStarter.start('all') as BunServer<UserJwtPayload>;
+  const sut = serverStarter.start('all') as BunServer;
   const serverResolver = sut.getServerResolver();
 
   [
@@ -20,7 +19,7 @@ describe('process http requests by server class', async () => {
     sut.getModule<CompanyModule>('CompanyModule'),
     sut.getModule<AuthModule>('AuthModule'),
   ].forEach((module) => {
-    const db = module.getModuleResolver().getDatabase() as TestDatabase;
+    const db = module.getModuleResolver().getDatabase() as unknown as TestDatabase<true>;
     db.addBatch(ServiceModulesFixtures.repoFixtures);
   });
 

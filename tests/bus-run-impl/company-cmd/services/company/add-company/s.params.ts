@@ -11,6 +11,7 @@ export type AddCompanyRequestDod = RequestDod<'addCompany', AddCompanyRequestDod
 export type AddCompanyOut = { id: string }
 
 export type AddCompanyServiceParams = CommandServiceParams<
+  'AddingCompanyService',
   CompanyParams,
   AddCompanyRequestDod,
   AddCompanyOut,

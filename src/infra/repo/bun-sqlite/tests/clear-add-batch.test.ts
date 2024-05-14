@@ -1,25 +1,23 @@
+/* eslint-disable no-useless-escape */
 import { beforeEach, describe, expect, test } from 'bun:test';
 import { SqliteTestFixtures } from './fixtures';
 
 describe('bun sqlite db: add batch to db, and clear db tests', () => {
-  const db = new SqliteTestFixtures.BlogDatabase();
-  const { resolver } = SqliteTestFixtures;
-  db.init(resolver); // init and resolves db and repositories
-  db.createDb(); // create sqlite db and tables
-  db.open(); // open sqlite db
+  const { fakeModuleResolver } = SqliteTestFixtures;
+  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.BlogDatabase;
 
   describe('add batch to db tests', () => {
     beforeEach(() => {
       db.clear();
     });
 
-    test('успех, данные добавлены', async () => {
+    test('успех, данные добавлены', () => {
       const usersBefore = db.sqliteDb.query('SELECT * FROM users').all();
       expect(usersBefore.length).toBe(0);
       const postsBefore = db.sqliteDb.query('SELECT * FROM posts').all();
       expect(postsBefore.length).toBe(0);
 
-      await db.addBatch(SqliteTestFixtures.batchRecords);
+      db.addBatch(SqliteTestFixtures.batchRecords);
 
       const usersAfter = db.sqliteDb.query('SELECT * FROM users').all();
       expect(usersAfter).toEqual([
@@ -27,14 +25,17 @@ describe('bun sqlite db: add batch to db, and clear db tests', () => {
           userId: '08ea51a1-6d14-42bf-81de-a94a809e3286',
           login: 'Bill',
           hash: 'fff',
+          posts: '[]',
         }, {
           userId: '38d929f5-d20d-47f3-8844-eb1986ee46ae',
           login: 'f1rstFx',
           hash: 'hhh',
+          posts: '[\"3ee45022-4253-4dbe-9da0-80db931184cc\"]',
         }, {
           userId: '131b499e-927d-477c-9d97-c2ae6104985e',
           login: 'Nick',
           hash: 'ccc',
+          posts: '[\"09cdf3d6-93ef-44be-8a3d-2e9da3982049\",\"fb369b27-ec5e-452f-b454-e48db4bf6ab4\"]',
         },
       ]);
       const postsAfter = db.sqliteDb.query('SELECT * FROM posts').all();
@@ -49,7 +50,7 @@ describe('bun sqlite db: add batch to db, and clear db tests', () => {
           version: 0,
           category: 'cinema',
         }, {
-          postId: '131b499e-927d-477c-9d97-c2ae6104985e',
+          postId: '3ee45022-4253-4dbe-9da0-80db931184cc',
           name: 'Film Interstellar',
           body: 'long recense',
           desc: 'very nice film',
@@ -70,13 +71,13 @@ describe('bun sqlite db: add batch to db, and clear db tests', () => {
       ]);
     });
 
-    test('успех, значени по умолчанию тоже ставятся', async () => {
+    test('успех, значени по умолчанию тоже ставятся', () => {
       const usersBefore = db.sqliteDb.query('SELECT * FROM users').all();
       expect(usersBefore.length).toBe(0);
       const postsBefore = db.sqliteDb.query('SELECT * FROM posts').all();
       expect(postsBefore.length).toBe(0);
 
-      await db.addBatch<SqliteTestFixtures.PostRepository>({
+      db.addBatch<SqliteTestFixtures.PostRepositorySqlite>({
         posts: [
           {
             postId: '09cdf3d6-93ef-44be-8a3d-2e9da3982049',
@@ -107,7 +108,7 @@ describe('bun sqlite db: add batch to db, and clear db tests', () => {
       db.clear();
     });
 
-    test('успех, бд полностью очищена, но таблица миграции не затрагивается', async () => {
+    test('успех, бд полностью очищена, но таблица миграции не затрагивается', () => {
       const usersBefore = db.sqliteDb.query('SELECT * FROM users').all();
       expect(usersBefore.length).toBe(0);
       const postsBefore = db.sqliteDb.query('SELECT * FROM posts').all();
@@ -117,7 +118,7 @@ describe('bun sqlite db: add batch to db, and clear db tests', () => {
       const migrationsBefore = db.sqliteDb.query('SELECT * FROM migrations').all();
       expect(migrationsBefore.length).toBe(1);
 
-      await db.addBatch(SqliteTestFixtures.batchRecords);
+      db.addBatch(SqliteTestFixtures.batchRecords);
 
       const usersAfterBatch = db.sqliteDb.query('SELECT * FROM users').all();
       expect(usersAfterBatch.length).toBe(3);
@@ -128,7 +129,7 @@ describe('bun sqlite db: add batch to db, and clear db tests', () => {
       const migrationsAfterBatch = db.sqliteDb.query('SELECT * FROM migrations').all();
       expect(migrationsAfterBatch.length).toBe(1);
 
-      await db.clear();
+      db.clear();
 
       const usersAfterClear = db.sqliteDb.query('SELECT * FROM users').all();
       expect(usersAfterClear.length).toBe(0);

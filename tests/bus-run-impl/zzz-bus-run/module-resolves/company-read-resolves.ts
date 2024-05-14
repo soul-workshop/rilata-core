@@ -22,6 +22,7 @@ export function getCompanyReadResolves(): CompanyReadResolves {
       moduleName: 'CompanyReadModule',
       moduleUrls: ['/api/company-read-module/'],
       db,
+      eventRepo,
       busMessageRepo: eventRepo,
       companyRepo,
     };

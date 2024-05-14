@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ModuleResolver } from '../../../src/app/module/module-resolver';
+import { ModuleResolver } from '../../../src/app/module/m-resolver';
 import { ModuleResolveInstance } from '../../../src/app/resolves/types';
-import { ServerResolver } from '../../../src/app/server/server-resolver';
+import { ServerResolver } from '../../../src/app/server/s-resolver';
+import { ServerResolves } from '../../../src/app/server/s-resolves';
 import { AuthFacade } from '../auth/facade';
 import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
 import { CompanyFacade } from '../company/facade';
@@ -10,10 +11,12 @@ import { FrontProxyModule } from './module';
 import { FrontendProxyResolves } from './resolves';
 
 export class FrontendProxyModuleResolver extends ModuleResolver<
-  UserJwtPayload, FrontProxyModule, FrontendProxyResolves
+  ServerResolver<ServerResolves<UserJwtPayload>>, FrontendProxyResolves
 > {
-  // override without db.init()
-  init(module: FrontProxyModule, serverResolver: ServerResolver<UserJwtPayload>): void {
+  init(
+    module: FrontProxyModule,
+    serverResolver: ServerResolver<ServerResolves<UserJwtPayload>>,
+  ): void {
     this.module = module;
     this.serverResolver = serverResolver;
     this.resolves.authFacade.init(this);

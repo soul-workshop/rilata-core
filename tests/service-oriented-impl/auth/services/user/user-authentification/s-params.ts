@@ -21,6 +21,7 @@ export type UserAuthentificationOut = string;
 export type UserAuthentificationErrors = UserDoesNotExistByLoginError | JwtDecodeErrors;
 
 export type UserAuthentificationServiceParams = QueryServiceParams<
+  'AuthentificatingUserService',
   UserParams,
   UserAuthentificationRequestDod,
   UserAuthentificationOut,

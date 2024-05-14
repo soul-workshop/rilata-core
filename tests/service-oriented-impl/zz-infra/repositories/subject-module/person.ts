@@ -1,5 +1,4 @@
-import { EventRepository } from '../../../../../src/app/database/event-repository';
-import { ModuleResolver } from '../../../../../src/app/module/module-resolver';
+import { EventRepository } from '../../../../../src/app/database/event.repository';
 import { DatabaseObjectSavingError } from '../../../../../src/common/exeptions';
 import { Logger } from '../../../../../src/common/logger/logger';
 import { failure } from '../../../../../src/common/result/failure';

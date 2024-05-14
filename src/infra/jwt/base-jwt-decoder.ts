@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   IncorrectTokenError, JwtDecodeErrors,
   NotValidTokenPayloadError, TokenExpiredError,
@@ -10,9 +11,9 @@ import { Result } from '../../common/result/types';
 import { dodUtility } from '../../common/utils/domain-object/dod-utility';
 import { JwtPayload, JwtType } from '../../app/jwt/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
-import { ServerResolver } from '../../app/server/server-resolver';
 import { JwtHmacHashUtils } from '../../common/utils/jwt/jwt-utils';
 import { UnionToTuple } from '../../common/utils/tuple/types';
+import { GeneralServerResolver } from '../../app/server/types';
 
 /** Класс для декодирования JWT токена. */
 export abstract class BaseJwtDecoder<
@@ -26,7 +27,7 @@ export abstract class BaseJwtDecoder<
   abstract payloadBodyIsValid(payload: PAYLOAD): boolean
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  init(resolver: ServerResolver<PAYLOAD>): void {}
+  init(resolver: GeneralServerResolver): void {}
 
   getTokenPayload(rawToken: string): Result<JwtDecodeErrors, PAYLOAD> {
     const decodedPayload = this.decodeJwt(rawToken);

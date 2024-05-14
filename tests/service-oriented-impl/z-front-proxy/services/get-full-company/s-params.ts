@@ -14,6 +14,7 @@ export type GetFullCompanyOut = FullCompany
 export type GetFullCompanyErrors = CompanyDoesntExistByIdError
 
 export type GetFullCompanyServiceParams = QueryServiceParams<
+  'GetingFullCompanyService',
   FullCompanyParams,
   GetFullCompanyRequestDod,
   GetFullCompanyOut,

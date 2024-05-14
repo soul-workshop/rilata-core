@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { storeDispatcher } from '../../src/app/async-store/store-dispatcher';
 import { DelivererToBus } from '../../src/app/bus/deliverer-to-bus';
 import { DeliveryBusMessage, DeliveryEvent } from '../../src/app/bus/types';
-import { BusMessageRepository } from '../../src/app/database/bus-message-repository';
-import { EventRepository } from '../../src/app/database/event-repository';
-import { TestDatabase } from '../../src/app/database/test-database';
-import { TestRepository } from '../../src/app/database/test-repository';
+import { BusMessageRepository } from '../../src/app/database/bus-message.repository';
+import { EventRepository } from '../../src/app/database/event.repository';
+import { TestDatabase } from '../../src/app/database/test.database';
+import { TestRepository } from '../../src/app/database/test.repository';
 import { TestBatchRecords } from '../../src/app/database/types';
 import { GeneralModuleResolver } from '../../src/app/module/types';
 import { failure } from '../../src/common/result/failure';
@@ -21,7 +22,7 @@ import { GetARParamsEvents } from '../../src/domain/domain-data/type-functions';
 import { DTO } from '../../src/domain/dto';
 
 export namespace FakeClassImplements {
-  export class TestMemoryDatabase implements TestDatabase {
+  export class TestMemoryDatabase implements TestDatabase<true> {
     protected resolver!: GeneralModuleResolver;
 
     // eslint-disable-next-line no-use-before-define
@@ -43,7 +44,7 @@ export namespace FakeClassImplements {
       repo.init(this.resolver);
     }
 
-    async addBatch<R extends TestRepository<string, DTO>>(
+    async addBatch<R extends TestRepository<string, DTO, true>>(
       batchRecords: TestBatchRecords<R>,
     ): Promise<void> {
       await Promise.all(Object.entries(batchRecords)
@@ -85,7 +86,7 @@ export namespace FakeClassImplements {
     REC extends DTO,
     ID_ATTR_NAME extends GetStringAttrsKeys<REC>,
   >
-  implements TestRepository<T_NAME, REC> {
+  implements TestRepository<T_NAME, REC, true> {
     protected records: Record<RecordId, REC> = {};
 
     protected transactionCache: Record<TransactionId, Record<RecordId, REC>> = {};
@@ -258,7 +259,7 @@ export namespace FakeClassImplements {
       aRootId: UuidType,
     }
 
-  export class TestEventRepository implements EventRepository, BusMessageRepository {
+  export class TestEventRepository implements EventRepository<true>, BusMessageRepository<true> {
     protected delivererToBus: DelivererToBus | undefined;
 
     testRepo: TestMemoryRepository<'domain_event', EventRecord, 'busMesssageId'>;

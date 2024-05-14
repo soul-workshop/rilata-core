@@ -9,6 +9,7 @@ export type GetCompanyRequestDod = RequestDod<'getCompany', { id: UuidType }>;
 export type GetCompanyOut = CompanyAttrs;
 
 export type GetCompanyServiceParams = QueryServiceParams<
+  'GettingCompanyService',
   CompanyParams,
   GetCompanyRequestDod,
   GetCompanyOut,

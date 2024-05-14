@@ -13,9 +13,12 @@ export type AddUserOut = {
   userId: UuidType
 }
 
-export type UserAddedEvent = EventDod<'UserAddedEvent', AddUserRequestDodAttrs, UserARDT>
+export type UserAddedEvent = EventDod<
+  'UserAddedEvent', 'AddingUserService', 'AuthModule', AddUserRequestDodAttrs, UserARDT
+>
 
 export type AddUserServiceParams = CommandServiceParams<
+  'AddingUserService',
   UserParams,
   AddUserRequestDod,
   AddUserOut,

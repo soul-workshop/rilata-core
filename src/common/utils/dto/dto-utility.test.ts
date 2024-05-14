@@ -548,33 +548,73 @@ describe('dtoUtility class', () => {
     });
   });
 
+  describe('Метод getAttrNames', () => {
+    test('одинаковые ключи', () => {
+      const input = [{ a: 5, b: 5 }, { a: 7 }];
+      expect(dtoUtility.getUniqueKeys(input)).toEqual(['a', 'b']);
+    });
+
+    test('дополнительный ключ', () => {
+      const input = [{ a: 5, b: 5 }, { a: 7, c: 7 }, { a: 8, b: 6 }];
+      expect(dtoUtility.getUniqueKeys(input)).toEqual(['a', 'b', 'c']);
+    });
+
+    test('множество разных ключей', () => {
+      const input = [{ a: 5, b: 5 }, { a: 7, c: 7 }, { d: 8, b: 6 }];
+      expect(dtoUtility.getUniqueKeys(input)).toEqual(['a', 'b', 'c', 'd']);
+    });
+  });
+
+  describe('Метод editKeys', () => {
+    const input = { name: 'bill', age: 15 };
+    test('успех, добавлены префиксы одиночным символом доллара', () => {
+      expect(dtoUtility.editKeys(input, (key) => `$${key}`)).toEqual({ $name: 'bill', $age: 15 });
+    });
+
+    test('успех, ключи переведены в верхний регистр', () => {
+      expect(dtoUtility.editKeys(input, (key) => key.toUpperCase())).toEqual({ NAME: 'bill', AGE: 15 });
+    });
+  });
+
+  describe('Метод editValues', () => {
+    const input = { name: 'bill', age: 15 };
+    test('успех, выполнено приведение типов в текст', () => {
+      expect(dtoUtility.editValues(input, (value) => String(value))).toEqual({ name: 'bill', age: '15' });
+    });
+
+    test('успех, строковые значения переведены на ПРОПИСНОЙ', () => {
+      const cb = (vl: unknown): unknown => (typeof vl === 'string' ? vl.toUpperCase() : vl);
+      expect(dtoUtility.editValues(input, cb)).toEqual({ name: 'BILL', age: 15 });
+    });
+  });
+
   describe('Метод isDTO', () => {
     test('Object: true', () => {
-      expect(dtoUtility.isDTO({ param: 'value' })).toEqual(true);
+      expect(dtoUtility.isDTO({ param: 'value' })).toBe(true);
     });
 
     test('String: false', () => {
-      expect(dtoUtility.isDTO('myString')).toEqual(false);
+      expect(dtoUtility.isDTO('myString')).toBe(false);
     });
 
     test('Array: false', () => {
-      expect(dtoUtility.isDTO(['a', 'b', 'c'])).toEqual(false);
+      expect(dtoUtility.isDTO(['a', 'b', 'c'])).toBe(false);
     });
 
     test('Set: false', () => {
-      expect(dtoUtility.isDTO(new Set([1, 2, 4]))).toEqual(false);
+      expect(dtoUtility.isDTO(new Set([1, 2, 4]))).toBe(false);
     });
 
     test('Date: false', () => {
-      expect(dtoUtility.isDTO(new Date())).toEqual(false);
+      expect(dtoUtility.isDTO(new Date())).toBe(false);
     });
 
     test('Undefined: false', () => {
-      expect(dtoUtility.isDTO(undefined)).toEqual(false);
+      expect(dtoUtility.isDTO(undefined)).toBe(false);
     });
 
     test('Null: false', () => {
-      expect(dtoUtility.isDTO(null)).toEqual(false);
+      expect(dtoUtility.isDTO(null)).toBe(false);
     });
   });
 });

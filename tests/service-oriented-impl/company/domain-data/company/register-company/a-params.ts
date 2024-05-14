@@ -10,6 +10,8 @@ export type RegisterCompanyOut = CompanyAR
 
 export type CompanyRegisteredEvent = EventDod<
   'CompanyRegisteredEvent',
+  'RegisteringCompanyService',
+  'CompanyModule',
   RegisterCompanyDomainCommand,
   CompanyCmdARDT
 >

@@ -77,7 +77,9 @@ export namespace DODPrivateFixtures {
 
   export type PersonARDT = ARDT<PersonAttrs, PersonMeta>;
 
-  export type PersonPhoneAddedEventDOD = EventDod<'PersonPhoneAddedEvent', PhoneAttrs, PersonARDT>;
+  export type PersonPhoneAddedEventDOD = EventDod<
+    'PersonPhoneAddedEvent', 'AddingPersonPhoneService', 'SubjectModule', PhoneAttrs, PersonARDT
+  >;
 
   export type InternalAppLocale = { text: string, hint: { traceback: 'any object' }, name: 'InternalAppError' };
 
@@ -85,5 +87,7 @@ export namespace DODPrivateFixtures {
 
   export type PersonNotExitsErrorDOD = ErrorDod<'PersonNotExistError', { text: string, hint: { personId: string }, name: 'PersonNotExistError' }>;
 
-  export type PersonEmailAddedEventDOD = EventDod<'PersonEmailAddedEvent', PersonAttrs, PersonARDT>;
+  export type PersonEmailAddedEventDOD = EventDod<
+    'PersonEmailAddedEvent', 'AddingPersonEmailService', 'SubjectModule', PersonAttrs, PersonARDT
+  >;
 }

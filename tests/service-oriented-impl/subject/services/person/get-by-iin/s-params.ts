@@ -12,6 +12,7 @@ export type GetPersonByIinRequestDod = RequestDod<'getPersonByIin', GetPersonByI
 export type GetPersonByIinOut = PersonOutAttrs
 
 export type GetPersonByIinServiceParams = QueryServiceParams<
+  'GetingPersonByIinService',
   PersonParams,
   GetPersonByIinRequestDod,
   GetPersonByIinOut,

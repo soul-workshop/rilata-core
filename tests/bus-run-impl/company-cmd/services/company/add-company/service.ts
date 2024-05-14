@@ -1,5 +1,6 @@
 import { storeDispatcher } from '../../../../../../src/app/async-store/store-dispatcher';
-import { CommandService } from '../../../../../../src/app/service/command-service';
+import { CommandService } from '../../../../../../src/app/service/concrete-service/command.service';
+import { UowTransactionStrategy } from '../../../../../../src/app/service/transaction-strategy/uow.strategy';
 import { ServiceResult } from '../../../../../../src/app/service/types';
 import { failure } from '../../../../../../src/common/result/failure';
 import { success } from '../../../../../../src/common/result/success';
@@ -8,21 +9,30 @@ import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod
 import { CompanyCmdARFactory } from '../../../domain-object/company/factory';
 import { CompanyCmdRepository } from '../../../domain-object/company/repo';
 import { CompanyAlreadyExistError } from '../../../domain-object/company/repo-errors';
+import { CompanyCmdModuleResolver } from '../../../resolver';
 import {
   AddCompanyServiceParams, AddCompanyOut, AddCompanyRequestDod, AddCompanyRequestDodAttrs,
 } from './s.params';
 import { addCompanyValidator } from './v.map';
 
-export class AddingCompanyService extends CommandService<AddCompanyServiceParams> {
-  serviceName = 'addCompany' as const;
+export class AddingCompanyService extends CommandService<
+  AddCompanyServiceParams, CompanyCmdModuleResolver
+> {
+  inputDodName = 'addCompany' as const;
+
+  serviceName = 'AddingCompanyService' as const;
+
+  moduleName = 'CompanyCmdModule' as const;
 
   aRootName = 'CompanyAR' as const;
+
+  protected transactionStrategy = new UowTransactionStrategy(true);
 
   protected supportedCallers = ['DomainUser'] as const;
 
   protected validator = addCompanyValidator;
 
-  protected async runDomain(
+  async runDomain(
     input: AddCompanyRequestDod,
   ): Promise<ServiceResult<AddCompanyServiceParams>> {
     const { caller } = storeDispatcher.getStoreOrExepction();

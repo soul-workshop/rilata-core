@@ -1,8 +1,8 @@
-import { RequestDodValidator } from '../../../../../../src/app/service/types';
+import { InputDodValidator } from '../../../../../../src/app/service/types';
 import { DtoFieldValidator } from '../../../../../../src/domain/validator/field-validator/dto-field-validator';
 import { ValidatorMap } from '../../../../../../src/domain/validator/field-validator/types';
 import { personAttrsVMap } from '../../../domain-data/person/v-map';
-import { AddPersonRequestDodAttrs, AddPersonServiceParams } from './s-params';
+import { AddPersonRequestDod, AddPersonRequestDodAttrs } from './s-params';
 
 const addPersonVmap: ValidatorMap<AddPersonRequestDodAttrs> = {
   iin: personAttrsVMap.iin,
@@ -10,5 +10,5 @@ const addPersonVmap: ValidatorMap<AddPersonRequestDodAttrs> = {
   lastName: personAttrsVMap.lastName,
 };
 
-export const addPersonValidator: RequestDodValidator<AddPersonServiceParams> =
+export const addPersonValidator: InputDodValidator<AddPersonRequestDod> =
   new DtoFieldValidator('addPerson', true, { isArray: false }, 'dto', addPersonVmap);

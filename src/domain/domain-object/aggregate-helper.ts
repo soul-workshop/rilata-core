@@ -66,9 +66,8 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     requestId?: UuidType,
     caller?: Caller,
   ): void {
-    const store = storeDispatcher.getStoreOrExepction();
-    const event: GeneralEventDod = dodUtility.getEvent(
-      eventName, eventAttrs, this.getOutput(), requestId, caller,
+    const event: GeneralEventDod = dodUtility.getEventDod(
+      eventName, eventAttrs, this.getOutput(), { requestId, caller },
     );
     this.domainEvents.push(event as GetARParamsEvents<PARAMS>);
   }

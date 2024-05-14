@@ -1,8 +1,6 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { EventRepository } from '../../../../../../src/app/database/event-repository';
-import { TestDatabase } from '../../../../../../src/app/database/test-database';
 import { dodUtility } from '../../../../../../src/common/utils/domain-object/dod-utility';
 import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
 import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
@@ -14,19 +12,21 @@ import { PersonAlreadyExistsError } from '../../../domain-object/person/repo-err
 import { SubjectModule } from '../../../module';
 import { AddPersonRequestDod, AddPersonOut } from './s-params';
 import { AddingPersonService } from './service';
+import { TestDatabase } from '../../../../../../src/app/database/test.database';
+import { EventRepository } from '../../../../../../src/app/database/event.repository';
 
 describe('add person service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start('all');
   const module = testSever.getModule<SubjectModule>('SubjectModule');
   const resolver = module.getModuleResolver();
-  const store = setAndGetTestStoreDispatcher({
+  setAndGetTestStoreDispatcher({
     requestId,
     moduleResolver: resolver,
   }).getStoreOrExepction();
 
   beforeEach(async () => {
-    const db = resolver.getDatabase() as TestDatabase;
+    const db = resolver.getDatabase() as unknown as TestDatabase<true>;
     await db.clear();
     await db.addBatch(ServiceModulesFixtures.repoFixtures);
   });
@@ -38,7 +38,7 @@ describe('add person service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByName<AddingPersonService>('addPerson');
+    const sut = module.getServiceByInputDodName<AddingPersonService>('addPerson');
     const result = await sut.execute(validRequestDod);
     expect(result.isSuccess()).toBe(true);
     const value = result.value as AddPersonOut;
@@ -61,7 +61,7 @@ describe('add person service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByName<AddingPersonService>('addPerson');
+    const sut = module.getServiceByInputDodName<AddingPersonService>('addPerson');
     const result = await sut.execute(existPersonRequestDod);
     expect(result.isFailure()).toBe(true);
     const err = result.value as PersonAlreadyExistsError;

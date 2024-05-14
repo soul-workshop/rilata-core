@@ -10,6 +10,8 @@ export type AddCompanyOut = CompanyAR
 
 export type CompanyAddedEvent = EventDod<
   'CompanyAddedEvent',
+  'AddingCompanyService',
+  'CompanyCmdModule',
   AddCompanyDomainCommand,
   CompanyCmdARDT
 >

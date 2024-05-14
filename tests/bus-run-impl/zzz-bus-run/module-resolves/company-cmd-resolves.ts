@@ -22,6 +22,7 @@ export function getCompanyCmdResolves(): CompanyCmdResolves {
       moduleName: 'CompanyCmdModule',
       moduleUrls: ['/api/company-cmd-module/'],
       db,
+      eventRepo,
       busMessageRepo: eventRepo,
       companyRepo,
     };

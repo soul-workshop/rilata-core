@@ -1,12 +1,14 @@
 import { UuidType } from '../../common/types';
 import { BusPayloadAsJson } from '../database/types';
 
-export type EventBusMessageType = 'event' | 'aggregate';
+/** тип сообщения шины. Позволяет за разе подписаться на любое событие агрегата. */
+export type BusMessageType = 'message' | 'event' | 'aggregate';
 
 type SubcribeToMessageBody = {
-  busMessageName: string,
-  publishModuleName: string,
-  handlerModuleName: string,
+  busMessageName: string, // имя сообщения на которое выполняется подписка (имя события)
+  publishModuleName: string, // имя модуля которое публикует событие
+  handlerModuleName: string, // имя модуля которое подписывается на событие
+  handlerServiceName: string, // имя сервиса которая будет обрабатывать событие
 }
 
 export type SubcribeToMessage = SubcribeToMessageBody & {

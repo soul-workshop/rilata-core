@@ -1,11 +1,12 @@
 import { DTO } from '../../domain/dto';
 import { Result } from '../../common/result/types';
 import { JwtDecodeErrors } from './jwt-errors';
-import { ServerResolver } from '../server/server-resolver';
 import { JwtPayload, JwtType } from './types';
+import { ServerResolver } from '../server/s-resolver';
+import { ServerResolves } from '../server/s-resolves';
 
 export interface JwtDecoder<PAYLOAD extends DTO> {
-  init(resolver: ServerResolver<PAYLOAD>): void
+  init(resolver: ServerResolver<ServerResolves<PAYLOAD>>): void
   /** Декодировать токен и получить его payload.
     Не проверяется валидность (соответствие секретному шифрованию). */
   getTokenPayload(rawToken: string): Result<JwtDecodeErrors, PAYLOAD>;

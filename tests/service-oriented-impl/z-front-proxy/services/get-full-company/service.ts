@@ -1,6 +1,6 @@
 import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
 import { DomainUser } from '../../../../../src/app/caller';
-import { QueryService } from '../../../../../src/app/service/query-service';
+import { QueryService } from '../../../../../src/app/service/concrete-service/query.service';
 import { ServiceResult } from '../../../../../src/app/service/types';
 import { failure } from '../../../../../src/common/result/failure';
 import { success } from '../../../../../src/common/result/success';
@@ -9,11 +9,18 @@ import { AuthFacade } from '../../../auth/facade';
 import { CompanyFacade } from '../../../company/facade';
 import { SubjectFacade } from '../../../subject/facade';
 import { FullUser } from '../../domain-data/full-company/params';
+import { FrontendProxyModuleResolver } from '../../resolver';
 import { GetFullCompanyRequestDod, GetFullCompanyServiceParams } from './s-params';
 import { getFullCompanyValidator } from './v-map';
 
-export class GetingFullCompanyService extends QueryService<GetFullCompanyServiceParams> {
-  serviceName = 'GetFullCompanyRequestDod' as const;
+export class GetingFullCompanyService extends QueryService<
+  GetFullCompanyServiceParams, FrontendProxyModuleResolver
+> {
+  moduleName = 'FrontProxyModule' as const;
+
+  serviceName = 'GetingFullCompanyService' as const;
+
+  inputDodName = 'GetFullCompanyRequestDod' as const;
 
   aRootName = 'FullCompany' as const;
 
@@ -21,7 +28,7 @@ export class GetingFullCompanyService extends QueryService<GetFullCompanyService
 
   protected validator = getFullCompanyValidator;
 
-  protected async runDomain(
+  async runDomain(
     input: GetFullCompanyRequestDod,
   ): Promise<ServiceResult<GetFullCompanyServiceParams>> {
     const store = storeDispatcher.getStoreOrExepction();
