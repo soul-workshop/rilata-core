@@ -1,12 +1,11 @@
 import { Logger } from '../../common/logger/logger';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
-import { GeneralARDParams } from '../domain-data/params-types';
-import { GetARParamsAggregateName, GetNoOutKeysFromARParams } from '../domain-data/type-functions';
+import { GeneralArParams } from '../index';
 import { DtoFieldValidator } from '../validator/field-validator/dto-field-validator';
 import { AggregateRootHelper } from './aggregate-helper';
 
 /** Корневой объект - т.е имеет уникальную глобальную идентификацию */
-export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
+export abstract class AggregateRoot<PARAMS extends GeneralArParams> {
   protected helper: AggregateRootHelper<PARAMS>;
 
   /** Обычно используется для идентификации пользователем объекта в списке */
@@ -15,10 +14,10 @@ export abstract class AggregateRoot<PARAMS extends GeneralARDParams> {
   constructor(
     protected attrs: PARAMS['attrs'],
     invariantsValidator: DtoFieldValidator<string, true, false, PARAMS['attrs']>,
-    aRootName: GetARParamsAggregateName<PARAMS>,
+    aRootName: PARAMS['meta']['name'],
     idName: keyof PARAMS['attrs'] & string,
     version: number,
-    outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,
+    outputExcludeAttrs: PARAMS['noOutKeys'],
     logger: Logger,
   ) {
     this.helper = new AggregateRootHelper<PARAMS>(

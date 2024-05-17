@@ -350,7 +350,7 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrToDelete);
       expect(result).toEqual(expectedDTO);
     });
 
@@ -367,7 +367,7 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrToDelete);
       expect(result).toEqual(expectedDTO);
     });
 
@@ -387,7 +387,7 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrs(personDTO, attrToDelete);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrToDelete);
       expect(result).toEqual(expectedDTO);
     });
 
@@ -408,7 +408,7 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrs(personDTO, attrsToDelete);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrsToDelete);
       expect(result).toEqual(expectedDTO);
     });
 
@@ -416,7 +416,7 @@ describe('dtoUtility class', () => {
     test('Проверка, что оригинал не трогается.', () => {
       const personDTOCopy = sut.deepCopy(personDTO);
       const attrsToDelete: ['firstName', 'contacts.phone'] = ['firstName', 'contacts.phone'];
-      const result = dtoUtility.excludeDeepAttrs(personDTO, attrsToDelete);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrsToDelete);
 
       expect(result).not.toEqual(personDTO);
       expect(personDTO).toStrictEqual(personDTOCopy);

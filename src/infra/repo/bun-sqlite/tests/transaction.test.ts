@@ -68,9 +68,7 @@ describe('bun sqlite db transaction tests', () => {
     expect(events.length).toBe(1);
     expect(events).toEqual([
       {
-        attrs: {
-          ...requestDodAttrs,
-        },
+        attrs: { ...requestDodAttrs },
         meta: {
           eventId: events[0].meta.eventId,
           requestId: events[0].meta.requestId,

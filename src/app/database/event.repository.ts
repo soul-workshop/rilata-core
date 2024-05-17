@@ -1,7 +1,5 @@
 import { UuidType } from '../../common/types';
-import { GeneralEventDod } from '../../domain/domain-data/domain-types';
-import { GeneralARDParams } from '../../domain/domain-data/params-types';
-import { GetARParamsEvents } from '../../domain/domain-data/type-functions';
+import { GeneralArParams, GeneralEventDod } from '../../domain/domain-data/domain-types';
 import { GeneralModuleResolver } from '../module/types';
 import { Repositoriable } from '../resolve/repositoriable';
 import { Asyncable } from './types';
@@ -16,7 +14,7 @@ export interface EventRepository<ASYNC extends boolean> {
   isExist(id: UuidType): Asyncable<ASYNC, boolean>
 
   // eslint-disable-next-line max-len
-  getAggregateEvents<A extends GeneralARDParams>(aRootId: UuidType): Asyncable<ASYNC, GetARParamsEvents<A>[]>
+  getAggregateEvents<A extends GeneralArParams>(aRootId: UuidType): Asyncable<ASYNC, A['events']>
 }
 
 export const EventRepository = {

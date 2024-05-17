@@ -1,8 +1,6 @@
-import { AggregateRootDataParams } from '../../../../../src/domain/domain-data/params-types';
-import { DomainMeta, OutputAggregateDataTransfer } from '../../../../../src/domain/domain-data/domain-types';
-import { AddPersonActionParams } from './add-person/a-params';
-import { AddPhoneActionParams } from './add-phones/add-phones.params';
-import { ExcludeDeepDtoAttrs } from '../../../../../src/common/type-functions';
+import { AggregateRootParams, ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
+import { PersonPhonesAddedEvent } from './add-phones/add-phones.params';
+import { PersonAddedEvent } from './add-person/a-params';
 
 export type PhoneTypes = 'mobile' | 'work' | 'home';
 
@@ -36,10 +34,8 @@ export type PersonAttrs = {
 export type PersonMeta = DomainMeta<'PersonAR', 'id'>;
 
 // при вызове у агрегата personAR.getHelper().getOutput() вернется объект без комментов техподдержки
-export type PersonParams = AggregateRootDataParams<
-  PersonAttrs, PersonMeta, AddPersonActionParams | AddPhoneActionParams, ['contacts.techSupportComments']
+export type PersonParams = AggregateRootParams<
+  PersonAttrs, PersonMeta, PersonAddedEvent | PersonPhonesAddedEvent, ['contacts.techSupportComments']
 >;
 
-export type PersonOutAttrs = ExcludeDeepDtoAttrs<PersonAttrs, PersonParams['noOutKeys']>
-
-export type PersonARDT = OutputAggregateDataTransfer<PersonParams>
+export type PersonOutARDT = ARDT<PersonAttrs, PersonMeta, []>;

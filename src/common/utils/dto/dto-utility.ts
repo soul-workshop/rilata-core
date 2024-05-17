@@ -97,12 +97,16 @@ class DtoUtility {
   *   т.е: ['name', 'phone.number'] вернет копию объекта без
   *   атрибута 'name' в основном объекте и без атрибута 'number'
   *   во вложенном объекте 'phone'. */
-  excludeDeepAttrs<
+  excludeDeepAttrsByKeys<
     ATTRS extends DTO,
     EXC extends GetDtoKeysByDotNotation<ATTRS> | GetDtoKeysByDotNotation<ATTRS>[]
   >(obj: ATTRS, excludedAttrs: EXC): ExcludeDeepDtoAttrs<ATTRS, EXC> {
+    return this.excludeDeepAttrs(obj, excludedAttrs) as ExcludeDeepDtoAttrs<ATTRS, EXC>;
+  }
+
+  excludeDeepAttrs(obj: DTO, keys: string | string[]): DTO {
     const objCopy = this.deepCopy(obj);
-    const attrs = Array.isArray(excludedAttrs) ? excludedAttrs : [excludedAttrs];
+    const attrs = Array.isArray(keys) ? keys : [keys];
 
     const deepDelete = (dto: DTO, attributePath: string): void => {
       const attributePathAsArray = attributePath.split('.');
@@ -124,7 +128,7 @@ class DtoUtility {
       deepDelete(objCopy, excludedAttr);
     });
 
-    return objCopy as unknown as ExcludeDeepDtoAttrs<ATTRS, EXC>;
+    return objCopy;
   }
 
   /**

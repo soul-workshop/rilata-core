@@ -1,4 +1,3 @@
-
 class SetUtils {
   difference<T>(
     a: Readonly<Set<T>>,

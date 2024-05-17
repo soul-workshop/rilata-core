@@ -1,7 +1,6 @@
 import { UserId, UuidType } from '../../../../../src/common/types';
-import { ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
-import { AggregateRootDataParams } from '../../../../../src/domain/domain-data/params-types';
-import { RegisterCompanyActionParams } from './register-company/a-params';
+import { AggregateRootParams, ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
+import { CompanyRegisteredEvent } from './register-company/a-params';
 
 export type CompanyAttrs = {
   id: UuidType,
@@ -14,11 +13,11 @@ export type CompanyAttrs = {
 
 export type CompanyMeta = DomainMeta<'CompanyAR', 'id'>
 
-export type CompanyCmdARDT = ARDT<CompanyAttrs, CompanyMeta>
-
-export type CompanyParams = AggregateRootDataParams<
+export type CompanyParams = AggregateRootParams<
   CompanyAttrs,
   CompanyMeta,
-  RegisterCompanyActionParams,
+  CompanyRegisteredEvent,
   []
 >
+
+export type CompanyCmdARDT = ARDT<CompanyAttrs, CompanyMeta, []>

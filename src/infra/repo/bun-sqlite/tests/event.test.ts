@@ -84,7 +84,7 @@ describe('bun sql event repository tests', () => {
       ];
       const addEventsSpy = spyOn(sut, 'addEvents');
       notNullableFields.forEach((fldName) => {
-        const addEvent = dtoUtility.excludeDeepAttrs(event, fldName) as GeneralEventDod;
+        const addEvent = dtoUtility.excludeDeepAttrsByKeys(event, fldName) as GeneralEventDod;
         try {
           sut.addEvents([addEvent]);
           throw Error(`not be called, fieldName: ${fldName}`);

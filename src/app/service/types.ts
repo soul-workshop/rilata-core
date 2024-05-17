@@ -2,10 +2,10 @@
 /* eslint-disable no-use-before-define */
 import { Result } from '../../common/result/types';
 import { GetArrayType } from '../../common/type-functions';
-import { GeneralARDParams } from '../../domain/domain-data/params-types';
 import {
   DomainAttrs, EventDod, GeneralARDT,
-  GeneralErrorDod, GeneralEventDod, GeneralRequestDod,
+  GeneralArParams,
+  GeneralErrorDod, GeneralEventDod, GeneralRequestDod, SimpleARDT,
 } from '../../domain/domain-data/domain-types';
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
 import { GeneralModuleResolver, GetModuleResolves, ModuleType } from '../module/types';
@@ -26,7 +26,7 @@ export type GetAppEventDod<EVENTS extends GeneralEventDod[], M_TYPE extends Modu
 
 export type BaseServiceParams<
   S_NAME extends string,
-  AR_PARAMS extends GeneralARDParams,
+  AR_PARAMS extends GeneralArParams,
   IN extends GeneralRequestDod | GeneralEventDod, // что входит в service,
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT, // возвращаемый ответ в случае не успеха
@@ -41,12 +41,12 @@ export type BaseServiceParams<
 }
 
 export type GeneralBaseServiceParams = BaseServiceParams<
-  string, GeneralARDParams, GeneralRequestDod | GeneralEventDod, unknown, unknown, unknown
+  string, GeneralArParams, GeneralRequestDod | GeneralEventDod, unknown, unknown, unknown
 >
 
 export type QueryServiceParams<
   S_NAME extends string,
-  AR_PARAMS extends GeneralARDParams,
+  AR_PARAMS extends GeneralArParams,
   REQ_DOD extends GeneralRequestDod, // что входит в service,
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT extends GeneralErrorDod, // возвращаемый ответ в случае не успеха
@@ -54,24 +54,24 @@ export type QueryServiceParams<
   S_NAME, AR_PARAMS, REQ_DOD, SUCCESS_OUT, FAIL_OUT, never
 >
 export type GeneralQueryServiceParams = QueryServiceParams<
-  string, GeneralARDParams, GeneralRequestDod, unknown, GeneralErrorDod
+  string, GeneralArParams, GeneralRequestDod, unknown, GeneralErrorDod
 >;
 
 export type GeneraQueryService = QueryService<GeneralQueryServiceParams, GeneralModuleResolver>;
 
 export type CommandServiceParams<
   S_NAME extends string,
-  AR_PARAMS extends GeneralARDParams,
+  AR_PARAMS extends GeneralArParams,
   REQ_DOD extends GeneralRequestDod, // что входит в service,
   SUCCESS_OUT, // ответ в случае успеха
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
-  EVENTS extends EventDod<string, S_NAME, string, DomainAttrs, GeneralARDT>[], // публикуемые доменные события
+  EVENTS extends EventDod<string, S_NAME, string, DomainAttrs, SimpleARDT>[], // публикуемые доменные события
 > = BaseServiceParams<
   S_NAME, AR_PARAMS, REQ_DOD, SUCCESS_OUT, FAIL_OUT, EVENTS
 >
 
 export type GeneralCommandServiceParams = CommandServiceParams<
-  string, GeneralARDParams, GeneralRequestDod, unknown, GeneralErrorDod, GeneralEventDod[]
+  string, GeneralArParams, GeneralRequestDod, unknown, GeneralErrorDod, GeneralEventDod[]
 >;
 
 export type GeneralCommandService = CommandService<
@@ -80,13 +80,13 @@ export type GeneralCommandService = CommandService<
 
 export type EventServiceParams<
   S_NAME extends string,
-  AR_PARAMS extends GeneralARDParams,
+  AR_PARAMS extends GeneralArParams,
   EVENT_DOD extends GeneralEventDod, // входящее событие,
-  EVENTS extends EventDod<string, S_NAME, string, DomainAttrs, GeneralARDT>[], // публикуемые доменные события
+  EVENTS extends EventDod<string, S_NAME, string, DomainAttrs, SimpleARDT>[], // публикуемые доменные события
 > = BaseServiceParams<S_NAME, AR_PARAMS, EVENT_DOD, void, never, EVENTS>
 
 export type GeneralEventServiceParams =
-  EventServiceParams<string, GeneralARDParams, GeneralEventDod, GeneralEventDod[]>
+  EventServiceParams<string, GeneralArParams, GeneralEventDod, GeneralEventDod[]>
 
 export type GeneralEventService = EventService<
   GeneralEventServiceParams, GeneralModuleResolver

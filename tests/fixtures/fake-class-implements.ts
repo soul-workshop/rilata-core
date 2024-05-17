@@ -16,9 +16,7 @@ import { Result } from '../../src/common/result/types';
 import { UuidType } from '../../src/common/types';
 import { dtoUtility } from '../../src/common/utils/dto/dto-utility';
 import { uuidUtility } from '../../src/common/utils/uuid/uuid-utility';
-import { GeneralEventDod } from '../../src/domain/domain-data/domain-types';
-import { GeneralARDParams } from '../../src/domain/domain-data/params-types';
-import { GetARParamsEvents } from '../../src/domain/domain-data/type-functions';
+import { GeneralArParams, GeneralEventDod } from '../../src/domain/domain-data/domain-types';
 import { DTO } from '../../src/domain/dto';
 
 export namespace FakeClassImplements {
@@ -270,12 +268,12 @@ export namespace FakeClassImplements {
 
     init(resovler: GeneralModuleResolver): void {}
 
-    async getAggregateEvents<A extends GeneralARDParams>(
+    async getAggregateEvents<A extends GeneralArParams>(
       aRootId: UuidType,
-    ): Promise<GetARParamsEvents<A>[]> {
+    ): Promise<A['events']> {
       return (await this.testRepo.all())
         .filter((record) => record.aRootId === aRootId)
-        .map((record) => record.payload) as GetARParamsEvents<A>;
+        .map((record) => record.payload) as A['events'];
     }
 
     async findEvent(id: string): Promise<GeneralEventDod | undefined> {
