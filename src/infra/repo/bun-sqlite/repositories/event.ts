@@ -3,9 +3,7 @@ import { DeliveryEvent, EventBodyType } from '../../../../app/bus/types';
 import { BusMessageRepository } from '../../../../app/database/bus-message.repository';
 import { EventRepository } from '../../../../app/database/event.repository';
 import { dtoUtility } from '../../../../common/utils/dto/dto-utility';
-import { GeneralEventDod } from '../../../../domain/domain-data/domain-types';
-import { GeneralARDParams } from '../../../../domain/domain-data/params-types';
-import { GetARParamsEvents } from '../../../../domain/domain-data/type-functions';
+import { GeneralArParams, GeneralEventDod } from '../../../../domain/domain-data/domain-types';
 import { BunSqliteRepository } from '../repository';
 import { MigrateRow } from '../types';
 
@@ -56,10 +54,10 @@ export class EventRepositorySqlite
   }
 
   // eslint-disable-next-line max-len
-  getAggregateEvents<A extends GeneralARDParams>(aRootId: string): GetARParamsEvents<A>[] {
+  getAggregateEvents<A extends GeneralArParams>(aRootId: string): A['events'] {
     const sql = `SELECT payload FROM ${this.tableName} WHERE aRootId='${aRootId}'`;
     const plds = this.db.sqliteDb.prepare(sql).all() as { payload: string }[];
-    return plds.map((pld) => JSON.parse(pld.payload)) as GetARParamsEvents<A>[];
+    return plds.map((pld) => JSON.parse(pld.payload)) as A['events'];
   }
 
   findEvent(id: string): GeneralEventDod | undefined {

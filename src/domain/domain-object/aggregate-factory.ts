@@ -1,9 +1,9 @@
 import { Logger } from '../../common/logger/logger';
-import { GeneralARDParams } from '../domain-data/params-types';
 import { DTO } from '../dto';
+import { GeneralArParams } from '../index';
 import { AggregateRoot } from './aggregate-root';
 
-export abstract class AggregateFactory<PARAMS extends GeneralARDParams> {
+export abstract class AggregateFactory<PARAMS extends GeneralArParams> {
   constructor(protected logger: Logger) {}
 
   /** создать экземпляр агрегата по событию */

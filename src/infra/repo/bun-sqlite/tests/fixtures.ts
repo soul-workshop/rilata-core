@@ -20,8 +20,7 @@ import { UuidType } from '../../../../common/types';
 import { dodUtility } from '../../../../common/utils/dod/dod-utility';
 import { dtoUtility } from '../../../../common/utils/dto/dto-utility';
 import { uuidUtility } from '../../../../common/utils/uuid/uuid-utility';
-import { ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '../../../../domain/domain-data/domain-types';
-import { AggregateRootDataParams } from '../../../../domain/domain-data/params-types';
+import { AggregateRootParams, ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '../../../../domain/domain-data/domain-types';
 import { DtoFieldValidator } from '../../../../domain/validator/field-validator/dto-field-validator';
 import { LiteralFieldValidator } from '../../../../domain/validator/field-validator/literal-field-validator';
 import { StringChoiceValidationRule } from '../../../../domain/validator/rules/validate-rules/string/string-choice.v-rule';
@@ -103,9 +102,9 @@ export namespace SqliteTestFixtures {
 
   type PostDomainMeta = DomainMeta<'PostAr', 'postId'>
 
-  type PostArParams = AggregateRootDataParams<PostAttrs, PostDomainMeta, never, []>
+  type PostArParams = AggregateRootParams<PostAttrs, PostDomainMeta, never, []>
 
-  type PostARDT = ARDT<PostAttrs, PostDomainMeta>
+  type PostARDT = ARDT<PostAttrs, PostDomainMeta, []>
 
   export interface PostRepository {
     init(resolver: GeneralModuleResolver): void

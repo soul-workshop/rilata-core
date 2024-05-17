@@ -1,18 +1,8 @@
 import { EventDod } from '../../../../../../src/domain/domain-data/domain-types';
-import { ActionParams } from '../../../../../../src/domain/domain-data/params-types';
-import { PersonARDT, PhoneAttrs } from '../params';
+import { PersonOutARDT, PhoneAttrs } from '../params';
 
 export type AddPhonesActionDod = { phones: PhoneAttrs[] };
 
-type PersonPhonesAddedEventAttrs = PhoneAttrs[]
-
 export type PersonPhonesAddedEvent = EventDod<
-  'PersonPhoneAddedEvent', 'AddingPhoneService', 'SubjectModule', PersonPhonesAddedEventAttrs, PersonARDT
+  'PersonPhoneAddedEvent', 'AddingPhoneService', 'SubjectModule', AddPhonesActionDod, PersonOutARDT
 >;
-
-export type AddPhoneActionParams = ActionParams<
-  AddPhonesActionDod,
-  undefined,
-  never,
-  PersonPhonesAddedEvent[]
->

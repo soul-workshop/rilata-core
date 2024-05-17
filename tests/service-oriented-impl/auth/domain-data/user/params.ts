@@ -1,6 +1,5 @@
 import { UuidType } from '../../../../../src/common/types';
-import { AggregateRootDataParams } from '../../../../../src/domain/domain-data/params-types';
-import { ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
+import { AggregateRootParams, ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
 
 export type UserAttrs = {
   userId: UuidType,
@@ -9,8 +8,8 @@ export type UserAttrs = {
 
 export type UserMeta = DomainMeta<'UserAR', 'userId'>;
 
-export type UserParams = AggregateRootDataParams<
+export type UserParams = AggregateRootParams<
   UserAttrs, UserMeta, never, []
 >;
 
-export type UserARDT = ARDT<UserAttrs, UserMeta>;
+export type UserARDT = ARDT<UserAttrs, UserMeta, []>;

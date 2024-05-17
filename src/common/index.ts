@@ -5,3 +5,6 @@ export * from './type-functions';
 export * from './result/success';
 export * from './result/failure';
 export * from './result/types';
+export * from './logger/logger';
+export * from './logger/console-logger';
+export * from './logger/logger-modes';

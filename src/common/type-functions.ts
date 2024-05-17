@@ -107,13 +107,15 @@ export type ExcludeDeepDtoAttrs<D extends DTO, DOT_NOTATION extends GetDomainAtt
   Пример: ExcludeDeepAttrs<{a: {b: {c: string, f?: string}}, e: number}, ['a.b.c', 'e']>
 */
 export type ExcludeDeepDotNotationAttrs<TYPE, DOT_NOTATION extends unknown[]> =
-  DOT_NOTATION extends [infer FIRST, ...infer OTHERS]
-    ? ExcludeDeepAttrs<TYPE, SplitStringToArray<FIRST & string, '.'>> extends infer DEEPED
-      ? OTHERS extends []
-        ? DEEPED
-        : ExcludeDeepDotNotationAttrs<DEEPED, OTHERS>
-      : never
-    : ExcludeDeepAttrs<TYPE, [DOT_NOTATION]>
+  DOT_NOTATION extends []
+    ? TYPE
+    : DOT_NOTATION extends [infer FIRST, ...infer OTHERS]
+      ? ExcludeDeepAttrs<TYPE, SplitStringToArray<FIRST & string, '.'>> extends infer DEEPED
+        ? OTHERS extends []
+          ? DEEPED
+          : ExcludeDeepDotNotationAttrs<DEEPED, OTHERS>
+        : never
+      : ExcludeDeepAttrs<TYPE, [DOT_NOTATION]>
 
 /** Исключить из DTO | DTO[] атрибуты.
   Пример: ExcludeDeepAttrs<{a: {b: {c: string, f?: string}}, e: number}, ['a', 'b', 'c']>

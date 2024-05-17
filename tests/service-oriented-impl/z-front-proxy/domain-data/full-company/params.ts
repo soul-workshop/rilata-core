@@ -1,11 +1,10 @@
-import { ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
-import { AggregateRootDataParams } from '../../../../../src/domain/domain-data/params-types';
+import { AggregateRootParams, ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
 import { UserAttrs } from '../../../auth/domain-data/user/params';
 import { CompanyAttrs } from '../../../company/domain-data/company/params';
-import { PersonOutAttrs } from '../../../subject/domain-data/person/params';
+import { PersonAttrs } from '../../../subject/domain-data/person/params';
 
 export type FullUser = Pick<UserAttrs, 'userId'> & {
-  person: PersonOutAttrs,
+  person: PersonAttrs,
 }
 
 export type FullCompany = Omit<CompanyAttrs, 'employees'> & {
@@ -14,11 +13,11 @@ export type FullCompany = Omit<CompanyAttrs, 'employees'> & {
 
 export type FullCompanyDomainMeta = DomainMeta<'FullCompany', 'id'>
 
-export type FullCompanyParams = AggregateRootDataParams<
+export type FullCompanyParams = AggregateRootParams<
   FullCompany,
   FullCompanyDomainMeta,
   never,
   []
 >
 
-export type FullCompanyARDT = ARDT<FullCompany, FullCompanyDomainMeta>
+export type FullCompanyARDT = ARDT<FullCompany, FullCompanyDomainMeta, []>

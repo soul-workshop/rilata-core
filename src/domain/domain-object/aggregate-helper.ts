@@ -1,26 +1,22 @@
 import { UuidType } from '../../common/types';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
-import { GeneralARDParams } from '../domain-data/params-types';
-import { OutputAggregateDataTransfer, GeneralEventDod } from '../domain-data/domain-types';
-import {
-  GetARParamsAggregateName, GetARParamsEventAttrs, GetARParamsEventNames,
-  GetARParamsEvents, GetNoOutKeysFromARParams,
-} from '../domain-data/type-functions';
+import { ARDT, GeneralArParams, GeneralEventDod } from '../domain-data/domain-types';
 import { Logger } from '../../common/logger/logger';
 import { Caller } from '../../app/controller/types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
+import { GetArrayType } from '../../common/type-functions';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */
-export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
-  private domainEvents: GetARParamsEvents<PARAMS>[] = [];
+export class AggregateRootHelper<PARAMS extends GeneralArParams> {
+  private domainEvents: PARAMS['events'] = [];
 
   constructor(
     protected attrs: PARAMS['attrs'],
-    protected aRootName: GetARParamsAggregateName<PARAMS>,
+    protected aRootName: PARAMS['meta']['name'],
     protected idName: keyof PARAMS['attrs'] & string,
     protected version: number,
-    protected outputExcludeAttrs: GetNoOutKeysFromARParams<PARAMS>,
+    protected outputExcludeAttrs: PARAMS['noOutKeys'],
     protected logger: Logger,
   ) {
     this.validateVersion();
@@ -35,10 +31,11 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     };
   }
 
-  getOutput(): OutputAggregateDataTransfer<PARAMS> {
+  // @ts-ignore
+  getOutput(): ARDT<PARAMS['attrs'], PARAMS['meta'], PARAMS['noOutKeys']> {
+    const attrs = dtoUtility.excludeDeepAttrs(this.attrs, this.outputExcludeAttrs) as any;
     return {
-    // @ts-ignore
-      attrs: dtoUtility.excludeDeepAttrs(this.attrs, this.outputExcludeAttrs),
+      attrs,
       meta: this.getMeta(),
     };
   }
@@ -59,19 +56,19 @@ export class AggregateRootHelper<PARAMS extends GeneralARDParams> {
     return this.logger;
   }
 
-  registerEvent<EVENT extends GetARParamsEvents<PARAMS>>(
-    eventName: GetARParamsEventNames<EVENT>,
-    eventAttrs: GetARParamsEventAttrs<EVENT>,
+  registerEvent<EVENTS extends GetArrayType<PARAMS['events']>>(
+    eventName: EVENTS['meta']['name'],
+    eventAttrs: EVENTS['attrs'],
     requestId?: UuidType,
     caller?: Caller,
   ): void {
     const event: GeneralEventDod = dodUtility.getEventDod(
-      eventName, eventAttrs, this.getOutput(), { requestId, caller },
+      eventName, eventAttrs, this.getOutput() as EVENTS['aRoot'], { requestId, caller },
     );
-    this.domainEvents.push(event as GetARParamsEvents<PARAMS>);
+    this.domainEvents.push(event as EVENTS);
   }
 
-  getEvents(): GetARParamsEvents<PARAMS>[] {
+  getEvents(): PARAMS['events'] {
     return this.domainEvents;
   }
 

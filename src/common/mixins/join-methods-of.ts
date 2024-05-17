@@ -35,4 +35,3 @@ export function joinMethodsOf(mixinConstr: Constructor<any>) {
     return targetClass;
   };
 }
-

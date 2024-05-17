@@ -1,8 +1,8 @@
 import { UserId } from '../../common/types';
-import { GeneralARDParams } from '../domain-data/params-types';
+import { GeneralArParams } from '../index';
 import { AggregateRoot } from './aggregate-root';
 
-export type GeneralAR = AggregateRoot<GeneralARDParams>;
+export type GeneralAR = AggregateRoot<GeneralArParams>;
 
 export type GetARParams<AR extends GeneralAR> =
   AR extends AggregateRoot<infer T> ? T : never;

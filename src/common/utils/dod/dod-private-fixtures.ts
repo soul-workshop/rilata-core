@@ -1,6 +1,7 @@
 import {
   ARDT, DomainMeta, ErrorDod, EventDod,
 } from '../../../domain/domain-data/domain-types';
+import { ExcludeDeepDotNotationAttrs } from '../../type-functions';
 
 export namespace DODPrivateFixtures {
   export type PhoneAttrs = {
@@ -75,7 +76,9 @@ export namespace DODPrivateFixtures {
     },
   };
 
-  export type PersonARDT = ARDT<PersonAttrs, PersonMeta>;
+  export type PersonARDT = ARDT<PersonAttrs, PersonMeta, [
+    'contacts.noOutField', 'contacts.email.noOutField', 'contacts.phones.noOutField'
+  ]>;
 
   export type PersonPhoneAddedEventDOD = EventDod<
     'PersonPhoneAddedEvent', 'AddingPersonPhoneService', 'SubjectModule', PhoneAttrs, PersonARDT
