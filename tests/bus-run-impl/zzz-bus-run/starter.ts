@@ -1,9 +1,9 @@
-import { defaultJwtConfig } from '../../../src/app/server/constants';
+import { defaultJwtConfig, getServerConfig } from '../../../src/app/server/configs';
 import { BusServerResolves } from '../../../src/app/server/s-resolves';
 import { ServerStarter } from '../../../src/app/server/server-starter';
 import { ModuleConstructors } from '../../../src/app/server/types';
+import { getEnvLogMode } from '../../../src/common/index';
 import { ConsoleLogger } from '../../../src/common/logger/console-logger';
-import { getLoggerMode } from '../../../src/common/logger/logger-modes';
 import { Constructor } from '../../../src/common/types';
 import { OneServerBus } from '../../../src/infra/bus/one-server-bus';
 import { JwtCreatorImpl } from '../../../src/infra/jwt/jwt-creator';
@@ -31,12 +31,12 @@ class BusRunServerStarter extends ServerStarter<AllServerModules> {
     resolves?: Partial<BusServerResolves<UserJwtPayload>>,
   ) {
     const defaultResolves: BusServerResolves<UserJwtPayload> = {
-      logger: new ConsoleLogger(getLoggerMode()),
+      logger: new ConsoleLogger(getEnvLogMode() ?? 'all'),
       runMode: 'test',
       jwtDecoder: new JwtDecoderImpl(),
       jwtVerifier: new JwtVerifierImpl(jwtSecret, defaultJwtConfig),
       jwtCreator: new JwtCreatorImpl(jwtSecret, defaultJwtConfig),
-      serverConfig: { loggerModes: 'off' }, // default serverConfig,
+      serverConfig: getServerConfig(),
       bus: new OneServerBus(),
     };
     super(ServerCtor, ServerResolverCtor, { ...defaultResolves, ...resolves }, ModuleCtors);

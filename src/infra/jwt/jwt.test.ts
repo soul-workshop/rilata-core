@@ -6,11 +6,11 @@ import { UserId } from '../../../src/common/types';
 import { JwtCreator } from '../../app/jwt/jwt-creator';
 import { JwtDecoder } from '../../app/jwt/jwt-decoder';
 import { JwtVerifier } from '../../app/jwt/jwt-verifier';
-import { defaultJwtConfig } from '../../app/server/constants';
+import { defaultJwtConfig } from '../../app/server/configs';
 import { ServerResolver } from '../../app/server/s-resolver';
 import { ServerResolves } from '../../app/server/s-resolves';
 import { JwtConfig } from '../../app/server/types';
-import { getLoggerMode } from '../../common/index';
+import { getEnvLogMode } from '../../common/index';
 import { ConsoleLogger } from '../../common/logger/console-logger';
 import { Logger } from '../../common/logger/logger';
 import { uuidUtility } from '../../common/utils/uuid/uuid-utility';
@@ -54,7 +54,7 @@ function getJwtFakeResolver(
 
   const resolver = {
     getLogger(): Logger {
-      return new ConsoleLogger(getLoggerMode());
+      return new ConsoleLogger(getEnvLogMode() ?? 'all');
     },
 
     getJwtDecoder(): JwtDecoder<TestJwtPayload> {

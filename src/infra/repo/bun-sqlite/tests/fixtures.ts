@@ -12,8 +12,8 @@ import { CommandService } from '../../../../app/service/concrete-service/command
 import { BunSqliteStrategy } from '../../../../app/service/transaction-strategy/bun-sqlite.strategy';
 import { CommandServiceParams, InputDodValidator, ServiceResult } from '../../../../app/service/types';
 import { DatabaseObjectSavingError } from '../../../../common/exeptions';
+import { getEnvLogMode } from '../../../../common/index';
 import { ConsoleLogger } from '../../../../common/logger/console-logger';
-import { getLoggerMode } from '../../../../common/logger/logger-modes';
 import { success } from '../../../../common/result/success';
 import { TupleToUnion } from '../../../../common/tuple-types';
 import { UuidType } from '../../../../common/types';
@@ -317,7 +317,7 @@ export namespace SqliteTestFixtures {
     },
 
     getLogger() {
-      return new ConsoleLogger(getLoggerMode());
+      return new ConsoleLogger(getEnvLogMode() ?? 'all');
     },
 
     getModuleName(): string {

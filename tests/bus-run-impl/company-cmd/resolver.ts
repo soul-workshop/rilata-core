@@ -2,7 +2,7 @@
 import { CompanyCmdRepository } from './domain-object/company/repo';
 import { CompanyCmdResolves } from './resolves';
 import { DelivererToBus } from '../../../src/app/bus/deliverer-to-bus';
-import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus.ts/timeout-callback-impl';
+import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus/timeout-callback-impl';
 import { Bus } from '../../../src/app/bus/bus';
 import { BusMessageRepository } from '../../../src/app/database/bus-message.repository';
 import { EventRepository } from '../../../src/app/database/event.repository';

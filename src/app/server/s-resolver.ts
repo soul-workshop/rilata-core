@@ -3,7 +3,7 @@ import { DTO } from '../../domain/dto';
 import { RilataServer } from './server';
 import { ServerResolves } from './s-resolves';
 import { ServerConfig } from './types';
-import { defaultServerConfig } from './constants';
+import { defaultServerConfig } from './configs';
 
 export class ServerResolver<RES extends ServerResolves<DTO>> {
   protected server!: RilataServer;

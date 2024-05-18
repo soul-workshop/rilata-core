@@ -2,7 +2,7 @@
 import { CompanyReadResolves } from './resolves';
 import { CompanyReadRepository } from './domain/company/repo';
 import { DelivererToBus } from '../../../src/app/bus/deliverer-to-bus';
-import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus.ts/timeout-callback-impl';
+import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus/timeout-callback-impl';
 import { ModuleResolver } from '../../../src/app/module/m-resolver';
 import { BusRunServerResolver } from '../zzz-bus-run/s-resolver';
 import { BusModuleResolver } from '../../../src/app/module/bus.m-resolver';

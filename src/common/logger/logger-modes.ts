@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { BinaryKeyFlag } from '../utils/index';
 
 // ++++++++++++ types +++++++++++++++++
@@ -16,33 +17,34 @@ export type InputLoggerModes = LoggerModes[] | 'all' | 'off';
 
 // ++++++++++++ const and functions +++++++++++++++++
 
-let cachedLogMode: InputLoggerModes;
+let cachedLogMode: InputLoggerModes | undefined;
 
-function calcLogMode(): InputLoggerModes {
+export function getEnvLogMode(): InputLoggerModes | undefined {
+  if (cachedLogMode) return cachedLogMode;
+
   // в env можно передавать одну из значений 'info', 'warn', 'error', 'fatal', 'all', 'off'
   // или битовое число, например 5 означает сумму 1+4 = ['info', 'error']
   // число 0 эквивалентно 'off'.
   // любое другое значение эквивалентно 'all'
-  const envLogMode = process.env.LOG_MODE ?? 'all';
+  const envLogMode = process.env.LOG_MODE;
+  if (envLogMode === undefined) return;
+
   const flags = Number(envLogMode);
   if (isNaN(flags)) {
-    if (envLogMode === 'all' || envLogMode === 'off') return envLogMode;
-    if (Object.keys(loggerModes).includes(envLogMode)) {
-      return [envLogMode] as LoggerModes[];
+    if (envLogMode === 'all' || envLogMode === 'off') {
+      cachedLogMode = envLogMode;
+    } else if (Object.keys(loggerModes).includes(envLogMode)) {
+      cachedLogMode = [envLogMode] as LoggerModes[];
     }
   } else if (flags >= 0) {
-    if (flags === 0) return 'off';
-    const modes = BinaryKeyFlag.getFlagKeys(loggerModes, flags);
-    if (modes.length !== 0) return modes;
+    if (flags <= 0) {
+      cachedLogMode = 'off';
+    } else {
+      const modes = BinaryKeyFlag.getFlagKeys(loggerModes, flags);
+      if (modes.length !== 0) cachedLogMode = modes;
+    }
   }
-  return 'all';
-}
-
-export function getLoggerMode(): InputLoggerModes {
-  if (cachedLogMode === undefined) {
-    cachedLogMode = calcLogMode();
-    // eslint-disable-next-line no-console
-    console.log('log mode setted: ', cachedLogMode);
-  }
+  // eslint-disable-next-line no-console
+  if (cachedLogMode) console.log('log mode setted: ', cachedLogMode);
   return cachedLogMode;
 }
