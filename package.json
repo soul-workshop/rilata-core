@@ -1,7 +1,7 @@
 {
   "name": "rilata",
   "version": "0.1.0",
-  "description": "",
+  "description": "Для тех кто хочет разрабатывать сложные приложения 'правильно'.",
   "author": "NurGeo",
   "license": "MIT",
   "private": false,
@@ -21,7 +21,9 @@
     "./db": "./src/app/db.index.ts",
     "./base": "./src/app/base.index.ts",
     "./http": "./src/app/http.index.ts",
-    "./bus": "./src/app/bus.index.ts"
+    "./bus": "./src/app/bus.index.ts",
+    "./bun-db": "./src/infra/repo/bun-sqlite/index.ts",
+    "./bus-impl": "./src/infra/bus/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

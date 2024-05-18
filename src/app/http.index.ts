@@ -10,3 +10,9 @@ export * from './jwt/jwt-verifier';
 export * from './jwt/jwt-decoder';
 export * from './jwt/types';
 export * from './backend-api/backend-api';
+
+// ++++++++++ infra implementations +++++++++++++
+
+export * from '../infra/jwt/jwt-verifier';
+export * from '../infra/jwt/jwt-creator';
+export * from '../infra/jwt/base-jwt-decoder';
