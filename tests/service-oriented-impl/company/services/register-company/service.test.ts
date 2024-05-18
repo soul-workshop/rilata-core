@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AnyFunction } from 'bun';
 import {
   describe, test, expect, beforeEach, spyOn, afterEach, Mock,
 } from 'bun:test';
@@ -38,9 +37,9 @@ describe('register company saga service tests', async () => {
 
   const subjectFacade = SubjectFacade.instance(resolver);
   const authFacade = AuthFacade.instance(resolver);
-  let addPersonMock: Mock<AnyFunction>;
-  let getPersonMock: Mock<AnyFunction>;
-  let addUserMock: Mock<AnyFunction>;
+  let addPersonMock: Mock<(...args: any[]) => any>;
+  let getPersonMock: Mock<(...args: any[]) => any>;
+  let addUserMock: Mock<(...args: any[]) => any>;
 
   beforeEach(async () => {
     const db = resolver.getDatabase() as unknown as TestDatabase<true>;

@@ -61,6 +61,7 @@ export abstract class BaseService<
   protected checkValidations(
     input: P['input'],
   ): Result<ValidationError, undefined> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((input as any).attrs === undefined) {
       throw this.logger.error('validate implemented only requestDod and eventDod');
     }

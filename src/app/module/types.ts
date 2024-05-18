@@ -13,6 +13,6 @@ export type GetModule<MR extends ModuleResolves<Module>> =
   MR extends ModuleResolves<infer M> ? M : never
 
 export type GetModuleResolves<MRR extends GeneralModuleResolver> =
-  MRR extends ModuleResolver<infer _, infer MRS>
+  MRR extends ModuleResolver<GeneralServerResolver, infer MRS>
     ? MRS
     : never

@@ -7,7 +7,6 @@ const sut = dodUtility;
 describe('test DODUtility class', () => {
   describe('получение DOD ошибки уровня приложения', () => {
     test('получили объект attrs', () => {
-      const errAttrs = { traceback: 'any object' } as const;
       const appError = sut.getAppError<DODF.InternalAppError>('InternalAppError', 'Ошибка сервера', {
         traceback: 'any object',
       });
@@ -16,7 +15,6 @@ describe('test DODUtility class', () => {
     });
 
     test('получили ожидаемую метаинформацию', () => {
-      const errAttrs = { traceback: 'any object' } as const;
       const appError = sut.getAppError<DODF.InternalAppError>('InternalAppError', 'some error string', {
         traceback: 'any object',
       });

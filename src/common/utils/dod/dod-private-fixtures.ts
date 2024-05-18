@@ -1,7 +1,6 @@
 import {
   ARDT, DomainMeta, ErrorDod, EventDod,
 } from '../../../domain/domain-data/domain-types';
-import { ExcludeDeepDotNotationAttrs } from '../../type-functions';
 
 export namespace DODPrivateFixtures {
   export type PhoneAttrs = {

@@ -117,13 +117,14 @@ describe('Тестирование класса StringUtility', () => {
     expect(sut.camelCaseToSuperSnake('sOmeTextLine')).toBe('s_ome_text_line');
     expect(sut.camelCaseToSuperSnake('SOmeTextLine')).toBe('s_ome_text_line');
     expect(sut.camelCaseToSuperSnake('S')).toBe('s');
+    expect(sut.camelCaseToSuperSnake('SS')).toBe('s_s');
     expect(sut.camelCaseToSuperSnake('s')).toBe('s');
     expect(sut.camelCaseToSuperSnake('')).toBe('');
   });
 
   describe('reduce method test', () => {
-    const cbStr = (f: string, s: string) => f + s + s;
-    const cbNum = (f: number, s: string) => f + Number(s) + Number(s);
+    const cbStr = (f: string, s: string): string => f + s + s;
+    const cbNum = (f: number, s: string): number => f + Number(s) + Number(s);
 
     test('метод reduce emptytext: cb<str: str>', () => {
       expect(sut.reduce('', cbStr)).toBe('');

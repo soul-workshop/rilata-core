@@ -1,14 +1,13 @@
 /* eslint-disable max-len */
 /* eslint-disable no-use-before-define */
 import { Result } from '../../common/result/types';
-import { GetArrayType } from '../../common/type-functions';
 import {
-  DomainAttrs, EventDod, GeneralARDT,
+  DomainAttrs, EventDod,
   GeneralArParams,
   GeneralErrorDod, GeneralEventDod, GeneralRequestDod, SimpleARDT,
 } from '../../domain/domain-data/domain-types';
 import { DtoFieldValidator } from '../../domain/validator/field-validator/dto-field-validator';
-import { GeneralModuleResolver, GetModuleResolves, ModuleType } from '../module/types';
+import { GeneralModuleResolver, GetModuleResolves } from '../module/types';
 import { ServiceBaseErrors } from './error-types';
 import { QueryService } from './concrete-service/query.service';
 import { CommandService } from './concrete-service/command.service';
@@ -16,13 +15,6 @@ import { EventService } from './concrete-service/event.service';
 import { ResultDTO } from '../controller/types';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
-
-export type GetAppEventDod<EVENTS extends GeneralEventDod[], M_TYPE extends ModuleType> =
-  M_TYPE extends 'command-module'
-    ? Array<GetArrayType<EVENTS> & { event: 'command-event' }>
-    : M_TYPE extends 'read-module'
-      ? Array<GetArrayType<EVENTS> & { event: 'read-event' }>
-      : EVENTS
 
 export type BaseServiceParams<
   S_NAME extends string,

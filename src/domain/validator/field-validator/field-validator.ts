@@ -60,6 +60,7 @@ export abstract class FieldValidator<
     return validationResult;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected complexValidate(value: unknown): FullFieldResult {
     return success(undefined);
   }

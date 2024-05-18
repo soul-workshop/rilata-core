@@ -50,7 +50,7 @@ describe('Test eNumUtility', () => {
   });
 
   test('Тестирование getKeyByValueStringEnum. Исключение что такого значения нет.', () => {
-    const func = () => {
+    const func = (): void => {
       eNumUtility.getKeyByValueOfNumberEnum(strEnum, 8);
     };
     expect(func).toThrow();

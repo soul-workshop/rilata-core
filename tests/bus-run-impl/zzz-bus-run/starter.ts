@@ -1,8 +1,7 @@
-import { BusServerResolver } from '../../../src/app/server/bus.s-resolver';
-import { ServerResolver } from '../../../src/app/server/s-resolver';
-import { BusServerResolves, ServerResolves } from '../../../src/app/server/s-resolves';
+import { defaultJwtConfig } from '../../../src/app/server/constants';
+import { BusServerResolves } from '../../../src/app/server/s-resolves';
 import { ServerStarter } from '../../../src/app/server/server-starter';
-import { GeneralServerResolver, JwtConfig, ModuleConstructors } from '../../../src/app/server/types';
+import { ModuleConstructors } from '../../../src/app/server/types';
 import { ConsoleLogger } from '../../../src/common/logger/console-logger';
 import { getLoggerMode } from '../../../src/common/logger/logger-modes';
 import { Constructor } from '../../../src/common/types';
@@ -23,11 +22,6 @@ import { BusRunServer } from './server';
 type AllServerModules = CompanyCmdModule | CompanyReadModule;
 
 const jwtSecret = 'your-256-bit-secret';
-const jwtConfig: JwtConfig = {
-  algorithm: 'HS256',
-  jwtLifetimeAsHour: 24,
-  jwtRefreshLifetimeAsHour: 24 * 3,
-};
 
 class BusRunServerStarter extends ServerStarter<AllServerModules> {
   constructor(
@@ -40,8 +34,8 @@ class BusRunServerStarter extends ServerStarter<AllServerModules> {
       logger: new ConsoleLogger(getLoggerMode()),
       runMode: 'test',
       jwtDecoder: new JwtDecoderImpl(),
-      jwtVerifier: new JwtVerifierImpl(jwtSecret, jwtConfig),
-      jwtCreator: new JwtCreatorImpl(jwtSecret, jwtConfig),
+      jwtVerifier: new JwtVerifierImpl(jwtSecret, defaultJwtConfig),
+      jwtCreator: new JwtCreatorImpl(jwtSecret, defaultJwtConfig),
       serverConfig: { loggerModes: 'off' }, // default serverConfig,
       bus: new OneServerBus(),
     };

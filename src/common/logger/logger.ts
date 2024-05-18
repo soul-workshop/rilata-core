@@ -1,4 +1,8 @@
+import { InputLoggerModes } from './logger-modes';
+
 export interface Logger {
+  logMode: InputLoggerModes
+
   /** Различная информация о работе приложения */
   info(log: string): void
 

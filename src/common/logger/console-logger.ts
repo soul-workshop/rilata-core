@@ -2,7 +2,7 @@
 import { AssertionException } from '../exeptions';
 import { BinaryKeyFlag } from '../utils/binary/binary-flag/binary-flag';
 import { Logger } from './logger';
-import { loggerModes } from './logger-modes';
+import { InputLoggerModes, loggerModes } from './logger-modes';
 
 export class ConsoleLogger implements Logger {
   timeFormat: Intl.DateTimeFormatOptions = {
@@ -13,17 +13,17 @@ export class ConsoleLogger implements Logger {
 
   protected modeDispatcher: BinaryKeyFlag<typeof loggerModes>;
 
-  constructor(modes: Array<keyof typeof loggerModes> | 'all' | 'off' = 'all') {
-    this.modeDispatcher = new BinaryKeyFlag(loggerModes, modes);
+  constructor(public logMode: InputLoggerModes) {
+    this.modeDispatcher = new BinaryKeyFlag(loggerModes, logMode);
   }
 
   info(log: string): void {
-    if (this.modeDispatcher.isOn(['info']) === false) return;
+    if (this.modeDispatcher.isAny(['info']) === false) return;
     this.toConsole(this.makeLogString('INFO', log));
   }
 
   warning(log: string, logAttrs?: unknown): void {
-    if (this.modeDispatcher.isOn(['warn']) === false) return;
+    if (this.modeDispatcher.isAny(['warn']) === false) return;
     this.toConsole(this.makeLogString('WARNING', log), logAttrs);
   }
 
@@ -33,7 +33,7 @@ export class ConsoleLogger implements Logger {
   }
 
   error(log: string, logAttrs?: unknown, err?: Error): AssertionException {
-    if (this.modeDispatcher.isOn(['error'])) {
+    if (this.modeDispatcher.isAny(['error'])) {
       const errStack = err ? this.getErrStack(err) : {};
       this.toConsole(
         this.makeLogString('ERROR', log),
@@ -44,7 +44,7 @@ export class ConsoleLogger implements Logger {
   }
 
   fatalError(log: string, logAttrs?: unknown, err?: Error): AssertionException {
-    if (this.modeDispatcher.isOn(['fatal'])) {
+    if (this.modeDispatcher.isAny(['fatal'])) {
       const errStack = err ? this.getErrStack(err) : {};
       this.toConsole(
         this.makeLogString('FATAL_ERROR', log),

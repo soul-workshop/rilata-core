@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DTO } from '../../domain/dto';
 import { RilataServer } from './server';
 import { ServerResolves } from './s-resolves';
 import { ServerConfig } from './types';
+import { defaultServerConfig } from './constants';
 
 export class ServerResolver<RES extends ServerResolves<DTO>> {
   protected server!: RilataServer;
@@ -36,11 +38,7 @@ export class ServerResolver<RES extends ServerResolves<DTO>> {
   }
 
   getServerConfig(): Required<ServerConfig> {
-    return {
-      hostname: this.resolves.serverConfig.hostname ?? 'localhost',
-      port: this.resolves.serverConfig.port ?? 3000,
-      loggerModes: this.resolves.serverConfig.loggerModes ?? 'all',
-    };
+    return defaultServerConfig;
   }
 
   getJwtDecoder(): RES['jwtDecoder'] {

@@ -7,8 +7,13 @@ export type BinaryFlags = Record<string, BinaryNumber>;
 export class BinaryKeyFlag<BF extends BinaryFlags> {
   private state: number;
 
-  protected getAllOn(): number {
-    return this.or(Object.keys(this.allKeysAndFlags) as Array<keyof BF>);
+  /** Возвращает ключи соответствующие переданному числу. */
+  static getFlagKeys<BF extends BinaryFlags>(allKeysAndFlags: BF, num: number): (keyof BF)[] {
+    const keys: string[] = [];
+    Object.entries(allKeysAndFlags).forEach(([key, value]) => {
+      if ((value & num) !== 0) keys.push(key);
+    });
+    return keys as unknown as (keyof BF)[];
   }
 
   /** @params {string} allKeysAndFlags Все значения ключей и значений.
@@ -22,11 +27,19 @@ export class BinaryKeyFlag<BF extends BinaryFlags> {
     else this.state = this.or(keys);
   }
 
-  isOn(keys: Array<keyof BF>): boolean {
+  isAny(keys: Array<keyof BF>): boolean {
     return Boolean(keys.some((key) => this.state & this.allKeysAndFlags[key]));
+  }
+
+  isAll(keys: Array<keyof BF>): boolean {
+    return Boolean(keys.every((key) => this.state & this.allKeysAndFlags[key]));
   }
 
   protected or(keys: Array<keyof BF>): number {
     return keys.reduce((prev, curr) => prev | this.allKeysAndFlags[curr], 0);
+  }
+
+  protected getAllOn(): number {
+    return this.or(Object.keys(this.allKeysAndFlags) as Array<keyof BF>);
   }
 }
