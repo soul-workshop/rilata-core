@@ -31,7 +31,7 @@ export class AggregateRootHelper<PARAMS extends GeneralArParams> {
     };
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   getOutput(): ARDT<PARAMS['attrs'], PARAMS['meta'], PARAMS['noOutKeys']> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs = dtoUtility.excludeDeepAttrs(this.attrs, this.outputExcludeAttrs) as any;

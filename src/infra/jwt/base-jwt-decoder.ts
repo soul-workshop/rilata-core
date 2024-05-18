@@ -35,7 +35,6 @@ export abstract class BaseJwtDecoder<
 
     if (this.dateIsExpired(decodedPayload)) return this.getError('TokenExpiredError');
 
-    // @ts-ignore - error TS2322: Type '"typ"' is not assignable to type '"exp"'
     const keys: UnionToTuple<keyof JwtPayload<Record<never, unknown>>> = ['exp', 'typ'];
     const payload = dtoUtility.excludeAttrs(decodedPayload, keys) as unknown as PAYLOAD;
     return this.payloadBodyIsValid(payload) ? success(payload) : this.getError('NotValidTokenPayloadError');

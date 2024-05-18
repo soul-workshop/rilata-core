@@ -308,7 +308,7 @@ export namespace SqliteTestFixtures {
 
   export const fakeModuleResolver = {
     getDirPath(): string {
-      // @ts-ignore
+      // @ts-expect-error
       return import.meta.dir;
     },
 

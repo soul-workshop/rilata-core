@@ -77,9 +77,6 @@ export abstract class BunServer extends RilataServer {
       const controller = this.urls[url.pathname];
       if (controller) return controller.execute(req);
 
-      // error TS2345: Argument of type 'import("url").URL' is not assignable to parameter of type 'URL'.
-      // Type 'URL' is missing the following properties from type 'URL': createObjectURL, revokeObjectURL, canParse
-      // @ts-ignore
       return this.getNotFoundError(url);
     } catch (e) {
       if (this.resolver.getRunMode() === 'test') throw e;

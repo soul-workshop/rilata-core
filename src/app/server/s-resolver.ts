@@ -18,7 +18,7 @@ export class ServerResolver<RES extends ServerResolves<DTO>> {
   }
 
   getServerPath(): string {
-    // @ts-ignore
+    // @ts-expect-error
     return import.meta.dir; // path/to/file
   }
 
