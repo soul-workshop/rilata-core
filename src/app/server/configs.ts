@@ -13,6 +13,13 @@ export const defaultJwtConfig: JwtConfig = {
   jwtRefreshLifetimeAsHour: 24 * 3,
 };
 
+export function getJwtSecretKey(): string {
+  function throwErr(): never {
+    throw Error('not found jwt secret key in env.JWT_SECRET');
+  }
+  return process.env.JWT_SECRET ?? throwErr();
+}
+
 export function getJwtConfig(config?: Partial<JwtConfig>): JwtConfig {
   const inputConfig = config ?? {};
   return {

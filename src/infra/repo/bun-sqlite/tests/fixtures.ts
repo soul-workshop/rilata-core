@@ -9,7 +9,6 @@ import { GeneralModuleResolver } from '../../../../app/module/types';
 import { Repositoriable } from '../../../../app/resolve/repositoriable';
 import { GeneralServerResolver } from '../../../../app/server/types';
 import { CommandService } from '../../../../app/service/concrete-service/command.service';
-import { BunSqliteStrategy } from '../../../../app/service/transaction-strategy/bun-sqlite.strategy';
 import { CommandServiceParams, InputDodValidator, ServiceResult } from '../../../../app/service/types';
 import { DatabaseObjectSavingError } from '../../../../common/exeptions';
 import { getEnvLogMode } from '../../../../common/index';
@@ -27,6 +26,7 @@ import { StringChoiceValidationRule } from '../../../../domain/validator/rules/v
 import { BunSqliteDatabase } from '../database';
 import { EventRepositorySqlite } from '../repositories/event';
 import { BunSqliteRepository } from '../repository';
+import { BunSqliteStrategy } from '../transaction/bun-sqlite.strategy';
 import { BunRepoCtor, MigrateRow } from '../types';
 
 export namespace SqliteTestFixtures {

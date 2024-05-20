@@ -18,7 +18,6 @@ export * from './service/concrete-service/command.service';
 export * from './service/concrete-service/event.service';
 export * from './service/concrete-service/query.service';
 export * from './service/transaction-strategy/strategy';
-export * from './service/transaction-strategy/bun-sqlite.strategy';
 export * from './service/transaction-strategy/uow.strategy';
 export * from './service/base.service';
 export * from './service/constants';

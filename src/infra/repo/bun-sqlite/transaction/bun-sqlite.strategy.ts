@@ -1,6 +1,6 @@
-import { BunSqliteDatabase } from '../../../infra/repo/bun-sqlite/database';
-import { storeDispatcher } from '../../async-store/store-dispatcher';
-import { TransactionStrategy } from './strategy';
+import { storeDispatcher } from '../../../../app/async-store/store-dispatcher';
+import { TransactionStrategy } from '../../../../app/service/transaction-strategy/strategy';
+import { BunSqliteDatabase } from '../database';
 
 export class BunSqliteStrategy extends TransactionStrategy {
   protected executeWithTransaction<
