@@ -16,6 +16,7 @@ export interface BusMessageRepository<ASYNC extends boolean> {
 }
 
 type BusRepository = BusMessageRepository<boolean>;
+
 export const BusMessageRepository = {
   instance(resolver: Repositoriable): BusRepository {
     return resolver.resolveRepo(BusMessageRepository) as BusRepository;

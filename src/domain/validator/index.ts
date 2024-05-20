@@ -1,6 +1,6 @@
 export * from './constants';
-export { RuleError } from './rules/types';
-export {
+export { type RuleError } from './rules/types';
+export type {
   RuleErrors, ValidatorMap, FieldErrors, ArrayFieldErrors,
   GeneralDtoFieldValidator, GeneralLiteralFieldValidator,
 } from './field-validator/types';
