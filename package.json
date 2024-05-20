@@ -23,7 +23,8 @@
     "./http": "./src/app/http.index.ts",
     "./bus": "./src/app/bus.index.ts",
     "./bun-db": "./src/infra/repo/bun-sqlite/index.ts",
-    "./bus-impl": "./src/infra/bus/index.ts"
+    "./bus-impl": "./src/infra/bus/index.ts",
+    "./fixtures": "./tests/fixtures/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
