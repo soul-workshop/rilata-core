@@ -12,3 +12,5 @@ export class BunSqliteStrategy extends TransactionStrategy {
     return transactionFn();
   }
 }
+
+export const bunSqliteStrategy = new BunSqliteStrategy();
