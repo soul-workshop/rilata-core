@@ -1,5 +1,5 @@
-import { getEnvLogMode } from '../../common/index';
-import { JwtConfig, ServerConfig } from './types';
+import { getEnvLogMode, UnionToTuple } from '../../common/index';
+import { JwtConfig, RunMode, ServerConfig } from './types';
 
 export const defaultServerConfig: Required<ServerConfig> = {
   hostname: 'localhost',
@@ -28,4 +28,17 @@ export function getServerConfig(config?: ServerConfig): Required<ServerConfig> {
     hostname: process.env.HOST ?? config?.hostname ?? defaultServerConfig.hostname,
     loggerModes: getEnvLogMode() ?? config?.loggerModes ?? defaultServerConfig.loggerModes,
   };
+}
+
+function getEnvRunMode(): RunMode | undefined {
+  const mode = process.env.NODE_ENV;
+  if (mode === undefined) return;
+
+  const allModes: UnionToTuple<RunMode> = ['test', 'dev', 'prod'];
+  // eslint-disable-next-line consistent-return
+  return allModes.find((arrMode) => arrMode === mode);
+}
+
+export function getRunMode(defMode?: RunMode): RunMode {
+  return getEnvRunMode() ?? defMode ?? 'test';
 }

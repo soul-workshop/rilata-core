@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   describe, test, expect, beforeEach, spyOn, afterEach, Mock,
@@ -181,7 +182,7 @@ describe('register company saga service tests', async () => {
       const existPersonRequestDod = dtoUtility.replaceAttrs(registerCompanyRequestDod, {
         attrs: { person: { iin: '123123123123' } },
       });
-      const result = await sut.execute(dtoUtility.deepCopy(existPersonRequestDod));
+      const result = await sut.execute(existPersonRequestDod);
       expect(result.isFailure()).toBe(true);
       const errValue = (result.value as PersonAlreadyExistsError);
       expect(errValue).toEqual({

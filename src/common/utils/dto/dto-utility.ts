@@ -5,7 +5,8 @@ import { DTO } from '../../../domain/dto';
 import { AssertionException } from '../../exeptions';
 import {
   DeepPartial,
-  ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs, GetDtoKeysByDotNotation,
+  ExcludeDeepDtoAttrs, ExcludeDtoAttrs, ExtendDtoAttrs,
+  GetDomainAttrsDotKeys, UnknownDto, ManyDtoKeys, ReplaceDtoAttrs,
 } from '../../type-functions';
 import { DeepAttr } from '../../types';
 
@@ -13,7 +14,7 @@ class DtoUtility {
   /** Возвращает копию объекта T, с исключенными атрибутами K. */
   excludeAttrs<
     T extends DTO,
-    K extends keyof T | ReadonlyArray<keyof T>
+    K extends ManyDtoKeys<T>
   >(obj: T, excludeAttrs: K, copy = true): ExcludeDtoAttrs<T, K> {
     const returnObj = copy ? this.deepCopy(obj) : obj;
     const excludeAttrsArr = (
@@ -41,8 +42,8 @@ class DtoUtility {
   }
 
   /** Возвращает объект T, со значениями с объекта P.
-  * - Обнавляются только существующие атрибуты,
-  *   новые атрибуты объявленные в P не добавляются.
+  * - Не использовать для изменений структуры данных.
+  * - Не изменяет объекты внутри массива, такие случаи обрабатывать отдельно.
   * - Если P[key] имеет значение undefined, то значение остается старым.
   * - Если copy=true возвращается копия объекта, иначе тот же объект */
   replaceAttrs<
@@ -51,15 +52,38 @@ class DtoUtility {
   >(obj: T, newValues: P, copy = true): T {
     const returnObj = copy ? this.deepCopy(obj) : obj;
     Object.entries(newValues).forEach(([key, value]) => {
-      if (!(key in obj) || value === undefined) {
-        /* not added new keys and not replaced undefined value */
-      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-        returnObj[key as keyof T] = this.replaceAttrs(obj[key], value, copy);
-      } else {
-        returnObj[key as keyof T] = value;
+      const keyIsValid = (key in obj) && (key in newValues);
+      if (keyIsValid && value !== undefined) {
+        if (this.isDto(obj[key]) && this.isDto(value)) {
+          returnObj[key as keyof T] = this.replaceAttrs(obj[key], value, copy);
+        } else {
+          returnObj[key as keyof T] = value;
+        }
       }
     });
     return returnObj;
+  }
+
+  /** Возвращает объект T, с измененными типом и значениями P.
+  * - Все значения Т, перетираются значениями P с изменением типа.
+  * - Не изменяет объекты внутри массива, такие случаи обрабатывать отдельно.
+  * - Не использовать для изменений структуры данных.
+  * - Если copy=true возвращается копия объекта, иначе тот же объект */
+  hardReplaceAttrs<
+    T extends DTO,
+    P extends UnknownDto<T>,
+  >(obj: T, newValues: P, copy = true): ReplaceDtoAttrs<T, P> {
+    const returnObj: Record<string, unknown> = copy ? this.deepCopy(obj) : obj;
+    Object.entries(newValues).forEach(([key, value]) => {
+      if ((key in obj) && (key in newValues)) {
+        if (this.isDto(obj[key]) && this.isDto(value)) {
+          returnObj[key] = this.hardReplaceAttrs(obj[key], value, copy);
+        } else {
+          returnObj[key] = value;
+        }
+      }
+    });
+    return returnObj as ReplaceDtoAttrs<T, P>;
   }
 
   /**
@@ -99,14 +123,14 @@ class DtoUtility {
   *   во вложенном объекте 'phone'. */
   excludeDeepAttrsByKeys<
     ATTRS extends DTO,
-    EXC extends GetDtoKeysByDotNotation<ATTRS> | GetDtoKeysByDotNotation<ATTRS>[]
+    EXC extends GetDomainAttrsDotKeys<ATTRS>
   >(obj: ATTRS, excludedAttrs: EXC): ExcludeDeepDtoAttrs<ATTRS, EXC> {
     return this.excludeDeepAttrs(obj, excludedAttrs) as ExcludeDeepDtoAttrs<ATTRS, EXC>;
   }
 
-  excludeDeepAttrs(obj: DTO, keys: string | string[]): DTO {
+  excludeDeepAttrs(obj: DTO, keys: string | string[] | ReadonlyArray<string>): DTO {
     const objCopy = this.deepCopy(obj);
-    const attrs = Array.isArray(keys) ? keys : [keys];
+    const attrs = (Array.isArray(keys) ? keys : [keys]) as string[];
 
     const deepDelete = (dto: DTO, attributePath: string): void => {
       const attributePathAsArray = attributePath.split('.');
@@ -207,7 +231,7 @@ class DtoUtility {
     return result;
   }
 
-  isDTO(value: unknown): value is DTO {
+  isDto(value: unknown): value is DTO {
     return value !== undefined
       && value !== null
       && value.constructor === Object;

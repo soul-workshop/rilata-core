@@ -1,12 +1,13 @@
 import { describe, expect, test } from 'bun:test';
 import { AssertionException } from '../../exeptions';
+import { ReplaceDtoAttrs } from '../../type-functions';
 import { dtoUtility } from './dto-utility';
 
 const sut = dtoUtility;
 
 describe('dtoUtility class', () => {
   describe('получение глубокой копии объекта', () => {
-    const personDTO = {
+    const personDto = {
       name: 'nur',
       phone: ['first number', 'second number'],
       wife: {
@@ -16,15 +17,15 @@ describe('dtoUtility class', () => {
     };
 
     test('возращается точная копия объекта', () => {
-      const copiedObj = sut.deepCopy(personDTO);
+      const copiedObj = sut.deepCopy(personDto);
 
-      expect(copiedObj).toStrictEqual(personDTO);
-      expect(copiedObj).not.toBe(personDTO);
+      expect(copiedObj).toStrictEqual(personDto);
+      expect(copiedObj).not.toBe(personDto);
     });
   });
 
-  describe('получение объекта с новыми значениями', () => {
-    const personDTO = {
+  describe('изменение объекта новыми значениями', () => {
+    const personDto = {
       name: 'Bill',
       phone: ['+ 7 777 7777'],
       age: 42,
@@ -39,12 +40,12 @@ describe('dtoUtility class', () => {
     };
 
     test('изменения атрибутов первого уровня, получили копию объекта', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: 43, sex: '' };
-      const newPersonDTO = sut.replaceAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.replaceAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO).not.toBe(copiedPersonDTO);
-      expect(newPersonDTO).toEqual({
+      expect(newPersonDto).not.toBe(copiedPersonDto);
+      expect(newPersonDto).toEqual({
         name: 'Bill',
         phone: ['+ 7 777 7777'],
         age: 43, // was 42
@@ -60,12 +61,12 @@ describe('dtoUtility class', () => {
     });
 
     test('изменения атрибутов первого уровня, изменили оригинал объекта', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: 43, sex: '' };
-      const newPersonDTO = sut.replaceAttrs(copiedPersonDTO, newValues, false);
+      const newPersonDto = sut.replaceAttrs(copiedPersonDto, newValues, false);
 
-      expect(newPersonDTO).toBe(copiedPersonDTO);
-      expect(newPersonDTO).toEqual({
+      expect(newPersonDto).toBe(copiedPersonDto);
+      expect(newPersonDto).toEqual({
         name: 'Bill',
         phone: ['+ 7 777 7777'],
         age: 43, // was 42
@@ -81,11 +82,11 @@ describe('dtoUtility class', () => {
     });
 
     test('изменение значения массива на первом уровне', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { phone: ['+ 7 777 0011'], age: 44 };
-      const newPersonDTO = sut.replaceAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.replaceAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO).toEqual({
+      expect(newPersonDto).toEqual({
         name: 'Bill',
         phone: ['+ 7 777 0011'], // was +7 777 7777
         age: 44, // was 42
@@ -101,11 +102,11 @@ describe('dtoUtility class', () => {
     });
 
     test('дополнительные атрибуты не добавляются', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: 45, sex: '', eyeColor: 'brown' };
-      const newPersonDTO = sut.replaceAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.replaceAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO).toEqual({
+      expect(newPersonDto).toEqual({
         name: 'Bill',
         phone: ['+ 7 777 7777'],
         age: 45, // was 42
@@ -121,12 +122,12 @@ describe('dtoUtility class', () => {
     });
 
     test('переданный атрибут со значением undefined не копируется в возвращаемый объект', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: 46, sex: undefined };
 
-      const newPersonDTO = sut.replaceAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.replaceAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO).toEqual({
+      expect(newPersonDto).toEqual({
         name: 'Bill',
         phone: ['+ 7 777 7777'],
         age: 46, // was 42
@@ -142,12 +143,12 @@ describe('dtoUtility class', () => {
     });
 
     test('замена атрибутов вложенного уровня происходит нормально', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: 47, car: { model: 'Ford' } };
 
-      const newPersonDTO = sut.replaceAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.replaceAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO).toEqual({
+      expect(newPersonDto).toEqual({
         name: 'Bill',
         phone: ['+ 7 777 7777'],
         age: 47, // was 42
@@ -163,12 +164,12 @@ describe('dtoUtility class', () => {
     });
 
     test('замена атрибутов двух вложенных уровней происходит нормально', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: 48, car: { model: 'Ford', engine: { type: 'gasoline' } } };
 
-      const newPersonDTO = sut.replaceAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.replaceAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO).toEqual({
+      expect(newPersonDto).toEqual({
         name: 'Bill',
         phone: ['+ 7 777 7777'],
         age: 48, // was 42
@@ -220,107 +221,345 @@ describe('dtoUtility class', () => {
     });
   });
 
-  describe('тестирование расширения атрибутов DTO', () => {
-    const personDTO = {
+  describe('жесткое изменение объекта новыми значениями с изменением типа', () => {
+    const personDto = {
+      name: 'Bill',
+      phone: ['+ 7 777 7777'],
+      age: 42,
+      sex: 'man',
+      car: {
+        model: 'Camry',
+        engine: {
+          type: 'diesel',
+          cylindersCount: 4,
+        },
+      },
+    };
+
+    test('жесткое изменение атрибутов первого уровня, получили копию объекта', () => {
+      const copiedPersonDto = sut.deepCopy(personDto);
+      const newValues = { age: 43, sex: '' };
+      const newPersonDto = sut.hardReplaceAttrs(copiedPersonDto, newValues);
+
+      expect(newPersonDto).not.toBe(copiedPersonDto);
+      const expectDto: ReplaceDtoAttrs<typeof copiedPersonDto, typeof newPersonDto> = {
+        name: 'Bill',
+        phone: ['+ 7 777 7777'],
+        age: 43,
+        sex: '',
+        car: {
+          model: 'Camry',
+          engine: {
+            type: 'diesel',
+            cylindersCount: 4,
+          },
+        },
+      };
+      expect(newPersonDto).toEqual(expectDto);
+    });
+
+    test('жесткое изменение атрибутов первого уровня, изменили оригинал объекта', () => {
+      const copiedPersonDto = sut.deepCopy(personDto);
+      const newValues = { age: 43, sex: '' };
+      const newPersonDto = sut.hardReplaceAttrs(copiedPersonDto, newValues, false);
+
+      expect(newPersonDto).toBe(copiedPersonDto);
+      const expectDto: ReplaceDtoAttrs<typeof copiedPersonDto, typeof newPersonDto> = {
+        name: 'Bill',
+        phone: ['+ 7 777 7777'],
+        age: 43,
+        sex: '',
+        car: {
+          model: 'Camry',
+          engine: {
+            type: 'diesel',
+            cylindersCount: 4,
+          },
+        },
+      };
+      expect(newPersonDto).toEqual(expectDto);
+    });
+
+    test('жесткое изменение значения массива и изменение типа на первом уровне', () => {
+      const copiedPersonDto = sut.deepCopy(personDto);
+      const newValues = { phone: [null], age: 'child' };
+      const newPersonDto = sut.hardReplaceAttrs(copiedPersonDto, newValues);
+
+      const expectDto: ReplaceDtoAttrs<typeof copiedPersonDto, typeof newValues> = {
+        name: 'Bill',
+        phone: [null], // was +7 777 7777
+        age: 'child', // was 42
+        sex: 'man',
+        car: {
+          model: 'Camry',
+          engine: {
+            type: 'diesel',
+            cylindersCount: 4,
+          },
+        },
+      };
+      expect(newPersonDto).toEqual(expectDto);
+    });
+
+    test('жесткое изменение, дополнительные атрибуты не добавляются', () => {
+      const copiedPersonDto = sut.deepCopy(personDto);
+      const newValues = { age: 'child', sex: '', eyeColor: 'brown' };
+      const newPersonDto = sut.hardReplaceAttrs(copiedPersonDto, newValues);
+
+      const expectDto: ReplaceDtoAttrs<typeof copiedPersonDto, typeof newValues> = {
+        name: 'Bill',
+        phone: ['+ 7 777 7777'],
+        age: 'child', // was 42
+        sex: '', // was man
+        car: {
+          model: 'Camry',
+          engine: {
+            type: 'diesel',
+            cylindersCount: 4,
+          },
+        },
+      };
+      expect(newPersonDto).toEqual(expectDto);
+    });
+
+    test('жесткое изменение атрибут со значением undefined тоже перезаписывает значение', () => {
+      const copiedPersonDto = sut.deepCopy(personDto);
+      const newValues = { age: 46, sex: undefined };
+
+      const newPersonDto = sut.hardReplaceAttrs(copiedPersonDto, newValues);
+
+      const expectDto: ReplaceDtoAttrs<typeof copiedPersonDto, typeof newValues> = {
+        name: 'Bill',
+        phone: ['+ 7 777 7777'],
+        age: 46, // was 42
+        sex: undefined, // replaced to undefined
+        car: {
+          model: 'Camry',
+          engine: {
+            type: 'diesel',
+            cylindersCount: 4,
+          },
+        },
+      };
+      expect(newPersonDto).toEqual(expectDto);
+    });
+
+    test('жесткая замена атрибутов вложенного уровня происходит нормально', () => {
+      const models = {
+        Toyota: 1,
+        BMW: 2,
+        Audi: 3,
+        Ford: 4,
+      };
+      const copiedPersonDto = sut.deepCopy(personDto);
+      const newValues = { age: 47, car: { model: models.Toyota } };
+
+      const newPersonDto = sut.hardReplaceAttrs(copiedPersonDto, newValues);
+      const expectDto: ReplaceDtoAttrs<typeof copiedPersonDto, typeof newValues> = {
+        name: 'Bill',
+        phone: ['+ 7 777 7777'],
+        age: 47, // was 42
+        sex: 'man',
+        car: {
+          model: 1, // was 'Camry'
+          engine: {
+            type: 'diesel',
+            cylindersCount: 4,
+          },
+        },
+      };
+
+      expect(newPersonDto).toEqual(expectDto);
+    });
+
+    test('жесткая замена атрибутов двух вложенных уровней происходит нормально', () => {
+      const copiedPersonDto = sut.deepCopy(personDto);
+      const newValues = { age: 48, car: { model: 5, engine: { type: undefined } } };
+
+      const newPersonDto = sut.hardReplaceAttrs(copiedPersonDto, newValues);
+      const expectDto: ReplaceDtoAttrs<typeof copiedPersonDto, typeof newValues> = {
+        name: 'Bill',
+        phone: ['+ 7 777 7777'],
+        age: 48, // was 42
+        sex: 'man',
+        car: {
+          model: 5, // was 'Camry'
+          engine: {
+            type: undefined, // was 'diesel'
+            cylindersCount: 4,
+          },
+        },
+      };
+
+      expect(newPersonDto).toEqual(expectDto);
+    });
+
+    test('жесктая замена атрибутов двух вложенных уровней происходит нормально', () => {
+      const carOwner = {
+        name: 'Bill',
+        home: null,
+        car: {
+          model: 'Audi',
+          engine: null,
+        },
+      };
+      const newValues = {
+        home: {
+          address: 'World street, 56',
+        },
+        car: {
+          engine: {
+            type: 'electro',
+          },
+          mode: '4wd',
+        },
+      };
+      const newCarOwner = sut.hardReplaceAttrs(carOwner, newValues);
+
+      const expectDto: ReplaceDtoAttrs<typeof carOwner, typeof newValues> = {
+        name: 'Bill',
+        home: {
+          address: 'World street, 56',
+        },
+        car: {
+          model: 'Audi',
+          engine: {
+            type: 'electro',
+          },
+        },
+      };
+      expect(newCarOwner).toEqual(expectDto);
+    });
+
+    test('жесктая замена добавление несуществующего атрибута не приводит к изменениям', () => {
+      const carOwner = {
+        name: 'Bill',
+        car: {
+          model: 'Audi',
+          engine: null,
+        },
+      };
+      const newValues = {
+        age: 32,
+        car: {
+          mode: '4wd',
+          engine: {},
+        },
+      };
+      const newCarOwner = sut.hardReplaceAttrs(carOwner, newValues);
+
+      const expectDto: ReplaceDtoAttrs<typeof carOwner, typeof newValues> = {
+        name: 'Bill',
+        car: {
+          model: 'Audi',
+          engine: {},
+        },
+      };
+      expect(newCarOwner).toEqual(expectDto);
+    });
+  });
+
+  describe('тестирование расширения атрибутов Dto', () => {
+    const personDto = {
       firstName: 'nur',
       lastName: 'ama',
       age: 42,
     };
 
     test('атрибуты обновляются, получилию копию объекта', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newAttrs = { age: 43 };
 
-      const newPersonDTO = sut.extendAttrs(copiedPersonDTO, newAttrs);
+      const newPersonDto = sut.extendAttrs(copiedPersonDto, newAttrs);
 
-      expect(newPersonDTO).not.toBe(copiedPersonDTO);
+      expect(newPersonDto).not.toBe(copiedPersonDto);
 
-      expect(newPersonDTO.firstName).toBe(personDTO.firstName);
-      expect(newPersonDTO.lastName).toBe(personDTO.lastName);
-      expect(newPersonDTO.age).toBe(newAttrs.age);
+      expect(newPersonDto.firstName).toBe(personDto.firstName);
+      expect(newPersonDto.lastName).toBe(personDto.lastName);
+      expect(newPersonDto.age).toBe(newAttrs.age);
     });
 
     test('атрибуты обновляются, получилию тот же объект', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newAttrs = { age: 43 };
 
-      const newPersonDTO = sut.extendAttrs(copiedPersonDTO, newAttrs, false);
+      const newPersonDto = sut.extendAttrs(copiedPersonDto, newAttrs, false);
 
-      expect(newPersonDTO).toBe(copiedPersonDTO);
+      expect(newPersonDto).toBe(copiedPersonDto);
 
-      expect(newPersonDTO.firstName).toBe(personDTO.firstName);
-      expect(newPersonDTO.lastName).toBe(personDTO.lastName);
-      expect(newPersonDTO.age).toBe(newAttrs.age);
+      expect(newPersonDto.firstName).toBe(personDto.firstName);
+      expect(newPersonDto.lastName).toBe(personDto.lastName);
+      expect(newPersonDto.age).toBe(newAttrs.age);
     });
 
     test('новые атриубты добавляются в возвращаемый объект', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newAttrs = { sex: 'man', phone: ['first phone number'] };
 
-      const newPersonDTO = sut.extendAttrs(copiedPersonDTO, newAttrs);
+      const newPersonDto = sut.extendAttrs(copiedPersonDto, newAttrs);
 
-      expect(newPersonDTO.firstName).toBe(personDTO.firstName);
-      expect(newPersonDTO.lastName).toBe(personDTO.lastName);
-      expect(newPersonDTO.age).toBe(personDTO.age);
-      expect(newPersonDTO.sex).toBe(newAttrs.sex);
-      expect(newPersonDTO.phone).toBe(newAttrs.phone);
+      expect(newPersonDto.firstName).toBe(personDto.firstName);
+      expect(newPersonDto.lastName).toBe(personDto.lastName);
+      expect(newPersonDto.age).toBe(personDto.age);
+      expect(newPersonDto.sex).toBe(newAttrs.sex);
+      expect(newPersonDto.phone).toBe(newAttrs.phone);
     });
 
     test('возвращается объект с типом второго объекта', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: '1 year' };
 
-      const newPersonDTO = sut.extendAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.extendAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO.firstName).toBe(personDTO.firstName);
-      expect(newPersonDTO.lastName).toBe(personDTO.lastName);
-      expect(newPersonDTO.age).toBe(newValues.age);
+      expect(newPersonDto.firstName).toBe(personDto.firstName);
+      expect(newPersonDto.lastName).toBe(personDto.lastName);
+      expect(newPersonDto.age).toBe(newValues.age);
     });
 
     test('переданный атрибут со значением undefine копируется в возращаемое значение', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
       const newValues = { age: undefined };
 
-      const newPersonDTO = sut.extendAttrs(copiedPersonDTO, newValues);
+      const newPersonDto = sut.extendAttrs(copiedPersonDto, newValues);
 
-      expect(newPersonDTO.firstName).toBe(personDTO.firstName);
-      expect(newPersonDTO.lastName).toBe(personDTO.lastName);
-      expect(newPersonDTO.age).toBe(undefined);
+      expect(newPersonDto.firstName).toBe(personDto.firstName);
+      expect(newPersonDto.lastName).toBe(personDto.lastName);
+      expect(newPersonDto.age).toBe(undefined);
     });
   });
 
   describe('тестироваине удаления атрибутов объекта', () => {
-    const personDTO = {
+    const personDto = {
       firstName: 'nur',
       lastName: 'ama',
       age: 42,
     };
 
     test('убирается один атрибут, получили копию объекта', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
 
-      const newPersonDTO = sut.excludeAttrs(copiedPersonDTO, 'age');
+      const newPersonDto = sut.excludeAttrs(copiedPersonDto, 'age');
 
-      expect(newPersonDTO).not.toBe(copiedPersonDTO);
-      const recievedAttrKeys = new Set(Object.keys(newPersonDTO));
+      expect(newPersonDto).not.toBe(copiedPersonDto);
+      const recievedAttrKeys = new Set(Object.keys(newPersonDto));
       const expectedAttrKeys = new Set(['firstName', 'lastName']);
       expect(recievedAttrKeys).toEqual(expectedAttrKeys);
     });
 
     test('убирается один атрибут, получили тот же объект', () => {
-      const copiedPersonDTO = sut.deepCopy(personDTO);
+      const copiedPersonDto = sut.deepCopy(personDto);
 
-      const newPersonDTO = sut.excludeAttrs(copiedPersonDTO, 'age', false);
+      const newPersonDto = sut.excludeAttrs(copiedPersonDto, 'age', false);
 
-      expect(newPersonDTO).toBe(copiedPersonDTO);
-      const recievedAttrKeys = new Set(Object.keys(newPersonDTO));
+      expect(newPersonDto).toBe(copiedPersonDto);
+      const recievedAttrKeys = new Set(Object.keys(newPersonDto));
       const expectedAttrKeys = new Set(['firstName', 'lastName']);
       expect(recievedAttrKeys).toEqual(expectedAttrKeys);
     });
   });
   // Надо исправить ошибку с типами и проверить метод excludeDeepAttrs TODO: Нурболат
   describe('тест метода excludeDeepAttrs', () => {
-    const personDTO = {
+    const personDto = {
       firstName: 'Donald',
       lastName: 'Jumper',
       contacts: {
@@ -337,7 +576,7 @@ describe('dtoUtility class', () => {
     test('Уберем атрибут первого уровня', () => {
       const attrToDelete = 'firstName';
 
-      const expectedDTO = {
+      const expectedDto = {
         lastName: 'Jumper',
         contacts: {
           phone: {
@@ -350,14 +589,14 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrToDelete);
-      expect(result).toEqual(expectedDTO);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDto, attrToDelete);
+      expect(result).toEqual(expectedDto);
     });
 
     test('Уберем атрибут второго уровня', () => {
       const attrToDelete = 'contacts.phone';
 
-      const expectedDTO = {
+      const expectedDto = {
         firstName: 'Donald',
         lastName: 'Jumper',
         contacts: {
@@ -367,14 +606,14 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrToDelete);
-      expect(result).toEqual(expectedDTO);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDto, attrToDelete);
+      expect(result).toEqual(expectedDto);
     });
 
     test('Уберем атрибут третьего уровня', () => {
       const attrToDelete = 'contacts.email.address';
 
-      const expectedDTO = {
+      const expectedDto = {
         firstName: 'Donald',
         lastName: 'Jumper',
         contacts: {
@@ -387,8 +626,8 @@ describe('dtoUtility class', () => {
         },
       };
 
-      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrToDelete);
-      expect(result).toEqual(expectedDTO);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDto, attrToDelete);
+      expect(result).toEqual(expectedDto);
     });
 
     // Не работает метод когда массив строк TODO: Нурболат
@@ -396,7 +635,7 @@ describe('dtoUtility class', () => {
       // TODO сделать чтобы можно было передавать readonly tuple;
       const attrsToDelete: ['contacts.email.address', 'lastName'] = ['contacts.email.address', 'lastName'];
 
-      const expectedDTO = {
+      const expectedDto = {
         firstName: 'Donald',
         contacts: {
           phone: {
@@ -407,19 +646,18 @@ describe('dtoUtility class', () => {
           },
         },
       };
-
-      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrsToDelete);
-      expect(result).toEqual(expectedDTO);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDto, attrsToDelete);
+      expect(result).toEqual(expectedDto);
     });
 
     // Не работает метод когда массив строк TODO: Нурболат
     test('Проверка, что оригинал не трогается.', () => {
-      const personDTOCopy = sut.deepCopy(personDTO);
+      const personDtoCopy = sut.deepCopy(personDto);
       const attrsToDelete: ['firstName', 'contacts.phone'] = ['firstName', 'contacts.phone'];
-      const result = dtoUtility.excludeDeepAttrsByKeys(personDTO, attrsToDelete);
+      const result = dtoUtility.excludeDeepAttrsByKeys(personDto, attrsToDelete);
 
-      expect(result).not.toEqual(personDTO);
-      expect(personDTO).toStrictEqual(personDTOCopy);
+      expect(result).not.toEqual(personDto);
+      expect(personDto).toStrictEqual(personDtoCopy);
     });
   });
 
@@ -455,7 +693,7 @@ describe('dtoUtility class', () => {
   });
 
   describe('Получение значения объекта по вложенному ключу (DeepAttr)', () => {
-    const storeDTO = {
+    const storeDto = {
       categories: {
         products: {
           banana: {
@@ -466,84 +704,84 @@ describe('dtoUtility class', () => {
     };
 
     test('Успех. Без вложенности.', () => {
-      const result = dtoUtility.getValueByDeepAttr(storeDTO, 'categories');
+      const result = dtoUtility.getValueByDeepAttr(storeDto, 'categories');
       expect(result).toMatchObject({ products: { banana: { price: 10 } } });
     });
 
     test('Успех. Одинарная вложенность.', () => {
-      const result = dtoUtility.getValueByDeepAttr(storeDTO, 'categories.products');
+      const result = dtoUtility.getValueByDeepAttr(storeDto, 'categories.products');
       expect(result).toMatchObject({ banana: { price: 10 } });
     });
 
     test('Успех. Двойная вложенность.', () => {
-      const result = dtoUtility.getValueByDeepAttr(storeDTO, 'categories.products.banana');
+      const result = dtoUtility.getValueByDeepAttr(storeDto, 'categories.products.banana');
       expect(result).toMatchObject({ price: 10 });
     });
 
     test('Успех. Полная вложенность', () => {
-      const result = dtoUtility.getValueByDeepAttr(storeDTO, 'categories.products.banana.price');
+      const result = dtoUtility.getValueByDeepAttr(storeDto, 'categories.products.banana.price');
       expect(result).toBe(10);
     });
 
     test('После вызова метода исходный объект не изменен.', () => {
-      const storeDTOCopy = dtoUtility.deepCopy(storeDTO);
-      dtoUtility.getValueByDeepAttr(storeDTO, 'categories.products.banana');
-      expect(storeDTO).toStrictEqual(storeDTOCopy);
+      const storeDtoCopy = dtoUtility.deepCopy(storeDto);
+      dtoUtility.getValueByDeepAttr(storeDto, 'categories.products.banana');
+      expect(storeDto).toStrictEqual(storeDtoCopy);
     });
 
     test('Если запрашиваемый ключ - объект, '
         + 'то получаем действительную ссылку на него, а не копию.', () => {
       const banana = dtoUtility.getValueByDeepAttr<{ price: number }>(
-        storeDTO,
+        storeDto,
         'categories.products.banana',
       ) as { price: number };
       const newBananaPrice = 25;
       banana.price = newBananaPrice;
-      expect(storeDTO.categories.products.banana.price).toBe(newBananaPrice);
+      expect(storeDto.categories.products.banana.price).toBe(newBananaPrice);
     });
 
     test('Не успех. Ключ отсутствует.', () => {
-      expect(dtoUtility.getValueByDeepAttr(storeDTO, 'unknown'))
+      expect(dtoUtility.getValueByDeepAttr(storeDto, 'unknown'))
         .toBeUndefined();
     });
 
     test('Не успех. Ключ отсутствует. Исключение', () => {
-      expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'unknown', true))
+      expect(() => dtoUtility.getValueByDeepAttr(storeDto, 'unknown', true))
         .toThrow(new AssertionException('В объекте {"categories":{"products":{"banana":{"price":25}}}} отсутствует вложенный ключ unknown.'));
     });
 
     test('Не успех. Ключ отсутствует (вложенный).', () => {
-      expect(dtoUtility.getValueByDeepAttr(storeDTO, 'categories.unknown'))
+      expect(dtoUtility.getValueByDeepAttr(storeDto, 'categories.unknown'))
         .toBeUndefined();
     });
 
     test('Не успех. Ключ отсутствует (вложенный). Исключение', () => {
-      expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'categories.unknown', true))
+      expect(() => dtoUtility.getValueByDeepAttr(storeDto, 'categories.unknown', true))
         .toThrow(new AssertionException('В объекте {"categories":{"products":{"banana":{"price":25}}}} отсутствует вложенный ключ categories.unknown.'));
     });
 
     test('Не успех. Ключ отсутствует (вложенный несколько раз).', () => {
-      expect(dtoUtility.getValueByDeepAttr(storeDTO, 'categories.unknown.fake.another'))
+      expect(dtoUtility.getValueByDeepAttr(storeDto, 'categories.unknown.fake.another'))
         .toBeUndefined();
     });
 
     test('Не успех. Ключ отсутствует (вложенный несколько раз). Исключение', () => {
-      expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'categories.unknown.fake.another', true))
+      expect(() => dtoUtility.getValueByDeepAttr(storeDto, 'categories.unknown.fake.another', true))
         .toThrow(new AssertionException('В объекте {"categories":{"products":{"banana":{"price":25}}}} отсутствует вложенный ключ categories.unknown.fake.another.'));
     });
 
     test('Не успех. Ключ начинается с точки', () => {
-      expect(() => dtoUtility.getValueByDeepAttr(storeDTO, '.categories'))
+      expect(() => dtoUtility.getValueByDeepAttr(storeDto, '.categories'))
         .toThrow(new AssertionException('Ключ .categories не может начинаться или заканчиваться точкой и не может быть пустым'));
     });
 
     test('Не успех. Ключ заканчивается точкой', () => {
-      expect(() => dtoUtility.getValueByDeepAttr(storeDTO, 'categories.'))
+      expect(() => dtoUtility.getValueByDeepAttr(storeDto, 'categories.'))
         .toThrow(new AssertionException('Ключ categories. не может начинаться или заканчиваться точкой и не может быть пустым'));
     });
 
     test('Не успех. Ключ пустая строка', () => {
-      expect(() => dtoUtility.getValueByDeepAttr(storeDTO, ''))
+      expect(() => dtoUtility.getValueByDeepAttr(storeDto, ''))
         .toThrow(new AssertionException('Ключ  не может начинаться или заканчиваться точкой и не может быть пустым'));
     });
   });
@@ -588,33 +826,33 @@ describe('dtoUtility class', () => {
     });
   });
 
-  describe('Метод isDTO', () => {
+  describe('Метод isDto', () => {
     test('Object: true', () => {
-      expect(dtoUtility.isDTO({ param: 'value' })).toBe(true);
+      expect(dtoUtility.isDto({ param: 'value' })).toBe(true);
     });
 
     test('String: false', () => {
-      expect(dtoUtility.isDTO('myString')).toBe(false);
+      expect(dtoUtility.isDto('myString')).toBe(false);
     });
 
     test('Array: false', () => {
-      expect(dtoUtility.isDTO(['a', 'b', 'c'])).toBe(false);
+      expect(dtoUtility.isDto(['a', 'b', 'c'])).toBe(false);
     });
 
     test('Set: false', () => {
-      expect(dtoUtility.isDTO(new Set([1, 2, 4]))).toBe(false);
+      expect(dtoUtility.isDto(new Set([1, 2, 4]))).toBe(false);
     });
 
     test('Date: false', () => {
-      expect(dtoUtility.isDTO(new Date())).toBe(false);
+      expect(dtoUtility.isDto(new Date())).toBe(false);
     });
 
     test('Undefined: false', () => {
-      expect(dtoUtility.isDTO(undefined)).toBe(false);
+      expect(dtoUtility.isDto(undefined)).toBe(false);
     });
 
     test('Null: false', () => {
-      expect(dtoUtility.isDTO(null)).toBe(false);
+      expect(dtoUtility.isDto(null)).toBe(false);
     });
   });
 });
