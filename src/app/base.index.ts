@@ -31,7 +31,7 @@ export type {
   ValidationError, BackendBaseErrors, ServiceBaseErrors, PermissionDeniedError,
 } from './service/error-types';
 export * from './service/service';
-export {
+export type {
   AppEventType, GetModuleName, ServiceResult, BaseServiceParams,
   FullServiceResult, InputDodValidator, EventServiceParams, GeneraQueryService,
   QueryServiceParams, GeneralEventService, CommandServiceParams, FullServiceResultDTO,

@@ -10,7 +10,7 @@ import { MigrationsSqliteRepository } from './repositories/migrations';
 import { BunSqliteRepository } from './repository';
 import { BunRepoCtor } from './types';
 
-export abstract class BunSqliteDatabase implements TestDatabase<false> {
+export class BunSqliteDatabase implements TestDatabase<false> {
   migrationRepo: MigrationsSqliteRepository;
 
   protected resolver!: GeneralModuleResolver;
