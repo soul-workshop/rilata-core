@@ -1,3 +1,4 @@
+import { GeneralServerResolver } from '../../../src/app/base.index';
 import { Controller } from '../../../src/app/controller/controller';
 import { InjectCallerMiddleware } from '../../../src/app/http.index';
 import { BunServer } from '../../../src/app/server/bun-server';
@@ -8,7 +9,7 @@ export class ServiceModulesBunServer extends BunServer {
     new InjectCallerMiddleware(),
   ];
 
-  protected controllers: Controller[] = [
+  protected serverControllers: Controller<GeneralServerResolver>[] = [
     new AboutController(),
   ];
 }

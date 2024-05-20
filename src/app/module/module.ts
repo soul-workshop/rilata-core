@@ -18,6 +18,8 @@ import { AssertionException } from '../../common/exeptions';
 import { GeneralServerResolver } from '../server/types';
 import { Caller } from '../controller/types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
+import { BaseUrlModuleController } from '../controller/base-url-m-controller';
+import { Controller } from '../controller/controller';
 
 export abstract class Module {
   readonly abstract moduleName: string;
@@ -29,6 +31,8 @@ export abstract class Module {
   readonly abstract commandServices: GeneralCommandService[];
 
   readonly abstract eventServices: GeneralEventService[];
+
+  protected controllers: Controller<GeneralModuleResolver>[] = [];
 
   protected moduleResolver!: GeneralModuleResolver;
 
@@ -45,6 +49,9 @@ export abstract class Module {
     this.logger = moduleResolver.getLogger();
     this.logger.info(`  | resolver for module ${this.moduleName} inited successfully`);
 
+    this.controllers.push(this.getBaseUrlModuleController());
+    this.controllers.forEach((controller) => { controller.init(this.moduleResolver); });
+
     this.services = [...this.queryServices, ...this.commandServices, ...this.eventServices];
   }
 
@@ -58,6 +65,10 @@ export abstract class Module {
 
   getLogger(): Logger {
     return this.logger;
+  }
+
+  getModuleControllers(): Controller<GeneralModuleResolver>[] {
+    return this.controllers;
   }
 
   async executeService<S extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
@@ -97,6 +108,10 @@ export abstract class Module {
       );
       return failure(err);
     }
+  }
+
+  protected getBaseUrlModuleController(): BaseUrlModuleController {
+    return new BaseUrlModuleController();
   }
 
   async executeEventService(eventDod: GeneralEventDod): Promise<void> {

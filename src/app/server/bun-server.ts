@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 import { Serve, Server } from 'bun';
 import { AsyncLocalStorage } from 'async_hooks';
 import { RilataServer } from './server';
 import { Locale } from '../../domain/locale';
 import { Controller } from '../controller/controller';
-import { ModuleController } from '../controller/module-controller';
 import { ResultDTO, RilataRequest } from '../controller/types';
 import { Middleware } from '../middleware/middleware';
 import { InternalError, NotFoundError } from '../service/error-types';
@@ -20,9 +20,9 @@ export abstract class BunServer extends RilataServer {
 
   protected abstract middlewares: Middleware[];
 
-  protected abstract controllers: Controller[];
+  protected abstract serverControllers: Controller<GeneralServerResolver>[];
 
-  protected urls: Record<string, Controller> = {};
+  protected urls: Record<string, Controller<any>> = {};
 
   protected server: Server | undefined;
 
@@ -30,23 +30,12 @@ export abstract class BunServer extends RilataServer {
     super.init(serverResolver);
     this.initStarted();
 
-    this.middlewares.forEach((middleware) => {
-      middleware.init(serverResolver);
-    });
+    this.middlewares.forEach((middleware) => middleware.init(serverResolver));
     this.logger.info('all server middlewares loaded');
 
-    this.modules.forEach((module) => {
-      const controller = new ModuleController();
-      controller.init(module.getModuleResolver());
-      this.controllers.push(controller);
-    });
-
-    this.controllers.forEach((controller) => {
-      controller.getUrls().forEach((url) => {
-        this.urls[url] = controller;
-      });
-    });
-    this.logger.info('all runned module controllers loaded');
+    this.serverControllers.forEach((controller) => controller.init(this.resolver));
+    this.setControllerUrls();
+    this.logger.info('all controllers loaded');
 
     storeDispatcher.setThreadStore(new AsyncLocalStorage());
     this.logger.info('async local store dispatcher setted');
@@ -82,6 +71,18 @@ export abstract class BunServer extends RilataServer {
       if (this.resolver.getRunMode() === 'test') throw e;
       return this.getInternalError(req, e as Error);
     }
+  }
+
+  setControllerUrls(): void {
+    const controllers: Controller<any>[] = this.serverControllers;
+    this.modules.map((module) => module.getModuleControllers()).forEach((mControllers) => {
+      controllers.push(...mControllers);
+    });
+    controllers.forEach((controller) => {
+      controller.getUrls().forEach((url) => {
+        this.urls[url] = controller;
+      });
+    });
   }
 
   protected processMiddlewares(req: Request): Response | undefined {

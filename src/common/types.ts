@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type LiteralType = string | number | boolean | bigint;
 export type LiteralWithUndefined = LiteralType | undefined;
 

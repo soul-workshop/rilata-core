@@ -1,3 +1,4 @@
+import { GeneralServerResolver } from '../../../src/app/base.index';
 import { Controller } from '../../../src/app/controller/controller';
 import { Middleware } from '../../../src/app/middleware/middleware';
 import { InjectCallerMiddleware } from '../../../src/app/middleware/prepared/inject-caller';
@@ -8,5 +9,5 @@ export class BusRunServer extends BusBunServer {
     new InjectCallerMiddleware(),
   ];
 
-  protected controllers: Controller[] = [];
+  protected serverControllers: Controller<GeneralServerResolver>[] = [];
 }

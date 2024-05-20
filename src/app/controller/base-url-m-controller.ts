@@ -11,7 +11,7 @@ import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
 
-export class ModuleController implements Controller {
+export class BaseUrlModuleController implements Controller<GeneralModuleResolver> {
   protected moduleResolver!: GeneralModuleResolver;
 
   init(moduleResolver: GeneralModuleResolver): void {
