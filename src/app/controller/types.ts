@@ -51,14 +51,17 @@ export type DispositionTypes = keyof typeof dispositionTypeMap;
  * @property {MimeTypes} [mimeType] - Тип MIME для файла. По умолчанию 'json'.
  * @property {number} [status] - HTTP статус для ответа. По умолчанию 200.
  * @property {BufferEncoding} [encode] - Кодировка для чтения файла. По умолчанию 'utf8'.
- * @property {boolean} [shouldZip] - Указывает, следует ли сжимать файл в zip. По умолчанию true.
+ * @property {boolean} [shouldCompress] - Указывает, надо ли сжимать файл в zip. По умолчанию true.
+ * @property {'br' | 'gzip' | 'deflate'} [compressionFormat] - Формат компрессии.
+   По умолчанию 'json'. Актуально только в случае shouldCompress = true.
  * @property {DispositionTypes} [disposition] - Значение для Content-Disposition заголовка.
    По умолчанию 'inline'.
  */
 export type ResponseFileOptions = {
+  compressionFormat?: 'br' | 'gzip' | 'deflate', // default 'br'
   mimeType?: MimeTypes, // default 'json'
   status?: number, // default 200
   encode?: BufferEncoding, // default 'utf8'
-  shouldZip?: boolean, // default true
+  shouldCompress?: boolean, // default true
   disposition?: DispositionTypes // default inline
 }
