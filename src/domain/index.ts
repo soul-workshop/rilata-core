@@ -1,12 +1,12 @@
 export type { DTO } from './dto';
 export type { Locale, LocaleHint } from './locale';
-export {
+export type {
   ARDT, DodType, ErrorDod, EventDod, ErrorType,
   DomainMeta, RequestDod, SimpleARDT, DomainAttrs,
   GeneralARDT, GeneralArParams, GeneralErrorDod, GeneralEventDod,
   GeneralRequestDod, AggregateRootParams,
 } from './domain-data/domain-types';
-export {
+export type {
   GeneralAR, GetARParams, RoleAttrs, GroupRoleAttrs,
 } from './domain-object/types';
 export * from './domain-object/domain-object';

@@ -1,5 +1,5 @@
-export * from './database/database';
-export * from './database/test.database';
+export type { Database } from './database/database';
+export type { TestDatabase } from './database/test.database';
 export type { TestBatchRecords, Asyncable } from './database/types';
 export * from './database/event.repository';
 export * from './database/test.repository';

@@ -3,7 +3,7 @@ export * from './server/bus-server';
 export * from './server/bus.s-resolver';
 export * from './server/configs';
 export * from './server/s-resolver';
-export * from './server/s-resolves';
+export type { ServerResolves, BusServerResolves } from './server/s-resolves';
 export * from './server/server-starter';
 export * from './server/server';
 export type {
@@ -13,7 +13,7 @@ export type {
 
 export * from './module/bus.m-resolver';
 export * from './module/m-resolver';
-export * from './module/m-resolves';
+export type { ModuleResolves } from './module/m-resolves';
 export * from './module/module';
 export type {
   GetModule, ModuleType, GetModuleResolves, GeneralModuleResolver,

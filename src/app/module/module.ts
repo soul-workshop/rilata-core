@@ -18,7 +18,7 @@ import { AssertionException } from '../../common/exeptions';
 import { GeneralServerResolver } from '../server/types';
 import { Caller } from '../controller/types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
-import { ModuleController } from '../controller/base-url-m-controller';
+import { ModuleController } from '../controller/m-controller';
 import { Controller } from '../controller/controller';
 
 export abstract class Module {
