@@ -1,13 +1,16 @@
 /* eslint-disable no-underscore-dangle */
-import { stat, readFile } from 'fs/promises';
+import { stat } from 'fs/promises';
 import JSZip from 'jszip';
-
-type Options = {
-  status?: number,
-  encode?: BufferEncoding,
-}
+import { MimeTypes, ResponseFileOptions } from '../../../app/controller/types';
+import { mimeTypesMap, dispositionTypeMap } from '../../../app/controller/constants';
 
 class ResponseUtility {
+  /**
+   * Создает JSON-ответ.
+   * @param data - Данные для включения в тело ответа.
+   * @param status - HTTP статус ответа. По умолчанию 200.
+   * @returns Ответ с данными в формате JSON.
+   */
   createJsonResponse(data: unknown, status = 200): Response {
     try {
       return this.createJson(data, status);
@@ -16,18 +19,40 @@ class ResponseUtility {
     }
   }
 
-  async createFileResponse(filePath: string, options?: Options): Promise<Response> {
+  /**
+   * Создает ответ с файлом.
+   * @param filePath - Путь к файлу.
+   * @param options - Опции для ответа.
+   * @returns Ответ с содержимым файла.
+   */
+  async createFileResponse(filePath: string, options?: ResponseFileOptions): Promise<Response> {
     try {
-      const fileStat = await stat(filePath);
-      const fileContent = await readFile(filePath, options?.encode ?? 'utf8');
+      const fileSize = await this.fileSize(filePath);
+      const mimeType = options?.mimeType ?? this.fileMimeType(filePath);
+      const fileName = filePath.split('/').pop() ?? filePath;
 
-      const headers = {
-        'Content-Type': 'application/octet-stream', // Или другой тип в зависимости от расширения файла
-        'Content-Length': fileStat.size.toString(),
-        'Content-Disposition': `attachment; filename="${filePath.split('/').pop()}"`,
+      const shouldZip = options?.shouldZip ?? true;
+      const disposition = options?.disposition ?? 'inline';
+      const dispositionValue = disposition === 'inline'
+        ? 'inline'
+        : `${dispositionTypeMap[disposition]}${shouldZip ? `"${fileName}.zip"` : `"${fileName}"`}`;
+
+      const headers: Record<string, string> = {
+        'Content-Type': mimeTypesMap[mimeType],
+        'Content-Length': fileSize,
+        'Content-Disposition': dispositionValue,
       };
 
-      return new Response(fileContent, {
+      let content: Uint8Array | string;
+      if (shouldZip) {
+        content = await this.compressFile(filePath);
+        headers['Content-Encoding'] = 'gzip';
+        headers['Content-Length'] = content.length.toString();
+      } else {
+        content = await this.fileContent(filePath);
+      }
+
+      return new Response(content, {
         status: options?.status ?? 200,
         headers,
       });
@@ -36,28 +61,43 @@ class ResponseUtility {
     }
   }
 
-  async createZipFileResponse(filePath: string, options?: Options): Promise<Response> {
-    try {
-      const fileName = filePath.split('/').pop();
-      if (!fileName) throw Error('not found file');
-      const fileContent = await readFile(filePath, options?.encode ?? 'utf8');
-
-      const zip = new JSZip();
-      zip.file(fileName, fileContent);
-
-      const zipContent = await zip.generateAsync({ type: 'uint8array' });
-      const headers = {
-        'Content-Type': 'application/zip',
-        'Content-Disposition': `attachment; filename="${fileName}.zip"`,
-        'Content-Length': zipContent.length.toString(),
-      };
-
-      return new Response(zipContent, { status: options?.status ?? 200, headers });
-    } catch (err) {
-      return this.createError(err as Error, 'file');
-    }
+  /**
+   * Читает содержимое файла.
+   * @param path - Путь к файлу.
+   * @returns Промис, который возвращает содержимое файла как строку.
+   */
+  protected fileContent(path: string): Promise<string> {
+    return Bun.file(path).text();
   }
 
+  /**
+   * Определяет размер файла.
+   * @param path - Путь к файлу.
+   * @returns Промис, который возвращает размер файла в байтах.
+   */
+  private async fileSize(path: string): Promise<string> {
+    const fileStat = await stat(path);
+    return fileStat.size.toString();
+  }
+
+  /**
+   * Сжимает файл.
+   * @param path - Путь к файлу.
+   * @returns Промис, который возвращает сжатое содержимое файла.
+   */
+  private async compressFile(path: string): Promise<Uint8Array> {
+    const zip = new JSZip();
+    const fileName = path.split('/').pop() ?? path;
+    zip.file(fileName, this.fileContent(path));
+    return zip.generateAsync({ type: 'uint8array' });
+  }
+
+  /**
+   * Создает JSON-ответ с сообщением об ошибке.
+   * @param err - Объект ошибки.
+   * @param errType - Тип ошибки file | json.
+   * @returns Ответ с сообщением об ошибке в формате JSON.
+   */
   private createError(err: Error, errType: string): Response {
     return this.createJson({
       type: `fail ${errType} response create error`,
@@ -66,9 +106,15 @@ class ResponseUtility {
     }, 500);
   }
 
+  /**
+   * Создает JSON-ответ.
+   * @param data - Данные для включения в тело ответа.
+   * @param status - HTTP статус ответа.
+   * @returns Ответ с данными в формате JSON.
+   */
   private createJson(data: unknown, status: number): Response {
     const jsonString = JSON.stringify(data);
-    const contentLength = Buffer.byteLength(jsonString, 'utf8');
+    const contentLength = Buffer.byteLength(jsonString);
     const headers = {
       'Content-Type': 'application/json',
       'Content-Length': contentLength.toString(),
@@ -77,6 +123,17 @@ class ResponseUtility {
       status,
       headers,
     });
+  }
+
+  /**
+   * Определяет MIME-тип файла на основе его расширения.
+   * @param path - Путь к файлу.
+   * @returns MIME-тип файла.
+   */
+  private fileMimeType(path: string): MimeTypes {
+    const fileExt = path.split('.').pop();
+    if (fileExt && fileExt in mimeTypesMap) return fileExt as MimeTypes;
+    return 'txt';
   }
 }
 

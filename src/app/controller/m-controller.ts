@@ -19,7 +19,7 @@ export class ModuleController extends Controller<GeneralModuleResolver> {
     this.moduleResolver = moduleResolver;
   }
 
-  getUrls(): string[] {
+  getUrls(): string[] | RegExp[] {
     return this.moduleResolver.getModuleUrls();
   }
 
