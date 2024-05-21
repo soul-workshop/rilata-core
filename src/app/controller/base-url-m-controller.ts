@@ -22,14 +22,14 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
     return this.moduleResolver.getModuleUrls();
   }
 
-  async execute(req: RilataRequest, headers?: Record<string, string>): Promise<Response> {
+  async execute(req: RilataRequest): Promise<Response> {
     const jsonBodyResult = await this.getJsonBody(req);
     if (jsonBodyResult.isFailure()) return this.getFailureResponse(jsonBodyResult.value);
     const reqJsonBody = jsonBodyResult.value;
 
     const checkResult = this.checkRequestDodBody(reqJsonBody);
     if (checkResult.isFailure()) {
-      return this.getFailureResponse(checkResult.value, headers);
+      return this.getFailureResponse(checkResult.value);
     }
     const requestDod = checkResult.value;
 
@@ -37,7 +37,7 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
       .getModule()
       .executeService(requestDod, req.caller);
     if (serviceResult.isSuccess()) {
-      return this.getSuccessResponse(serviceResult.value, headers);
+      return this.getSuccessResponse(serviceResult.value);
     }
     const err = (serviceResult as Result<ServiceBaseErrors, never>).value;
     return this.getFailureResponse(err);
@@ -85,7 +85,7 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
     return success(input as GeneralRequestDod);
   }
 
-  protected getSuccessResponse(payload: unknown, headers?: Record<string, string>): Response {
+  protected getSuccessResponse(payload: unknown): Response {
     const resultDto: ResultDTO<never, unknown> = {
       httpStatus: 200,
       success: true,
@@ -93,11 +93,11 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
     };
     return new Response(JSON.stringify(resultDto), {
       status: resultDto.httpStatus,
-      headers: this.getHeaders(headers),
+      headers: this.getHeaders(),
     });
   }
 
-  protected getFailureResponse(err: ServiceBaseErrors, headers?: Record<string, string>): Response {
+  protected getFailureResponse(err: ServiceBaseErrors): Response {
     const resultDto: ResultDTO<ServiceBaseErrors, never> = {
       httpStatus: STATUS_CODES[err.name] ?? 400,
       success: false,
@@ -105,15 +105,14 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
     };
     return new Response(JSON.stringify(resultDto), {
       status: resultDto.httpStatus,
-      headers: this.getHeaders(headers),
+      headers: this.getHeaders(),
     });
   }
 
-  protected getHeaders(headers?: Record<string, string>): Record<string, string> {
+  protected getHeaders(): Record<string, string> {
     return {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...headers ?? {},
     };
   }
 

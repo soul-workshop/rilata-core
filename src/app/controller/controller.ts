@@ -6,5 +6,5 @@ export interface Controller<R extends GeneralServerResolver | GeneralModuleResol
 
   execute(req: Request): Promise<Response>
 
-  getUrls(): string[]
+  getUrls(): string[] | RegExp[]
 }

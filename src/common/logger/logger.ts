@@ -10,7 +10,7 @@ export interface Logger {
   warning(log: string, logAttrs?: unknown): void
 
   /** Утверждения, если условие ложно, то запишется fatalError */
-  assert(condition: boolean, log: string, logAttrs?: unknown): void
+ assert(condition: boolean, log: string, logAttrs?: unknown): void
 
   /** Ошибки программы которые выявляются в ходе проверок в коде */
   error(log: string, logAttrs?: unknown, err?: Error): Error

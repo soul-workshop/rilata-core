@@ -22,7 +22,9 @@ export abstract class BunServer extends RilataServer {
 
   protected abstract serverControllers: Controller<GeneralServerResolver>[];
 
-  protected urls: Record<string, Controller<any>> = {};
+  protected stringUrls: Record<string, Controller<any>> = {};
+
+  protected regexUrls: [RegExp, Controller<any>][] = [];
 
   protected server: Server | undefined;
 
@@ -58,29 +60,43 @@ export abstract class BunServer extends RilataServer {
   }
 
   async fetch(req: Request): Promise<Response> {
-    const url = new URL(req.url);
     try {
       const middlewaresResult = this.processMiddlewares(req);
       if (middlewaresResult !== undefined) return middlewaresResult;
 
-      const controller = this.urls[url.pathname];
-      if (controller) return controller.execute(req);
+      const controller = this.getControllerByUrlPath(req);
+      if (controller) {
+        const resp = await controller.execute(req);
+        this.log(req, resp);
+        return resp;
+      }
 
-      return this.getNotFoundError(url);
+      return this.getNotFoundError(new URL(req.url).pathname);
     } catch (e) {
       if (this.resolver.getRunMode() === 'test') throw e;
       return this.getInternalError(req, e as Error);
     }
   }
 
-  setControllerUrls(): void {
+  protected getControllerByUrlPath(req: Request): Controller<any> | undefined {
+    const path = new URL(req.url).pathname;
+    const controller = this.stringUrls[path];
+    if (controller) return controller;
+
+    const tuple = this.regexUrls.find(([regex, _]) => regex.test(path));
+    if (tuple) return tuple[1];
+    return undefined;
+  }
+
+  protected setControllerUrls(): void {
     const controllers: Controller<any>[] = this.serverControllers;
     this.modules.map((module) => module.getModuleControllers()).forEach((mControllers) => {
       controllers.push(...mControllers);
     });
     controllers.forEach((controller) => {
       controller.getUrls().forEach((url) => {
-        this.urls[url] = controller;
+        if (typeof url === 'string') this.stringUrls[url] = controller;
+        else this.regexUrls.push([url, controller]);
       });
     });
   }
@@ -94,11 +110,11 @@ export abstract class BunServer extends RilataServer {
     return undefined;
   }
 
-  protected getNotFoundError(url: URL): Response {
+  protected getNotFoundError(path: string): Response {
     const err = dodUtility.getAppError<NotFoundError<Locale<'Not found'>>>(
       'Not found',
       'Запрос по адресу: {{url}} не может быть обработана',
-      { url: url.pathname },
+      { url: path },
     );
     return this.getFailure(err, 404);
   }
@@ -120,5 +136,11 @@ export abstract class BunServer extends RilataServer {
       payload: err,
     };
     return new Response(JSON.stringify(resultDto), { status });
+  }
+
+  protected log(req: Request, resp: Response): void {
+    const method = `${req.method}:`.padEnd(8);
+    const path = `${new URL(req.url).pathname}:`.padEnd(18);
+    this.logger.info(`${method}${path}${resp.status}`);
   }
 }
