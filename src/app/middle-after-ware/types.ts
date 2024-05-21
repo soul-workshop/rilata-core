@@ -6,4 +6,3 @@ import { Middleware } from './middleware';
 export type GeneralMiddleware = Middleware<GeneralServerResolver | GeneralModuleResolver>;
 
 export type GeneralAfterware = Afterware<GeneralServerResolver | GeneralModuleResolver>;
-

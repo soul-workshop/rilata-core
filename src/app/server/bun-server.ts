@@ -11,16 +11,17 @@ import { storeDispatcher } from '../async-store/store-dispatcher';
 import { GeneralServerResolver } from './types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
 import { responseUtility } from '../../common/utils/responce/response-utility';
-import { GeneralMiddleware, GeneralAfterware } from '../middle-after-ware/types';
+import { Middleware } from '../middle-after-ware/middleware';
+import { Afterware } from '../middle-after-ware/afterware';
 
 export abstract class BunServer extends RilataServer {
   port: number | undefined;
 
   hostname: string | undefined;
 
-  protected abstract middlewares: GeneralMiddleware[];
+  protected abstract middlewares: Middleware<GeneralServerResolver>[];
 
-  protected abstract afterwares: GeneralAfterware[];
+  protected abstract afterwares: Afterware<GeneralServerResolver>[];
 
   protected abstract serverControllers: Controller<GeneralServerResolver>[];
 

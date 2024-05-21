@@ -1,8 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 import { stat } from 'fs/promises';
-import JSZip from 'jszip';
+import { createGzip, createDeflate, brotliCompress } from 'zlib';
+import { promisify } from 'util';
 import { MimeTypes, ResponseFileOptions } from '../../../app/controller/types';
 import { mimeTypesMap, dispositionTypeMap } from '../../../app/controller/constants';
+
+const brotliCompressAsync = promisify(brotliCompress);
 
 class ResponseUtility {
   /**
@@ -31,11 +34,12 @@ class ResponseUtility {
       const mimeType = options?.mimeType ?? this.fileMimeType(filePath);
       const fileName = filePath.split('/').pop() ?? filePath;
 
-      const shouldZip = options?.shouldZip ?? true;
+      const shouldCompress = options?.shouldCompress ?? true;
+      const compressionFormat = options?.compressionFormat ?? 'br'; // поддержка различных форматов сжатия, по умолчанию 'br'
       const disposition = options?.disposition ?? 'inline';
       const dispositionValue = disposition === 'inline'
         ? 'inline'
-        : `${dispositionTypeMap[disposition]}${shouldZip ? `"${fileName}.zip"` : `"${fileName}"`}`;
+        : `${dispositionTypeMap[disposition]}${shouldCompress && (compressionFormat === 'gzip' || compressionFormat === 'deflate') ? `"${fileName}.zip"` : `"${fileName}"`}`;
 
       const headers: Record<string, string> = {
         'Content-Type': mimeTypesMap[mimeType],
@@ -44,9 +48,9 @@ class ResponseUtility {
       };
 
       let content: Uint8Array | string;
-      if (shouldZip) {
-        content = await this.compressFile(filePath);
-        headers['Content-Encoding'] = 'gzip';
+      if (shouldCompress) {
+        content = await this.compressFile(filePath, compressionFormat);
+        headers['Content-Encoding'] = compressionFormat;
         headers['Content-Length'] = content.length.toString();
       } else {
         content = await this.fileContent(filePath);
@@ -83,13 +87,45 @@ class ResponseUtility {
   /**
    * Сжимает файл.
    * @param path - Путь к файлу.
+   * @param format - Формат сжатия (gzip, deflate, br).
    * @returns Промис, который возвращает сжатое содержимое файла.
    */
-  private async compressFile(path: string): Promise<Uint8Array> {
-    const zip = new JSZip();
-    const fileName = path.split('/').pop() ?? path;
-    zip.file(fileName, this.fileContent(path));
-    return zip.generateAsync({ type: 'uint8array' });
+  private async compressFile(path: string, format: string): Promise<Uint8Array> {
+    const fileContent = await this.fileContent(path);
+    const buffer = Buffer.from(fileContent);
+
+    switch (format) {
+      case 'br':
+        return brotliCompressAsync(buffer);
+      case 'gzip':
+        return this.compressWithStream(buffer, createGzip);
+      case 'deflate':
+        return this.compressWithStream(buffer, createDeflate);
+      default:
+        throw new Error(`Unsupported compression format: ${format}`);
+    }
+  }
+
+  /**
+   * Сжимает данные с помощью потока.
+   * @param buffer - Данные для сжатия.
+   * @param createStream - Функция создания потока сжатия.
+   * @returns Промис, который возвращает сжатые данные.
+   */
+  private compressWithStream(
+    buffer: Buffer,
+    createStream: () => NodeJS.ReadWriteStream,
+  ): Promise<Uint8Array> {
+    return new Promise((resolve, reject) => {
+      const chunks: Buffer[] = [];
+      const stream = createStream();
+
+      stream.on('data', (chunk) => chunks.push(chunk));
+      stream.on('end', () => resolve(Buffer.concat(chunks)));
+      stream.on('error', reject);
+
+      stream.end(buffer);
+    });
   }
 
   /**

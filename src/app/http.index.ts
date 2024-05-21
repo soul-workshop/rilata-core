@@ -10,7 +10,7 @@ export * from './middle-after-ware/middleware';
 export * from './middle-after-ware/afterware';
 export type { GeneralMiddleware, GeneralAfterware } from './middle-after-ware/types';
 export * from './middle-after-ware/middlewares/inject-caller';
-export * from './middle-after-ware/afterwares/zip';
+export * from './middle-after-ware/afterwares/log-request';
 export type {
   JwtVerifyError, JwtDecodeErrors, JwtVerifyErrors,
   TokenExpiredError, IncorrectTokenError, NotValidTokenPayloadError,

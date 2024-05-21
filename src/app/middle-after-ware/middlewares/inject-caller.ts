@@ -14,7 +14,7 @@ export class InjectCallerMiddleware extends Middleware<GeneralServerResolver> {
     }
 
     rawToken = rawToken?.includes('Bearer ') ? rawToken.replace('Bearer ', '') : rawToken;
-    const verifyResult = this.serverResolver.getJwtVerifier().verifyToken(rawToken);
+    const verifyResult = this.resolver.getJwtVerifier().verifyToken(rawToken);
     if (verifyResult.isFailure()) {
       const respBody: ResultDTO<JwtVerifyErrors, never> = {
         success: false,
