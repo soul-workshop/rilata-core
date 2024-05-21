@@ -5,20 +5,22 @@ import { AsyncLocalStorage } from 'async_hooks';
 import { RilataServer } from './server';
 import { Controller } from '../controller/controller';
 import { ResultDTO, RilataRequest } from '../controller/types';
-import { Middleware } from '../middleware/middleware';
 import { GeneralInternalError, GeneralNotFoundError } from '../service/error-types';
 import { GeneralErrorDod } from '../../domain/domain-data/domain-types';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { GeneralServerResolver } from './types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
 import { responseUtility } from '../../common/utils/responce/response-utility';
+import { GeneralMiddleware, GeneralAfterware } from '../middle-after-ware/types';
 
 export abstract class BunServer extends RilataServer {
   port: number | undefined;
 
   hostname: string | undefined;
 
-  protected abstract middlewares: Middleware[];
+  protected abstract middlewares: GeneralMiddleware[];
+
+  protected abstract afterwares: GeneralAfterware[];
 
   protected abstract serverControllers: Controller<GeneralServerResolver>[];
 

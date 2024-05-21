@@ -7,7 +7,7 @@ import { BackendBaseErrors } from '../service/error-types';
  */
 export const dispositionTypeMap = {
   inline: 'inline',
-  attachment: 'attachment; filename=',
+  attachment: 'attachment',
 };
 
 /**

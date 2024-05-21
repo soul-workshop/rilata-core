@@ -1,12 +1,16 @@
 export * from './controller/controller';
 export * from './controller/m-controller';
+export * from './controller/file-controller';
 export * from './controller/constants';
 export type {
   Caller, ResultDTO, CallerType, DomainUser,
   ModuleCaller, AnonymousUser, RilataRequest,
 } from './controller/types';
-export * from './middleware/middleware';
-export * from './middleware/prepared/inject-caller';
+export * from './middle-after-ware/middleware';
+export * from './middle-after-ware/afterware';
+export type { GeneralMiddleware, GeneralAfterware } from './middle-after-ware/types';
+export * from './middle-after-ware/middlewares/inject-caller';
+export * from './middle-after-ware/afterwares/zip';
 export type {
   JwtVerifyError, JwtDecodeErrors, JwtVerifyErrors,
   TokenExpiredError, IncorrectTokenError, NotValidTokenPayloadError,

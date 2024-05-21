@@ -1,8 +1,9 @@
 import { ResultDTO, RilataRequest } from '../../controller/types';
 import { JwtVerifyErrors } from '../../jwt/jwt-errors';
+import { GeneralServerResolver } from '../../server/types';
 import { Middleware } from '../middleware';
 
-export class InjectCallerMiddleware extends Middleware {
+export class InjectCallerMiddleware extends Middleware<GeneralServerResolver> {
   process(req: RilataRequest): Response | undefined {
     let rawToken = req.headers.get('Authorization');
     if (!rawToken) {

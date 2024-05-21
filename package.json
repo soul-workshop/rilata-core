@@ -14,7 +14,7 @@
   "dependencies": {
     "@types/jszip": "^3.4.1",
     "email-validator": "^2.0.4",
-    "jszip": "^3.10.1"
+    "zlib": "^1.0.5"
   },
   "exports": {
     "./utils": "./src/common/utils/index.ts",
