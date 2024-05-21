@@ -1,12 +1,9 @@
 import { GeneralServerResolver } from '../../../../src/app/base.index';
 import { Controller } from '../../../../src/app/controller/controller';
 
-export class AboutController implements Controller<GeneralServerResolver> {
-  // eslint-disable-next-line
-  init(resolver: GeneralServerResolver): void {}
-
+export class AboutController extends Controller<GeneralServerResolver> {
   async execute(req: Request): Promise<Response> {
-    return new Response('bun test implement service');
+    return new Response('another server contoller implement', { status: 200 });
   }
 
   getUrls(): string[] {

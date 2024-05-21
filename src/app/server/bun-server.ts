@@ -3,15 +3,15 @@
 import { Serve, Server } from 'bun';
 import { AsyncLocalStorage } from 'async_hooks';
 import { RilataServer } from './server';
-import { Locale } from '../../domain/locale';
 import { Controller } from '../controller/controller';
 import { ResultDTO, RilataRequest } from '../controller/types';
 import { Middleware } from '../middleware/middleware';
-import { InternalError, NotFoundError } from '../service/error-types';
+import { GeneralInternalError, GeneralNotFoundError } from '../service/error-types';
 import { GeneralErrorDod } from '../../domain/domain-data/domain-types';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { GeneralServerResolver } from './types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
+import { responceUtility } from '../../common/utils/responce/response-utility';
 
 export abstract class BunServer extends RilataServer {
   port: number | undefined;
@@ -67,14 +67,15 @@ export abstract class BunServer extends RilataServer {
       const controller = this.getControllerByUrlPath(req);
       if (controller) {
         const resp = await controller.execute(req);
-        this.log(req, resp);
-        return resp;
+        return this.postProcess(req, resp);
       }
 
-      return this.getNotFoundError(new URL(req.url).pathname);
+      const errResp = this.getNotFoundError(new URL(req.url).pathname);
+      return this.postProcess(req, errResp);
     } catch (e) {
       if (this.resolver.getRunMode() === 'test') throw e;
-      return this.getInternalError(req, e as Error);
+      const errResp = this.getInternalError(req, e as Error);
+      return this.postProcess(req, errResp);
     }
   }
 
@@ -83,6 +84,7 @@ export abstract class BunServer extends RilataServer {
     const controller = this.stringUrls[path];
     if (controller) return controller;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const tuple = this.regexUrls.find(([regex, _]) => regex.test(path));
     if (tuple) return tuple[1];
     return undefined;
@@ -111,7 +113,7 @@ export abstract class BunServer extends RilataServer {
   }
 
   protected getNotFoundError(path: string): Response {
-    const err = dodUtility.getAppError<NotFoundError<Locale<'Not found'>>>(
+    const err = dodUtility.getAppError<GeneralNotFoundError>(
       'Not found',
       'Запрос по адресу: {{url}} не может быть обработана',
       { url: path },
@@ -121,10 +123,17 @@ export abstract class BunServer extends RilataServer {
 
   protected getInternalError(req: Request, e: Error): Response {
     this.logger.error(String(e), { url: req.url, body: req.json() }, e as Error);
-    const err = dodUtility.getAppError<InternalError<Locale<'Internal error'>>>(
+
+    const data = this.resolver.getRunMode() === 'dev'
+      ? {
+        error: (e as Error)?.message ?? 'not handled error',
+        stack: (e as Error)?.stack ?? 'no stack trace',
+      }
+      : {};
+    const err = dodUtility.getAppError<GeneralInternalError>(
       'Internal error',
       'Внутренняя ошибка сервера',
-      {},
+      data,
     );
     return this.getFailure(err, 500);
   }
@@ -135,7 +144,12 @@ export abstract class BunServer extends RilataServer {
       success: false,
       payload: err,
     };
-    return new Response(JSON.stringify(resultDto), { status });
+    return responceUtility.createJsonResponse(resultDto, status);
+  }
+
+  protected postProcess(req: Request, resp: Response): Response {
+    this.log(req, resp);
+    return resp;
   }
 
   protected log(req: Request, resp: Response): void {

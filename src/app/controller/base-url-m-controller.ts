@@ -10,8 +10,9 @@ import { badRequestError } from '../service/constants';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
+import { responceUtility } from '../../common/utils/responce/response-utility';
 
-export class BaseUrlModuleController implements Controller<GeneralModuleResolver> {
+export class ModuleController extends Controller<GeneralModuleResolver> {
   protected moduleResolver!: GeneralModuleResolver;
 
   init(moduleResolver: GeneralModuleResolver): void {
@@ -65,7 +66,7 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
   // eslint-disable-next-line max-len
   protected checkRequestDodBody(input: unknown): Result<typeof badRequestError, GeneralRequestDod> {
     if (typeof input !== 'object' || input === null) {
-      return this.getErr('Тело запроса должно быть объектом');
+      return this.getBadRequestErr('Тело запроса должно быть объектом');
     }
 
     if (
@@ -73,14 +74,14 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
       || (input as any)?.meta?.requestId === undefined
       || (input as any)?.meta?.domainType !== 'request'
     ) {
-      return this.getErr('Полезная нагрузка запроса не является объектом requestDod');
+      return this.getBadRequestErr('Полезная нагрузка запроса не является объектом requestDod');
     }
 
     if (
       !(input as any).attrs
       || typeof (input as any).attrs !== 'object'
     ) {
-      return this.getErr('Не найдены атрибуты (attrs) объекта requestDod');
+      return this.getBadRequestErr('Не найдены атрибуты (attrs) объекта requestDod');
     }
     return success(input as GeneralRequestDod);
   }
@@ -91,10 +92,7 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
       success: true,
       payload,
     };
-    return new Response(JSON.stringify(resultDto), {
-      status: resultDto.httpStatus,
-      headers: this.getHeaders(),
-    });
+    return responceUtility.createJsonResponse(resultDto, 200);
   }
 
   protected getFailureResponse(err: ServiceBaseErrors): Response {
@@ -103,20 +101,10 @@ export class BaseUrlModuleController implements Controller<GeneralModuleResolver
       success: false,
       payload: err,
     };
-    return new Response(JSON.stringify(resultDto), {
-      status: resultDto.httpStatus,
-      headers: this.getHeaders(),
-    });
+    return responceUtility.createJsonResponse(resultDto, resultDto.httpStatus);
   }
 
-  protected getHeaders(): Record<string, string> {
-    return {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    };
-  }
-
-  protected getErr(errText: string): Result<typeof badRequestError, never> {
+  protected getBadRequestErr(errText: string): Result<typeof badRequestError, never> {
     const err = dtoUtility.replaceAttrs(badRequestError, { locale: {
       text: errText,
     } });

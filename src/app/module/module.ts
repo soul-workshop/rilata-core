@@ -18,7 +18,7 @@ import { AssertionException } from '../../common/exeptions';
 import { GeneralServerResolver } from '../server/types';
 import { Caller } from '../controller/types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
-import { BaseUrlModuleController } from '../controller/base-url-m-controller';
+import { ModuleController } from '../controller/base-url-m-controller';
 import { Controller } from '../controller/controller';
 
 export abstract class Module {
@@ -49,7 +49,7 @@ export abstract class Module {
     this.logger = moduleResolver.getLogger();
     this.logger.info(`  | resolver for module ${this.moduleName} inited successfully`);
 
-    this.controllers.push(this.getBaseUrlModuleController());
+    this.controllers.push(this.getModuleController());
     this.controllers.forEach((controller) => { controller.init(this.moduleResolver); });
 
     this.services = [...this.queryServices, ...this.commandServices, ...this.eventServices];
@@ -110,8 +110,8 @@ export abstract class Module {
     }
   }
 
-  protected getBaseUrlModuleController(): BaseUrlModuleController {
-    return new BaseUrlModuleController();
+  protected getModuleController(): ModuleController {
+    return new ModuleController();
   }
 
   async executeEventService(eventDod: GeneralEventDod): Promise<void> {

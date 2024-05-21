@@ -195,7 +195,7 @@ describe('process http requests by server class', async () => {
       });
 
       const resp = await sut.fetch(req);
-      expect(await resp.text()).toBe('bun test implement service');
+      expect(await resp.text()).toBe('another server contoller implement');
     });
   });
 });

@@ -14,22 +14,32 @@ export type ValidationError = {
 
 export type BadRequestError<L extends Locale<'Bad request'>> = ErrorDod<'Bad request', L, 'app-error'>;
 
+export type GeneralBadRequestError = BadRequestError<Locale<'Bad request'>>
+
 export type NotFoundError<L extends Locale<'Not found'>> = ErrorDod<'Not found', L, 'app-error'>;
 
+export type GeneralNotFoundError = NotFoundError<Locale<'Not found'>>;
+
 export type NetError<L extends Locale<'Net error'>> = ErrorDod<'Net error', L, 'app-error'>;
+
+export type GeneralNetError = NetError<Locale<'Net error'>>;
 
 export type PermissionDeniedError<LOCALE extends Locale<'Permission denied'>> =
   ErrorDod<'Permission denied', LOCALE, 'domain-error'>;
 
+export type GeneralPermissionDeniedError = PermissionDeniedError<Locale<'Permission denied'>>;
+
 export type InternalError<LOCALE extends Locale<'Internal error'>> =
   ErrorDod<'Internal error', LOCALE, 'app-error'>;
 
+export type GeneralInternalError = InternalError<Locale<'Internal error'>>;
+
 export type ServiceBaseErrors =
-  BadRequestError<Locale<'Bad request'>>
-  | NotFoundError<Locale<'Not found'>>
-  | NetError<Locale<'Net error'>>
-  | PermissionDeniedError<Locale<'Permission denied'>>
-  | InternalError<Locale<'Internal error'>>
+  GeneralBadRequestError
+  | GeneralNotFoundError
+  | GeneralNetError
+  | GeneralPermissionDeniedError
+  | GeneralInternalError
   | ValidationError
   | JwtDecodeErrors
   | JwtVerifyErrors;

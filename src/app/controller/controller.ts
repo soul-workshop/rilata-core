@@ -1,10 +1,14 @@
 import { GeneralModuleResolver } from '../module/types';
 import { GeneralServerResolver } from '../server/types';
 
-export interface Controller<R extends GeneralServerResolver | GeneralModuleResolver> {
-  init(resolver: R): void;
+export abstract class Controller<R extends GeneralServerResolver | GeneralModuleResolver> {
+  resolver!: R;
 
-  execute(req: Request): Promise<Response>
+  init(resolver: R): void {
+    this.resolver = resolver;
+  }
 
-  getUrls(): string[] | RegExp[]
+  abstract execute(req: Request): Promise<Response>
+
+  abstract getUrls(): string[] | RegExp[]
 }
