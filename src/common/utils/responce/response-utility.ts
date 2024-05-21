@@ -36,15 +36,23 @@ class ResponseUtility {
 
       const shouldCompress = options?.shouldCompress ?? true;
       const compressionFormat = options?.compressionFormat ?? 'br'; // поддержка различных форматов сжатия, по умолчанию 'br'
-      const disposition = options?.disposition ?? 'inline';
-      const dispositionValue = disposition === 'inline'
-        ? 'inline'
-        : `${dispositionTypeMap[disposition]}${shouldCompress && (compressionFormat === 'gzip' || compressionFormat === 'deflate') ? `"${fileName}.zip"` : `"${fileName}"`}`;
+      let disposition: string;
+      if (!options?.disposition || options.disposition === 'inline') {
+        disposition = 'inline';
+      } else {
+        let filenameString: string;
+        if (shouldCompress && (compressionFormat === 'gzip' || compressionFormat === 'deflate')) {
+          filenameString = `filename="${fileName}.zip"`;
+        } else {
+          filenameString = `filename="${fileName}"`;
+        }
+        disposition = `${dispositionTypeMap.attachment}; ${filenameString}`;
+      }
 
       const headers: Record<string, string> = {
         'Content-Type': mimeTypesMap[mimeType],
         'Content-Length': fileSize,
-        'Content-Disposition': dispositionValue,
+        'Content-Disposition': disposition,
       };
 
       let content: Uint8Array | string;
