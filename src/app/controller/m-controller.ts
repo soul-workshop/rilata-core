@@ -10,7 +10,7 @@ import { badRequestError } from '../service/constants';
 import { dtoUtility } from '../../common/utils/dto/dto-utility';
 import { success } from '../../common/result/success';
 import { failure } from '../../common/result/failure';
-import { responceUtility } from '../../common/utils/responce/response-utility';
+import { responseUtility } from '../../common/utils/responce/response-utility';
 
 export class ModuleController extends Controller<GeneralModuleResolver> {
   protected moduleResolver!: GeneralModuleResolver;
@@ -92,7 +92,7 @@ export class ModuleController extends Controller<GeneralModuleResolver> {
       success: true,
       payload,
     };
-    return responceUtility.createJsonResponse(resultDto, 200);
+    return responseUtility.createJsonResponse(resultDto, 200);
   }
 
   protected getFailureResponse(err: ServiceBaseErrors): Response {
@@ -101,7 +101,7 @@ export class ModuleController extends Controller<GeneralModuleResolver> {
       success: false,
       payload: err,
     };
-    return responceUtility.createJsonResponse(resultDto, resultDto.httpStatus);
+    return responseUtility.createJsonResponse(resultDto, resultDto.httpStatus);
   }
 
   protected getBadRequestErr(errText: string): Result<typeof badRequestError, never> {

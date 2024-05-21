@@ -80,4 +80,4 @@ class ResponseUtility {
   }
 }
 
-export const responceUtility = new ResponseUtility();
+export const responseUtility = new ResponseUtility();

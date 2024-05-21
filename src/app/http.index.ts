@@ -1,5 +1,5 @@
-export type { Controller } from './controller/controller';
-export * from './controller/base-url-m-controller';
+export * from './controller/controller';
+export * from './controller/m-controller';
 export * from './controller/constants';
 export type {
   Caller, ResultDTO, CallerType, DomainUser,

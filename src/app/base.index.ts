@@ -29,6 +29,8 @@ export * from './service/constants';
 export type {
   NetError, InternalError, NotFoundError, BadRequestError,
   ValidationError, BackendBaseErrors, ServiceBaseErrors, PermissionDeniedError,
+  GeneralInternalError, GeneralNotFoundError, GeneralPermissionDeniedError,
+  GeneralNetError, GeneralBadRequestError,
 } from './service/error-types';
 export * from './service/service';
 export type {

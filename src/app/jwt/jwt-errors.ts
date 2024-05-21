@@ -1,4 +1,5 @@
 import { ErrorDod } from '../../domain/domain-data/domain-types';
+import { GeneralInternalError } from '../service/error-types';
 
 type IncorrectTokenBody = {
   text: 'Невозможно расшифровать токен. Токен имеет не верный формат.',

@@ -7,6 +7,7 @@ export * from './dto/dto-utility';
 export * from './enum/enum-utility';
 export * from './jwt/jwt-utils';
 export * from './number/number-utility';
+export * from './responce/response-utility';
 export * from './set/set-utils';
 export * from './string/string-utility';
 export * from './uuid/uuid-utility';

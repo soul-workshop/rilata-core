@@ -11,7 +11,7 @@ import { GeneralErrorDod } from '../../domain/domain-data/domain-types';
 import { storeDispatcher } from '../async-store/store-dispatcher';
 import { GeneralServerResolver } from './types';
 import { dodUtility } from '../../common/utils/dod/dod-utility';
-import { responceUtility } from '../../common/utils/responce/response-utility';
+import { responseUtility } from '../../common/utils/responce/response-utility';
 
 export abstract class BunServer extends RilataServer {
   port: number | undefined;
@@ -144,7 +144,7 @@ export abstract class BunServer extends RilataServer {
       success: false,
       payload: err,
     };
-    return responceUtility.createJsonResponse(resultDto, status);
+    return responseUtility.createJsonResponse(resultDto, status);
   }
 
   protected postProcess(req: Request, resp: Response): Response {
