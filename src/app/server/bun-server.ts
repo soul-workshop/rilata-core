@@ -156,8 +156,8 @@ export abstract class BunServer extends RilataServer {
   }
 
   protected log(req: Request, resp: Response): void {
-    const method = `${req.method}:`.padEnd(8);
-    const path = `${new URL(req.url).pathname}:`.padEnd(18);
+    const method = `${req.method}`.padEnd(8);
+    const path = `${new URL(req.url).pathname}`.padEnd(30);
     this.logger.info(`${method}${path}${resp.status}`);
   }
 }
