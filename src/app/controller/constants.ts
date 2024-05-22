@@ -25,6 +25,7 @@ export const mimeTypesMap = {
   pdf: 'application/pdf',
   zip: 'application/zip',
   mp3: 'audio/mpeg',
+  ico: 'image/x-icon',
 };
 
 /**

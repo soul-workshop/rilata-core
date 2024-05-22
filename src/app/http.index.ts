@@ -5,6 +5,7 @@ export * from './controller/constants';
 export type {
   Caller, ResultDTO, CallerType, DomainUser,
   ModuleCaller, AnonymousUser, RilataRequest,
+  MimeTypes, DispositionTypes, ResponseFileOptions,
 } from './controller/types';
 export * from './middle-after-ware/middleware';
 export * from './middle-after-ware/afterware';
