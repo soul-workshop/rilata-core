@@ -70,15 +70,15 @@ export abstract class BunServer extends RilataServer {
       const controller = this.getControllerByUrlPath(req);
       if (controller) {
         const resp = await controller.execute(req);
-        return this.postProcess(req, resp);
+        return this.processAfterwares(req, resp);
       }
 
       const errResp = this.getNotFoundError(new URL(req.url).pathname);
-      return this.postProcess(req, errResp);
+      return this.processAfterwares(req, errResp);
     } catch (e) {
       if (this.resolver.getRunMode() === 'test') throw e;
       const errResp = this.getInternalError(req, e as Error);
-      return this.postProcess(req, errResp);
+      return this.processAfterwares(req, errResp);
     }
   }
 
@@ -115,6 +115,13 @@ export abstract class BunServer extends RilataServer {
     return undefined;
   }
 
+  protected processAfterwares(req: Request, resp: Response): Response {
+    this.log(req, resp);
+    // TODO: надо добавить логику работы afterware;
+    // TODO: хорошо бы добавить в tests/../run-server начальный html файл.
+    return resp;
+  }
+
   protected getNotFoundError(path: string): Response {
     const err = dodUtility.getAppError<GeneralNotFoundError>(
       'Not found',
@@ -148,16 +155,5 @@ export abstract class BunServer extends RilataServer {
       payload: err,
     };
     return responseUtility.createJsonResponse(resultDto, status);
-  }
-
-  protected postProcess(req: Request, resp: Response): Response {
-    this.log(req, resp);
-    return resp;
-  }
-
-  protected log(req: Request, resp: Response): void {
-    const method = `${req.method}:`.padEnd(8);
-    const path = `${new URL(req.url).pathname}:`.padEnd(18);
-    this.logger.info(`${method}${path}${resp.status}`);
   }
 }
