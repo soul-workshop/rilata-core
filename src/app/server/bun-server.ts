@@ -36,7 +36,8 @@ export abstract class BunServer extends RilataServer {
     this.initStarted();
 
     this.middlewares.forEach((middleware) => middleware.init(serverResolver));
-    this.logger.info('all server middlewares loaded');
+    this.afterwares.forEach((afterware) => afterware.init(serverResolver));
+    this.logger.info('all server middle-after-wares loaded');
 
     this.serverControllers.forEach((controller) => controller.init(this.resolver));
     this.setControllerUrls();
@@ -65,20 +66,22 @@ export abstract class BunServer extends RilataServer {
   async fetch(req: Request): Promise<Response> {
     try {
       const middlewaresResult = this.processMiddlewares(req);
-      if (middlewaresResult !== undefined) return middlewaresResult;
+      if (middlewaresResult !== undefined) {
+        return this.processAfterware(req, middlewaresResult);
+      }
 
       const controller = this.getControllerByUrlPath(req);
       if (controller) {
         const resp = await controller.execute(req);
-        return this.processAfterwares(req, resp);
+        return this.processAfterware(req, resp);
       }
 
       const errResp = this.getNotFoundError(new URL(req.url).pathname);
-      return this.processAfterwares(req, errResp);
+      return this.processAfterware(req, errResp);
     } catch (e) {
       if (this.resolver.getRunMode() === 'test') throw e;
       const errResp = this.getInternalError(req, e as Error);
-      return this.processAfterwares(req, errResp);
+      return this.processAfterware(req, errResp);
     }
   }
 
@@ -115,13 +118,6 @@ export abstract class BunServer extends RilataServer {
     return undefined;
   }
 
-  protected processAfterwares(req: Request, resp: Response): Response {
-    this.log(req, resp);
-    // TODO: надо добавить логику работы afterware;
-    // TODO: хорошо бы добавить в tests/../run-server начальный html файл.
-    return resp;
-  }
-
   protected getNotFoundError(path: string): Response {
     const err = dodUtility.getAppError<GeneralNotFoundError>(
       'Not found',
@@ -155,5 +151,16 @@ export abstract class BunServer extends RilataServer {
       payload: err,
     };
     return responseUtility.createJsonResponse(resultDto, status);
+  }
+
+  protected processAfterware(req: Request, resp: Response): Response {
+    this.log(req, resp);
+    return resp;
+  }
+
+  protected log(req: Request, resp: Response): void {
+    const method = `${req.method}`.padEnd(8);
+    const path = `${new URL(req.url).pathname}`.padEnd(30);
+    this.logger.info(`${method}${path}${resp.status}`);
   }
 }

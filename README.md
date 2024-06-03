@@ -63,7 +63,7 @@
 **Попробовать:**
 - Склонировать репозиторий: `git clone https://github.com/nurgeo/rilata/`;
 - Перейти в папку с проектом: `cd rilata`;
-- Выполнить команду запуска: `bun run -f ./tests/service-oriented-impl/zzz-run-server/main.ts`;
+- Выполнить команду запуска: `bun run ./tests/service-oriented-impl/zzz-run-server/main.ts -f`;
     - опция `-f`: при запуске тестового сервера БД заполняется начальными записями;
 - Выполнить каким либо способом post запрос с токеном авторизации и заполненным телом, например:  
 ```bash
