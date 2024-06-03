@@ -1,4 +1,4 @@
-import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
+import { uuidUtility } from '../../../../../src/core/utils/uuid/uuid-utility';
 import { AggregateFactory } from '../../../../../src/domain/domain-object/aggregate-factory';
 import { CompanyAttrs, CompanyParams } from '../../domain-data/company/params';
 import { CompanyAddedEvent, AddCompanyDomainCommand } from '../../domain-data/company/add-company/a-params';

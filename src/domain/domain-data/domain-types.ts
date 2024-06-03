@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
-import { Caller } from '../../app/controller/types';
-import { ExcludeDeepDotNotationAttrs, GetDtoKeysByDotNotation } from '../../common/type-functions';
-import { UuidType } from '../../common/types';
+import { Caller } from '../../api/controller/types';
+import { ExcludeDeepDotNotationAttrs, GetDtoKeysByDotNotation } from '../../core/type-functions';
+import { UuidType } from '../../core/types';
 import { DTO } from '../dto';
 import { Locale } from '../locale';
 

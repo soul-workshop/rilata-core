@@ -1,9 +1,9 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { TestDatabase } from '../../../../../../src/app/database/test.database';
-import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
-import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
+import { TestDatabase } from '../../../../../../src/api/database/test.database';
+import { dodUtility } from '../../../../../../src/core/utils/dod/dod-utility';
+import { requestStoreMock } from '../../../../../fixtures/request-store-mock';
 import { UserRepositoryImpl } from '../../../../zz-infra/repositories/auth-module/user';
 import { serverStarter } from '../../../../zzz-run-server/starter';
 import { AuthModule } from '../../../module';
@@ -15,10 +15,10 @@ describe('get users service test', async () => {
   const testSever = serverStarter.start(['AuthModule']);
   const module = testSever.getModule<AuthModule>('AuthModule');
   const resolver = module.getModuleResolver();
-  setAndGetTestStoreDispatcher({
+  requestStoreMock({
     requestId,
     moduleResolver: resolver,
-  }).getStoreOrExepction();
+  });
   const sut = module.getServiceByInputDodName<GetingUsersService>('getUsers');
 
   beforeEach(async () => {

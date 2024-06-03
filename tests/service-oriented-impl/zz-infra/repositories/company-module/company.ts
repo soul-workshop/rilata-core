@@ -1,12 +1,12 @@
-import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
-import { EventRepository } from '../../../../../src/app/database/event.repository';
-import { DatabaseObjectSavingError } from '../../../../../src/common/exeptions';
-import { Logger } from '../../../../../src/common/logger/logger';
-import { failure } from '../../../../../src/common/result/failure';
-import { success } from '../../../../../src/common/result/success';
-import { Result } from '../../../../../src/common/result/types';
-import { UuidType } from '../../../../../src/common/types';
-import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
+import { EventRepository } from '../../../../../src/api/database/event.repository';
+import { requestStoreDispatcher } from '../../../../../src/api/request-store/request-store-dispatcher';
+import { DatabaseObjectSavingError } from '../../../../../src/core/exeptions';
+import { Logger } from '../../../../../src/core/logger/logger';
+import { failure } from '../../../../../src/core/result/failure';
+import { success } from '../../../../../src/core/result/success';
+import { Result } from '../../../../../src/core/result/types';
+import { UuidType } from '../../../../../src/core/types';
+import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
 import { FakeClassImplements } from '../../../../fixtures/fake-class-implements';
 import { CompanyAttrs } from '../../../company/domain-data/company/params';
 import { CompanyAR } from '../../../company/domain-object/company/a-root';
@@ -52,7 +52,7 @@ export class CompanyRepositoryImpl implements CompanyRepository {
     const result = await this.testRepo.add({ ...attrs, version });
     if (result.isSuccess()) return success({ id: attrs.id });
 
-    const { requestId } = storeDispatcher.getStoreOrExepction();
+    const { requestId } = requestStoreDispatcher.getPayload();
     this.logger.error(`Компания с id: ${attrs.id} уже существует`, { err: result.value, requestId });
     throw new DatabaseObjectSavingError();
   }
@@ -61,7 +61,7 @@ export class CompanyRepositoryImpl implements CompanyRepository {
     const companyRecord = await this.testRepo.find(id);
     if (companyRecord) {
       const { version, ...attrs } = companyRecord;
-      const logger = storeDispatcher.getStoreOrExepction().moduleResolver.getLogger();
+      const logger = requestStoreDispatcher.getPayload().moduleResolver.getLogger();
       const factory = new CompanyARFactory(logger);
       return success(factory.restore(attrs, version));
     }
@@ -76,7 +76,7 @@ export class CompanyRepositoryImpl implements CompanyRepository {
     const companyRecord = await this.testRepo.findByAttrs({ bin });
     if (companyRecord) {
       const { version, ...attrs } = companyRecord;
-      const logger = storeDispatcher.getStoreOrExepction().moduleResolver.getLogger();
+      const logger = requestStoreDispatcher.getPayload().moduleResolver.getLogger();
       const factory = new CompanyARFactory(logger);
       return success(factory.restore(attrs, version));
     }

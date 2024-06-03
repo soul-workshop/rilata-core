@@ -1,4 +1,4 @@
-import { success } from '../../../common/result/success';
+import { success } from '../../../core/result/success';
 import { LiteralDataType } from '../../validator/rules/types';
 import { ValidationRule } from '../../validator/rules/validation-rule';
 import { CannotBeEmptyStringAssertionRule } from '../rules/assert-rules/cannot-be-empty-string.v-rule';

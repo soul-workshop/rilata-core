@@ -1,5 +1,5 @@
-import { QueryServiceParams } from '../../../../../../src/app/service/types';
-import { UuidType } from '../../../../../../src/common/types';
+import { QueryServiceParams } from '../../../../../../src/api/service/types';
+import { UuidType } from '../../../../../../src/core/types';
 import { RequestDod } from '../../../../../../src/domain/domain-data/domain-types';
 import { UserAttrs, UserParams } from '../../../domain-data/user/params';
 

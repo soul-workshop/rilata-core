@@ -1,8 +1,8 @@
-import { DomainUser, ModuleCaller } from '../../../../src/app/controller/types';
-import { GeneralModuleResolver } from '../../../../src/app/module/types';
-import { ServiceResult } from '../../../../src/app/service/types';
-import { UserId } from '../../../../src/common/types';
-import { dodUtility } from '../../../../src/common/utils/dod/dod-utility';
+import { DomainUser, ModuleCaller } from '../../../../src/api/controller/types';
+import { GeneralModuleResolver } from '../../../../src/api/module/types';
+import { ServiceResult } from '../../../../src/api/service/types';
+import { UserId } from '../../../../src/core/types';
+import { dodUtility } from '../../../../src/core/utils/dod/dod-utility';
 import { AuthFacade } from '../facade';
 import { AuthModule } from '../module';
 import { AddUserRequestDod, AddUserServiceParams } from '../services/user/add-user/s-params';

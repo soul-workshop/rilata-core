@@ -1,5 +1,5 @@
-import { CommandServiceParams } from '../../../../../../src/app/service/types';
-import { UuidType } from '../../../../../../src/common/types';
+import { CommandServiceParams } from '../../../../../../src/api/service/types';
+import { UuidType } from '../../../../../../src/core/types';
 import { RequestDod, EventDod } from '../../../../../../src/domain/domain-data/domain-types';
 import { UserARDT, UserParams } from '../../../domain-data/user/params';
 

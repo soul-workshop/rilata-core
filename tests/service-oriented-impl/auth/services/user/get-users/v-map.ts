@@ -1,4 +1,4 @@
-import { InputDodValidator } from '../../../../../../src/app/service/types';
+import { InputDodValidator } from '../../../../../../src/api/service/types';
 import { DtoFieldValidator } from '../../../../../../src/domain/validator/field-validator/dto-field-validator';
 import { LiteralFieldValidator } from '../../../../../../src/domain/validator/field-validator/literal-field-validator';
 import { ValidatorMap } from '../../../../../../src/domain/validator/field-validator/types';

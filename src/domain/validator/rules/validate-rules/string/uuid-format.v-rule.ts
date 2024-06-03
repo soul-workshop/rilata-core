@@ -1,4 +1,4 @@
-import { uuidUtility } from '../../../../../common/utils/uuid/uuid-utility';
+import { uuidUtility } from '../../../../../core/utils/uuid/uuid-utility';
 import { ValidationRuleAnswer } from '../../types';
 import { ValidationRule } from '../../validation-rule';
 

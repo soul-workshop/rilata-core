@@ -1,4 +1,4 @@
-import { CommandServiceParams } from '../../../../../src/app/service/types';
+import { CommandServiceParams } from '../../../../../src/api/service/types';
 import { RequestDod } from '../../../../../src/domain/domain-data/domain-types';
 import { PersonAttrs } from '../../../subject/domain-data/person/params';
 import { PersonAlreadyExistsError, PersonDoesntExistByIinError } from '../../../subject/domain-object/person/repo-errors';

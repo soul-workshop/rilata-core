@@ -1,7 +1,7 @@
-import { QueryService } from '../../../../../../src/app/service/concrete-service/query.service';
-import { ServiceResult } from '../../../../../../src/app/service/types';
-import { success } from '../../../../../../src/common/result/success';
-import { dtoUtility } from '../../../../../../src/common/utils/dto/dto-utility';
+import { QueryService } from '../../../../../../src/api/service/concrete-service/query.service';
+import { ServiceResult } from '../../../../../../src/api/service/types';
+import { success } from '../../../../../../src/core/result/success';
+import { dtoUtility } from '../../../../../../src/core/utils/dto/dto-utility';
 import { UserAttrs } from '../../../domain-data/user/params';
 import { UserRepository } from '../../../domain-object/user/repo';
 import { AuthModuleResolver } from '../../../resolver';

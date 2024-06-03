@@ -1,6 +1,6 @@
-import { BusMessageRepository } from '../../../src/app/database/bus-message.repository';
-import { EventRepository } from '../../../src/app/database/event.repository';
-import { ModuleResolves } from '../../../src/app/module/m-resolves';
+import { BusMessageRepository } from '../../../src/api/database/bus-message.repository';
+import { EventRepository } from '../../../src/api/database/event.repository';
+import { ModuleResolves } from '../../../src/api/module/m-resolves';
 import { CompanyCmdRepository } from './domain-object/company/repo';
 import { CompanyCmdModule } from './module';
 

@@ -1,8 +1,7 @@
 import {
   describe, test, expect, beforeEach,
 } from 'bun:test';
-import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
-import { setAndGetTestStoreDispatcher } from '../../../../fixtures/test-thread-store-mock';
+import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
 import { serverStarter } from '../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures';
 import { CompanyAttrs } from '../../domain-data/company/params';
@@ -10,14 +9,15 @@ import { CompanyDoesntExistByIdError } from '../../domain-object/company/repo-er
 import { CompanyModule } from '../../module';
 import { GetCompanyRequestDod } from './s.params';
 import { GetingCompanyService } from './service';
-import { TestDatabase } from '../../../../../src/app/database/test.database';
+import { TestDatabase } from '../../../../../src/api/database/test.database';
+import { requestStoreMock } from '../../../../fixtures/request-store-mock';
 
 describe('register company saga service tests', async () => {
   const requestId = '5611f332-f4d9-4c16-a561-04dabe864fc9';
   const testServer = serverStarter.start('all');
   const module = testServer.getModule<CompanyModule>('CompanyModule');
   const resolver = module.getModuleResolver();
-  setAndGetTestStoreDispatcher({
+  requestStoreMock({
     requestId,
     moduleResolver: resolver,
   });

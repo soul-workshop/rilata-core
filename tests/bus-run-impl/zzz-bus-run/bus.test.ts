@@ -1,11 +1,11 @@
 import {
   describe, test, expect, afterAll,
 } from 'bun:test';
-import { EventRepository } from '../../../src/app/database/event.repository';
-import { BusBunServer } from '../../../src/app/server/bus-server';
-import { dodUtility } from '../../../src/common/utils/dod/dod-utility';
-import { dtoUtility } from '../../../src/common/utils/dto/dto-utility';
-import { uuidUtility } from '../../../src/common/utils/uuid/uuid-utility';
+import { EventRepository } from '../../../src/api/database/event.repository';
+import { BusBunServer } from '../../../src/api/server/bus-server';
+import { dodUtility } from '../../../src/core/utils/dod/dod-utility';
+import { dtoUtility } from '../../../src/core/utils/dto/dto-utility';
+import { uuidUtility } from '../../../src/core/utils/uuid/uuid-utility';
 import { AddCompanyRequestDod, AddCompanyRequestDodAttrs } from '../company-cmd/services/company/add-company/s.params';
 import { CompanyOutAttrs } from '../company-read/domain/company/params';
 import { CompanyReadRepository } from '../company-read/domain/company/repo';

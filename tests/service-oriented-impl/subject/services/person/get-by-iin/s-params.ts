@@ -1,4 +1,4 @@
-import { QueryServiceParams } from '../../../../../../src/app/service/types';
+import { QueryServiceParams } from '../../../../../../src/api/service/types';
 import { RequestDod } from '../../../../../../src/domain/domain-data/domain-types';
 import { PersonAttrs, PersonParams } from '../../../domain-data/person/params';
 import { PersonDoesntExistByIinError } from '../../../domain-object/person/repo-errors';

@@ -1,5 +1,5 @@
-import { Logger } from '../../common/logger/logger';
-import { dtoUtility } from '../../common/utils/dto/dto-utility';
+import { Logger } from '../../core/logger/logger';
+import { dtoUtility } from '../../core/utils/dto/dto-utility';
 import { GeneralArParams } from '../index';
 import { DtoFieldValidator } from '../validator/field-validator/dto-field-validator';
 import { AggregateRootHelper } from './aggregate-helper';

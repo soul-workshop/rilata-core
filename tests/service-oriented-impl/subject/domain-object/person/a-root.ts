@@ -1,4 +1,4 @@
-import { Logger } from '../../../../../src/common/logger/logger';
+import { Logger } from '../../../../../src/core/logger/logger';
 import { AggregateRoot } from '../../../../../src/domain/domain-object/aggregate-root';
 import { PersonAttrs, PersonParams } from '../../domain-data/person/params';
 import { personInvariantsValidator } from '../../domain-data/person/v-map';

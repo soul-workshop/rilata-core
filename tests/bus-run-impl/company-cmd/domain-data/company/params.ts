@@ -1,4 +1,4 @@
-import { UuidType } from '../../../../../src/common/types';
+import { UuidType } from '../../../../../src/core/types';
 import { AggregateRootParams, ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
 import { CompanyAddedEvent } from './add-company/a-params';
 

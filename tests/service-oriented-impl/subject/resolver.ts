@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { EventRepository } from '../../../src/app/database/event.repository';
-import { ModuleResolver } from '../../../src/app/module/m-resolver';
-import { GeneralServerResolver } from '../../../src/app/server/types';
+import { EventRepository } from '../../../src/api/database/event.repository';
+import { ModuleResolver } from '../../../src/api/module/m-resolver';
+import { GeneralServerResolver } from '../../../src/api/server/types';
 import { PersonRepository } from './domain-object/person/repo';
 import { SubjectResolves } from './resolves';
 

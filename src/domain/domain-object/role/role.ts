@@ -1,4 +1,4 @@
-import { UserId } from '../../../common/types';
+import { UserId } from '../../../core/types';
 import { RoleAttrs } from '../types';
 
 export abstract class Role<A extends RoleAttrs> {

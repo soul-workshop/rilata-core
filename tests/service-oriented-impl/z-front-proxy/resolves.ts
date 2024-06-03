@@ -1,4 +1,4 @@
-import { ModuleResolves } from '../../../src/app/module/m-resolves';
+import { ModuleResolves } from '../../../src/api/module/m-resolves';
 import { AuthFacade } from '../auth/facade';
 import { CompanyFacade } from '../company/facade';
 import { SubjectFacade } from '../subject/facade';

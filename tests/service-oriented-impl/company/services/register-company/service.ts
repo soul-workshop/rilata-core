@@ -1,14 +1,13 @@
-import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
-import { DomainUser } from '../../../../../src/app/controller/types';
-import { ValidationError } from '../../../../../src/app/service/error-types';
-import { CommandService } from '../../../../../src/app/service/concrete-service/command.service';
-import { InputDodValidator, ServiceResult } from '../../../../../src/app/service/types';
-import { failure } from '../../../../../src/common/result/failure';
-import { success } from '../../../../../src/common/result/success';
-import { Result } from '../../../../../src/common/result/types';
-import { UuidType } from '../../../../../src/common/types';
-import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
-import { dtoUtility } from '../../../../../src/common/utils/dto/dto-utility';
+import { DomainUser } from '../../../../../src/api/controller/types';
+import { ValidationError } from '../../../../../src/api/service/error-types';
+import { CommandService } from '../../../../../src/api/service/concrete-service/command.service';
+import { InputDodValidator, ServiceResult } from '../../../../../src/api/service/types';
+import { failure } from '../../../../../src/core/result/failure';
+import { success } from '../../../../../src/core/result/success';
+import { Result } from '../../../../../src/core/result/types';
+import { UuidType } from '../../../../../src/core/types';
+import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
+import { dtoUtility } from '../../../../../src/core/utils/dto/dto-utility';
 import { AuthFacade } from '../../../auth/facade';
 import { PersonAlreadyExistsError, PersonDoesntExistByIinError } from '../../../subject/domain-object/person/repo-errors';
 import { SubjectFacade } from '../../../subject/facade';
@@ -22,7 +21,8 @@ import {
   RegisterCompanyRequestDodAttrs,
 } from './s.params';
 import { RegisterCompanyValidator } from './v.map';
-import { UowTransactionStrategy } from '../../../../../src/app/service/transaction-strategy/uow.strategy';
+import { UowTransactionStrategy } from '../../../../../src/api/service/transaction-strategy/uow.strategy';
+import { requestStoreDispatcher } from '../../../../../src/api/request-store/request-store-dispatcher';
 
 export class RegisteringCompanyService extends CommandService<
   CompanyRegisteredServiceParams, CompanyModuleResolver
@@ -44,7 +44,7 @@ export class RegisteringCompanyService extends CommandService<
   async runDomain(
     input: RegisterCompanyRequestDod,
   ): Promise<ServiceResult<CompanyRegisteredServiceParams>> {
-    const { caller } = storeDispatcher.getStoreOrExepction();
+    const { caller } = requestStoreDispatcher.getPayload();
     if (caller.type !== 'DomainUser') {
       throw this.logger.error(`not supported called by call: ${caller.type}`);
     }

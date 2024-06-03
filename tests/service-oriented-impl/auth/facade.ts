@@ -1,8 +1,8 @@
-import { DomainUser } from '../../../src/app/controller/types';
-import { GeneralModuleResolver } from '../../../src/app/module/types';
-import { Facadable } from '../../../src/app/resolve/facadable';
-import { ServiceResult } from '../../../src/app/service/types';
-import { UuidType } from '../../../src/common/types';
+import { DomainUser } from '../../../src/api/controller/types';
+import { GeneralModuleResolver } from '../../../src/api/module/types';
+import { Facadable } from '../../../src/api/resolve/facadable';
+import { ServiceResult } from '../../../src/api/service/types';
+import { UuidType } from '../../../src/core/types';
 import { AddUserServiceParams } from './services/user/add-user/s-params';
 import { GetUsersServiceParams } from './services/user/get-users/s-params';
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ModuleResolver } from '../../../src/app/module/m-resolver';
-import { ServerResolver } from '../../../src/app/server/s-resolver';
-import { ServerResolves } from '../../../src/app/server/s-resolves';
+import { ModuleResolver } from '../../../src/api/module/m-resolver';
+import { ServerResolver } from '../../../src/api/server/s-resolver';
+import { ServerResolves } from '../../../src/api/server/s-resolves';
 import { AuthFacade } from '../auth/facade';
 import { UserJwtPayload } from '../auth/services/user/user-authentification/s-params';
 import { CompanyFacade } from '../company/facade';

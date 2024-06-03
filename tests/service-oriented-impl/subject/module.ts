@@ -1,6 +1,6 @@
-import { Module } from '../../../src/app/module/module';
-import { ModuleType } from '../../../src/app/module/types';
-import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/app/service/types';
+import { Module } from '../../../src/api/module/module';
+import { ModuleType } from '../../../src/api/module/types';
+import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/api/service/types';
 import { AddingPersonService } from './services/person/add-person/service';
 import { GetingPersonByIinService } from './services/person/get-by-iin/service';
 

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import { failure } from '../../../common/result/failure';
-import { success } from '../../../common/result/success';
+import { failure } from '../../../core/result/failure';
+import { success } from '../../../core/result/success';
 import { DTO } from '../../dto';
 import { FieldValidator } from './field-validator';
 import {

@@ -2,9 +2,9 @@ import { CompanyRepository } from './domain-object/company/repo';
 import { CompanyResolves } from './resolves';
 import { AuthFacade } from '../auth/facade';
 import { SubjectFacade } from '../subject/facade';
-import { ModuleResolver } from '../../../src/app/module/m-resolver';
-import { GeneralServerResolver } from '../../../src/app/server/types';
-import { EventRepository } from '../../../src/app/database/event.repository';
+import { ModuleResolver } from '../../../src/api/module/m-resolver';
+import { GeneralServerResolver } from '../../../src/api/server/types';
+import { EventRepository } from '../../../src/api/database/event.repository';
 
 export class CompanyModuleResolver extends ModuleResolver<
   GeneralServerResolver, CompanyResolves

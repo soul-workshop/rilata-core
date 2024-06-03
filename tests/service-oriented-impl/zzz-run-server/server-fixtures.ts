@@ -1,4 +1,4 @@
-import { TestBatchRecords } from '../../../src/app/database/types';
+import { TestBatchRecords } from '../../../src/api/database/types';
 import { UserRepositoryImpl } from '../zz-infra/repositories/auth-module/user';
 import { CompanyRepositoryImpl } from '../zz-infra/repositories/company-module/company';
 import { PersonRepositoryImpl } from '../zz-infra/repositories/subject-module/person';

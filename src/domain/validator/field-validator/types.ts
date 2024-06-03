@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { Result } from '../../../common/result/types';
+import { Result } from '../../../core/result/types';
 import { DTO } from '../../dto';
 import { LiteralDataType, RuleError } from '../../validator/rules/types';
 import { DtoFieldValidator } from './dto-field-validator';

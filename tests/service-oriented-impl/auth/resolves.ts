@@ -1,5 +1,5 @@
-import { EventRepository } from '../../../src/app/database/event.repository';
-import { ModuleResolves } from '../../../src/app/module/m-resolves';
+import { EventRepository } from '../../../src/api/database/event.repository';
+import { ModuleResolves } from '../../../src/api/module/m-resolves';
 import { UserRepository } from './domain-object/user/repo';
 import { AuthModule } from './module';
 

@@ -1,4 +1,4 @@
-import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
+import { uuidUtility } from '../../../../../src/core/utils/uuid/uuid-utility';
 import { AggregateFactory } from '../../../../../src/domain/domain-object/aggregate-factory';
 import { AddingPersonActionAttrs } from '../../domain-data/person/add-person/a-params';
 import { PersonAttrs, PersonParams } from '../../domain-data/person/params';

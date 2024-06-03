@@ -1,4 +1,4 @@
-import { Result } from '../../common/result/types';
+import { Result } from '../../core/result/types';
 import { GeneralErrorDod } from '../domain-data/domain-types';
 
 /** Правила предметной области которые могут заблокировать выполнение запроса */

@@ -1,11 +1,11 @@
-import { storeDispatcher } from '../../../../../../src/app/async-store/store-dispatcher';
-import { CommandService } from '../../../../../../src/app/service/concrete-service/command.service';
-import { UowTransactionStrategy } from '../../../../../../src/app/service/transaction-strategy/uow.strategy';
-import { ServiceResult } from '../../../../../../src/app/service/types';
-import { failure } from '../../../../../../src/common/result/failure';
-import { success } from '../../../../../../src/common/result/success';
-import { Result } from '../../../../../../src/common/result/types';
-import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
+import { requestStoreDispatcher } from '../../../../../../src/api/request-store/request-store-dispatcher';
+import { CommandService } from '../../../../../../src/api/service/concrete-service/command.service';
+import { UowTransactionStrategy } from '../../../../../../src/api/service/transaction-strategy/uow.strategy';
+import { ServiceResult } from '../../../../../../src/api/service/types';
+import { failure } from '../../../../../../src/core/result/failure';
+import { success } from '../../../../../../src/core/result/success';
+import { Result } from '../../../../../../src/core/result/types';
+import { dodUtility } from '../../../../../../src/core/utils/dod/dod-utility';
 import { CompanyCmdARFactory } from '../../../domain-object/company/factory';
 import { CompanyCmdRepository } from '../../../domain-object/company/repo';
 import { CompanyAlreadyExistError } from '../../../domain-object/company/repo-errors';
@@ -35,7 +35,7 @@ export class AddingCompanyService extends CommandService<
   async runDomain(
     input: AddCompanyRequestDod,
   ): Promise<ServiceResult<AddCompanyServiceParams>> {
-    const { caller } = storeDispatcher.getStoreOrExepction();
+    const { caller } = requestStoreDispatcher.getPayload();
     if (caller.type !== 'DomainUser') {
       throw this.logger.error(`not supported called by call: ${caller.type}`);
     }

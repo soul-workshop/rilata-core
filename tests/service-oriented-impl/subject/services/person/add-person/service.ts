@@ -1,6 +1,6 @@
-import { CommandService } from '../../../../../../src/app/service/concrete-service/command.service';
-import { UowTransactionStrategy } from '../../../../../../src/app/service/transaction-strategy/uow.strategy';
-import { ServiceResult } from '../../../../../../src/app/service/types';
+import { CommandService } from '../../../../../../src/api/service/concrete-service/command.service';
+import { UowTransactionStrategy } from '../../../../../../src/api/service/transaction-strategy/uow.strategy';
+import { ServiceResult } from '../../../../../../src/api/service/types';
 import { PersonFactory } from '../../../domain-object/person/factory';
 import { PersonRepository } from '../../../domain-object/person/repo';
 import { SubjectModuleResolver } from '../../../resolver';

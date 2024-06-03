@@ -1,7 +1,7 @@
-import { CommandService } from '../../../../../../src/app/service/concrete-service/command.service';
-import { UowTransactionStrategy } from '../../../../../../src/app/service/transaction-strategy/uow.strategy';
-import { ServiceResult } from '../../../../../../src/app/service/types';
-import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
+import { CommandService } from '../../../../../../src/api/service/concrete-service/command.service';
+import { UowTransactionStrategy } from '../../../../../../src/api/service/transaction-strategy/uow.strategy';
+import { ServiceResult } from '../../../../../../src/api/service/types';
+import { uuidUtility } from '../../../../../../src/core/utils/uuid/uuid-utility';
 import { UserRepository, UserRepositoryRecord } from '../../../domain-object/user/repo';
 import { AuthModuleResolver } from '../../../resolver';
 import { AddUserRequestDod, AddUserServiceParams } from './s-params';

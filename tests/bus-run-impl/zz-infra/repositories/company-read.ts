@@ -1,10 +1,10 @@
-import { storeDispatcher } from '../../../../src/app/async-store/store-dispatcher';
-import { DatabaseObjectSavingError } from '../../../../src/common/exeptions';
-import { Logger } from '../../../../src/common/logger/logger';
-import { failure } from '../../../../src/common/result/failure';
-import { success } from '../../../../src/common/result/success';
-import { Result } from '../../../../src/common/result/types';
-import { dodUtility } from '../../../../src/common/utils/dod/dod-utility';
+import { requestStoreDispatcher } from '../../../../src/api/request-store/request-store-dispatcher';
+import { DatabaseObjectSavingError } from '../../../../src/core/exeptions';
+import { Logger } from '../../../../src/core/logger/logger';
+import { failure } from '../../../../src/core/result/failure';
+import { success } from '../../../../src/core/result/success';
+import { Result } from '../../../../src/core/result/types';
+import { dodUtility } from '../../../../src/core/utils/dod/dod-utility';
 import { FakeClassImplements } from '../../../fixtures/fake-class-implements';
 import { CompanyDoesntExistByBinError } from '../../company-cmd/domain-object/company/repo-errors';
 import { CompanyOutAttrs } from '../../company-read/domain/company/params';
@@ -38,7 +38,7 @@ export class CompanyReadRepositoryImpl implements CompanyReadRepository {
     const result = await this.testRepo.add({ ...attrs });
     if (result.isSuccess()) return undefined;
 
-    const { requestId } = storeDispatcher.getStoreOrExepction();
+    const { requestId } = requestStoreDispatcher.getPayload();
     const errStr = `Компания с id: ${attrs.id} уже существует`;
     this.logger.error(errStr, { err: result.value, requestId });
     throw new DatabaseObjectSavingError(errStr);

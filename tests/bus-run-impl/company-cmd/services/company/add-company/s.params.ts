@@ -1,4 +1,4 @@
-import { CommandServiceParams } from '../../../../../../src/app/service/types';
+import { CommandServiceParams } from '../../../../../../src/api/service/types';
 import { RequestDod } from '../../../../../../src/domain/domain-data/domain-types';
 import { AddCompanyDomainCommand, CompanyAddedEvent } from '../../../domain-data/company/add-company/a-params';
 import { CompanyParams } from '../../../domain-data/company/params';

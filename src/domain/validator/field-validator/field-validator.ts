@@ -1,6 +1,6 @@
-import { failure } from '../../../common/result/failure';
-import { success } from '../../../common/result/success';
-import { AssertionException } from '../../../common/exeptions';
+import { failure } from '../../../core/result/failure';
+import { success } from '../../../core/result/success';
+import { AssertionException } from '../../../core/exeptions';
 import { DTO } from '../../dto';
 import { CannotBeEmptyArrayAssertionRule } from '../../validator/rules/assert-rules/cannot-be-empty-array.a-rule';
 import { CannotBeNullableAssertionRule } from '../../validator/rules/assert-rules/cannot-be-nullable.a-rule';

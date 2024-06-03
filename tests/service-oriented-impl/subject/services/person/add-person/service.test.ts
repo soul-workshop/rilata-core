@@ -1,9 +1,8 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
-import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
-import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
+import { dodUtility } from '../../../../../../src/core/utils/dod/dod-utility';
+import { uuidUtility } from '../../../../../../src/core/utils/uuid/uuid-utility';
 import { serverStarter } from '../../../../zzz-run-server/starter';
 import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures';
 import { PersonAR } from '../../../domain-object/person/a-root';
@@ -12,18 +11,19 @@ import { PersonAlreadyExistsError } from '../../../domain-object/person/repo-err
 import { SubjectModule } from '../../../module';
 import { AddPersonRequestDod, AddPersonOut } from './s-params';
 import { AddingPersonService } from './service';
-import { TestDatabase } from '../../../../../../src/app/database/test.database';
-import { EventRepository } from '../../../../../../src/app/database/event.repository';
+import { TestDatabase } from '../../../../../../src/api/database/test.database';
+import { EventRepository } from '../../../../../../src/api/database/event.repository';
+import { requestStoreMock } from '../../../../../fixtures/request-store-mock';
 
 describe('add person service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start('all');
   const module = testSever.getModule<SubjectModule>('SubjectModule');
   const resolver = module.getModuleResolver();
-  setAndGetTestStoreDispatcher({
+  requestStoreMock({
     requestId,
     moduleResolver: resolver,
-  }).getStoreOrExepction();
+  });
 
   beforeEach(async () => {
     const db = resolver.getDatabase() as unknown as TestDatabase<true>;

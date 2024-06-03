@@ -1,8 +1,8 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { DomainUser } from '../../../../../src/app/controller/types';
-import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
+import { DomainUser } from '../../../../../src/api/controller/types';
+import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
 import { AuthModule } from '../../../auth/module';
 import { CompanyModule } from '../../../company/module';
 import { SubjectModule } from '../../../subject/module';
@@ -11,7 +11,7 @@ import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures'
 import { FullCompany } from '../../domain-data/full-company/params';
 import { FrontProxyModule } from '../../module';
 import { GetFullCompanyRequestDod, GetFullCompanyServiceParams } from './s-params';
-import { TestDatabase } from '../../../../../src/app/database/test.database';
+import { TestDatabase } from '../../../../../src/api/database/test.database';
 
 describe('get full company service tests', async () => {
   const testServer = serverStarter.start('all');

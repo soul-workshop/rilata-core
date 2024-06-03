@@ -1,4 +1,4 @@
-import { UserId } from '../../common/types';
+import { UserId } from '../../core/types';
 import { GeneralArParams } from '../index';
 import { AggregateRoot } from './aggregate-root';
 

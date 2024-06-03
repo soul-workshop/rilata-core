@@ -1,4 +1,4 @@
-import { UuidType } from '../../src/common/types';
+import { UuidType } from '../../src/core/types';
 
 export type UserJwtPayload = {
   userId: UuidType,

@@ -17,17 +17,17 @@
     "zlib": "^1.0.5"
   },
   "exports": {
-    "./utils": "./src/common/utils/index.ts",
-    "./common": "./src/common/index.ts",
+    "./utils": "./src/core/utils/index.ts",
+    "./core": "./src/core/index.ts",
     "./domain": "./src/domain/index.ts",
     "./validator": "./src/domain/validator/index.ts",
-    "./db": "./src/app/db.index.ts",
-    "./base": "./src/app/base.index.ts",
-    "./http": "./src/app/http.index.ts",
-    "./bus": "./src/app/bus.index.ts",
-    "./bun-db": "./src/infra/repo/bun-sqlite/index.ts",
-    "./bus-impl": "./src/infra/bus/index.ts",
-    "./fixtures": "./tests/fixtures/index.ts"
+    "./api/db": "./src/api/db.index.ts",
+    "./api/base": "./src/api/base.index.ts",
+    "./api/http": "./src/api/http.index.ts",
+    "./api/bus": "./src/api/bus.index.ts",
+    "./api/bun-db": "./src/infra/repo/bun-sqlite/index.ts",
+    "./api/bus-impl": "./src/infra/bus/index.ts",
+    "./api/fixtures": "./tests/fixtures/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

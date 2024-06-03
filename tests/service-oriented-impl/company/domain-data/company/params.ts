@@ -1,4 +1,4 @@
-import { UserId, UuidType } from '../../../../../src/common/types';
+import { UserId, UuidType } from '../../../../../src/core/types';
 import { AggregateRootParams, ARDT, DomainMeta } from '../../../../../src/domain/domain-data/domain-types';
 import { CompanyRegisteredEvent } from './register-company/a-params';
 

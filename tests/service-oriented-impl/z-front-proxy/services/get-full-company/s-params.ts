@@ -1,4 +1,4 @@
-import { QueryServiceParams } from '../../../../../src/app/service/types';
+import { QueryServiceParams } from '../../../../../src/api/service/types';
 import { RequestDod } from '../../../../../src/domain/domain-data/domain-types';
 import { CompanyDoesntExistByIdError } from '../../../company/domain-object/company/repo-errors';
 import { FullCompany, FullCompanyParams } from '../../domain-data/full-company/params';

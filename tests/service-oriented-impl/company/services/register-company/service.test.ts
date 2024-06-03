@@ -3,12 +3,11 @@
 import {
   describe, test, expect, beforeEach, spyOn, afterEach, Mock,
 } from 'bun:test';
-import { failure } from '../../../../../src/common/result/failure';
-import { success } from '../../../../../src/common/result/success';
-import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
-import { dtoUtility } from '../../../../../src/common/utils/dto/dto-utility';
-import { uuidUtility } from '../../../../../src/common/utils/uuid/uuid-utility';
-import { setAndGetTestStoreDispatcher } from '../../../../fixtures/test-thread-store-mock';
+import { failure } from '../../../../../src/core/result/failure';
+import { success } from '../../../../../src/core/result/success';
+import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
+import { dtoUtility } from '../../../../../src/core/utils/dto/dto-utility';
+import { uuidUtility } from '../../../../../src/core/utils/uuid/uuid-utility';
 import { AuthFacade } from '../../../auth/facade';
 import { PersonAlreadyExistsError, PersonDoesntExistByIinError } from '../../../subject/domain-object/person/repo-errors';
 import { SubjectFacade } from '../../../subject/facade';
@@ -21,19 +20,20 @@ import { CompanyAlreadyExistError } from '../../domain-object/company/repo-error
 import { CompanyModule } from '../../module';
 import { RegisterCompanyRequestDod, RegisterCompanyOut, RegisterCompanyRequestDodAttrs } from './s.params';
 import { RegisteringCompanyService } from './service';
-import { TestDatabase } from '../../../../../src/app/database/test.database';
-import { EventRepository } from '../../../../../src/app/database/event.repository';
-import { DomainUser } from '../../../../../src/app/controller/types';
+import { TestDatabase } from '../../../../../src/api/database/test.database';
+import { EventRepository } from '../../../../../src/api/database/event.repository';
+import { DomainUser } from '../../../../../src/api/controller/types';
+import { requestStoreMock } from '../../../../fixtures/request-store-mock';
 
 describe('register company saga service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start('all');
   const module = testSever.getModule<CompanyModule>('CompanyModule');
   const resolver = module.getModuleResolver();
-  setAndGetTestStoreDispatcher({
+  requestStoreMock({
     requestId,
     moduleResolver: resolver,
-  }).getStoreOrExepction();
+  });
   const sut = module.getServiceByInputDodName<RegisteringCompanyService>('registerCompany');
 
   const subjectFacade = SubjectFacade.instance(resolver);

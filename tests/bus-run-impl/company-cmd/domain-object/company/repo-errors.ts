@@ -1,4 +1,4 @@
-import { UuidType } from '../../../../../src/common/types';
+import { UuidType } from '../../../../../src/core/types';
 import { ErrorDod } from '../../../../../src/domain/domain-data/domain-types';
 
 export type CompanyAlreadyExistError = ErrorDod<'CompanyAlreadyExistError', {

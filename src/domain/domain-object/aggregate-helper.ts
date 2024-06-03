@@ -1,10 +1,10 @@
-import { UuidType } from '../../common/types';
-import { dtoUtility } from '../../common/utils/dto/dto-utility';
+import { UuidType } from '../../core/types';
+import { dtoUtility } from '../../core/utils/dto/dto-utility';
 import { ARDT, GeneralArParams, GeneralEventDod } from '../domain-data/domain-types';
-import { Logger } from '../../common/logger/logger';
-import { Caller } from '../../app/controller/types';
-import { dodUtility } from '../../common/utils/dod/dod-utility';
-import { GetArrayType } from '../../common/type-functions';
+import { Logger } from '../../core/logger/logger';
+import { Caller } from '../../api/controller/types';
+import { dodUtility } from '../../core/utils/dod/dod-utility';
+import { GetArrayType } from '../../core/type-functions';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */

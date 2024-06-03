@@ -1,4 +1,4 @@
-import { Logger } from '../../common/logger/logger';
+import { Logger } from '../../core/logger/logger';
 import { DTO } from '../dto';
 import { GeneralArParams } from '../index';
 import { AggregateRoot } from './aggregate-root';

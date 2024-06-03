@@ -1,7 +1,7 @@
-import { GeneralModuleResolver } from '../../../../../src/app/module/types';
-import { Repositoriable } from '../../../../../src/app/resolve/repositoriable';
-import { Result } from '../../../../../src/common/result/types';
-import { UuidType } from '../../../../../src/common/types';
+import { GeneralModuleResolver } from '../../../../../src/api/module/types';
+import { Repositoriable } from '../../../../../src/api/resolve/repositoriable';
+import { Result } from '../../../../../src/core/result/types';
+import { UuidType } from '../../../../../src/core/types';
 import { CompanyAR } from './a-root';
 import { CompanyDoesntExistByBinError, CompanyAlreadyExistError } from './repo-errors';
 

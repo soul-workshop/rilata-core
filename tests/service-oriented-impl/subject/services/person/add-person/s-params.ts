@@ -1,5 +1,5 @@
-import { CommandServiceParams } from '../../../../../../src/app/service/types';
-import { UuidType } from '../../../../../../src/common/types';
+import { CommandServiceParams } from '../../../../../../src/api/service/types';
+import { UuidType } from '../../../../../../src/core/types';
 import { RequestDod } from '../../../../../../src/domain/domain-data/domain-types';
 import { AddingPersonActionAttrs, PersonAddedEvent } from '../../../domain-data/person/add-person/a-params';
 import { PersonParams } from '../../../domain-data/person/params';

@@ -1,9 +1,9 @@
-import { EventRepository } from '../../../../../src/app/database/event.repository';
-import { EventService } from '../../../../../src/app/service/concrete-service/event.service';
-import { UowTransactionStrategy } from '../../../../../src/app/service/transaction-strategy/uow.strategy';
-import { ServiceResult } from '../../../../../src/app/service/types';
-import { success } from '../../../../../src/common/result/success';
-import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
+import { EventRepository } from '../../../../../src/api/database/event.repository';
+import { EventService } from '../../../../../src/api/service/concrete-service/event.service';
+import { UowTransactionStrategy } from '../../../../../src/api/service/transaction-strategy/uow.strategy';
+import { ServiceResult } from '../../../../../src/api/service/types';
+import { success } from '../../../../../src/core/result/success';
+import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
 import { CompanyAddedEvent } from '../../../company-cmd/domain-data/company/add-company/a-params';
 import { CompanyReadRepository } from '../../domain/company/repo';
 import { CompanyReadModuleResolver } from '../../resolver';

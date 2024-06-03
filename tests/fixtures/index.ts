@@ -1,2 +1,2 @@
 export * from './fake-class-implements';
-export * from './test-thread-store-mock';
+export * from './request-store-mock';
