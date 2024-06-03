@@ -110,7 +110,7 @@ export class RegisteringCompanyService extends CommandService<
   protected async addCompany(
     input: RegisterCompanyRequestDodAttrs, userId: UuidType,
   ): Promise<Result<CompanyAlreadyExistError, RegisterCompanyOut>> {
-    const companyFactory = new CompanyARFactory(this.logger);
+    const companyFactory = new CompanyARFactory();
     const companyAttrs: RegisterCompanyDomainCommand = {
       ...input.company,
       employees: [userId],

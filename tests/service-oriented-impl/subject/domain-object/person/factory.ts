@@ -11,13 +11,13 @@ export class PersonFactory extends AggregateFactory<PersonParams> {
       id: uuidUtility.getNewUUID(),
       contacts: { phones: [] },
     };
-    const person = new PersonAR(personAttrs, 0, this.logger);
+    const person = new PersonAR(personAttrs, 0);
 
     person.getHelper().registerEvent('PersonAddedEvent', personAttrs);
     return person;
   }
 
   restore(attrs: PersonAttrs, version: number): PersonAR {
-    return new PersonAR(attrs, version, this.logger);
+    return new PersonAR(attrs, version);
   }
 }

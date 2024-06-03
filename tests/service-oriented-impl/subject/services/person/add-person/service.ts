@@ -27,7 +27,7 @@ export class AddingPersonService extends CommandService<
   async runDomain(
     input: AddPersonRequestDod,
   ): Promise<ServiceResult<AddPersonServiceParams>> {
-    const factory = new PersonFactory(this.moduleResolver.getLogger());
+    const factory = new PersonFactory();
     const person = factory.create(input.attrs);
     const repo = PersonRepository.instance(this.moduleResolver);
     return repo.addPerson(person);

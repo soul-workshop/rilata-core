@@ -63,7 +63,7 @@ export class AddingCompanyService extends CommandService<
   protected async addCompany(
     input: AddCompanyRequestDodAttrs,
   ): Promise<Result<CompanyAlreadyExistError, AddCompanyOut>> {
-    const companyFactory = new CompanyCmdARFactory(this.logger);
+    const companyFactory = new CompanyCmdARFactory();
     const company = companyFactory.create(input);
     const companyRepo = CompanyCmdRepository.instance(this.moduleResolver);
     return companyRepo.addCompany(company);

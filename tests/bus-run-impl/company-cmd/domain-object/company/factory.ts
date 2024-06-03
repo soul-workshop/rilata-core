@@ -7,12 +7,12 @@ import { CompanyAR } from './a-root';
 export class CompanyCmdARFactory extends AggregateFactory<CompanyParams> {
   create(command: AddCompanyDomainCommand): CompanyAR {
     const attrs = { id: uuidUtility.getNewUUID(), ...command };
-    const company = new CompanyAR(attrs, 0, this.logger);
+    const company = new CompanyAR(attrs, 0);
     company.getHelper().registerEvent<CompanyAddedEvent>('CompanyAddedEvent', command);
     return company;
   }
 
   restore(attrs: CompanyAttrs, version: number): CompanyAR {
-    return new CompanyAR(attrs, version, this.logger);
+    return new CompanyAR(attrs, version);
   }
 }

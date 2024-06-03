@@ -64,7 +64,7 @@ export class PersonRepositoryImpl implements PersonRepository {
         { id },
       ));
     }
-    const factory = new PersonFactory(this.logger);
+    const factory = new PersonFactory();
     return success(factory.restore(
       dtoUtility.excludeAttrs(result, 'version'),
       result.version,
@@ -80,7 +80,7 @@ export class PersonRepositoryImpl implements PersonRepository {
         { iin },
       ));
     }
-    const factory = new PersonFactory(this.logger);
+    const factory = new PersonFactory();
     return success(factory.restore(
       dtoUtility.excludeAttrs(result, 'version'),
       result.version,

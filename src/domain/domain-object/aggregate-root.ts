@@ -1,4 +1,3 @@
-import { Logger } from '../../core/logger/logger';
 import { dtoUtility } from '../../core/utils/dto/dto-utility';
 import { GeneralArParams } from '../index';
 import { DtoFieldValidator } from '../validator/field-validator/dto-field-validator';
@@ -18,10 +17,9 @@ export abstract class AggregateRoot<PARAMS extends GeneralArParams> {
     idName: keyof PARAMS['attrs'] & string,
     version: number,
     outputExcludeAttrs: PARAMS['noOutKeys'],
-    logger: Logger,
   ) {
     this.helper = new AggregateRootHelper<PARAMS>(
-      attrs, aRootName, idName, version, outputExcludeAttrs, logger,
+      attrs, aRootName, idName, version, outputExcludeAttrs,
     );
     this.checkInveriants(invariantsValidator, attrs);
   }

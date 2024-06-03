@@ -5,6 +5,7 @@ import { Logger } from '../../core/logger/logger';
 import { Caller } from '../../api/controller/types';
 import { dodUtility } from '../../core/utils/dod/dod-utility';
 import { GetArrayType } from '../../core/type-functions';
+import { domainStoreDispatcher } from '../../core/index';
 
 /** Класс помощник агрегата. Забирает себе всю техническую работу агрегата,
     позволяя агрегату сосредоточиться на решении логики предметного уровня. */
@@ -17,7 +18,6 @@ export class AggregateRootHelper<PARAMS extends GeneralArParams> {
     protected idName: keyof PARAMS['attrs'] & string,
     protected version: number,
     protected outputExcludeAttrs: PARAMS['noOutKeys'],
-    protected logger: Logger,
   ) {
     this.validateVersion();
   }
@@ -54,7 +54,7 @@ export class AggregateRootHelper<PARAMS extends GeneralArParams> {
   }
 
   getLogger(): Logger {
-    return this.logger;
+    return domainStoreDispatcher.getPayload().logger;
   }
 
   registerEvent<EVENTS extends GetArrayType<PARAMS['events']>>(
@@ -79,7 +79,7 @@ export class AggregateRootHelper<PARAMS extends GeneralArParams> {
 
   private validateVersion(): void {
     if (typeof this.version !== 'number' || this.version < 0) {
-      throw this.logger.error(
+      throw this.getLogger().error(
         `not valid version for aggregate ${this.aRootName}`,
         { aRootName: this.aRootName, version: this.version },
       );

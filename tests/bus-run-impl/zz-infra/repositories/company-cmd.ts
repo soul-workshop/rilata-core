@@ -58,8 +58,7 @@ export class CompanyCmdRepositoryImpl implements CompanyCmdRepository {
     const companyRecord = await this.testRepo.findByAttrs({ bin });
     if (companyRecord) {
       const { version, ...attrs } = companyRecord;
-      const logger = requestStoreDispatcher.getPayload().moduleResolver.getLogger();
-      const factory = new CompanyCmdARFactory(logger);
+      const factory = new CompanyCmdARFactory();
       return success(factory.restore(attrs, version));
     }
     return failure(dodUtility.getDomainError<CompanyDoesntExistByBinError>(

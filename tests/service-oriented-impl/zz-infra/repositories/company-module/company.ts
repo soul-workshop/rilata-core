@@ -61,8 +61,7 @@ export class CompanyRepositoryImpl implements CompanyRepository {
     const companyRecord = await this.testRepo.find(id);
     if (companyRecord) {
       const { version, ...attrs } = companyRecord;
-      const logger = requestStoreDispatcher.getPayload().moduleResolver.getLogger();
-      const factory = new CompanyARFactory(logger);
+      const factory = new CompanyARFactory();
       return success(factory.restore(attrs, version));
     }
     return failure(dodUtility.getDomainError<CompanyDoesntExistByIdError>(
@@ -76,8 +75,7 @@ export class CompanyRepositoryImpl implements CompanyRepository {
     const companyRecord = await this.testRepo.findByAttrs({ bin });
     if (companyRecord) {
       const { version, ...attrs } = companyRecord;
-      const logger = requestStoreDispatcher.getPayload().moduleResolver.getLogger();
-      const factory = new CompanyARFactory(logger);
+      const factory = new CompanyARFactory();
       return success(factory.restore(attrs, version));
     }
     return failure(dodUtility.getDomainError<CompanyDoesntExistByBinError>(
