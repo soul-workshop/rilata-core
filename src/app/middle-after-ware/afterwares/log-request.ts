@@ -8,8 +8,6 @@ export class LogResponseAfterware extends Afterware<GeneralServerResolver> {
     const path = `${new URL(req.url).pathname}`.padEnd(30);
     const msg = `${method}${path}${resp.status}`;
     this.resolver.getLogger().info(msg);
-    // eslint-disable-next-line no-console
-    console.log(`${new Date().toLocaleString()}  ${msg}`);
     return resp;
   }
 }

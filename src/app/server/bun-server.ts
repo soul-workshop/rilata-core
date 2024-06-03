@@ -36,7 +36,8 @@ export abstract class BunServer extends RilataServer {
     this.initStarted();
 
     this.middlewares.forEach((middleware) => middleware.init(serverResolver));
-    this.logger.info('all server middlewares loaded');
+    this.afterwares.forEach((afterware) => afterware.init(serverResolver));
+    this.logger.info('all server middle-after-wares loaded');
 
     this.serverControllers.forEach((controller) => controller.init(this.resolver));
     this.setControllerUrls();
@@ -65,20 +66,22 @@ export abstract class BunServer extends RilataServer {
   async fetch(req: Request): Promise<Response> {
     try {
       const middlewaresResult = this.processMiddlewares(req);
-      if (middlewaresResult !== undefined) return middlewaresResult;
+      if (middlewaresResult !== undefined) {
+        return this.processAfterware(req, middlewaresResult);
+      }
 
       const controller = this.getControllerByUrlPath(req);
       if (controller) {
         const resp = await controller.execute(req);
-        return this.postProcess(req, resp);
+        return this.processAfterware(req, resp);
       }
 
       const errResp = this.getNotFoundError(new URL(req.url).pathname);
-      return this.postProcess(req, errResp);
+      return this.processAfterware(req, errResp);
     } catch (e) {
       if (this.resolver.getRunMode() === 'test') throw e;
       const errResp = this.getInternalError(req, e as Error);
-      return this.postProcess(req, errResp);
+      return this.processAfterware(req, errResp);
     }
   }
 
@@ -150,7 +153,7 @@ export abstract class BunServer extends RilataServer {
     return responseUtility.createJsonResponse(resultDto, status);
   }
 
-  protected postProcess(req: Request, resp: Response): Response {
+  protected processAfterware(req: Request, resp: Response): Response {
     this.log(req, resp);
     return resp;
   }
