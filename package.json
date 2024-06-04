@@ -21,13 +21,13 @@
     "./core": "./src/core/index.ts",
     "./domain": "./src/domain/index.ts",
     "./validator": "./src/domain/validator/index.ts",
-    "./api/db": "./src/api/db.index.ts",
-    "./api/base": "./src/api/base.index.ts",
-    "./api/http": "./src/api/http.index.ts",
-    "./api/bus": "./src/api/bus.index.ts",
-    "./api/bun-db": "./src/infra/repo/bun-sqlite/index.ts",
-    "./api/bus-impl": "./src/infra/bus/index.ts",
-    "./api/fixtures": "./tests/fixtures/index.ts"
+    "./api-db": "./src/api/db.index.ts",
+    "./api-base": "./src/api/base.index.ts",
+    "./api-http": "./src/api/http.index.ts",
+    "./api-bus": "./src/api/bus.index.ts",
+    "./api-bun-db": "./src/api-infra/repo/bun-sqlite/index.ts",
+    "./api-bus-impl": "./src/api-infra/bus/index.ts",
+    "./api-fixtures": "./tests/fixtures/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
