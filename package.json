@@ -1,6 +1,6 @@
 {
   "name": "rilata",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Для тех кто хочет разрабатывать сложные приложения 'правильно'.",
   "author": "NurGeo",
   "license": "MIT",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@types/jszip": "^3.4.1",
     "email-validator": "^2.0.4",
+    "uuidv7": "LiosK/uuidv7",
     "zlib": "^1.0.5"
   },
   "exports": {

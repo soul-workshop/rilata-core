@@ -1,3 +1,4 @@
+import { uuidv7 } from 'uuidv7';
 import { UuidType } from '../../types';
 import { AssertionException } from '../../exeptions';
 
@@ -6,6 +7,10 @@ class UUIDUtility {
 
   getNewUUID(): UuidType {
     return crypto.randomUUID();
+  }
+
+  getNewUuidV7(): UuidType {
+    return uuidv7();
   }
 
   isValidValue(value?: unknown): boolean {
