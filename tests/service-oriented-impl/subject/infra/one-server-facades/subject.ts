@@ -1,6 +1,6 @@
 import { DomainUser, ModuleCaller } from '../../../../../src/api/controller/types';
 import { GeneralModuleResolver } from '../../../../../src/api/module/types';
-import { ServiceResult } from '../../../../../src/api/service/types';
+import { FullServiceResult, ServiceResult } from '../../../../../src/api/service/types';
 import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
 import { SubjectFacade } from '../../facade';
 import { SubjectModule } from '../../module';
@@ -17,7 +17,7 @@ export class SubjectFacadeOneServerImpl implements SubjectFacade {
 
   async addPerson(
     attrs: AddPersonRequestDodAttrs, caller: DomainUser,
-  ): Promise<ServiceResult<AddPersonServiceParams>> {
+  ): Promise<FullServiceResult<AddPersonServiceParams>> {
     const requestDod = dodUtility.getRequestDod<AddPersonRequestDod>('addPerson', attrs);
     const moduleCaller: ModuleCaller = {
       type: 'ModuleCaller',
@@ -33,7 +33,7 @@ export class SubjectFacadeOneServerImpl implements SubjectFacade {
 
   getPersonByIin(
     iin: string, caller: DomainUser,
-  ): Promise<ServiceResult<GetPersonByIinServiceParams>> {
+  ): Promise<FullServiceResult<GetPersonByIinServiceParams>> {
     const requestDod = dodUtility.getRequestDod<GetPersonByIinRequestDod>('getPersonByIin', { iin });
     const moduleCaller: ModuleCaller = {
       type: 'ModuleCaller',

@@ -1,6 +1,6 @@
 import { DomainUser, ModuleCaller } from '../../../../../src/api/controller/types';
 import { GeneralModuleResolver } from '../../../../../src/api/module/types';
-import { ServiceResult } from '../../../../../src/api/service/types';
+import { FullServiceResult, ServiceResult } from '../../../../../src/api/service/types';
 import { UuidType } from '../../../../../src/core/types';
 import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility';
 import { CompanyFacade } from '../../facade';
@@ -17,7 +17,7 @@ export class CompanyFacadeOneServerImpl implements CompanyFacade {
 
   getCompany(
     id: UuidType, caller: DomainUser,
-  ): Promise<ServiceResult<GetCompanyServiceParams>> {
+  ): Promise<FullServiceResult<GetCompanyServiceParams>> {
     const requestDod = dodUtility.getRequestDod<GetCompanyRequestDod>('getCompany', { id });
     const moduleCaller: ModuleCaller = {
       type: 'ModuleCaller',
