@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { Logger } from '../../core/logger/logger';
 import {
-    FullServiceResult,
+  FullServiceResult,
   GeneralCommandService,
   GeneralCommandServiceParams, GeneralEventService,
   GeneralQueryServiceParams, GeneraQueryService, ServiceResult,

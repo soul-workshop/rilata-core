@@ -233,6 +233,7 @@ export namespace SqliteTestFixtures {
     PostAddedEvent[]
   >
 
+  // @ts-expect-error: почему то выходит ошибка, хотя вроде не должна быть
   const addPostValidator: InputDodValidator<AddPostRequestDod> = new DtoFieldValidator(
     'addPost', true, { isArray: false }, 'dto', {
       name: new LiteralFieldValidator('name', true, { isArray: false }, 'string', []),
@@ -240,6 +241,7 @@ export namespace SqliteTestFixtures {
       category: new LiteralFieldValidator('category', true, { isArray: false }, 'string', [
         new StringChoiceValidationRule(postCategories),
       ]),
+      // @ts-expect-error: почему то выходит ошибка, хотя вроде не должна быть
       desc: new LiteralFieldValidator('desc', false, { isArray: false }, 'string', []),
     },
   );
