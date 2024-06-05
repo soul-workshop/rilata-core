@@ -10,7 +10,6 @@ describe('bun sqlite db: add batch to db, and clear db tests', () => {
   });
 
   describe('add batch to db tests', () => {
-
     test('успех, данные добавлены', () => {
       const usersBefore = db.sqliteDb.query('SELECT * FROM users').all();
       expect(usersBefore.length).toBe(0);

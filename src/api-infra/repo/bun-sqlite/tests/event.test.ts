@@ -16,9 +16,7 @@ describe('bun sql event repository tests', () => {
   });
 
   describe('add events tests', () => {
-    console.log('???????????? describe успех...')
     test('успех, события добавлены', () => {
-      console.log('!!!!!!!!!!!! тест успех...')
       sut.addEvents(SqliteTestFixtures.events);
 
       const notPublishedDeliveries = sut.getNotPublished();

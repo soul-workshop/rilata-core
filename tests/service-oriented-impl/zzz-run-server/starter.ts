@@ -13,7 +13,7 @@ import { getAuthResolves } from './module-resolves/auth-resolves.js';
 import { getCompanyResolves } from './module-resolves/company-resolves.js';
 import { getFrontProxyResolves } from './module-resolves/front-proxy-resolves.js';
 import { getSubjectResolves } from './module-resolves/subject-resolves.js';
-import { ServerResolver } from '../../src/api/server/s-resolver.js';
+import { ServerResolver } from '../../../src/api/server/s-resolver.js';
 
 type AllServerModules = AuthModule | SubjectModule | CompanyModule | FrontProxyModule;
 

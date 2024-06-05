@@ -8,7 +8,7 @@ export abstract class AggregateRoot<PARAMS extends GeneralArParams> {
   protected helper: AggregateRootHelper<PARAMS>;
 
   /** Обычно используется для идентификации пользователем объекта в списке */
-  abstract getShortName(): string;
+  abstract getShortName(): string
 
   constructor(
     protected attrs: PARAMS['attrs'],
