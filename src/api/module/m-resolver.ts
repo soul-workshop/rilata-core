@@ -27,7 +27,6 @@ implements Repositoriable, Realisable, Facadable {
   constructor(protected resolves: MR) {}
 
   getModulePath(): string {
-    // @ts-expect-error
     return import.meta.dir; // path/to/file
   }
 

@@ -1,9 +1,9 @@
-import { DelivererToBus } from '../../../../api/bus/deliverer-to-bus';
-import { DeliveryEvent, EventBodyType } from '../../../../api/bus/types';
-import { BusMessageRepository } from '../../../../api/database/bus-message.repository';
-import { EventRepository } from '../../../../api/database/event.repository';
-import { dtoUtility } from '../../../../core/utils/dto/dto-utility';
-import { GeneralArParams, GeneralEventDod } from '../../../../domain/domain-data/domain-types';
+import { DelivererToBus } from '#api/bus/deliverer-to-bus';
+import { DeliveryEvent, EventBodyType } from '#api/bus/types';
+import { BusMessageRepository } from '#api/database/bus-message.repository';
+import { EventRepository } from '#api/database/event.repository';
+import { dtoUtility } from '#core/utils/dto/dto-utility';
+import { GeneralArParams, GeneralEventDod } from '#domain/domain-data/domain-types';
 import { BunSqliteRepository } from '../repository';
 import { MigrateRow } from '../types';
 

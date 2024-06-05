@@ -1,5 +1,5 @@
-import { UuidType } from '../../../core/types';
-import { DTO } from '../../../domain/dto';
+import { UuidType } from '#core/types';
+import { DTO } from '#domain/dto';
 import { BunSqliteDatabase } from './database';
 import { BunSqliteRepository } from './repository';
 

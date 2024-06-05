@@ -1,28 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-len */
 /* eslint-disable no-use-before-define */
-import { requestStoreDispatcher } from '../../../../api/base.index';
-import { DomainUser } from '../../../../api/controller/types';
-import { EventRepository } from '../../../../api/database/event.repository';
-import { TestBatchRecords } from '../../../../api/database/types';
-import { GeneralModuleResolver } from '../../../../api/module/types';
-import { Repositoriable } from '../../../../api/resolve/repositoriable';
-import { GeneralServerResolver } from '../../../../api/server/types';
-import { CommandService } from '../../../../api/service/concrete-service/command.service';
-import { CommandServiceParams, InputDodValidator, ServiceResult } from '../../../../api/service/types';
-import { DatabaseObjectSavingError } from '../../../../core/exeptions';
-import { getEnvLogMode } from '../../../../core/index';
-import { ConsoleLogger } from '../../../../core/logger/console-logger';
-import { success } from '../../../../core/result/success';
-import { TupleToUnion } from '../../../../core/tuple-types';
-import { UuidType } from '../../../../core/types';
-import { dodUtility } from '../../../../core/utils/dod/dod-utility';
-import { dtoUtility } from '../../../../core/utils/dto/dto-utility';
-import { uuidUtility } from '../../../../core/utils/uuid/uuid-utility';
-import { AggregateRootParams, ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '../../../../domain/domain-data/domain-types';
-import { DtoFieldValidator } from '../../../../domain/validator/field-validator/dto-field-validator';
-import { LiteralFieldValidator } from '../../../../domain/validator/field-validator/literal-field-validator';
-import { StringChoiceValidationRule } from '../../../../domain/validator/rules/validate-rules/string/string-choice.v-rule';
+import { requestStoreDispatcher } from '#api/base.index';
+import { DomainUser } from '#api/controller/types';
+import { EventRepository } from '#api/database/event.repository';
+import { TestBatchRecords } from '#api/database/types';
+import { GeneralModuleResolver } from '#api/module/types';
+import { Repositoriable } from '#api/resolve/repositoriable';
+import { GeneralServerResolver } from '#api/server/types';
+import { CommandService } from '#api/service/concrete-service/command.service';
+import { CommandServiceParams, InputDodValidator, ServiceResult } from '#api/service/types';
+import { DatabaseObjectSavingError } from '#core/exeptions';
+import { getEnvLogMode } from '#core/index';
+import { ConsoleLogger } from '#core/logger/console-logger';
+import { success } from '#core/result/success';
+import { TupleToUnion } from '#core/tuple-types';
+import { UuidType } from '#core/types';
+import { dodUtility } from '#core/utils/dod/dod-utility';
+import { dtoUtility } from '#core/utils/dto/dto-utility';
+import { uuidUtility } from '#core/utils/uuid/uuid-utility';
+import { AggregateRootParams, ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '#domain/domain-data/domain-types';
+import { DtoFieldValidator } from '#domain/validator/field-validator/dto-field-validator';
+import { LiteralFieldValidator } from '#domain/validator/field-validator/literal-field-validator';
+import { StringChoiceValidationRule } from '#domain/validator/rules/validate-rules/string/string-choice.v-rule';
 import { BunSqliteDatabase } from '../database';
 import { EventRepositorySqlite } from '../repositories/event';
 import { BunSqliteRepository } from '../repository';
@@ -212,7 +212,7 @@ export namespace SqliteTestFixtures {
   type AddPostRequestDodAttrs = {
     name: string,
     body: string,
-    desc?: string,
+    desc?: undefined | string,
     category: PostCategories,
   }
 
@@ -233,6 +233,7 @@ export namespace SqliteTestFixtures {
     PostAddedEvent[]
   >
 
+  // @ts-ignore: непонятная ошибка которая появляется только при выполнении bun tslint
   const addPostValidator: InputDodValidator<AddPostRequestDod> = new DtoFieldValidator(
     'addPost', true, { isArray: false }, 'dto', {
       name: new LiteralFieldValidator('name', true, { isArray: false }, 'string', []),
@@ -240,6 +241,7 @@ export namespace SqliteTestFixtures {
       category: new LiteralFieldValidator('category', true, { isArray: false }, 'string', [
         new StringChoiceValidationRule(postCategories),
       ]),
+      // @ts-ignore: непонятная ошибка которая появляется только при выполнении bun tslint
       desc: new LiteralFieldValidator('desc', false, { isArray: false }, 'string', []),
     },
   );
@@ -304,49 +306,51 @@ export namespace SqliteTestFixtures {
   }
 
   // ++++++++++++++++++ resolver mock section ++++++++++++++++++++
-  export const db = new BlogDatabase();
+  export function getResolverWithTestDb(): GeneralModuleResolver {
+    const db = new BlogDatabase();
 
-  export const fakeModuleResolver = {
-    getDirPath(): string {
-      // @ts-expect-error
-      return import.meta.dir;
-    },
+    const fakeModuleResolver = {
+      getDirPath(): string {
+        return import.meta.dir;
+      },
 
-    getRunMode(): 'test' | 'prod' {
-      return 'test';
-    },
+      getRunMode(): 'test' | 'prod' {
+        return 'test';
+      },
 
-    getLogger() {
-      return new ConsoleLogger(getEnvLogMode() ?? 'all');
-    },
+      getLogger() {
+        return new ConsoleLogger(getEnvLogMode() ?? 'all');
+      },
 
-    getModuleName(): string {
-      return 'SubjectModule';
-    },
+      getModuleName(): string {
+        return 'SubjectModule';
+      },
 
-    getServerResolver(): GeneralServerResolver {
-      return {
-        getRunMode() {
-          return 'test';
-        },
-      } as GeneralServerResolver;
-    },
+      getServerResolver(): GeneralServerResolver {
+        return {
+          getRunMode() {
+            return 'test';
+          },
+        } as GeneralServerResolver;
+      },
 
-    resolveRepo(key: unknown): unknown {
-      if (key === UserRepository) return db.getRepository<UserRepositorySqlite>('users');
-      if (key === PostRepository) return db.getRepository<PostRepositorySqlite>('posts');
-      if (key === EventRepository) return db.getRepository<EventRepositorySqlite>('events');
-      throw Error(`not found key: ${key}`);
-    },
+      resolveRepo(key: unknown): unknown {
+        if (key === UserRepository) return db.getRepository<UserRepositorySqlite>('users');
+        if (key === PostRepository) return db.getRepository<PostRepositorySqlite>('posts');
+        if (key === EventRepository) return db.getRepository<EventRepositorySqlite>('events');
+        throw Error(`not found key: ${key}`);
+      },
 
-    getDatabase(): BlogDatabase {
-      return db;
-    },
-  } as unknown as GeneralModuleResolver;
+      getDatabase(): BlogDatabase {
+        return db;
+      },
+    } as unknown as GeneralModuleResolver;
 
-  db.init(fakeModuleResolver); // init and resolves db and repositories
-  db.createDb(); // create sqlite db and tables
-  db.open(); // open sqlite db
+    db.init(fakeModuleResolver); // init and resolves db and repositories
+    db.createDb(); // create sqlite db and tables
+
+    return fakeModuleResolver;
+  }
 
   // ++++++++++++++++++ fixture data section ++++++++++++++++++++
 

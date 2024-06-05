@@ -6,8 +6,9 @@
   "license": "MIT",
   "private": false,
   "repository": "https://github.com/nurgeo/rilata.git",
+  "type": "module",
   "scripts": {
-    "tslint": "bun tsc",
+    "tslint": "bun tsc --noEmit",
     "lint": "bun eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "all:tests": "LOG_MODE=off bun test"
   },
@@ -17,6 +18,7 @@
     "uuidv7": "LiosK/uuidv7",
     "zlib": "^1.0.5"
   },
+  // Хорошая статья как настраивать разрешения путей https://habr.com/ru/articles/738132/
   "exports": {
     "./utils": "./src/core/utils/index.ts",
     "./core": "./src/core/index.ts",
@@ -30,6 +32,9 @@
     "./api-bus-impl": "./src/api-infra/bus/index.ts",
     "./api-fixtures": "./tests/fixtures/index.ts"
   },
+  "imports": {
+    "#*": "./src/*"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
@@ -39,6 +44,6 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.0.0",
     "nurgeo-project-configs": "github:NurGeo/project-config",
-    "typescript": "~4.8.2"
+    "typescript": "^5.0.0"
   }
 }

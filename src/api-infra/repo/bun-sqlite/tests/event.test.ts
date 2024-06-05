@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
-import { DeliveryEvent } from '../../../../api/bus/types';
-import { GetDtoKeysByDotNotation } from '../../../../core/type-functions';
-import { dtoUtility } from '../../../../core/utils/dto/dto-utility';
-import { GeneralEventDod } from '../../../../domain/domain-data/domain-types';
+import { DeliveryEvent } from '#api/bus/types';
+import { GetDtoKeysByDotNotation } from '#core/type-functions';
+import { dtoUtility } from '#core/utils/dto/dto-utility';
+import { GeneralEventDod } from '#domain/domain-data/domain-types';
 import { EventRepositorySqlite } from '../repositories/event';
 import { SqliteTestFixtures } from './fixtures';
 
 describe('bun sql event repository tests', () => {
-  const { fakeModuleResolver } = SqliteTestFixtures;
+  const fakeModuleResolver = SqliteTestFixtures.getResolverWithTestDb();
   const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.BlogDatabase;
   const sut = db.getRepository<EventRepositorySqlite>('events');
 
@@ -16,7 +16,9 @@ describe('bun sql event repository tests', () => {
   });
 
   describe('add events tests', () => {
+    console.log('???????????? describe успех...')
     test('успех, события добавлены', () => {
+      console.log('!!!!!!!!!!!! тест успех...')
       sut.addEvents(SqliteTestFixtures.events);
 
       const notPublishedDeliveries = sut.getNotPublished();

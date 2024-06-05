@@ -1,11 +1,11 @@
 /* eslint-disable no-use-before-define */
 import { Database as SqliteDb } from 'bun:sqlite';
-import { TestDatabase } from '../../../api/database/test.database';
-import { TestRepository } from '../../../api/database/test.repository';
-import { TestBatchRecords } from '../../../api/database/types';
-import { GeneralModuleResolver } from '../../../api/module/types';
-import { Logger } from '../../../core/logger/logger';
-import { DTO } from '../../../domain/dto';
+import { TestDatabase } from '#api/database/test.database';
+import { TestRepository } from '#api/database/test.repository';
+import { TestBatchRecords } from '#api/database/types';
+import { GeneralModuleResolver } from '#api/module/types';
+import { Logger } from '#core/logger/logger';
+import { DTO } from '#domain/dto';
 import { MigrationsSqliteRepository } from './repositories/migrations';
 import { BunSqliteRepository } from './repository';
 import { BunRepoCtor } from './types';
@@ -36,6 +36,7 @@ export class BunSqliteDatabase implements TestDatabase<false> {
     this.logger = this.resolver.getLogger();
     this.migrationRepo.init(moduleResolver);
     this.repositories.forEach((repo) => repo.init(moduleResolver));
+    this.open();
   }
 
   addRepository(repo: BunSqliteRepository<string, DTO>): void {

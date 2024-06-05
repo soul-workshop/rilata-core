@@ -1,9 +1,9 @@
 import { SQLQueryBindings } from 'bun:sqlite';
-import { TestRepository } from '../../../api/database/test.repository';
-import { GeneralModuleResolver } from '../../../api/module/types';
-import { Logger } from '../../../core/logger/logger';
-import { dtoUtility } from '../../../core/utils/dto/dto-utility';
-import { DTO } from '../../../domain/dto';
+import { TestRepository } from '#api/database/test.repository';
+import { GeneralModuleResolver } from '#api/module/types';
+import { Logger } from '#core/logger/logger';
+import { dtoUtility } from '#core/utils/dto/dto-utility';
+import { DTO } from '#domain/dto';
 import { BunSqliteDatabase } from './database';
 import { MigrateRow } from './types';
 
