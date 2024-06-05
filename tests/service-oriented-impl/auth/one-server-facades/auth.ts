@@ -1,6 +1,6 @@
 import { DomainUser, ModuleCaller } from '../../../../src/api/controller/types';
 import { GeneralModuleResolver } from '../../../../src/api/module/types';
-import { ServiceResult } from '../../../../src/api/service/types';
+import { FullServiceResult } from '../../../../src/api/service/types';
 import { UserId } from '../../../../src/core/types';
 import { dodUtility } from '../../../../src/core/utils/dod/dod-utility';
 import { AuthFacade } from '../facade';
@@ -16,7 +16,7 @@ export class AuthFacadeOneServerImpl implements AuthFacade {
     this.moduleResolver = resolver;
   }
 
-  addUser(iin: string, caller: DomainUser): Promise<ServiceResult<AddUserServiceParams>> {
+  addUser(iin: string, caller: DomainUser): Promise<FullServiceResult<AddUserServiceParams>> {
     const requestDod = dodUtility.getRequestDod<AddUserRequestDod>('addUser', { personIin: iin });
     const moduleCaller: ModuleCaller = {
       type: 'ModuleCaller',
@@ -32,7 +32,7 @@ export class AuthFacadeOneServerImpl implements AuthFacade {
 
   async getUsers(
     userIds: UserId[], caller: DomainUser,
-  ): Promise<ServiceResult<GetUsersServiceParams>> {
+  ): Promise<FullServiceResult<GetUsersServiceParams>> {
     const requestDod = dodUtility.getRequestDod<GetUsersRequestDod>('getUsers', { userIds });
     const moduleCaller: ModuleCaller = {
       type: 'ModuleCaller',

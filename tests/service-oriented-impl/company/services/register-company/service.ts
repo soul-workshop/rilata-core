@@ -1,7 +1,7 @@
 import { DomainUser } from '../../../../../src/api/controller/types';
-import { ValidationError } from '../../../../../src/api/service/error-types';
+import { ServiceBaseErrors, ValidationError } from '../../../../../src/api/service/error-types';
 import { CommandService } from '../../../../../src/api/service/concrete-service/command.service';
-import { InputDodValidator, ServiceResult } from '../../../../../src/api/service/types';
+import { FullServiceResult, InputDodValidator, ServiceResult } from '../../../../../src/api/service/types';
 import { failure } from '../../../../../src/core/result/failure';
 import { success } from '../../../../../src/core/result/success';
 import { Result } from '../../../../../src/core/result/types';
@@ -53,7 +53,8 @@ export class RegisteringCompanyService extends CommandService<
     if (existCompanyResult.isFailure()) return failure(existCompanyResult.value);
 
     const personResult = await this.processPerson(input.attrs, caller);
-    if (personResult.isFailure()) return failure(personResult.value);
+    if (personResult.isFailure())
+      return failure(personResult.value) as ServiceResult<CompanyRegisteredServiceParams>;
     const personIin = input.attrs.person.iin;
 
     const userResult = await this.addUser(personIin, caller);
@@ -78,7 +79,10 @@ export class RegisteringCompanyService extends CommandService<
   async processPerson(
     input: RegisterCompanyRequestDodAttrs,
     caller: DomainUser,
-  ): Promise<Result<PersonAlreadyExistsError | PersonDoesntExistByIinError, string>> {
+  ): Promise<Result<
+    ServiceBaseErrors | PersonAlreadyExistsError | PersonDoesntExistByIinError,
+    string
+  >> {
     const subjectFacade = SubjectFacade.instance(this.moduleResolver);
     if (input.person.type === 'newPerson') {
       const addPersonResult = await subjectFacade.addPerson(

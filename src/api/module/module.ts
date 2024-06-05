@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { Logger } from '../../core/logger/logger';
 import {
+    FullServiceResult,
   GeneralCommandService,
   GeneralCommandServiceParams, GeneralEventService,
   GeneralQueryServiceParams, GeneraQueryService, ServiceResult,
@@ -74,7 +75,7 @@ export abstract class Module {
   async executeService<S extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
     inputDod: S['input'],
     caller: Caller,
-  ): Promise<ServiceResult<S>> {
+  ): Promise<FullServiceResult<S>> {
     try {
       const inputDodName = inputDod.meta.name;
       const service = this.getServiceByInputDodName(inputDodName);

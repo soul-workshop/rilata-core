@@ -1,7 +1,7 @@
 import { DomainUser } from '../../../../../src/api/controller/types';
 import { requestStoreDispatcher } from '../../../../../src/api/request-store/request-store-dispatcher';
 import { QueryService } from '../../../../../src/api/service/concrete-service/query.service';
-import { ServiceResult } from '../../../../../src/api/service/types';
+import { FullServiceResult, ServiceResult } from '../../../../../src/api/service/types';
 import { failure } from '../../../../../src/core/result/failure';
 import { success } from '../../../../../src/core/result/success';
 import { UserId, UuidType } from '../../../../../src/core/types';
@@ -40,12 +40,12 @@ export class GetingFullCompanyService extends QueryService<
       domainUser = caller.user;
     } else throw this.logger.error('supported only domain user caller');
 
-    return this.getFullCompany(input.attrs.id, domainUser);
+    return this.getFullCompany(input.attrs.id, domainUser) as Promise<ServiceResult<GetFullCompanyServiceParams>>;
   }
 
   protected async getFullCompany(
     companyId: UuidType, domainUser: DomainUser,
-  ): Promise<ServiceResult<GetFullCompanyServiceParams>> {
+  ): Promise<FullServiceResult<GetFullCompanyServiceParams>> {
     const companyFacade = CompanyFacade.instance(this.moduleResolver);
     const companyResult = await companyFacade.getCompany(companyId, domainUser);
     if (companyResult.isFailure()) return failure(companyResult.value);
@@ -60,6 +60,9 @@ export class GetingFullCompanyService extends QueryService<
   protected async getFullUsers(userIds: UserId[], domainUser: DomainUser): Promise<FullUser[]> {
     const authFacade = AuthFacade.instance(this.moduleResolver);
     const usersResult = await authFacade.getUsers(userIds, domainUser);
+    if (usersResult.isFailure()) {
+      throw this.logger.error('метод getUsers не должен возвращать failure');
+    }
     const users = usersResult.value;
     const subjectFacade = SubjectFacade.instance(this.moduleResolver);
     const personResults = await Promise.all(users.map(

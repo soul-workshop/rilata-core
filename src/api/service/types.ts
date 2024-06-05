@@ -96,7 +96,7 @@ export type ServiceResult<P extends GeneralBaseServiceParams> =
   Result<P['errors'], P['successOut']>
 
 export type FullServiceResult<
-  P extends GeneralQueryServiceParams | GeneralCommandServiceParams
+  P extends GeneralBaseServiceParams
 > = Result<P['errors'] | ServiceBaseErrors, P['successOut']>
 
 export type FullServiceResultDTO<
