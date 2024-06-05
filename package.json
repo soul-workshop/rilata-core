@@ -7,7 +7,7 @@
   "private": false,
   "repository": "https://github.com/nurgeo/rilata.git",
   "scripts": {
-    "tslint": "bun tsc",
+    "tslint": "bun tsc --noEmit -p ./tsconfig.json",
     "lint": "bun eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "all:tests": "LOG_MODE=off bun test"
   },
