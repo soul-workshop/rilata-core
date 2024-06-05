@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { SqliteTestFixtures } from './fixtures';
+import { SqliteTestFixtures } from './fixtures.js';
 
 describe('bun sqlite db: add batch to db, and clear db tests', () => {
   const fakeModuleResolver = SqliteTestFixtures.getResolverWithTestDb();

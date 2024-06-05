@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
-import { requestStoreMock } from 'tests/fixtures/request-store-mock';
-import { DomainUser } from '#api/controller/types';
-import { EventRepository } from '#api/database/event.repository';
-import { dodUtility } from '#core/utils/dod/dod-utility';
-import { uuidUtility } from '#core/utils/uuid/uuid-utility';
-import { SqliteTestFixtures } from './fixtures';
+import { requestStoreMock } from 'tests/fixtures/request-store-mock.js';
+import { DomainUser } from '#api/controller/types.js';
+import { EventRepository } from '#api/database/event.repository.js';
+import { dodUtility } from '#core/utils/dod/dod-utility.js';
+import { uuidUtility } from '#core/utils/uuid/uuid-utility.js';
+import { SqliteTestFixtures } from './fixtures.js';
 
 describe('bun sqlite db transaction tests', () => {
   const fakeModuleResolver = SqliteTestFixtures.getResolverWithTestDb();

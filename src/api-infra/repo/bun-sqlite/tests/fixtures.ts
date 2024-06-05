@@ -1,33 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-len */
 /* eslint-disable no-use-before-define */
-import { requestStoreDispatcher } from '#api/base.index';
-import { DomainUser } from '#api/controller/types';
-import { EventRepository } from '#api/database/event.repository';
-import { TestBatchRecords } from '#api/database/types';
-import { GeneralModuleResolver } from '#api/module/types';
-import { Repositoriable } from '#api/resolve/repositoriable';
-import { GeneralServerResolver } from '#api/server/types';
-import { CommandService } from '#api/service/concrete-service/command.service';
-import { CommandServiceParams, InputDodValidator, ServiceResult } from '#api/service/types';
-import { DatabaseObjectSavingError } from '#core/exeptions';
-import { getEnvLogMode } from '#core/index';
-import { ConsoleLogger } from '#core/logger/console-logger';
-import { success } from '#core/result/success';
-import { TupleToUnion } from '#core/tuple-types';
-import { UuidType } from '#core/types';
-import { dodUtility } from '#core/utils/dod/dod-utility';
-import { dtoUtility } from '#core/utils/dto/dto-utility';
-import { uuidUtility } from '#core/utils/uuid/uuid-utility';
-import { AggregateRootParams, ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '#domain/domain-data/domain-types';
-import { DtoFieldValidator } from '#domain/validator/field-validator/dto-field-validator';
-import { LiteralFieldValidator } from '#domain/validator/field-validator/literal-field-validator';
-import { StringChoiceValidationRule } from '#domain/validator/rules/validate-rules/string/string-choice.v-rule';
-import { BunSqliteDatabase } from '../database';
-import { EventRepositorySqlite } from '../repositories/event';
-import { BunSqliteRepository } from '../repository';
-import { BunSqliteStrategy } from '../transaction/bun-sqlite.strategy';
-import { BunRepoCtor, MigrateRow } from '../types';
+import { DomainUser } from '#api/controller/types.js';
+import { EventRepository } from '#api/database/event.repository.js';
+import { TestBatchRecords } from '#api/database/types.js';
+import { GeneralModuleResolver } from '#api/module/types.js';
+import { requestStoreDispatcher } from '#api/request-store/request-store-dispatcher.js';
+import { Repositoriable } from '#api/resolve/repositoriable.js';
+import { GeneralServerResolver } from '#api/server/types.js';
+import { CommandService } from '#api/service/concrete-service/command.service.js';
+import { CommandServiceParams, InputDodValidator, ServiceResult } from '#api/service/types.js';
+import { DatabaseObjectSavingError } from '#core/exeptions.js';
+import { ConsoleLogger } from '#core/logger/console-logger.js';
+import { getEnvLogMode } from '#core/logger/logger-modes.js';
+import { success } from '#core/result/success.js';
+import { TupleToUnion } from '#core/tuple-types.js';
+import { UuidType } from '#core/types.js';
+import { dodUtility } from '#core/utils/dod/dod-utility.js';
+import { dtoUtility } from '#core/utils/dto/dto-utility.js';
+import { uuidUtility } from '#core/utils/uuid/uuid-utility.js';
+import { AggregateRootParams, ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '#domain/domain-data/domain-types.js';
+import { DtoFieldValidator } from '#domain/validator/field-validator/dto-field-validator.js';
+import { LiteralFieldValidator } from '#domain/validator/field-validator/literal-field-validator.js';
+import { StringChoiceValidationRule } from '#domain/validator/rules/validate-rules/string/string-choice.v-rule.js';
+import { BunSqliteDatabase } from '../database.js';
+import { EventRepositorySqlite } from '../repositories/event.js';
+import { BunSqliteRepository } from '../repository.js';
+import { BunSqliteStrategy } from '../transaction/bun-sqlite.strategy.js';
+import { BunRepoCtor, MigrateRow } from '../types.js';
 
 export namespace SqliteTestFixtures {
   // ++++++++++++++++++ database and repositories section ++++++++++++++++++++

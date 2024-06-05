@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, test, expect, beforeEach } from 'bun:test';
-import { MigrateRow } from '../types';
-import { SqliteTestFixtures } from './fixtures';
+import { MigrateRow } from '../types.js';
+import { SqliteTestFixtures } from './fixtures.js';
 
 describe('sqlite create and migrate tests', () => {
   const fakeModuleResolver = SqliteTestFixtures.getResolverWithTestDb();

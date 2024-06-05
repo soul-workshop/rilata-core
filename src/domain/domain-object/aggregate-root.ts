@@ -1,7 +1,7 @@
-import { dtoUtility } from '../../core/utils/dto/dto-utility';
-import { GeneralArParams } from '../index';
-import { DtoFieldValidator } from '../validator/field-validator/dto-field-validator';
-import { AggregateRootHelper } from './aggregate-helper';
+import { dtoUtility } from '../../core/utils/dto/dto-utility.js';
+import { GeneralArParams } from '../index.js';
+import { DtoFieldValidator } from '../validator/field-validator/dto-field-validator.js';
+import { AggregateRootHelper } from './aggregate-helper.js';
 
 /** Корневой объект - т.е имеет уникальную глобальную идентификацию */
 export abstract class AggregateRoot<PARAMS extends GeneralArParams> {
