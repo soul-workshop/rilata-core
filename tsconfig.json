@@ -8,7 +8,7 @@
     "lib": ["esnext", "dom"],  // Включение библиотек для браузера и стандартной библиотеки ES
     "baseUrl": "./",
     "paths": {
-        "#*": ["./src/*"],
+        "#*": ["./src/*"]
     },
     "esModuleInterop": true,  // Включение совместимости с CommonJS модулями
     "allowSyntheticDefaultImports": true,  // Разрешение синтетических импортов по умолчанию
