@@ -29,6 +29,7 @@
     "./api-bus": "./src/api/bus.index.ts",
     "./api-bun-db": "./src/api-infra/repo/bun-sqlite/index.ts",
     "./api-bus-impl": "./src/api-infra/bus/index.ts",
+    "./ui-http": "./src/ui/index.ts",
     "./api-fixtures": "./tests/fixtures/index.ts"
   },
   "imports": {
