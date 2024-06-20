@@ -24,14 +24,14 @@ export class BackendApi {
       if (err.message === 'Failed to fetch') {
         return failure(dodUtility.getAppError<GeneralNetError>(
           'Net error',
-          'Похоже нет соединение с интернетом',
+          'Похоже нет соединения с интернетом',
           {},
         ));
       }
 
       return failure(dodUtility.getAppError<GeneralInternalError>(
         'Internal error',
-        'Ощибка приложения, попробуйте перезагрузить',
+        'Ошибка приложения, попробуйте перезагрузить',
         {},
       ));
     }
