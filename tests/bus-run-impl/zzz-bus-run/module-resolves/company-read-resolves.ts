@@ -20,6 +20,7 @@ export function getCompanyReadResolves(): CompanyReadResolves {
     companyRepo = new CompanyReadRepositoryImpl(db);
     companyResolves = {
       moduleName: 'CompanyReadModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/company-read-module/'],
       db,
       eventRepo,

@@ -14,6 +14,7 @@ export function getSubjectResolves(): SubjectResolves {
   if (!subjectResolves) {
     subjectResolves = {
       moduleName: 'SubjectModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/subject-module/'],
       db,
       eventRepo: new FakeClassImplements.TestEventRepository(db),

@@ -20,6 +20,7 @@ export function getCompanyCmdResolves(): CompanyCmdResolves {
     companyRepo = new CompanyCmdRepositoryImpl(db);
     companyResolves = {
       moduleName: 'CompanyCmdModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/company-cmd-module/'],
       db,
       eventRepo,

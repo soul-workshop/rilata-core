@@ -14,6 +14,7 @@ export function getAuthResolves(): AuthResolves {
   if (!authResolves) {
     authResolves = {
       moduleName: 'AuthModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/auth-module/'],
       db,
       eventRepo: new FakeClassImplements.TestEventRepository(db),

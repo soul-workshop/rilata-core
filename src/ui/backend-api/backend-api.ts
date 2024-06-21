@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BadRequestError } from '../../api/service/error-types.js';
 import { FullServiceResult, FullServiceResultDTO, GeneralCommandServiceParams, GeneralQueryServiceParams } from '../../api/service/types.js';
 import { failure } from '../../core/result/failure.js';

@@ -22,6 +22,7 @@ export function getCompanyResolves(): CompanyResolves {
     companyRepo = new CompanyRepositoryImpl(db);
     companyResolves = {
       moduleName: 'CompanyModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/company-module/'],
       db,
       eventRepo,

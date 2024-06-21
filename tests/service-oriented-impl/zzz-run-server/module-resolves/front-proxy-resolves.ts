@@ -10,6 +10,7 @@ export function getFrontProxyResolves(): FrontendProxyResolves {
   if (!frontProxyResolves) {
     frontProxyResolves = {
       moduleName: 'FrontProxyModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/frontend-proxy-module/'],
       companyFacade: new CompanyFacadeOneServerImpl(),
       subjectFacade: new SubjectFacadeOneServerImpl(),
