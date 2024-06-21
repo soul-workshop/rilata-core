@@ -34,7 +34,7 @@ class ResponseUtility {
       const mimeType = options?.mimeType ?? this.fileMimeType(filePath);
       const fileName = filePath.split('/').pop() ?? filePath;
 
-      const shouldCompress = options?.shouldCompress ?? true;
+      const shouldCompress = false;
       const compressionFormat = options?.compressionFormat ?? 'br'; // поддержка различных форматов сжатия, по умолчанию 'br'
       let disposition: string;
       if (!options?.disposition || options.disposition === 'inline') {

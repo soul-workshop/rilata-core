@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { Database as SqliteDb } from 'bun:sqlite';
+import { existsSync } from 'fs';
 import { TestDatabase } from '#api/database/test.database.js';
 import { TestRepository } from '#api/database/test.repository.js';
 import { TestBatchRecords } from '#api/database/types.js';
@@ -40,8 +41,10 @@ export class BunSqliteDatabase implements TestDatabase<false> {
     this.repositories.forEach((repo) => repo.init(moduleResolver));
     if (this.getFullFileName() === MEMORY_PATH) {
       this.createDb();
-    } else {
+    } else if (this.dbFileIsExist()) {
       this.open();
+    } else {
+      throw this.logger.error(`database file not exist by path: ${this.getFullFileName()}`);
     }
   }
 
@@ -133,5 +136,9 @@ export class BunSqliteDatabase implements TestDatabase<false> {
       this.sqliteDbInstance = new SqliteDb(this.getFullFileName());
       this.logger.info(`-| sqlite db by name "${this.getFileName()}" for module "${this.resolver.getModuleName()}" opened`);
     }
+  }
+
+  protected dbFileIsExist(): boolean {
+    return existsSync(this.getFullFileName());
   }
 }
