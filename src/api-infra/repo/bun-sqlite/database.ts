@@ -10,6 +10,8 @@ import { MigrationsSqliteRepository } from './repositories/migrations.js';
 import { BunSqliteRepository } from './repository.js';
 import { BunRepoCtor } from './types.js';
 
+const MEMORY_PATH = ':memory:';
+
 export class BunSqliteDatabase implements TestDatabase<false> {
   migrationRepo: MigrationsSqliteRepository;
 
@@ -36,7 +38,11 @@ export class BunSqliteDatabase implements TestDatabase<false> {
     this.logger = this.resolver.getLogger();
     this.migrationRepo.init(moduleResolver);
     this.repositories.forEach((repo) => repo.init(moduleResolver));
-    this.open();
+    if (this.getFullFileName() === MEMORY_PATH) {
+      this.createDb();
+    } else {
+      this.open();
+    }
   }
 
   addRepository(repo: BunSqliteRepository<string, DTO>): void {
@@ -114,7 +120,7 @@ export class BunSqliteDatabase implements TestDatabase<false> {
 
   getFullFileName(): string {
     return this.resolver.getServerResolver().getRunMode() === 'test'
-      ? ':memory:'
+      ? MEMORY_PATH
       : `${this.getFilePath()}/${this.getFileName()}`;
   }
 

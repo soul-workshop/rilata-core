@@ -347,7 +347,6 @@ export namespace SqliteTestFixtures {
     } as unknown as GeneralModuleResolver;
 
     db.init(fakeModuleResolver); // init and resolves db and repositories
-    db.createDb(); // create sqlite db and tables
 
     return fakeModuleResolver;
   }

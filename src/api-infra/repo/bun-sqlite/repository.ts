@@ -72,8 +72,8 @@ export abstract class BunSqliteRepository<
       if (!rowIsMigrated) {
         try {
           const transation = this.db.sqliteDb.transaction(() => {
-            this.db.sqliteDb.run(migration.sql);
-            this.db.sqliteDb.run(this.getMigrationSql(migration));
+            this.migrateTable(migration);
+            this.registerMigration(migration);
           });
           transation();
           this.logger.info(`---| migrate "${migration.description}" successfully processed`);
@@ -88,8 +88,13 @@ export abstract class BunSqliteRepository<
     });
   }
 
-  protected getMigrationSql(migration: MigrateRow): string {
+  protected migrateTable(migration: MigrateRow): void {
+    this.db.sqliteDb.run(migration.sql);
+  }
+
+  protected registerMigration(migration: MigrateRow): void {
     const { id, description, sql } = migration;
-    return `INSERT INTO migrations VALUES ('${id}', '${description}', '${sql}', '${this.tableName}', unixepoch('now'))`;
+    const migrationRecordSql = `INSERT INTO migrations VALUES ('${id}', '${description}', '${sql}', '${this.tableName}', unixepoch('now'))`;
+    this.db.sqliteDb.prepare(migrationRecordSql).run();
   }
 }

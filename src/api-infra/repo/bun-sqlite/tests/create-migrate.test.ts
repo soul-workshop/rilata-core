@@ -46,10 +46,10 @@ describe('sqlite create and migrate tests', () => {
 
   test('провал, тест транзакции, запись миграции в таблицу posts, migrations не проходит из за ошибки записи в таблицу migrations', () => {
     class FailMigratePostRepository extends SqliteTestFixtures.PostRepositorySqlite {
-      protected getMigrationSql(migration: MigrateRow): string {
+      protected registerMigration(migration: MigrateRow): void {
         const { id, description, sql } = migration;
-        // last column value is null => fail;
-        return `INSERT INTO migrations VALUES ('${id}', '${description}', '${sql}', 'posts', null)`;
+        const migrationRecordSql = `INSERT INTO migrations VALUES ('${id}', '${description}', '${sql}', '${this.tableName}', null)`;
+        this.db.sqliteDb.prepare(migrationRecordSql).run();
       }
     }
     class FailBlogDatabase extends SqliteTestFixtures.BlogDatabase {
@@ -62,9 +62,8 @@ describe('sqlite create and migrate tests', () => {
     }
 
     const failDb = new FailBlogDatabase();
-    failDb.init(fakeModuleResolver);
     try {
-      failDb.createDb();
+      failDb.init(fakeModuleResolver);
       throw Error('not be called');
     } catch (e) {
       expect(String(e)).toBe('Error: fail migrate "add post category column" row');
