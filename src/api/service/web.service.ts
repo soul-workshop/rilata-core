@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { failure } from '../../core/result/failure.js';
 import { success } from '../../core/result/success.js';
-import { Result } from '../../core/result/types.js';
 import {
   ServiceResult, InputDodValidator,
-  GeneralBaseServiceParams, GetModuleName,
+  GeneralWebServiceParams, GetModuleName,
 } from './types.js';
 import { Service } from './service.js';
-import { ValidationError } from './error-types.js';
 import { GeneralModuleResolver } from '../module/types.js';
 import { permissionDeniedError } from './constants.js';
 import { CallerType } from '../controller/types.js';
 import { dodUtility } from '../../core/utils/dod/dod-utility.js';
 import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
 
-export abstract class BaseService<
-  P extends GeneralBaseServiceParams, RES extends GeneralModuleResolver
+export abstract class WebService<
+  P extends GeneralWebServiceParams, RES extends GeneralModuleResolver
 > extends Service<RES> {
   abstract override moduleName: GetModuleName<RES>;
 

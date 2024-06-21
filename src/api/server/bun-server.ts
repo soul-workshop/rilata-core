@@ -99,9 +99,7 @@ export abstract class BunServer extends RilataServer {
 
   protected setControllerUrls(): void {
     const controllers: Controller<any>[] = this.serverControllers;
-    this.modules.map((module) => module.getModuleControllers()).forEach((mControllers) => {
-      controllers.push(...mControllers);
-    });
+    this.modules.forEach((module) => controllers.push(module.getModuleController()));
     controllers.forEach((controller) => {
       controller.getUrls().forEach((url) => {
         if (typeof url === 'string') this.stringUrls[url] = controller;
