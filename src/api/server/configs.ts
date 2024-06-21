@@ -40,11 +40,14 @@ export function getServerConfig(config?: ServerConfig): Required<ServerConfig> {
 
 function getEnvRunMode(): RunMode | undefined {
   const mode = process.env.NODE_ENV;
-  if (mode === undefined) return;
+  if (mode === 'prod' || mode === 'production') return 'prod';
+  if (mode === 'dev' || mode === 'development') return 'dev';
+  if (mode === 'test') return 'test';
+  return undefined;
 
-  const allModes: UnionToTuple<RunMode> = ['test', 'dev', 'prod'];
-  // eslint-disable-next-line consistent-return
-  return allModes.find((arrMode) => arrMode === mode);
+  // const allModes: UnionToTuple<RunMode> = ['test', 'dev', 'prod'];
+  // // eslint-disable-next-line consistent-return
+  // return allModes.find((arrMode) => arrMode === mode);
 }
 
 export function getRunMode(defMode?: RunMode): RunMode {
