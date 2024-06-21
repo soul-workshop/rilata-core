@@ -119,7 +119,7 @@ export class BunSqliteDatabase implements TestDatabase<false> {
   }
 
   getFullFileName(): string {
-    return this.resolver.getServerResolver().getRunMode() === 'test'
+    return this.resolver.getServerResolver().getRunMode() !== 'prod'
       ? MEMORY_PATH
       : `${this.getFilePath()}/${this.getFileName()}`;
   }

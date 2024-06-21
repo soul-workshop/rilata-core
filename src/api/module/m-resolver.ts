@@ -39,7 +39,6 @@ implements Repositoriable, Realisable, Facadable {
     this.serverResolver = serverResolver;
 
     this.initResolves();
-    this.getDatabase().init(this);
   }
 
   stop(): void {
@@ -75,11 +74,11 @@ implements Repositoriable, Realisable, Facadable {
   }
 
   protected initResolves(): void {
-    Object.values(this.resolves).forEach((resolveItem) => {
-      if (
-        (resolveItem as any).init
-        && typeof (resolveItem as any).init === 'function'
-      ) (resolveItem as any).init(this);
+    Object.values(this.resolves).forEach((item) => {
+      const resolve = item as any;
+      if (resolve.init && typeof resolve.init === 'function') {
+        (item as any).init(this);
+      }
     });
   }
 }
