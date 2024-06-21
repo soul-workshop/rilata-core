@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BadRequestError } from '../../api/service/error-types.js';
+import { BadRequestError, GeneralInternalError, GeneralNetError } from '../../api/service/error-types.js';
 import { FullServiceResult, FullServiceResultDTO, GeneralCommandServiceParams, GeneralQueryServiceParams } from '../../api/service/types.js';
 import { failure } from '../../core/result/failure.js';
 import { success } from '../../core/result/success.js';
@@ -16,10 +16,26 @@ export class BackendApi {
     requestDod: SERVICE_PARAMS['input'],
     ...args: unknown[]
   ): Promise<FullServiceResult<SERVICE_PARAMS>> {
-    const backendResult = await fetch(this.moduleUrl, this.getRequestBody(requestDod));
+    try {
+      const backendResult = await fetch(this.moduleUrl, this.getRequestBody(requestDod));
+      const resultDto = await backendResult.json();
+      return this.resultDtoToResult(resultDto);
+    } catch (e) {
+      const err = e as Error;
+      if (err.message === 'Failed to fetch') {
+        return failure(dodUtility.getAppError<GeneralNetError>(
+          'Net error',
+          'Похоже нет соединения с интернетом',
+          {},
+        ));
+      }
 
-    const resultDto = await backendResult.json();
-    return this.resultDtoToResult(resultDto);
+      return failure(dodUtility.getAppError<GeneralInternalError>(
+        'Internal error',
+        'Ошибка приложения, попробуйте перезагрузить',
+        {},
+      ));
+    }
   }
 
   getRequestBody(payload: unknown, ...args: unknown[]): Record<string, unknown> {
