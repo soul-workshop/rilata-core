@@ -1,10 +1,9 @@
-import { BotModule } from '#api/module/bot.module.js';
-import { Update } from '#api/telegram/types.js';
+import { BotReplyMessage, Update } from '#api/telegram/types.js';
 import { ModuleController } from './m-controller.js';
 
 const TELEGRAM_API = 'https://api.telegram.org/';
 
-export class BotController extends ModuleController {
+export class BotModuleController extends ModuleController {
   constructor(protected botName: string, protected botToken: string) {
     super();
   }
@@ -12,9 +11,9 @@ export class BotController extends ModuleController {
   async execute(req: Request): Promise<void> {
     try {
       const update = await req.json() as Update;
-      const module = this.resolver.getModule() as BotModule;
+      const module = this.resolver.getModule();
       const body = await module.executeService(this.botName, update);
-      if (body.method === 'notResponse') return;
+      if ((body as BotReplyMessage).method === 'notResponse') return;
 
       const payload = {
         method: 'POST',

@@ -1,6 +1,6 @@
 import { Service } from './service.js';
 import { GeneralModuleResolver } from '../module/types.js';
-import { TelegramMessage, Update } from '#api/telegram/types.js';
+import { BotReplyMessage, Update } from '#api/telegram/types.js';
 
 export abstract class BotService<RES extends GeneralModuleResolver> extends Service<RES> {
   abstract botName: string;
@@ -9,5 +9,5 @@ export abstract class BotService<RES extends GeneralModuleResolver> extends Serv
     return this.botName;
   }
 
-  abstract execute(update: Update): Promise<TelegramMessage>
+  abstract execute(update: Update): Promise<BotReplyMessage>
 }

@@ -11,5 +11,5 @@ export type SendMessage = {
   args: Parameters<ApiMethods<unknown>['sendMessage']>
 }
 
-export type TelegramMessage = NotResponse
+export type BotReplyMessage = NotResponse
   | SendMessage;
