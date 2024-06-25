@@ -12,6 +12,8 @@ export abstract class EventService<
 > extends WebService<P, RES> {
   abstract busMessageType: BusMessageType;
 
+  abstract eventName: P['input']['meta']['name'];
+
   abstract eventModuleName: P['input']['meta']['moduleName'];
 
   abstract eventServiceName: P['input']['meta']['serviceName'];
@@ -21,6 +23,10 @@ export abstract class EventService<
   protected supportedCallers!: never;
 
   protected abstract transactionStrategy: TransactionStrategy;
+
+  get handleName(): string {
+    return this.eventName;
+  }
 
   protected executeService(input: P['input']): Promise<ServiceResult<P>> {
     return this.transactionStrategy.executeDatabaseScope(this, input);

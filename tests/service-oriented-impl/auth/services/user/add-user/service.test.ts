@@ -35,7 +35,7 @@ describe('add user service tests', async () => {
       { personIin: '111333555777' },
       requestId,
     );
-    const sut = module.getServiceByInputDodName<AddingUserService>('addUser');
+    const sut = module.getService<AddingUserService>('addUser');
     const result = await sut.execute(inputDod);
     expect(result.isSuccess()).toBe(true);
     const userAr = result.value as AddUserOut;
@@ -63,7 +63,7 @@ describe('add user service tests', async () => {
 
     const repoAddUserMock = spyOn(UserRepository.instance(resolver), 'addUser');
     randomUuidMock.mockClear();
-    const sut = module.getServiceByInputDodName<AddingUserService>('addUser');
+    const sut = module.getService<AddingUserService>('addUser');
     const result = await sut.execute(inputDod);
 
     expect(result.isSuccess()).toBe(true);

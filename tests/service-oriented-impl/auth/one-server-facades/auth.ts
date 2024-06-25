@@ -5,8 +5,10 @@ import { UserId } from '../../../../src/core/types.js';
 import { dodUtility } from '../../../../src/core/utils/dod/dod-utility.js';
 import { AuthFacade } from '../facade.js';
 import { AuthModule } from '../module.js';
-import { AddUserRequestDod, AddUserServiceParams } from '../services/user/add-user/s-params.js';
-import { GetUsersRequestDod, GetUsersServiceParams } from '../services/user/get-users/s-params.js';
+import { AddUserRequestDod } from '../services/user/add-user/s-params.js';
+import { AddingUserService } from '../services/user/add-user/service.js';
+import { GetUsersRequestDod } from '../services/user/get-users/s-params.js';
+import { GetingUsersService } from '../services/user/get-users/service.js';
 
 /** Реализация фасада для работы в рамках одного сервера */
 export class AuthFacadeOneServerImpl implements AuthFacade {
@@ -16,9 +18,9 @@ export class AuthFacadeOneServerImpl implements AuthFacade {
     this.moduleResolver = resolver;
   }
 
-  addUser(iin: string, caller: DomainUser): Promise<FullServiceResult<AddUserServiceParams>> {
+  addUser(iin: string, caller: DomainUser): Promise<FullServiceResult<AddingUserService>> {
     const requestDod = dodUtility.getRequestDod<AddUserRequestDod>('addUser', { personIin: iin });
-    const moduleCaller: ModuleCaller = {
+    const mCaller: ModuleCaller = {
       type: 'ModuleCaller',
       name: this.moduleResolver.getModuleName(),
       user: caller,
@@ -27,14 +29,14 @@ export class AuthFacadeOneServerImpl implements AuthFacade {
       .getServerResolver()
       .getServer()
       .getModule<AuthModule>('AuthModule')
-      .executeService(requestDod, moduleCaller);
+      .executeService(requestDod, mCaller) as Promise<FullServiceResult<AddingUserService>>;
   }
 
   async getUsers(
     userIds: UserId[], caller: DomainUser,
-  ): Promise<FullServiceResult<GetUsersServiceParams>> {
+  ): Promise<FullServiceResult<GetingUsersService>> {
     const requestDod = dodUtility.getRequestDod<GetUsersRequestDod>('getUsers', { userIds });
-    const moduleCaller: ModuleCaller = {
+    const mCaller: ModuleCaller = {
       type: 'ModuleCaller',
       name: this.moduleResolver.getModuleName(),
       user: caller,
@@ -43,6 +45,6 @@ export class AuthFacadeOneServerImpl implements AuthFacade {
       .getServerResolver()
       .getServer()
       .getModule<AuthModule>('AuthModule')
-      .executeService(requestDod, moduleCaller);
+      .executeService(requestDod, mCaller) as Promise<FullServiceResult<GetingUsersService>>;
   }
 }

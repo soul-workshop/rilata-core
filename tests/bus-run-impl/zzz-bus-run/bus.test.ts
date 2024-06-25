@@ -13,9 +13,9 @@ import { CompanyReadModule } from '../company-read/module.js';
 import { serverStarter } from './starter.js';
 
 describe('add company service tests', async () => {
-  function timeout() {
+  function timeout(sleep = 0) {
     // eslint-disable-next-line no-promise-executor-return
-    return new Promise((resolve) => setTimeout(resolve, 0));
+    return new Promise((resolve) => setTimeout(resolve, sleep));
   }
 
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';

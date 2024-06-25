@@ -13,6 +13,7 @@ import { QueryService } from './concrete-service/query.service.js';
 import { CommandService } from './concrete-service/command.service.js';
 import { EventService } from './concrete-service/event.service.js';
 import { ResultDTO } from '../controller/types.js';
+import { WebService } from '#api/base.index.js';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
 
@@ -98,11 +99,14 @@ export type ServiceResult<P extends GeneralWebServiceParams> =
   Result<P['errors'], P['successOut']>
 
 export type FullServiceResult<
-  P extends GeneralWebServiceParams
-> = Result<P['errors'] | ServiceBaseErrors, P['successOut']>
+  S extends GeneralWebService
+> = Result<GetServiceParams<S>['errors'] | ServiceBaseErrors, GetServiceParams<S>['successOut']>
 
 export type FullServiceResultDTO<
-  P extends GeneralQueryServiceParams | GeneralCommandServiceParams
-> = ResultDTO<P['errors'] | ServiceBaseErrors, P['successOut']>
+  S extends GeneralWebService
+> = ResultDTO<GetServiceParams<S>['errors'] | ServiceBaseErrors, GetServiceParams<S>['successOut']>
 
 export type GetModuleName<RES extends GeneralModuleResolver> = GetModuleResolves<RES>['moduleName']
+
+export type GetServiceParams<S extends GeneralWebService> =
+  S extends WebService<infer P, GeneralModuleResolver> ? P : never

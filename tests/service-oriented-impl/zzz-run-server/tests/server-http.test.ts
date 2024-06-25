@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, test, expect, spyOn } from 'bun:test';
 import { BunServer } from '../../../../src/api/server/bun-server.js';
 import { AuthModule } from '../../auth/module.js';
 import { CompanyModule } from '../../company/module.js';
@@ -169,6 +169,7 @@ describe('process http requests by server class', async () => {
         },
         body: JSON.stringify(inputDto),
       });
+
       const resp = await sut.fetch(req);
       expect(await resp.json()).toEqual({
         httpStatus: 400,
@@ -176,7 +177,7 @@ describe('process http requests by server class', async () => {
           locale: {
             hint: {},
             name: 'Bad request',
-            text: 'Полезная нагрузка запроса не является объектом requestDod',
+            text: 'Полезная нагрузка запроса не является объектом inputDod',
           },
           meta: {
             domainType: 'error',

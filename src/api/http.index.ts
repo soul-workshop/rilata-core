@@ -1,5 +1,5 @@
 export * from './controller/controller.js';
-export * from './controller/m-controller.js';
+export * from './controller/web.module-controller.js';
 export * from './controller/file-controller.js';
 export * from './controller/constants.js';
 export type {

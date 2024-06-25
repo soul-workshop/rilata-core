@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BadRequestError } from '../../api/service/error-types.js';
-import { FullServiceResult, FullServiceResultDTO, GeneralCommandServiceParams, GeneralQueryServiceParams } from '../../api/service/types.js';
+import { FullServiceResult, FullServiceResultDTO, GeneralWebService, GetServiceParams } from '../../api/service/types.js';
 import { failure } from '../../core/result/failure.js';
 import { success } from '../../core/result/success.js';
 import { Result } from '../../core/result/types.js';
@@ -11,10 +12,10 @@ export class BackendApi {
 
   /** делает запрос в бэкенд и возвращает результат.
     @param {Object} requestDod - объект типа RequestDod */
-  async request<SERVICE_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
-    requestDod: SERVICE_PARAMS['input'],
+  async request<SERVICE extends GeneralWebService>(
+    requestDod: GetServiceParams<SERVICE>['input'],
     ...args: unknown[]
-  ): Promise<FullServiceResult<SERVICE_PARAMS>> {
+  ): Promise<FullServiceResult<SERVICE>> {
     const backendResult = await fetch(this.moduleUrl, this.getRequestBody(requestDod));
 
     const resultDto = await backendResult.json();
@@ -32,9 +33,9 @@ export class BackendApi {
     };
   }
 
-  protected resultDtoToResult<P extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
-    resultDto: FullServiceResultDTO<P>,
-  ): FullServiceResult<P> {
+  protected resultDtoToResult<S extends GeneralWebService>(
+    resultDto: FullServiceResultDTO<S>,
+  ): FullServiceResult<S> {
     if (resultDto.success === false) {
       return failure(resultDto.payload);
     }

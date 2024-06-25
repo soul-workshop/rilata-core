@@ -11,6 +11,8 @@ import { permissionDeniedError } from './constants.js';
 import { CallerType } from '../controller/types.js';
 import { dodUtility } from '../../core/utils/dod/dod-utility.js';
 import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
+import { Result } from '#core/result/types.js';
+import { ValidationError } from '#api/base.index.js';
 
 export abstract class WebService<
   P extends GeneralWebServiceParams, RES extends GeneralModuleResolver
@@ -19,7 +21,7 @@ export abstract class WebService<
 
   abstract override serviceName: P['serviceName'];
 
-  abstract override inputDodName: P['input']['meta']['name'];
+  abstract handleName: P['input']['meta']['name'];
 
   abstract override aRootName: P['aRootName'];
 

@@ -35,7 +35,7 @@ describe('register company saga service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByInputDodName<GetingCompanyService>('getCompany');
+    const sut = module.getService<GetingCompanyService>('getCompany');
 
     const result = await sut.execute(getCompanyRequestDod);
     expect(result.isSuccess()).toBe(true);
@@ -50,7 +50,7 @@ describe('register company saga service tests', async () => {
   });
 
   test('провал, нет такой компании', async () => {
-    const sut = module.getServiceByInputDodName<GetingCompanyService>('getCompany');
+    const sut = module.getService<GetingCompanyService>('getCompany');
 
     const notFindedRequestDod = dodUtility.getRequestDod<GetCompanyRequestDod>(
       'getCompany',

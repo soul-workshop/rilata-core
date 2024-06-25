@@ -1,5 +1,4 @@
 import { Logger } from '../../core/logger/logger.js';
-import { Result } from '../../core/result/types.js';
 import { GeneralModuleResolver } from '../module/types.js';
 import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
 
@@ -8,7 +7,7 @@ export abstract class Service<R extends GeneralModuleResolver> {
 
   abstract serviceName: string;
 
-  abstract inputDodName: string;
+  abstract handleName: string;
 
   abstract moduleName: string;
 
@@ -20,5 +19,5 @@ export abstract class Service<R extends GeneralModuleResolver> {
     return this.moduleResolver.getLogger();
   }
 
-  abstract execute(...args: unknown[]): Promise<Result<unknown, unknown>>
+  abstract execute(...args: unknown[]): Promise<unknown>
 }

@@ -34,7 +34,7 @@ export type {
 } from './service/error-types.js';
 export * from './service/service.js';
 export type {
-  AppEventType, GetModuleName, ServiceResult, WebServiceParams as BaseServiceParams,
+  AppEventType, GetModuleName, ServiceResult, WebServiceParams,
   FullServiceResult, InputDodValidator, EventServiceParams, GeneraQueryService,
   QueryServiceParams, GeneralEventService, CommandServiceParams, FullServiceResultDTO,
   GeneralCommandService, GeneralWebServiceParams, GeneralEventServiceParams,
@@ -45,5 +45,5 @@ export type { Facadable } from './resolve/facadable.js';
 export type { Realisable } from './resolve/realisable.js';
 export type { Repositoriable } from './resolve/repositoriable.js';
 
-export type { RequestStore, RequestStorePayload } from './request-store/types.js';
+export type { RequestStore, WebReqeustStorePayload } from './request-store/types.js';
 export * from './request-store/request-store-dispatcher.js';

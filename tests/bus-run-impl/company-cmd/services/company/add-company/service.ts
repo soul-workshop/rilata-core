@@ -18,7 +18,7 @@ import { addCompanyValidator } from './v.map.js';
 export class AddingCompanyService extends CommandService<
   AddCompanyServiceParams, CompanyCmdModuleResolver
 > {
-  inputDodName = 'addCompany' as const;
+  handleName = 'addCompany' as const;
 
   serviceName = 'AddingCompanyService' as const;
 

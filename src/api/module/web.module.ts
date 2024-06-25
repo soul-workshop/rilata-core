@@ -1,19 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-use-before-define */
 import {
+  FullServiceResult,
   GeneralCommandService, GeneralEventService,
   GeneralWebService, GeneraQueryService,
+  GetServiceParams,
 } from '../service/types.js';
-import { Service } from '../service/service.js';
 import { GeneralModuleResolver } from './types.js';
-import { GeneralRequestDod, InputDod } from '../../domain/domain-data/domain-types.js';
+import { GeneralEventDod, GeneralRequestDod, InputDod } from '../../domain/domain-data/domain-types.js';
 import { failure } from '../../core/result/failure.js';
 import { GeneralServerResolver } from '../server/types.js';
 import { Caller } from '../controller/types.js';
-import { RequestStorePayload } from '../request-store/types.js';
+import { WebReqeustStorePayload } from '../request-store/types.js';
 import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
 import { Module } from './module.js';
 import { Result } from '#core/result/types.js';
-import { badRequestError, internalError } from '#api/base.index.js';
+import { badRequestError, internalError, ServiceBaseErrors } from '#api/base.index.js';
+import { success } from '#core/index.js';
+import { WebModuleController } from '#api/controller/web.module-controller.js';
+import { dodUtility } from '#core/utils/dod/dod-utility.js';
+import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 
 export abstract class WebModule extends Module {
   readonly abstract queryServices: GeneraQueryService[]
@@ -21,6 +27,8 @@ export abstract class WebModule extends Module {
   readonly abstract commandServices: GeneralCommandService[];
 
   readonly abstract eventServices: GeneralEventService[];
+
+  protected moduleController: WebModuleController = new WebModuleController();
 
   protected services!: GeneralWebService[];
 
@@ -32,17 +40,50 @@ export abstract class WebModule extends Module {
     this.services = [...this.queryServices, ...this.commandServices, ...this.eventServices];
   }
 
-  async executeService(
-    inputDod: InputDod,
-    caller: Caller,
-  ): Promise<Result<unknown, unknown>> {
+  /** Обеспачиват выполнение сервиса. */
+  async executeService<S extends GeneralWebService>(
+    inputDod: GetServiceParams<S>['input'], caller: Caller,
+  ): Promise<FullServiceResult<S>> {
     try {
-      const findServiceResult = this.findHandlerService(inputDod);
-      if (findServiceResult.isFailure()) {
-        return findServiceResult;
+      const checkResult = this.checkInputData(inputDod);
+      if (checkResult.isFailure()) {
+        return checkResult;
       }
-      const service = findServiceResult.value;
+      return this.runService(checkResult.value, caller);
+    } catch (e) {
+      return this.catchRunModeError(inputDod, caller, e as Error);
+    }
+  }
 
+  protected catchRunModeError(
+    inputDod: unknown, caller: Caller, e: Error,
+  ): Result<ServiceBaseErrors, never> {
+    if (this.moduleResolver.getServerResolver().getRunMode().includes('test')) {
+      throw e;
+    }
+    if (this.isRequestDod(inputDod)) {
+      this.moduleResolver.getLogger().fatalError(
+        'server internal error',
+        { inputDod, caller },
+        e,
+      );
+      return failure(internalError);
+    }
+
+    // event dod
+    if (this.moduleResolver.getServerResolver().getRunMode() === 'test') {
+      this.moduleResolver.getServerResolver().getServer().stop();
+      throw e;
+    }
+    throw this.moduleResolver.getLogger().fatalError('server internal error', inputDod, e as Error);
+  }
+
+  protected async runService(
+    inputDod: GeneralRequestDod | GeneralEventDod, caller: Caller,
+  ): Promise<Result<unknown, unknown>> {
+    let service: GeneralWebService;
+    try {
+      service = this.getService(inputDod.meta.name);
       const requestStore = requestStoreDispatcher.getRequestStore();
       return requestStore.run(
         this.getStorePayload(inputDod, caller),
@@ -50,45 +91,58 @@ export abstract class WebModule extends Module {
         inputDod,
       );
     } catch (e) {
-      if (this.moduleResolver.getServerResolver().getRunMode().includes('test')) {
-        throw e;
-      }
-      if (this.isRequestDod(inputDod)) {
-        this.moduleResolver.getLogger().fatalError(
-          'server internal error',
-          { requestDod: inputDod, caller },
-          e as Error,
-        );
-        return failure(internalError);
-      }
-
-      // event dod
-      if (this.moduleResolver.getServerResolver().getRunMode() === 'test') {
-        this.moduleResolver.getServerResolver().getServer().stop();
-        throw e;
-      }
-      throw this.moduleResolver.getLogger().fatalError('server internal error', inputDod, e as Error);
+      return this.catchServiceTypeError(inputDod, e as Error);
     }
   }
 
-  protected findHandlerService(inputDod: InputDod): Result<
-    typeof badRequestError,
-    Service<GeneralModuleResolver>
-  > {
-    const inputDodName = inputDod.meta.name;
-    const service = this.services.find((s) => s.inputDodName === inputDodName);
-    if (!service) {
-      const errStr = `Не найден обработчик для запроса ${inputDodName} в модуле ${this.moduleName}`;
-      if (this.isRequestDod(inputDod)) {
-        return this.notFindedServiceError(errStr);
-      }
-      // event service throwed
-      throw this.logger.error(errStr);
+  protected catchServiceTypeError(
+    inputDod: InputDod, err: Error,
+  ): Result<typeof badRequestError, never> {
+    if (this.isRequestDod(inputDod)) {
+      return this.notFindedServiceError(err.message);
     }
-    return service;
+    throw this.logger.error(err.message, { err, inputDod }, err);
   }
 
-  protected getStorePayload(inputDod: InputDod, caller: Caller): RequestStorePayload {
+  protected checkInputData(
+    input: unknown,
+  ): Result<typeof badRequestError, GeneralRequestDod | GeneralEventDod> {
+    if (typeof input !== 'object' || input === null) {
+      return this.getBadRequestErr('Тело запроса должно быть объектом');
+    }
+
+    if (
+      (input as any)?.meta?.name === undefined
+      || (input as any)?.meta?.requestId === undefined
+      || ['request', 'event'].includes((input as any)?.meta?.domainType) === false
+    ) {
+      return this.getBadRequestErr('Полезная нагрузка запроса не является объектом inputDod');
+    }
+
+    if (
+      !(input as any).attrs
+      || typeof (input as any).attrs !== 'object'
+    ) {
+      return this.getBadRequestErr('Не найдены атрибуты (attrs) объекта inputDod');
+    }
+    return success(input as GeneralRequestDod);
+  }
+
+  protected notFindedServiceError(errString: string): Result<typeof badRequestError, never> {
+    const err = dodUtility.getAppError<typeof badRequestError>(
+      'Bad request', errString, {},
+    );
+    return failure(err);
+  }
+
+  protected getBadRequestErr(errText: string): Result<typeof badRequestError, never> {
+    const err = dtoUtility.replaceAttrs(badRequestError, { locale: {
+      text: errText,
+    } });
+    return failure(err);
+  }
+
+  protected getStorePayload(inputDod: InputDod, caller: Caller): WebReqeustStorePayload {
     return {
       serviceName: inputDod.meta.name,
       moduleName: this.moduleName,
@@ -100,7 +154,7 @@ export abstract class WebModule extends Module {
     };
   }
 
-  protected isRequestDod(inputDod: InputDod): inputDod is GeneralRequestDod {
-    return inputDod.meta.domainType === 'request';
+  protected isRequestDod(inputDod: unknown): inputDod is GeneralRequestDod {
+    return (inputDod as any).meta?.domainType === 'request';
   }
 }

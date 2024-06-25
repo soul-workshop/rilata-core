@@ -251,7 +251,7 @@ export namespace SqliteTestFixtures {
 
     moduleName = 'PostModule';
 
-    inputDodName = 'addPost' as const;
+    handleName = 'addPost' as const;
 
     serviceName = 'AddingPostService' as const;
 

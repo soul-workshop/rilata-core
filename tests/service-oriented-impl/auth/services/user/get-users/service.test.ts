@@ -19,7 +19,7 @@ describe('get users service test', async () => {
     requestId,
     moduleResolver: resolver,
   });
-  const sut = module.getServiceByInputDodName<GetingUsersService>('getUsers');
+  const sut = module.getService<GetingUsersService>('getUsers');
 
   beforeEach(async () => {
     const db = resolver.getDatabase() as unknown as TestDatabase<true>;

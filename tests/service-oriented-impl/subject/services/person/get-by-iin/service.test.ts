@@ -34,7 +34,7 @@ describe('get person by iin service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByInputDodName<GetingPersonByIinService>('getPersonByIin');
+    const sut = module.getService<GetingPersonByIinService>('getPersonByIin');
     const result = await sut.execute(validRequestDod);
     expect(result.isSuccess()).toBe(true);
     const person = result.value as GetPersonByIinOut;
@@ -57,7 +57,7 @@ describe('get person by iin service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByInputDodName<GetingPersonByIinService>('getPersonByIin');
+    const sut = module.getService<GetingPersonByIinService>('getPersonByIin');
     const result = await sut.execute(validRequestDod);
     expect(result.isFailure()).toBe(true);
     const person = result.value as PersonDoesntExistByIinError;

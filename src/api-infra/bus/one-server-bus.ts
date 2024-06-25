@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { AnonymousUser, DomainUser, ModuleCaller } from '#api/http.index.js';
 import { Bus } from '../../api/bus/bus.js';
 import { PublishBusMessage, SubcribeToBusMessage } from '../../api/bus/types.js';
 import { Module } from '../../api/module/module.js';
@@ -34,7 +35,12 @@ export class OneServerBus implements Bus {
     if (!event) return;
 
     const eventDod = JSON.parse(eventPublish.payload) as GeneralEventDod;
-    await this.getModule(event.handlerModuleName).executeEventService(eventDod);
+    const caller: ModuleCaller = {
+      type: 'ModuleCaller',
+      name: eventDod.meta.moduleName,
+      user: eventDod.caller as DomainUser | AnonymousUser,
+    };
+    await this.getModule(event.handlerModuleName).executeService(eventDod, caller);
   }
 
   protected getModule(moduleName: ModuleName): Module {

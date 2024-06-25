@@ -2,15 +2,10 @@
 import { Logger } from '../../core/logger/logger.js';
 import { Service } from '../service/service.js';
 import { GeneralModuleResolver, ModuleType } from './types.js';
-import { failure } from '../../core/result/failure.js';
-import { Locale } from '../../domain/locale.js';
-import { BadRequestError } from '../service/error-types.js';
-import { Result } from '../../core/result/types.js';
 import { GeneralServerResolver } from '../server/types.js';
-import { Caller } from '../controller/types.js';
-import { dodUtility } from '../../core/utils/dod/dod-utility.js';
 import { Controller } from '#api/controller/controller.js';
-import { badRequestError } from '#api/base.index.js';
+import { AssertionException } from '#core/exeptions.js';
+import { ModuleController } from '#api/controller/module-controller.js';
 
 export abstract class Module {
   readonly abstract moduleName: string;
@@ -19,13 +14,13 @@ export abstract class Module {
 
   protected abstract services: Service<GeneralModuleResolver>[];
 
-  protected abstract moduleController: Controller<GeneralModuleResolver>;
+  protected abstract moduleController: ModuleController;
 
   protected moduleResolver!: GeneralModuleResolver;
 
   protected logger!: Logger;
 
-  abstract executeService(input: unknown, caller: Caller): Promise<unknown>
+  abstract executeService(...args: unknown[]): Promise<unknown>
 
   init(
     moduleResolver: GeneralModuleResolver,
@@ -55,10 +50,17 @@ export abstract class Module {
     return this.logger;
   }
 
-  protected notFindedServiceError(errString: string): Result<typeof badRequestError, never> {
-    const err = dodUtility.getAppError<BadRequestError<Locale<'Bad request'>>>(
-      'Bad request', errString, {},
-    );
-    return failure(err);
+  getServises(): Service<GeneralModuleResolver>[] {
+    return this.services;
+  }
+
+  getService<S extends Service<GeneralModuleResolver>>(handleName: S['handleName']): S {
+    const service = this.services.find((s) => s.handleName === handleName);
+    if (!service) {
+      const errStr = `Не найден обработчик для запроса ${handleName} в модуле ${this.moduleName}`;
+      this.logger.warning(errStr);
+      throw new AssertionException(errStr);
+    }
+    return service as S;
   }
 }

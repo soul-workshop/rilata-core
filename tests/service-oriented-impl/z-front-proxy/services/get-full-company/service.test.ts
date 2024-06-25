@@ -10,8 +10,9 @@ import { serverStarter } from '../../../zzz-run-server/starter.js';
 import { ServiceModulesFixtures } from '../../../zzz-run-server/server-fixtures.js';
 import { FullCompany } from '../../domain-data/full-company/params.js';
 import { FrontProxyModule } from '../../module.js';
-import { GetFullCompanyRequestDod, GetFullCompanyServiceParams } from './s-params.js';
+import { GetFullCompanyRequestDod } from './s-params.js';
 import { TestDatabase } from '../../../../../src/api/database/test.database.js';
+import { GetingFullCompanyService } from './service.js';
 
 describe('get full company service tests', async () => {
   const testServer = serverStarter.start('all');
@@ -38,7 +39,7 @@ describe('get full company service tests', async () => {
       requestId,
     );
 
-    const result = await sut.executeService<GetFullCompanyServiceParams>(requestDod, caller);
+    const result = await sut.executeService<GetingFullCompanyService>(requestDod, caller);
     expect(result.isSuccess()).toBe(true);
     const recieveFullCompany = result.value as FullCompany;
     expect(recieveFullCompany).toEqual({

@@ -34,7 +34,7 @@ describe('register company saga service tests', async () => {
     requestId,
     moduleResolver: resolver,
   });
-  const sut = module.getServiceByInputDodName<RegisteringCompanyService>('registerCompany');
+  const sut = module.getService<RegisteringCompanyService>('registerCompany');
 
   const subjectFacade = SubjectFacade.instance(resolver);
   const authFacade = AuthFacade.instance(resolver);

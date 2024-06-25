@@ -38,7 +38,7 @@ describe('add person service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByInputDodName<AddingPersonService>('addPerson');
+    const sut = module.getService<AddingPersonService>('addPerson');
     const result = await sut.execute(validRequestDod);
     expect(result.isSuccess()).toBe(true);
     const value = result.value as AddPersonOut;
@@ -61,7 +61,7 @@ describe('add person service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByInputDodName<AddingPersonService>('addPerson');
+    const sut = module.getService<AddingPersonService>('addPerson');
     const result = await sut.execute(existPersonRequestDod);
     expect(result.isFailure()).toBe(true);
     const err = result.value as PersonAlreadyExistsError;

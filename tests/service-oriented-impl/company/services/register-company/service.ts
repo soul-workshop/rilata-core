@@ -1,7 +1,7 @@
 import { DomainUser } from '../../../../../src/api/controller/types.js';
 import { ServiceBaseErrors, ValidationError } from '../../../../../src/api/service/error-types.js';
 import { CommandService } from '../../../../../src/api/service/concrete-service/command.service.js';
-import { FullServiceResult, InputDodValidator, ServiceResult } from '../../../../../src/api/service/types.js';
+import { InputDodValidator, ServiceResult } from '../../../../../src/api/service/types.js';
 import { failure } from '../../../../../src/core/result/failure.js';
 import { success } from '../../../../../src/core/result/success.js';
 import { Result } from '../../../../../src/core/result/types.js';
@@ -31,7 +31,7 @@ export class RegisteringCompanyService extends CommandService<
 
   serviceName = 'RegisteringCompanyService' as const;
 
-  inputDodName = 'registerCompany' as const;
+  handleName = 'registerCompany' as const;
 
   aRootName = 'CompanyAR' as const;
 
@@ -53,8 +53,9 @@ export class RegisteringCompanyService extends CommandService<
     if (existCompanyResult.isFailure()) return failure(existCompanyResult.value);
 
     const personResult = await this.processPerson(input.attrs, caller);
-    if (personResult.isFailure())
+    if (personResult.isFailure()) {
       return failure(personResult.value) as ServiceResult<CompanyRegisteredServiceParams>;
+    }
     const personIin = input.attrs.person.iin;
 
     const userResult = await this.addUser(personIin, caller);
@@ -89,7 +90,9 @@ export class RegisteringCompanyService extends CommandService<
         dtoUtility.excludeAttrs(input.person, 'type'),
         caller,
       );
-      if (addPersonResult.isFailure()) return failure(addPersonResult.value);
+      if (addPersonResult.isFailure()) {
+        return failure(addPersonResult.value);
+      }
       return success(addPersonResult.value.id);
     }
 

@@ -14,7 +14,7 @@ export class GetingCompanyService extends QueryService<
 
   serviceName = 'GettingCompanyService' as const;
 
-  inputDodName = 'getCompany' as const;
+  handleName = 'getCompany' as const;
 
   aRootName = 'CompanyAR' as const;
 
