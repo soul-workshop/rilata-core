@@ -5,7 +5,7 @@ import { GeneralModuleResolver, ModuleType } from './types.js';
 import { GeneralServerResolver } from '../server/types.js';
 import { Controller } from '#api/controller/controller.js';
 import { AssertionException } from '#core/exeptions.js';
-import { ModuleController } from '#api/controller/module-controller.js';
+import { ModuleController } from '#api/controller/m-controller.js';
 
 export abstract class Module {
   readonly abstract moduleName: string;

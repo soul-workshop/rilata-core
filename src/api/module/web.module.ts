@@ -17,7 +17,7 @@ import { Module } from './module.js';
 import { Result } from '#core/result/types.js';
 import { badRequestError, internalError, ServiceBaseErrors } from '#api/base.index.js';
 import { success } from '#core/index.js';
-import { WebModuleController } from '#api/controller/web.module-controller.js';
+import { WebModuleController } from '#api/controller/web.m-controller.js';
 import { dodUtility } from '#core/utils/dod/dod-utility.js';
 import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 

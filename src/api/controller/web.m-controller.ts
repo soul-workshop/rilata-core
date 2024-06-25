@@ -7,12 +7,11 @@ import { Result } from '#core/result/types.js';
 import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 import { responseUtility } from '#core/utils/response/response-utility.js';
 import { GeneralEventDod, GeneralRequestDod } from '#domain/index.js';
-import { GeneralModuleResolver } from '../module/types.js';
 import { STATUS_CODES } from './constants.js';
-import { Controller } from './controller.js';
+import { ModuleController } from './m-controller.ts';
 import { ResultDTO, RilataRequest } from './types.js';
 
-export class WebModuleController extends Controller <GeneralModuleResolver> {
+export class WebModuleController extends ModuleController {
   getUrls(): string[] | RegExp[] {
     return this.resolver.getModuleUrls();
   }

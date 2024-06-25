@@ -15,6 +15,8 @@ export * from './module/bus.m-resolver.js';
 export * from './module/m-resolver.js';
 export type { ModuleResolves } from './module/m-resolves.js';
 export * from './module/module.js';
+export * from './module/web.module.js';
+export * from './module/bot.module.js';
 export type {
   GetModule, ModuleType, GetModuleResolves, GeneralModuleResolver,
 } from './module/types.js';
@@ -25,6 +27,7 @@ export * from './service/concrete-service/query.service.js';
 export * from './service/transaction-strategy/strategy.js';
 export * from './service/transaction-strategy/uow.strategy.js';
 export * from './service/web.service.js';
+export * from './service/bot.service.js';
 export * from './service/constants.js';
 export type {
   NetError, InternalError, NotFoundError, BadRequestError,

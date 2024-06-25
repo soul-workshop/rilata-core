@@ -1,6 +1,6 @@
 import { BotModule } from '#api/module/bot.module.js';
 import { Update } from '#api/telegram/types.js';
-import { ModuleController } from './module-controller.js';
+import { ModuleController } from './m-controller.js';
 
 const TELEGRAM_API = 'https://api.telegram.org/';
 
