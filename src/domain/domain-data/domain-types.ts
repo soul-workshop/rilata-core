@@ -71,6 +71,15 @@ export type SimpleARDT = {
   meta: DomainMeta<string, string>,
 }
 
+export type InputDod = {
+  meta: {
+    name: string,
+    domainType: 'event' | 'request',
+    requestId: UuidType,
+  },
+  attrs: DTO,
+}
+
 export type EventDod<
   NAME extends string,
   S_NAME extends string,

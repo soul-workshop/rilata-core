@@ -3,11 +3,11 @@ import { GeneralModuleResolver } from '../../../src/api/module/types.js';
 import { Facadable } from '../../../src/api/resolve/facadable.js';
 import { FullServiceResult } from '../../../src/api/service/types.js';
 import { UuidType } from '../../../src/core/types.js';
-import { GetCompanyServiceParams } from './services/get-company/s.params.js';
+import { GetingCompanyService } from './services/get-company/service.js';
 
 export interface CompanyFacade {
   init(resolver: GeneralModuleResolver): void
-  getCompany(id: UuidType, caller: DomainUser): Promise<FullServiceResult<GetCompanyServiceParams>>
+  getCompany(id: UuidType, caller: DomainUser): Promise<FullServiceResult<GetingCompanyService>>
 }
 
 export const CompanyFacade = {

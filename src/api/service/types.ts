@@ -13,10 +13,11 @@ import { QueryService } from './concrete-service/query.service.js';
 import { CommandService } from './concrete-service/command.service.js';
 import { EventService } from './concrete-service/event.service.js';
 import { ResultDTO } from '../controller/types.js';
+import { WebService } from '#api/base.index.js';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
 
-export type BaseServiceParams<
+export type WebServiceParams<
   S_NAME extends string,
   AR_PARAMS extends GeneralArParams,
   IN extends GeneralRequestDod | GeneralEventDod, // что входит в service,
@@ -32,9 +33,11 @@ export type BaseServiceParams<
   events: EVENTS
 }
 
-export type GeneralBaseServiceParams = BaseServiceParams<
+export type GeneralWebServiceParams = WebServiceParams<
   string, GeneralArParams, GeneralRequestDod | GeneralEventDod, unknown, unknown, unknown
 >
+
+export type GeneralWebService = WebService<GeneralWebServiceParams, GeneralModuleResolver>
 
 export type QueryServiceParams<
   S_NAME extends string,
@@ -42,7 +45,7 @@ export type QueryServiceParams<
   REQ_DOD extends GeneralRequestDod, // что входит в service,
   SUCCESS_OUT, // ответ клиенту в случае успеха
   FAIL_OUT extends GeneralErrorDod, // возвращаемый ответ в случае не успеха
-> = BaseServiceParams<
+> = WebServiceParams<
   S_NAME, AR_PARAMS, REQ_DOD, SUCCESS_OUT, FAIL_OUT, never
 >
 export type GeneralQueryServiceParams = QueryServiceParams<
@@ -58,7 +61,7 @@ export type CommandServiceParams<
   SUCCESS_OUT, // ответ в случае успеха
   FAIL_OUT extends GeneralErrorDod, // доменные ошибки при выполнении запроса
   EVENTS extends EventDod<string, S_NAME, string, DomainAttrs, SimpleARDT>[], // публикуемые доменные события
-> = BaseServiceParams<
+> = WebServiceParams<
   S_NAME, AR_PARAMS, REQ_DOD, SUCCESS_OUT, FAIL_OUT, EVENTS
 >
 
@@ -75,7 +78,7 @@ export type EventServiceParams<
   AR_PARAMS extends GeneralArParams,
   EVENT_DOD extends GeneralEventDod, // входящее событие,
   EVENTS extends EventDod<string, S_NAME, string, DomainAttrs, SimpleARDT>[], // публикуемые доменные события
-> = BaseServiceParams<S_NAME, AR_PARAMS, EVENT_DOD, void, never, EVENTS>
+> = WebServiceParams<S_NAME, AR_PARAMS, EVENT_DOD, void, never, EVENTS>
 
 export type GeneralEventServiceParams =
   EventServiceParams<string, GeneralArParams, GeneralEventDod, GeneralEventDod[]>
@@ -92,15 +95,18 @@ export type InputDodValidator<
     DOD['attrs']
   >
 
-export type ServiceResult<P extends GeneralBaseServiceParams> =
+export type ServiceResult<P extends GeneralWebServiceParams> =
   Result<P['errors'], P['successOut']>
 
 export type FullServiceResult<
-  P extends GeneralBaseServiceParams
-> = Result<P['errors'] | ServiceBaseErrors, P['successOut']>
+  S extends GeneralWebService
+> = Result<GetServiceParams<S>['errors'] | ServiceBaseErrors, GetServiceParams<S>['successOut']>
 
 export type FullServiceResultDTO<
-  P extends GeneralQueryServiceParams | GeneralCommandServiceParams
-> = ResultDTO<P['errors'] | ServiceBaseErrors, P['successOut']>
+  S extends GeneralWebService
+> = ResultDTO<GetServiceParams<S>['errors'] | ServiceBaseErrors, GetServiceParams<S>['successOut']>
 
 export type GetModuleName<RES extends GeneralModuleResolver> = GetModuleResolves<RES>['moduleName']
+
+export type GetServiceParams<S extends GeneralWebService> =
+  S extends WebService<infer P, GeneralModuleResolver> ? P : never

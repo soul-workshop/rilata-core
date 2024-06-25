@@ -1,3 +1,4 @@
+import { EventService } from '#api/base.index.js';
 import { SubcribeToBusMessage } from '../bus/types.js';
 import { BunServer } from './bun-server.js';
 import { BusServerResolver } from './bus.s-resolver.js';
@@ -15,15 +16,17 @@ export abstract class BusBunServer extends BunServer {
     this.modules.forEach((module) => {
       const busResolver = this.resolver as unknown as BusServerResolver;
       const bus = busResolver.getBus();
-      module.eventServices.forEach((service) => {
-        const eventSubscribe: SubcribeToBusMessage = {
-          type: service.busMessageType,
-          busMessageName: service.inputDodName,
-          publishModuleName: service.eventModuleName,
-          handlerModuleName: service.moduleName,
-          handlerServiceName: service.serviceName,
-        };
-        bus.subscribe(eventSubscribe);
+      module.getServises().forEach((service) => {
+        if (service instanceof EventService) {
+          const eventSubscribe: SubcribeToBusMessage = {
+            type: service.busMessageType,
+            busMessageName: service.eventName,
+            publishModuleName: service.eventModuleName,
+            handlerModuleName: service.moduleName,
+            handlerServiceName: service.serviceName,
+          };
+          bus.subscribe(eventSubscribe);
+        }
       });
     });
   }

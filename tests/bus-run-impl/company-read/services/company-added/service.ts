@@ -12,7 +12,7 @@ import { CompanyAddedServiceParams } from './s-params.js';
 export class CompanyAddedService extends EventService<
   CompanyAddedServiceParams, CompanyReadModuleResolver
 > {
-  inputDodName = 'CompanyAddedEvent' as const; // имя входящего события
+  eventName = 'CompanyAddedEvent' as const; // имя входящего события
 
   eventServiceName = 'AddingCompanyService' as const; // имя сервиса которое выпустило событие
 

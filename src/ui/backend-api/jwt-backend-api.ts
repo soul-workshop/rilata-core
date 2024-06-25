@@ -1,6 +1,6 @@
 import { dtoUtility } from '#core/utils/index.js';
 import { BadRequestError } from '../../api/service/error-types.js';
-import { FullServiceResult, GeneralCommandServiceParams, GeneralQueryServiceParams } from '../../api/service/types.js';
+import { FullServiceResult, GeneralWebService, GetServiceParams } from '../../api/service/types.js';
 import { JwtDecoder } from '../../core/jwt/jwt-decoder.js';
 import { Logger } from '../../core/logger/logger.js';
 import { failure } from '../../core/result/failure.js';
@@ -23,10 +23,10 @@ export class JwtBackendApi extends BackendApi {
     @param {Object} requestDod - объект типа RequestDod.
     @param {string} jwtToken - jwt токен авторизации (рефреш).
       Для неавторизованного запроса передать пустую строку. */
-  async request<SERVICE_PARAMS extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
-    requestDod: SERVICE_PARAMS['input'],
+  async request<SERVICE extends GeneralWebService>(
+    requestDod: GetServiceParams<SERVICE>['input'],
     jwtToken: string,
-  ): Promise<FullServiceResult<SERVICE_PARAMS>> {
+  ): Promise<FullServiceResult<SERVICE>> {
     if (jwtToken && this.jwtDecoder.dateIsExpired(jwtToken)) {
       return this.jwtDecoder.getError('TokenExpiredError');
     }

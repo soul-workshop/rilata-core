@@ -1,5 +1,5 @@
 import { AssertionException } from '../../core/exeptions.js';
-import { RequestStorePayload, RequestStore } from './types.js';
+import { WebReqeustStorePayload, RequestStore } from './types.js';
 
 /**
   Оберка над asyncLocalStorage.
@@ -11,7 +11,7 @@ import { RequestStorePayload, RequestStore } from './types.js';
   Данный диспетчер тажке позволяет в момент выполнения тестов установить заглушку пустышку
   через метод setStore и тестировать различные тестовые ситуации.
   */
-export class RequestStoreDispatcher<T extends RequestStorePayload> {
+export class RequestStoreDispatcher<T extends WebReqeustStorePayload> {
   private requestStore!: RequestStore<T>;
 
   setRequestStore(requestStore: RequestStore<T>): void {
@@ -29,4 +29,4 @@ export class RequestStoreDispatcher<T extends RequestStorePayload> {
   }
 }
 
-export const requestStoreDispatcher = new RequestStoreDispatcher<RequestStorePayload>();
+export const requestStoreDispatcher = new RequestStoreDispatcher<WebReqeustStorePayload>();

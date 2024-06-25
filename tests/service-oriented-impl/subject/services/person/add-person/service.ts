@@ -14,7 +14,7 @@ export class AddingPersonService extends CommandService<
 
   serviceName = 'AddingPersonService' as const;
 
-  inputDodName = 'addPerson' as const;
+  handleName = 'addPerson' as const;
 
   aRootName = 'PersonAR' as const;
 

@@ -14,7 +14,7 @@ export class GetingPersonByIinService extends QueryService<
 
   serviceName = 'GetingPersonByIinService' as const;
 
-  inputDodName = 'getPersonByIin' as const;
+  handleName = 'getPersonByIin' as const;
 
   aRootName = 'PersonAR' as const;
 

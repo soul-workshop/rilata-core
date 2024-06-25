@@ -2,15 +2,17 @@ import { success } from '../../../core/result/success.js';
 import { Result } from '../../../core/result/types.js';
 import { BusMessageType } from '../../bus/types.js';
 import { GeneralModuleResolver } from '../../module/types.js';
-import { BaseService } from '../base.service.js';
+import { WebService } from '../web.service.js';
 import { TransactionStrategy } from '../transaction-strategy/strategy.js';
 import { GeneralEventServiceParams, ServiceResult } from '../types.js';
 
 export abstract class EventService<
   P extends GeneralEventServiceParams,
   RES extends GeneralModuleResolver
-> extends BaseService<P, RES> {
+> extends WebService<P, RES> {
   abstract busMessageType: BusMessageType;
+
+  abstract eventName: P['input']['meta']['name'];
 
   abstract eventModuleName: P['input']['meta']['moduleName'];
 
@@ -21,6 +23,10 @@ export abstract class EventService<
   protected supportedCallers!: never;
 
   protected abstract transactionStrategy: TransactionStrategy;
+
+  get handleName(): string {
+    return this.eventName;
+  }
 
   protected executeService(input: P['input']): Promise<ServiceResult<P>> {
     return this.transactionStrategy.executeDatabaseScope(this, input);

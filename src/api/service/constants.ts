@@ -44,7 +44,7 @@ export const notFoundError: NotFoundError<Locale<'Not found'>> = {
 
 export const internalError: InternalError<Locale<'Internal error'>> = {
   locale: {
-    text: 'Internal error',
+    text: 'Извините, на сервере произошла ошибка. Попробуйте перезегрузить приложение.',
     hint: {},
     name: 'Internal error',
   },

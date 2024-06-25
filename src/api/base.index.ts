@@ -24,7 +24,7 @@ export * from './service/concrete-service/event.service.js';
 export * from './service/concrete-service/query.service.js';
 export * from './service/transaction-strategy/strategy.js';
 export * from './service/transaction-strategy/uow.strategy.js';
-export * from './service/base.service.js';
+export * from './service/web.service.js';
 export * from './service/constants.js';
 export type {
   NetError, InternalError, NotFoundError, BadRequestError,
@@ -34,10 +34,10 @@ export type {
 } from './service/error-types.js';
 export * from './service/service.js';
 export type {
-  AppEventType, GetModuleName, ServiceResult, BaseServiceParams,
+  AppEventType, GetModuleName, ServiceResult, WebServiceParams,
   FullServiceResult, InputDodValidator, EventServiceParams, GeneraQueryService,
   QueryServiceParams, GeneralEventService, CommandServiceParams, FullServiceResultDTO,
-  GeneralCommandService, GeneralBaseServiceParams, GeneralEventServiceParams,
+  GeneralCommandService, GeneralWebServiceParams, GeneralEventServiceParams,
   GeneralQueryServiceParams, GeneralCommandServiceParams,
 } from './service/types.js';
 
@@ -45,5 +45,5 @@ export type { Facadable } from './resolve/facadable.js';
 export type { Realisable } from './resolve/realisable.js';
 export type { Repositoriable } from './resolve/repositoriable.js';
 
-export type { RequestStore, RequestStorePayload } from './request-store/types.js';
+export type { RequestStore, WebReqeustStorePayload } from './request-store/types.js';
 export * from './request-store/request-store-dispatcher.js';

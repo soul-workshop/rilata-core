@@ -1,8 +1,7 @@
 import { DomainUser } from '../../../../../src/api/controller/types.js';
 import { requestStoreDispatcher } from '../../../../../src/api/request-store/request-store-dispatcher.js';
 import { QueryService } from '../../../../../src/api/service/concrete-service/query.service.js';
-import { FullServiceResult, ServiceResult } from '../../../../../src/api/service/types.js';
-import { failure } from '../../../../../src/core/result/failure.js';
+import { ServiceResult } from '../../../../../src/api/service/types.js';
 import { success } from '../../../../../src/core/result/success.js';
 import { UserId, UuidType } from '../../../../../src/core/types.js';
 import { AuthFacade } from '../../../auth/facade.js';
@@ -20,7 +19,7 @@ export class GetingFullCompanyService extends QueryService<
 
   serviceName = 'GetingFullCompanyService' as const;
 
-  inputDodName = 'GetFullCompanyRequestDod' as const;
+  handleName = 'GetFullCompanyRequestDod' as const;
 
   aRootName = 'FullCompany' as const;
 
@@ -40,15 +39,18 @@ export class GetingFullCompanyService extends QueryService<
       domainUser = caller.user;
     } else throw this.logger.error('supported only domain user caller');
 
+    // eslint-disable-next-line max-len
     return this.getFullCompany(input.attrs.id, domainUser) as Promise<ServiceResult<GetFullCompanyServiceParams>>;
   }
 
   protected async getFullCompany(
     companyId: UuidType, domainUser: DomainUser,
-  ): Promise<FullServiceResult<GetFullCompanyServiceParams>> {
+  ): Promise<ServiceResult<GetFullCompanyServiceParams>> {
     const companyFacade = CompanyFacade.instance(this.moduleResolver);
     const companyResult = await companyFacade.getCompany(companyId, domainUser);
-    if (companyResult.isFailure()) return failure(companyResult.value);
+    if (companyResult.isFailure()) {
+      return companyResult.value as unknown as ServiceResult<GetFullCompanyServiceParams>;
+    }
     const companyAttrs = companyResult.value;
     const employees = await this.getFullUsers(companyAttrs.employees, domainUser);
     return success({

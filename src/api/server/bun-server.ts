@@ -13,7 +13,7 @@ import { responseUtility } from '../../core/utils/response/response-utility.js';
 import { Middleware } from '../middle-after-ware/middleware.js';
 import { Afterware } from '../middle-after-ware/afterware.js';
 import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
-import { RequestStorePayload } from '../request-store/types.js';
+import { WebReqeustStorePayload } from '../request-store/types.js';
 
 export abstract class BunServer extends RilataServer {
   port: number | undefined;
@@ -44,7 +44,7 @@ export abstract class BunServer extends RilataServer {
     this.setControllerUrls();
     this.logger.info('all controllers loaded');
 
-    requestStoreDispatcher.setRequestStore(new AsyncLocalStorage<RequestStorePayload>());
+    requestStoreDispatcher.setRequestStore(new AsyncLocalStorage<WebReqeustStorePayload>());
     this.logger.info('async local store dispatcher setted');
     this.initFinished();
   }
@@ -73,7 +73,8 @@ export abstract class BunServer extends RilataServer {
 
       const controller = this.getControllerByUrlPath(req);
       if (controller) {
-        const resp = await controller.execute(req);
+        const result = await controller.execute(req);
+        const resp = result instanceof Response ? result : new Response('success', { status: 200 });
         return this.processAfterware(req, resp);
       }
 
@@ -99,9 +100,7 @@ export abstract class BunServer extends RilataServer {
 
   protected setControllerUrls(): void {
     const controllers: Controller<any>[] = this.serverControllers;
-    this.modules.map((module) => module.getModuleControllers()).forEach((mControllers) => {
-      controllers.push(...mControllers);
-    });
+    this.modules.forEach((module) => controllers.push(module.getModuleController()));
     controllers.forEach((controller) => {
       controller.getUrls().forEach((url) => {
         if (typeof url === 'string') this.stringUrls[url] = controller;

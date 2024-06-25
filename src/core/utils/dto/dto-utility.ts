@@ -55,6 +55,7 @@ class DtoUtility {
       const keyIsValid = (key in obj) && (key in newValues);
       if (keyIsValid && value !== undefined) {
         if (this.isDto(obj[key]) && this.isDto(value)) {
+          // @ts-ignore: выходит ошибка при выполнении tsc --noEmit
           returnObj[key as keyof T] = this.replaceAttrs(obj[key], value, copy);
         } else {
           returnObj[key as keyof T] = value;

@@ -11,7 +11,7 @@ import { getUsersValidator } from './v-map.js';
 export class GetingUsersService extends QueryService<
   GetUsersServiceParams, AuthModuleResolver
 > {
-  inputDodName = 'getUsers' as const;
+  handleName = 'getUsers' as const;
 
   moduleName = 'AuthModule' as const;
 

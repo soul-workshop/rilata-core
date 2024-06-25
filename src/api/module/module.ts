@@ -1,45 +1,26 @@
 /* eslint-disable no-use-before-define */
 import { Logger } from '../../core/logger/logger.js';
-import {
-  FullServiceResult,
-  GeneralCommandService,
-  GeneralCommandServiceParams, GeneralEventService,
-  GeneralQueryServiceParams, GeneraQueryService, ServiceResult,
-} from '../service/types.js';
 import { Service } from '../service/service.js';
 import { GeneralModuleResolver, ModuleType } from './types.js';
-import { GeneralEventDod } from '../../domain/domain-data/domain-types.js';
-import { failure } from '../../core/result/failure.js';
-import { Locale } from '../../domain/locale.js';
-import { BadRequestError, InternalError } from '../service/error-types.js';
-import { Result } from '../../core/result/types.js';
-import { AssertionException } from '../../core/exeptions.js';
 import { GeneralServerResolver } from '../server/types.js';
-import { Caller } from '../controller/types.js';
-import { dodUtility } from '../../core/utils/dod/dod-utility.js';
-import { ModuleController } from '../controller/m-controller.js';
-import { Controller } from '../controller/controller.js';
-import { RequestStorePayload } from '../request-store/types.js';
-import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
+import { Controller } from '#api/controller/controller.js';
+import { AssertionException } from '#core/exeptions.js';
+import { ModuleController } from '#api/controller/module-controller.js';
 
 export abstract class Module {
   readonly abstract moduleName: string;
 
   readonly abstract moduleType: ModuleType;
 
-  readonly abstract queryServices: GeneraQueryService[]
+  protected abstract services: Service<GeneralModuleResolver>[];
 
-  readonly abstract commandServices: GeneralCommandService[];
-
-  readonly abstract eventServices: GeneralEventService[];
-
-  protected controllers: Controller<GeneralModuleResolver>[] = [];
+  protected abstract moduleController: ModuleController;
 
   protected moduleResolver!: GeneralModuleResolver;
 
-  protected services!: Service<GeneralModuleResolver>[];
-
   protected logger!: Logger;
+
+  abstract executeService(...args: unknown[]): Promise<unknown>
 
   init(
     moduleResolver: GeneralModuleResolver,
@@ -50,14 +31,15 @@ export abstract class Module {
     this.logger = moduleResolver.getLogger();
     this.logger.info(`  | resolver for module ${this.moduleName} inited successfully`);
 
-    this.controllers.push(this.getModuleController());
-    this.controllers.forEach((controller) => { controller.init(this.moduleResolver); });
-
-    this.services = [...this.queryServices, ...this.commandServices, ...this.eventServices];
+    this.getModuleController().init(moduleResolver);
   }
 
   stop(): void {
     this.moduleResolver.stop();
+  }
+
+  getModuleController(): Controller<GeneralModuleResolver> {
+    return this.moduleController;
   }
 
   getModuleResolver(): GeneralModuleResolver {
@@ -68,99 +50,17 @@ export abstract class Module {
     return this.logger;
   }
 
-  getModuleControllers(): Controller<GeneralModuleResolver>[] {
-    return this.controllers;
+  getServises(): Service<GeneralModuleResolver>[] {
+    return this.services;
   }
 
-  async executeService<S extends GeneralQueryServiceParams | GeneralCommandServiceParams>(
-    inputDod: S['input'],
-    caller: Caller,
-  ): Promise<FullServiceResult<S>> {
-    try {
-      const inputDodName = inputDod.meta.name;
-      const service = this.getServiceByInputDodName(inputDodName);
-      if (service === undefined) {
-        return this.notFindedServiceByName(inputDodName);
-      }
-
-      const store: RequestStorePayload = {
-        serviceName: inputDodName,
-        moduleName: this.moduleName,
-        caller,
-        moduleResolver: this.moduleResolver,
-        logger: this.logger,
-        requestId: inputDod.meta.requestId,
-        databaseErrorRestartAttempts: 1,
-      };
-      const requestStore = requestStoreDispatcher.getRequestStore();
-      return requestStore.run(
-        store,
-        (serviceInput) => service.execute(serviceInput),
-        inputDod,
-      ) as unknown as ServiceResult<S>;
-    } catch (e) {
-      if (this.moduleResolver.getServerResolver().getRunMode().includes('test')) {
-        throw e;
-      }
-      this.moduleResolver.getLogger().fatalError('server internal error', { requestDod: inputDod, caller }, e as Error);
-      const err = dodUtility.getAppError<InternalError<Locale<'Internal error'>>>(
-        'Internal error',
-        'Извините, на сервере произошла ошибка',
-        {},
-      );
-      return failure(err);
+  getService<S extends Service<GeneralModuleResolver>>(handleName: S['handleName']): S {
+    const service = this.services.find((s) => s.handleName === handleName);
+    if (!service) {
+      const errStr = `Не найден обработчик для запроса ${handleName} в модуле ${this.moduleName}`;
+      this.logger.warning(errStr);
+      throw new AssertionException(errStr);
     }
-  }
-
-  protected getModuleController(): ModuleController {
-    return new ModuleController();
-  }
-
-  async executeEventService(eventDod: GeneralEventDod): Promise<void> {
-    try {
-      const serviceName = eventDod.meta.name;
-      const service = this.getServiceByInputDodName(serviceName);
-      if (!service) {
-        const errStr = `not finded service by name: ${serviceName} in module: ${this.moduleName}`;
-        throw new AssertionException(errStr);
-      }
-      const caller = eventDod.caller.type === 'ModuleCaller'
-        ? eventDod.caller.user
-        : eventDod.caller;
-      const store: RequestStorePayload = {
-        serviceName,
-        moduleName: this.moduleName,
-        caller,
-        moduleResolver: this.moduleResolver,
-        logger: this.logger,
-        requestId: eventDod.meta.requestId,
-        databaseErrorRestartAttempts: 1,
-      };
-      const requestStore = requestStoreDispatcher.getRequestStore();
-      await requestStore.run(
-        store,
-        (serviceInput) => service.execute(serviceInput),
-        eventDod,
-      );
-    } catch (e) {
-      if (this.moduleResolver.getServerResolver().getRunMode() === 'test') {
-        this.moduleResolver.getServerResolver().getServer().stop();
-        throw e;
-      }
-      throw this.moduleResolver.getLogger().fatalError('server internal error', eventDod, e as Error);
-    }
-  }
-
-  getServiceByInputDodName<S extends Service<GeneralModuleResolver>>(name: S['inputDodName']): S {
-    return this.services.find((s) => s.inputDodName === name) as S;
-  }
-
-  protected notFindedServiceByName(reqName: string): Result<BadRequestError<Locale<'Bad request'>>, never> {
-    const err = dodUtility.getAppError<BadRequestError<Locale<'Bad request'>>>(
-      'Bad request',
-      `Не найден обработчик для запроса ${reqName} в модуле ${this.moduleName}`,
-      {},
-    );
-    return failure(err);
+    return service as S;
   }
 }
