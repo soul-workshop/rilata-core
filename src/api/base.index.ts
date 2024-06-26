@@ -13,10 +13,15 @@ export type {
 
 export * from './module/bus.m-resolver.js';
 export * from './module/m-resolver.js';
+export * from './module/bot.m-resolver.js';
 export type { ModuleResolves } from './module/m-resolves.js';
+export type { BotModuleResolves } from './module/bot.m-resolves.js';
 export * from './module/module.js';
 export * from './module/web.module.js';
 export * from './module/bot.module.js';
+export type {
+  GeneralBotModuleResolves, GeneralBotModuleResolver,
+} from './module/bot-types.js';
 export type {
   GetModule, ModuleType, GetModuleResolves, GeneralModuleResolver,
 } from './module/types.js';
