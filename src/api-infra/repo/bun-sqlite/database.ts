@@ -39,7 +39,11 @@ export class BunSqliteDatabase implements TestDatabase<false> {
     this.logger = this.resolver.getLogger();
     this.migrationRepo.init(moduleResolver);
     this.repositories.forEach((repo) => repo.init(moduleResolver));
-    this.open();
+    if (this.getFullFileName() === MEMORY_PATH) {
+      this.createDb();
+    } else {
+      this.open();
+    }
   }
 
   addRepository(repo: BunSqliteRepository<string, DTO>): void {
@@ -49,10 +53,10 @@ export class BunSqliteDatabase implements TestDatabase<false> {
   /** Создать файл БД и таблицы. */
   createDb(): void {
     this.logger.info(`create db "${this.getFileName()}" for module: "${this.resolver.getModuleName()}" started`);
+    this.openSqliteDb();
     if (this.dbIsCreated()) {
       throw this.logger.error(`database ${this.constructor.name} has already been created.`);
     }
-    this.openSqliteDb();
     this.createRepositories();
     this.migrateRepositories();
     this.logger.info(`create db "${this.getFileName()}" for module: "${this.resolver.getModuleName()}" finished`);
