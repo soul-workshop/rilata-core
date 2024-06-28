@@ -1,9 +1,9 @@
 import { describe, test, expect } from 'bun:test';
-import { InlineKeyboard } from './inline-keyboard.js';
+import { InlineKeyboardBuilder } from './inline-keyboard.js';
 
 describe('InlineKeyboard', () => {
   test('должен создать InlineKeyboardMarkup с пустыми строками', () => {
-    const result = new InlineKeyboard().makeReplyMarkup();
+    const result = new InlineKeyboardBuilder().makeReplyMarkup();
     expect(result).toEqual({
       reply_markup: {
         inline_keyboard: [],
@@ -14,7 +14,7 @@ describe('InlineKeyboard', () => {
   test('должен добавить одну строку с кнопкой callback', () => {
     const buttonText = 'Кнопка 1';
     const callbackData = 'callback_1';
-    const result = new InlineKeyboard()
+    const result = new InlineKeyboardBuilder()
       .addCbButtonRow(buttonText, callbackData)
       .makeReplyMarkup();
     expect(result).toEqual({
@@ -31,7 +31,7 @@ describe('InlineKeyboard', () => {
     const callbackData2 = 'callback_2';
     const buttonText3 = 'Кнопка 3';
     const callbackData3 = 'callback_3';
-    const result = new InlineKeyboard()
+    const result = new InlineKeyboardBuilder()
       .addCbButtonRow(buttonText1, callbackData1)
       .addCbButtonRow(
         buttonText2, callbackData2, buttonText3, callbackData3,
@@ -57,7 +57,7 @@ describe('InlineKeyboard', () => {
     const callbackData2 = 'callback_2';
     const buttonText3 = 'Кнопка 3';
     const callbackData3 = 'callback_3';
-    const result = new InlineKeyboard()
+    const result = new InlineKeyboardBuilder()
       .addCbButtonRow(buttonText1, callbackData1)
       .pushRow([
         { text: buttonText2, callback_data: callbackData2 },
@@ -80,7 +80,7 @@ describe('InlineKeyboard', () => {
   test('должен создать объект inline_reply_markup с кнопками callback', () => {
     const buttonText = 'Кнопка';
     const callbackData = 'callback_data';
-    const result = new InlineKeyboard()
+    const result = new InlineKeyboardBuilder()
       .addCbButtonRow(buttonText, callbackData)
       .make();
     expect(result).toEqual({
@@ -95,7 +95,7 @@ describe('InlineKeyboard', () => {
     const callbackData1 = 'callback_1';
     const buttonText2 = 'Кнопка 2';
     try {
-      new InlineKeyboard()
+      new InlineKeyboardBuilder()
         .addCbButtonRow(buttonText1, callbackData1, buttonText2)
         .makeReplyMarkup();
       throw Error('not be throwed');

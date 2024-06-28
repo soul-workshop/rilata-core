@@ -1,6 +1,6 @@
 import { KeyboardButton, ReplyKeyboardMarkup } from '@grammyjs/types';
 
-export class ReplyKeyboard {
+export class ReplyKeyboardBuilder {
   private options: Omit<ReplyKeyboardMarkup, 'keyboard'> = {};
 
   private rows: KeyboardButton.CommonButton[][] = [];

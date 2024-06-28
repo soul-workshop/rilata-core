@@ -1,9 +1,9 @@
 import { describe, test, expect } from 'bun:test';
-import { ReplyKeyboard } from './reply-keyboard.js';
+import { ReplyKeyboardBuilder } from './reply-keyboard.js';
 
 describe('ReplyKeyboard', () => {
   test('должен создать ReplyKeyboardMarkup с пустыми строками и опциями', () => {
-    const result = new ReplyKeyboard().makeReplyMarkup();
+    const result = new ReplyKeyboardBuilder().makeReplyMarkup();
     expect(result).toEqual({
       reply_markup: {
         keyboard: [],
@@ -13,7 +13,7 @@ describe('ReplyKeyboard', () => {
 
   test('должен добавить одну строку с кнопкой', () => {
     const buttonText = 'Кнопка 1';
-    const result = new ReplyKeyboard().addButtonRow(buttonText).makeReplyMarkup();
+    const result = new ReplyKeyboardBuilder().addButtonRow(buttonText).makeReplyMarkup();
     expect(result).toEqual({
       reply_markup: {
         keyboard: [[{ text: buttonText }]],
@@ -25,7 +25,7 @@ describe('ReplyKeyboard', () => {
     const buttonText1 = 'Кнопка 1';
     const buttonText2 = 'Кнопка 2';
     const buttonText3 = 'Кнопка 2';
-    const result = new ReplyKeyboard()
+    const result = new ReplyKeyboardBuilder()
       .addButtonRow(buttonText1)
       .pushRow([{ text: buttonText2 }, { text: buttonText3 }])
       .makeReplyMarkup();
@@ -41,7 +41,7 @@ describe('ReplyKeyboard', () => {
 
   test('должен установить опции клавиатуры', () => {
     const options = { resize_keyboard: true, one_time_keyboard: true };
-    const result = new ReplyKeyboard().setOption(options).makeReplyMarkup();
+    const result = new ReplyKeyboardBuilder().setOption(options).makeReplyMarkup();
     expect(result).toEqual({
       reply_markup: {
         keyboard: [],
@@ -54,7 +54,7 @@ describe('ReplyKeyboard', () => {
   test('должен создать объект reply_markup с кнопками и опциями', () => {
     const buttonText = 'Кнопка';
     const options = { resize_keyboard: true };
-    const result = new ReplyKeyboard()
+    const result = new ReplyKeyboardBuilder()
       .addButtonRow(buttonText)
       .setOption(options)
       .makeReplyMarkup();

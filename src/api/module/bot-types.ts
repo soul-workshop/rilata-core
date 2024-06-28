@@ -8,3 +8,14 @@ export type GeneralBotModuleResolves = BotModuleResolves<BotModule>
 export type GeneralBotModuleResolver = BotModuleResolver<
   GeneralServerResolver, GeneralBotModuleResolves
 >
+
+export type GetUpdatesMode = {
+  type: 'getUpdates',
+  timeoutAsSec: number,
+}
+
+export type WebhookMode = {
+  type: 'webhook',
+}
+
+export type BotSubscribeMode = GetUpdatesMode | WebhookMode

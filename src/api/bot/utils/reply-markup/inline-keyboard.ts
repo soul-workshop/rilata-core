@@ -1,6 +1,6 @@
 import { InlineKeyboardButton, InlineKeyboardMarkup } from '@grammyjs/types';
 
-export class InlineKeyboard {
+export class InlineKeyboardBuilder {
   private rows: InlineKeyboardButton[][] = [];
 
   makeReplyMarkup(): { reply_markup: InlineKeyboardMarkup } {
