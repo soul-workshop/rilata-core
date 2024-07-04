@@ -1,11 +1,11 @@
+import { ApiMethods } from '@grammyjs/types';
 import { Timestamp } from '#core/types.js';
 import { DTO } from '#domain/dto.js';
-import { ApiMethods } from '@grammyjs/types';
 
-export type DialogueContext<R extends DTO> = {
-  telegramId: number;
+export type DialogueContext<R extends DTO, SN extends string> = {
+  telegramId: string;
   isActive: boolean;
-  stateName: string;
+  stateName: SN;
   lastUpdate: Timestamp;
   payload: R;
 }
@@ -14,13 +14,12 @@ export type NotResponse = {
   method: 'notResponse',
 }
 
-export type SendMessage = Parameters<ApiMethods<unknown>['sendMessage']>[0] & {
-  method: 'sendMessage',
-}
+export type ApiMethodNames = keyof ApiMethods<unknown>;
 
-export type GetUpdatesMessage = Parameters<ApiMethods<unknown>['getUpdates']>[0] & {
-  method: 'getUpdates',
-}
+export type ApiMethodsParams<K extends ApiMethodNames> =
+  Parameters<ApiMethods<unknown>[K]>[0] & { method: K };
+
+export type SendMessage = ApiMethodsParams<'sendMessage'>;
 
 export type BotReplyMessage = NotResponse
   | SendMessage;

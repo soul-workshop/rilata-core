@@ -5,7 +5,7 @@ import { SqliteTestFixtures } from './fixtures.js';
 
 describe('sqlite create and migrate tests', () => {
   const fakeModuleResolver = SqliteTestFixtures.getResolverWithTestDb();
-  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.BlogDatabase;
+  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.TestBunSqliteDatabase;
   beforeEach(() => {
     db.clear();
   });
@@ -52,7 +52,7 @@ describe('sqlite create and migrate tests', () => {
         this.db.sqliteDb.prepare(migrationRecordSql).run();
       }
     }
-    class FailBlogDatabase extends SqliteTestFixtures.BlogDatabase {
+    class FailBlogDatabase extends SqliteTestFixtures.TestBunSqliteDatabase {
       constructor() {
         super([
           SqliteTestFixtures.UserRepositorySqlite,

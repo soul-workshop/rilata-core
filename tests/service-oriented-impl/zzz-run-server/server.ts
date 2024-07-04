@@ -1,6 +1,7 @@
-import { GeneralServerResolver } from '../../../src/api/base.index.js';
+import { Afterware } from '#api/middle-after-ware/afterware.js';
+import { InjectCallerMiddleware } from '#api/middle-after-ware/middlewares/inject-caller.js';
+import { GeneralServerResolver } from '#api/server/types.js';
 import { Controller } from '../../../src/api/controller/controller.js';
-import { Afterware, InjectCallerMiddleware } from '../../../src/api/http.index.js';
 import { LogResponseAfterware } from '../../../src/api/middle-after-ware/afterwares/log-request.js';
 import { BunServer } from '../../../src/api/server/bun-server.js';
 import { AboutController } from './controllers/about.js';

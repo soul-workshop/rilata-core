@@ -1,4 +1,4 @@
-import { EventService } from '#api/base.index.js';
+import { EventService } from '#api/service/concrete-service/event.service.js';
 import { SubcribeToBusMessage } from '../bus/types.js';
 import { BunServer } from './bun-server.js';
 import { BusServerResolver } from './bus.s-resolver.js';

@@ -32,7 +32,6 @@ export * from './service/concrete-service/query.service.js';
 export * from './service/transaction-strategy/strategy.js';
 export * from './service/transaction-strategy/uow.strategy.js';
 export * from './service/web.service.js';
-export * from './service/bot.service.js';
 export * from './service/constants.js';
 export type {
   NetError, InternalError, NotFoundError, BadRequestError,

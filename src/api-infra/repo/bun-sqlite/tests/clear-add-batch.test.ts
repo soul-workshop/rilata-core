@@ -4,7 +4,7 @@ import { SqliteTestFixtures } from './fixtures.js';
 
 describe('bun sqlite db: add batch to db, and clear db tests', () => {
   const fakeModuleResolver = SqliteTestFixtures.getResolverWithTestDb();
-  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.BlogDatabase;
+  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.TestBunSqliteDatabase;
   beforeEach(() => {
     db.clear();
   });

@@ -1,4 +1,4 @@
-import { GeneralServerResolver } from '../../../../src/api/base.index.js';
+import { GeneralServerResolver } from '#api/server/types.js';
 import { Controller } from '../../../../src/api/controller/controller.js';
 
 export class AboutController extends Controller<GeneralServerResolver> {

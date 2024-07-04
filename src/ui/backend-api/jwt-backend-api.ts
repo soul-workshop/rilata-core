@@ -1,4 +1,4 @@
-import { dtoUtility } from '#core/utils/index.js';
+import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 import { BadRequestError } from '../../api/service/error-types.js';
 import { FullServiceResult, GeneralWebService, GetServiceParams } from '../../api/service/types.js';
 import { JwtDecoder } from '../../core/jwt/jwt-decoder.js';

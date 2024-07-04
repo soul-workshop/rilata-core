@@ -12,7 +12,7 @@ import { CallerType } from '../controller/types.js';
 import { dodUtility } from '../../core/utils/dod/dod-utility.js';
 import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
 import { Result } from '#core/result/types.js';
-import { ValidationError } from '#api/base.index.js';
+import { ValidationError } from './error-types.ts';
 
 export abstract class WebService<
   P extends GeneralWebServiceParams, RES extends GeneralModuleResolver

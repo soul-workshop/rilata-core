@@ -13,7 +13,7 @@ import { QueryService } from './concrete-service/query.service.js';
 import { CommandService } from './concrete-service/command.service.js';
 import { EventService } from './concrete-service/event.service.js';
 import { ResultDTO } from '../controller/types.js';
-import { WebService } from '#api/base.index.js';
+import { WebService } from './web.service.ts';
 
 export type AppEventType = 'command-event' | 'read-module' | 'event';
 

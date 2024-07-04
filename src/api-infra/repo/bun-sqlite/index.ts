@@ -5,4 +5,5 @@ export type {
 } from './types.js';
 export * from './repositories/event.js';
 export * from './repositories/migrations.js';
+export * from './repositories/bot-dialogue.js';
 export * from './transaction/bun-sqlite.strategy.js';

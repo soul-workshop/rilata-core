@@ -15,11 +15,12 @@ import { WebReqeustStorePayload } from '../request-store/types.js';
 import { requestStoreDispatcher } from '../request-store/request-store-dispatcher.js';
 import { Module } from './module.js';
 import { Result } from '#core/result/types.js';
-import { badRequestError, internalError, ServiceBaseErrors } from '#api/base.index.js';
-import { success } from '#core/index.js';
-import { WebModuleController } from '#api/controller/web.m-controller.js';
 import { dodUtility } from '#core/utils/dod/dod-utility.js';
+import { WebModuleController } from '#api/controller/web.m-controller.js';
 import { dtoUtility } from '#core/utils/dto/dto-utility.js';
+import { ServiceBaseErrors } from '#api/service/error-types.js';
+import { badRequestError, internalError } from '#api/service/constants.js';
+import { success } from '#core/result/success.js';
 
 export abstract class WebModule extends Module {
   readonly abstract queryServices: GeneraQueryService[]

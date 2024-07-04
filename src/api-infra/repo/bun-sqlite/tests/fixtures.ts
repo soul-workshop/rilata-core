@@ -20,6 +20,7 @@ import { dodUtility } from '#core/utils/dod/dod-utility.js';
 import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 import { uuidUtility } from '#core/utils/uuid/uuid-utility.js';
 import { AggregateRootParams, ARDT, DomainMeta, EventDod, GeneralEventDod, RequestDod } from '#domain/domain-data/domain-types.js';
+import { DTO } from '#domain/dto.js';
 import { DtoFieldValidator } from '#domain/validator/field-validator/dto-field-validator.js';
 import { LiteralFieldValidator } from '#domain/validator/field-validator/literal-field-validator.js';
 import { StringChoiceValidationRule } from '#domain/validator/rules/validate-rules/string/string-choice.v-rule.js';
@@ -183,9 +184,9 @@ export namespace SqliteTestFixtures {
     }
   }
 
-  export class BlogDatabase extends BunSqliteDatabase {
-    constructor(repoCtors?: BunRepoCtor[]) {
-      super(repoCtors ?? [
+  export class TestBunSqliteDatabase extends BunSqliteDatabase {
+    constructor(RepoCtors?: BunRepoCtor[]) {
+      super(RepoCtors ?? [
         UserRepositorySqlite,
         PostRepositorySqlite,
         EventRepositorySqlite,
@@ -306,8 +307,8 @@ export namespace SqliteTestFixtures {
   }
 
   // ++++++++++++++++++ resolver mock section ++++++++++++++++++++
-  export function getResolverWithTestDb(): GeneralModuleResolver {
-    const db = new BlogDatabase();
+  export function getResolverWithTestDb(RepoCtors?: BunRepoCtor[]): GeneralModuleResolver {
+    const db = new TestBunSqliteDatabase(RepoCtors);
 
     const fakeModuleResolver = {
       getDirPath(): string {
@@ -341,7 +342,7 @@ export namespace SqliteTestFixtures {
         throw Error(`not found key: ${key}`);
       },
 
-      getDatabase(): BlogDatabase {
+      getDatabase(): TestBunSqliteDatabase {
         return db;
       },
     } as unknown as GeneralModuleResolver;

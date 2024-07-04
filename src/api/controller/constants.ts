@@ -44,4 +44,4 @@ export const STATUS_CODES: Record<BackendBaseErrors['name'], number> = {
   JwtVerifyError: 400,
 };
 
-export const TELEGRAM_API = 'telegram.org/';
+export const TELEGRAM_API = 'https://api.telegram.org/';

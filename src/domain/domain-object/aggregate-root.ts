@@ -1,5 +1,5 @@
+import { GeneralArParams } from '#domain/domain-data/domain-types.js';
 import { dtoUtility } from '../../core/utils/dto/dto-utility.js';
-import { GeneralArParams } from '../index.js';
 import { DtoFieldValidator } from '../validator/field-validator/dto-field-validator.js';
 import { AggregateRootHelper } from './aggregate-helper.js';
 

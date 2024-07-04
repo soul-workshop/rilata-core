@@ -1,3 +1,4 @@
+import { getEnvLogMode } from '#core/logger/logger-modes.js';
 import { OneServerBus } from '../../../src/api-infra/bus/one-server-bus.js';
 import { JwtCreatorImpl } from '../../../src/api-infra/jwt/jwt-creator.js';
 import { JwtVerifierImpl } from '../../../src/api-infra/jwt/jwt-verifier.js';
@@ -5,7 +6,6 @@ import { defaultJwtConfig, getServerConfig } from '../../../src/api/server/confi
 import { BusServerResolves } from '../../../src/api/server/s-resolves.js';
 import { ServerStarter } from '../../../src/api/server/server-starter.js';
 import { ModuleConstructors } from '../../../src/api/server/types.js';
-import { getEnvLogMode } from '../../../src/core/index.js';
 import { ConsoleLogger } from '../../../src/core/logger/console-logger.js';
 import { Constructor } from '../../../src/core/types.js';
 import { JwtDecoderImpl } from '../../service-oriented-impl/zz-infra/jwt/decoder.js';

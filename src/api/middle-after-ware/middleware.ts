@@ -1,4 +1,4 @@
-import { GeneralModuleResolver } from '../base.index.js';
+import { GeneralModuleResolver } from '#api/module/types.js';
 import { RilataRequest } from '../controller/types.js';
 import { GeneralServerResolver } from '../server/types.js';
 

@@ -8,7 +8,7 @@ import { GetPersonByIinRequestDod } from '../../subject/services/person/get-by-i
 import { serverStarter } from '../starter.js';
 import { ServiceModulesFixtures } from '../server-fixtures.js';
 import { TestDatabase } from '../../../../src/api/database/test.database.js';
-import { dodUtility } from '../../../../src/core/utils/index.js';
+import { dodUtility } from '#core/utils/dod/dod-utility.js';
 
 describe('process http requests by server class', async () => {
   const sut = serverStarter.start('all') as BunServer;

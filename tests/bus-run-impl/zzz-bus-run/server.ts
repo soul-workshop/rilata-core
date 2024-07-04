@@ -1,6 +1,6 @@
-import { GeneralServerResolver } from '../../../src/api/base.index.js';
+import { Afterware } from '#api/middle-after-ware/afterware.js';
+import { GeneralServerResolver } from '#api/server/types.js';
 import { Controller } from '../../../src/api/controller/controller.js';
-import { Afterware } from '../../../src/api/http.index.js';
 import { LogResponseAfterware } from '../../../src/api/middle-after-ware/afterwares/log-request.js';
 import { Middleware } from '../../../src/api/middle-after-ware/middleware.js';
 import { InjectCallerMiddleware } from '../../../src/api/middle-after-ware/middlewares/inject-caller.js';

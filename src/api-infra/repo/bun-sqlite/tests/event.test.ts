@@ -8,7 +8,7 @@ import { SqliteTestFixtures } from './fixtures.js';
 
 describe('bun sql event repository tests', () => {
   const fakeModuleResolver = SqliteTestFixtures.getResolverWithTestDb();
-  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.BlogDatabase;
+  const db = fakeModuleResolver.getDatabase() as SqliteTestFixtures.TestBunSqliteDatabase;
   const sut = db.getRepository<EventRepositorySqlite>('events');
 
   beforeEach(() => {

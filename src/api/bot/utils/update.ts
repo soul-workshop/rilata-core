@@ -1,7 +1,7 @@
 import { Update } from '@grammyjs/types';
 
 class UpdateUtils {
-  getChatId(upd: Update): number {
+  getChatId(upd: Update): string {
     let chatId: number | undefined;
     if (upd.message) chatId = upd.message.chat.id;
     else if (upd.edited_message) chatId = upd.edited_message.chat.id;
@@ -19,7 +19,7 @@ class UpdateUtils {
     else if (upd.chat_member) chatId = upd.chat_member.chat.id;
     else if (upd.chat_join_request) chatId = upd.chat_join_request.chat.id;
     if (chatId === undefined) throw Error('not found chat_id for update');
-    return chatId;
+    return String(chatId);
   }
 }
 export const updateUtils = new UpdateUtils();

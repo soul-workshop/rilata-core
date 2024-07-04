@@ -1,5 +1,5 @@
+import { GeneralArParams } from '#domain/domain-data/domain-types.js';
 import { DTO } from '../dto.js';
-import { GeneralArParams } from '../index.js';
 import { AggregateRoot } from './aggregate-root.js';
 
 export abstract class AggregateFactory<PARAMS extends GeneralArParams> {

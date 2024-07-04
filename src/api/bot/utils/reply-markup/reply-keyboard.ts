@@ -1,7 +1,11 @@
 import { KeyboardButton, ReplyKeyboardMarkup } from '@grammyjs/types';
 
+type Options = Omit<ReplyKeyboardMarkup, 'keyboard'>;
 export class ReplyKeyboardBuilder {
-  private options: Omit<ReplyKeyboardMarkup, 'keyboard'> = {};
+  private options: Options = {
+    one_time_keyboard: true,
+    resize_keyboard: true,
+  };
 
   private rows: KeyboardButton.CommonButton[][] = [];
 
@@ -19,7 +23,13 @@ export class ReplyKeyboardBuilder {
     return this;
   }
 
-  setOption(options: Omit<ReplyKeyboardMarkup, 'keyboard'>): this {
+  empty(): this {
+    this.rows = [];
+    this.options = {};
+    return this;
+  }
+
+  setOption(options: Partial<Options>): this {
     this.options = { ...this.options, ...options };
     return this;
   }

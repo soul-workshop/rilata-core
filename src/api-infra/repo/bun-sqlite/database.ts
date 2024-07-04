@@ -108,11 +108,7 @@ export class BunSqliteDatabase implements TestDatabase<false> {
 
   clear(): void {
     const transaction = this.sqliteDb.transaction(() => {
-      this.repositories.forEach((repo) => {
-        if (repo.tableName !== 'migrations') {
-          this.sqliteDb.run(`DELETE FROM ${repo.tableName}`);
-        }
-      });
+      this.repositories.forEach((repo) => repo.clear());
     });
     transaction();
     this.logger.info(`sqlite db for module "${this.resolver.getModuleName()}" cleared`);

@@ -6,7 +6,7 @@ import { success } from '#core/result/success.js';
 import { Result } from '#core/result/types.js';
 import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 import { responseUtility } from '#core/utils/response/response-utility.js';
-import { GeneralEventDod, GeneralRequestDod } from '#domain/index.js';
+import { GeneralEventDod, GeneralRequestDod } from '#domain/domain-data/domain-types.js';
 import { STATUS_CODES } from './constants.js';
 import { ModuleController } from './m-controller.ts';
 import { ResultDTO, RilataRequest } from './types.js';

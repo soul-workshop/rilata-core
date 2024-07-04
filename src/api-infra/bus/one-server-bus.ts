@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { AnonymousUser, DomainUser, ModuleCaller } from '#api/http.index.js';
+import { AnonymousUser, DomainUser, ModuleCaller } from '#api/controller/types.js';
 import { Bus } from '../../api/bus/bus.js';
 import { PublishBusMessage, SubcribeToBusMessage } from '../../api/bus/types.js';
 import { Module } from '../../api/module/module.js';

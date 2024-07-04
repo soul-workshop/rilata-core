@@ -2,16 +2,16 @@
 import { Update } from '@grammyjs/types';
 import { BotModuleController } from '#api/controller/bot.m-controller.js';
 import { GeneralServerResolver } from '#api/server/types.js';
-import { BotService } from '#api/service/bot.service.js';
 import { BotSubscribeMode, GeneralBotModuleResolves, GetUpdatesMode } from './bot-types.ts';
 import { ModuleResolver } from './m-resolver.ts';
 import { Module } from './module.js';
-import { GeneralModuleResolver } from './types.js';
-import { BotReplyMessage, GetUpdatesMessage } from '#api/bot/types.js';
+import { ApiMethodsParams, BotReplyMessage, SendMessage } from '#api/bot/types.js';
 import { TELEGRAM_API } from '#api/controller/constants.js';
+import { BotDialogueRouter } from '#api/bot/dialogue-router.js';
+import { updateUtils } from '#api/bot/utils/update.js';
 
 export abstract class BotModule extends Module {
-  protected abstract services: BotService<GeneralModuleResolver>[];
+  protected abstract services: BotDialogueRouter[];
 
   declare protected moduleController: BotModuleController;
 
@@ -23,7 +23,7 @@ export abstract class BotModule extends Module {
 
   protected botSubscribeMode!: BotSubscribeMode;
 
-  protected lastUpdateId = 0;
+  protected newUpdateId = 0;
 
   protected timer?: Timer;
 
@@ -38,20 +38,31 @@ export abstract class BotModule extends Module {
     this.botSubscribeMode = resolves.botSubscribeMode;
     this.moduleController = new BotModuleController(this.botName, this.botToken);
     super.init(moduleResolver, serverResolver);
+    this.services.forEach((s) => s.init(this.moduleResolver));
     this.subscribeToUpdates();
   }
 
-  async executeService(botName: string, update: Update): Promise<BotReplyMessage> {
+  getModuleController(): BotModuleController {
+    return this.moduleController;
+  }
+
+  async executeService(routerName: string, update: Update): Promise<BotReplyMessage> {
     try {
-      const service = this.getService(botName) as BotService<GeneralModuleResolver>;
+      const service = this.getService(routerName) as BotDialogueRouter;
       return service.execute(update);
     } catch (e) {
       this.logger.error(
-        'Ошибка при обработке запроса телеграм',
-        { serviceName: botName, update },
+        `Ошибка при обработке запроса телеграм. Err: ${(e as Error).message}`,
+        { serviceName: routerName, update },
         e as Error,
       );
-      return { method: 'notResponse' };
+      const msg: SendMessage = {
+        method: 'sendMessage',
+        chat_id: updateUtils.getChatId(update),
+        parse_mode: 'Markdown',
+        text: '**К сожалению произошла непредвиденная ошибка.**\nПопробуйте еще раз, но с большой вероятностью ошибка полностью на нашей стороне.\nМы занимаемся этой ошибкой, но просим помочь вас и переслать это сообщение лицу которое предоставило ссылку на этот бот.',
+      };
+      return msg;
     }
   }
 
@@ -73,6 +84,10 @@ export abstract class BotModule extends Module {
   }
 
   protected async subscribeToWebHook(): Promise<void> {
+    const data: ApiMethodsParams<'setWebhook'> = {
+      method: 'setWebhook',
+      url: 'смотри в избранных в телеге, чтобы настроить через ngrok',
+    };
     throw Error('not implemnented');
   }
 
@@ -83,25 +98,26 @@ export abstract class BotModule extends Module {
   protected subscribeGetUpdates(): void {
     this.timer = setTimeout(
       this.getAndProcessUpdates.bind(this),
-      (this.botSubscribeMode as GetUpdatesMode).timeoutAsSec,
+      (this.botSubscribeMode as GetUpdatesMode).timeoutAsSec * 1000,
     );
   }
 
   protected async getAndProcessUpdates(): Promise<void> {
-    const body: GetUpdatesMessage = {
+    const update = await this.getLastUpdate();
+    if (update) {
+      await this.moduleController.executeUpdate(update);
+    }
+    this.subscribeGetUpdates();
+  }
+
+  protected async getLastUpdate(): Promise<Update | undefined> {
+    const body: ApiMethodsParams<'getUpdates'> = {
       method: 'getUpdates',
-      offset: this.lastUpdateId || undefined,
+      offset: this.newUpdateId || undefined,
       allowed_updates: ['message', 'callback_query'],
     };
-    const data = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    };
     try {
-      const response = await fetch(`${this.getBotUrl()}`, data);
+      const response = await this.moduleController.postRequest(body);
       if (response.ok) {
         const updates = (await response.json()).result as Update[];
         if (updates.length === 0) return;
@@ -109,36 +125,20 @@ export abstract class BotModule extends Module {
           this.logger.warning(`Бот получил ${updates.length} сообщений. Будет обработано только последнее сообщение (режим диалога).`);
         }
         const update = updates[updates.length - 1];
-        this.lastUpdateId = update.update_id;
-        await this.executeService(this.botName, update);
-      } else {
-        const resp = {
-          ok: response.ok,
-          url: response.url,
-          status: response.status,
-          statusText: response.statusText,
-          headers: JSON.stringify([...Object.entries(response.headers)]),
-          redirected: response.redirected,
-          bodyUsed: response.bodyUsed,
-          body: await response.text(),
-        };
-        this.logger.warning(
-          'Неудачный вызов телеграм сервера с getUpdates: ', { data, url: this.getBotUrl(), response: resp },
-        );
+        this.newUpdateId = update.update_id + 1;
+        // eslint-disable-next-line consistent-return
+        return update;
       }
-      this.subscribeGetUpdates();
     } catch (e) {
       this.logger.error(
         'Ошибка при запросе или обработке Updates: ',
-        { data, url: this.getBotUrl() },
+        { body, url: this.getBotUrl() },
         e as Error,
       );
     }
   }
 
-  protected getBotUrl(): string {
-    return this.botSubscribeMode.type === 'getUpdates'
-      ? `http://${TELEGRAM_API}bot${this.botToken}/`
-      : `https://${TELEGRAM_API}bot${this.botToken}/`;
+  getBotUrl(): string {
+    return `${TELEGRAM_API}bot${this.botToken}`;
   }
 }
