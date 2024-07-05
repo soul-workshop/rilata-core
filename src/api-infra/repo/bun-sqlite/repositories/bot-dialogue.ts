@@ -144,6 +144,7 @@ export class BotDialogueRepositorySqlite<CTX extends DialogueContext<DTO, string
       : bindData;
 
     const db = this.db.sqliteDb;
+    this.removeFromCache(telegramId);
     try {
       db.exec('BEGIN TRANSACTION');
       const result = db

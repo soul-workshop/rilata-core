@@ -1,22 +1,17 @@
 import { Update } from '@grammyjs/types';
-import {
-  BotModule, BotModuleResolves,
-  GeneralServerResolver, ModuleResolver,
-} from '#api/base.index.js';
 import { BotReplyMessage } from './types.ts';
 import { BotDialogueRouter } from './dialogue-router.ts';
-
-// тип создан для избегания циклической ссылки
-type BotResolver = ModuleResolver<GeneralServerResolver, BotModuleResolves<BotModule>>;
+import { GeneralModuleResolver } from '#api/base.index.js';
 
 export abstract class BotState {
   abstract stateName: string;
 
-  protected resolver!: BotResolver;
+  protected resolver!: GeneralModuleResolver;
 
-  protected router!:BotDialogueRouter;
+  protected router!: BotDialogueRouter;
 
-  init(resolver: BotResolver, router: BotDialogueRouter): void {
+  // eslint-disable-next-line max-len
+  init(resolver: GeneralModuleResolver, router: BotDialogueRouter): void {
     this.resolver = resolver;
     this.router = router;
   }

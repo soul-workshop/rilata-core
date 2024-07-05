@@ -38,7 +38,7 @@ export abstract class BotModule extends Module {
     this.botSubscribeMode = resolves.botSubscribeMode;
     this.moduleController = new BotModuleController(this.botName, this.botToken);
     super.init(moduleResolver, serverResolver);
-    this.services.forEach((s) => s.init(this.moduleResolver));
+    this.services.forEach((s) => (s as any).init(this.moduleResolver)); // s BotDialogue
     this.subscribeToUpdates();
   }
 

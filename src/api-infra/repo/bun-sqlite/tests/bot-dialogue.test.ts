@@ -199,7 +199,7 @@ describe('BotDialogueRepositorySqlite', () => {
       expect(repo.findAll('333')).toEqual([notActiveContext]);
       expect(repo.findActive('333')).toBeUndefined();
 
-      const cb = () => repo.updateContext('333', { stateName: 'finished' });
+      const cb = (): void => repo.updateContext('333', { stateName: 'finished' });
       expect(cb).toThrow('Нет активного контекста диалога для пользователя с telegramId: 333');
     });
   });
@@ -247,6 +247,7 @@ describe('BotDialogueRepositorySqlite', () => {
       expect(repo.findAll('333')).toEqual([expectContext]);
       expect(repo.findActive('333')).toBeUndefined();
 
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       const cb = () => repo.finishContext('333', {});
       expect(cb).toThrow('Нет активного контекста диалога для пользователя с telegramId: 333');
     });

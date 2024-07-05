@@ -57,9 +57,7 @@ export type DispositionTypes = keyof typeof dispositionTypeMap;
    По умолчанию 'inline'.
  */
 export type ResponseFileOptions = {
-  compressionFormat?: 'br' | 'gzip' | 'deflate', // default 'br'
   mimeType?: MimeTypes, // default 'json'
   status?: number, // default 200
-  shouldCompress?: boolean, // default true
   disposition?: DispositionTypes // default inline
 }

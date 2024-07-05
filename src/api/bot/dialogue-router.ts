@@ -1,37 +1,27 @@
 /* eslint-disable no-underscore-dangle */
 import { Update } from '@grammyjs/types';
 import { BotState } from './state.js';
-import { BotReplyMessage, DialogueContext, SendMessage } from './types.js';
+import { ApiMethodNames, ApiMethodsParams, BotReplyMessage, DialogueContext, SendMessage } from './types.js';
 import { BotDialogueRepository } from './dialogue-repo.js';
 import { updateUtils } from './utils/update.ts';
 import { Constructor } from '#core/types.js';
 import { DTO } from '#domain/dto.js';
-import { ModuleResolver } from '#api/module/m-resolver.js';
-import { GeneralServerResolver } from '#api/server/types.js';
-import { BotModuleResolves } from '#api/module/bot.m-resolves.js';
-import { BotModule } from '#api/module/bot.module.js';
 import { Service } from '#api/service/service.js';
+import { GeneralModuleResolver } from '#api/module/types.js';
+import { BotModuleController } from '#api/http.index.js';
 
-// тип создан для избегания циклической ссылки
-type BotResolver = ModuleResolver<GeneralServerResolver, BotModuleResolves<BotModule>>;
-export abstract class BotDialogueRouter extends Service<BotResolver> {
-  abstract botName: string;
-
+export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
   protected abstract stateCtors: Constructor<BotState>[];
-
-  get handleName(): string {
-    return this.botName;
-  }
 
   protected states!: BotState[];
 
-  protected _moduleResolver!: BotResolver;
+  protected _moduleResolver!: GeneralModuleResolver;
 
-  get moduleResolver(): BotResolver {
+  get moduleResolver(): GeneralModuleResolver {
     return this._moduleResolver;
   }
 
-  init(resolver: BotResolver): void {
+  init(resolver: GeneralModuleResolver): void {
     this._moduleResolver = resolver;
     this.states = this.stateCtors.map((Ctor) => new Ctor());
     this.states.forEach((state) => state.init(this._moduleResolver, this));
@@ -61,6 +51,12 @@ export abstract class BotDialogueRouter extends Service<BotResolver> {
       };
       return msg;
     }
+  }
+
+  async sendByBot(promise: Promise<ApiMethodsParams<ApiMethodNames>>): Promise<void> {
+    const params = await promise;
+    const controller = this.moduleResolver.getModule().getModuleController() as BotModuleController;
+    controller.postRequest(params);
   }
 
   getState<S extends BotState>(stateName: S['stateName']): S {
