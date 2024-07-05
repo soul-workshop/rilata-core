@@ -10,7 +10,7 @@ export abstract class FileController<
 > extends Controller<R> {
   protected abstract filePath: string;
 
-  protected abstract fileOptions: ResponseFileOptions;
+  protected abstract fileOptions?: ResponseFileOptions;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   execute(req: Request): Promise<Response> {

@@ -1,5 +1,5 @@
 import { BotDialogueRepository } from '#api/bot/dialogue-repo.js';
-import { DialogueContext } from '#api/bot/types.js';
+import { DialogueContext, FinishContextAttrs, UpdateContextAttrs } from '#api/bot/types.js';
 import { DeepPartial } from '#core/type-functions.js';
 import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 import { DTO } from '#domain/dto.js';
@@ -119,17 +119,17 @@ export class BotDialogueRepositorySqlite<CTX extends DialogueContext<DTO, string
     );
   }
 
-  updateContext(telegramId: string, attrs: DeepPartial<Pick<CTX, 'stateName' | 'payload'>>): void {
+  updateContext(telegramId: string, attrs: UpdateContextAttrs): void {
     this.updateRecord(telegramId, attrs);
   }
 
-  finishContext(telegramId: string, attrs: DeepPartial<Pick<CTX, 'stateName' | 'payload'>>): void {
+  finishContext(telegramId: string, attrs: FinishContextAttrs): void {
     this.updateRecord(telegramId, { ...attrs, isActive: false });
   }
 
   protected updateRecord(
     telegramId: string,
-    attrs: DeepPartial<Pick<CTX, 'stateName' | 'payload' | 'isActive'>>,
+    attrs: UpdateContextAttrs & { isActive?: boolean },
   ): void {
     const updateData = dtoUtility.extendAttrs(attrs, { lastUpdate: this.getNow() });
     const updateAttrs = Object.keys(updateData);

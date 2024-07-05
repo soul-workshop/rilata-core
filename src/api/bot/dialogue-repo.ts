@@ -2,7 +2,7 @@
 import { Asyncable } from '#api/database/types.js';
 import { Repositoriable } from '#api/resolve/repositoriable.js';
 import { DTO } from '#domain/dto.js';
-import { DialogueContext } from './types.js';
+import { DialogueContext, FinishContextAttrs, UpdateContextAttrs } from './types.js';
 
 export interface BotDialogueRepository<ASYNC extends boolean, CTX extends DialogueContext<DTO, string>> {
   findActive(telegramId: string): Asyncable<ASYNC, CTX | undefined>
@@ -11,9 +11,9 @@ export interface BotDialogueRepository<ASYNC extends boolean, CTX extends Dialog
 
   add(conext: Omit<CTX, 'isActive' | 'lastUpdate'>): Asyncable<ASYNC, void>
 
-  updateContext(telegramId: string, attrs: Partial<Pick<CTX, 'stateName' | 'payload'>>): void
+  updateContext(telegramId: string, attrs: UpdateContextAttrs): void
 
-  finishContext(telegramId: string, attrs: Partial<Pick<CTX, 'stateName' | 'payload'>>): void
+  finishContext(telegramId: string, attrs: FinishContextAttrs): void
 
   getNow(): number
 }

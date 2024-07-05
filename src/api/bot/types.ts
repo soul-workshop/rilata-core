@@ -14,6 +14,10 @@ export type NotResponse = {
   method: 'notResponse',
 }
 
+export type UpdateContextAttrs = Partial<Pick<DialogueContext<DTO, string>, 'stateName' | 'payload'>>
+
+export type FinishContextAttrs = Partial<Pick<DialogueContext<DTO, string>, 'stateName' | 'payload'>>
+
 export type ApiMethodNames = keyof ApiMethods<unknown>;
 
 export type ApiMethodsParams<K extends ApiMethodNames> =
