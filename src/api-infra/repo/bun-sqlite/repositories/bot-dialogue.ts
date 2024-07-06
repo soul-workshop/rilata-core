@@ -1,6 +1,5 @@
 import { BotDialogueRepository } from '#api/bot/dialogue-repo.js';
 import { DialogueContext, FinishContextAttrs, UpdateContextAttrs } from '#api/bot/types.js';
-import { DeepPartial } from '#core/type-functions.js';
 import { dtoUtility } from '#core/utils/dto/dto-utility.js';
 import { DTO } from '#domain/dto.js';
 import { BunSqliteRepository } from '../repository.ts';

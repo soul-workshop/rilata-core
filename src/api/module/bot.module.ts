@@ -10,6 +10,8 @@ import { TELEGRAM_API } from '#api/controller/constants.js';
 import { BotDialogueRouter } from '#api/bot/dialogue-router.js';
 import { updateUtils } from '#api/bot/utils/update.js';
 
+type TelegramId = string;
+
 export abstract class BotModule extends Module {
   protected abstract services: BotDialogueRouter[];
 
@@ -103,14 +105,17 @@ export abstract class BotModule extends Module {
   }
 
   protected async getAndProcessUpdates(): Promise<void> {
-    const update = await this.getLastUpdate();
-    if (update) {
-      await this.moduleController.executeUpdate(update);
+    const updates = await this.getUpdates();
+    if (updates.length > 0) {
+      const updatesByUsers = this.getUpdatesByUsers(updates);
+      this.processUpdates(updatesByUsers);
+      const lastUpdate = updates[updates.length - 1];
+      this.newUpdateId = lastUpdate.update_id + 1;
     }
     this.subscribeGetUpdates();
   }
 
-  protected async getLastUpdate(): Promise<Update | undefined> {
+  protected async getUpdates(): Promise<Update[]> {
     const body: ApiMethodsParams<'getUpdates'> = {
       method: 'getUpdates',
       offset: this.newUpdateId || undefined,
@@ -118,24 +123,44 @@ export abstract class BotModule extends Module {
     };
     try {
       const response = await this.moduleController.postRequest(body);
-      if (response.ok) {
-        const updates = (await response.json()).result as Update[];
-        if (updates.length === 0) return;
-        if (updates.length > 1) {
-          this.logger.warning(`Бот получил ${updates.length} сообщений. Будет обработано только последнее сообщение (режим диалога).`);
-        }
-        const update = updates[updates.length - 1];
-        this.newUpdateId = update.update_id + 1;
-        // eslint-disable-next-line consistent-return
-        return update;
-      }
+      if (response.ok) return (await response.json()).result as Update[];
+
+      this.logger.error(
+        `Запрос getUpdates на сервер telegram вернул ошибку. Status: ${response.status}: StatusText: ${response.statusText}.`,
+        { response: await response.json() },
+      );
+      return [];
     } catch (e) {
       this.logger.error(
-        'Ошибка при запросе или обработке Updates: ',
+        `Не удалось выполнить запрос getUpdates на сервер telegram: ${(e as Error).message}`,
         { body, url: this.getBotUrl() },
         e as Error,
       );
+      return [];
     }
+  }
+
+  protected async processUpdates(usersUpdates: Record<TelegramId, Update[]>): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [telegramId, userUpdates] of Object.entries(usersUpdates)) {
+      if (userUpdates.length > 1) {
+        this.logger.warning(`Бот получил ${userUpdates.length} сообщений для пользователя ${telegramId}. Будет обработано только последнее сообщение (режим диалога).`);
+      }
+      const update = userUpdates[userUpdates.length - 1];
+      // запускаем последовательно для уменьшения вероятности ошибко
+      // eslint-disable-next-line no-await-in-loop
+      await this.moduleController.executeUpdate(update);
+    }
+  }
+
+  protected getUpdatesByUsers(updates: Update[]): Record<TelegramId, Update[]> {
+    const result: Record<TelegramId, Update[]> = {};
+    updates.forEach((update) => {
+      const telegramId = updateUtils.getChatId(update);
+      if (telegramId in result) result[telegramId].push(update);
+      else result[telegramId] = [update];
+    });
+    return result;
   }
 
   getBotUrl(): string {
