@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Update } from '@grammyjs/types';
 import { BotModuleController } from '#api/controller/bot.m-controller.js';
@@ -12,6 +13,13 @@ import { updateUtils } from '#api/bot/utils/update.js';
 
 type TelegramId = string;
 
+type GetUpdatesData = {
+  mode: 'activeMode' | 'passiveMode',
+  timer: Timer,
+  atLastUpdate: number,
+  newUpdateId?: number,
+}
+
 export abstract class BotModule extends Module {
   protected abstract services: BotDialogueRouter[];
 
@@ -25,9 +33,23 @@ export abstract class BotModule extends Module {
 
   protected botSubscribeMode!: BotSubscribeMode;
 
-  protected newUpdateId = 0;
+  protected updatesConfig_?: GetUpdatesMode;
 
-  protected timer?: Timer;
+  protected get updatesConfig(): GetUpdatesMode {
+    if (!this.updatesConfig_) {
+      throw this.logger.error('should not have been called without first being installed');
+    }
+    return this.updatesConfig_;
+  }
+
+  protected updatesData_?: GetUpdatesData;
+
+  protected get updatesData(): GetUpdatesData {
+    if (!this.updatesData_) {
+      throw this.logger.error('should not have been called without first being installed');
+    }
+    return this.updatesData_;
+  }
 
   init(
     moduleResolver: ModuleResolver<GeneralServerResolver, GeneralBotModuleResolves>,
@@ -70,16 +92,18 @@ export abstract class BotModule extends Module {
 
   protected subscribeToUpdates(): void {
     if (this.botSubscribeMode.type === 'getUpdates') {
+      // eslint-disable-next-line max-len
+      this.updatesConfig_ = this.moduleResolver.getModuleResolves().botSubscribeMode as GetUpdatesMode;
       this.subscribeGetUpdates();
-      this.logger.info(`successfully subscribed for bot: ${this.botName}. Mode: ${this.botSubscribeMode.type}. Update time (sec): ${this.botSubscribeMode.timeoutAsSec}`);
+      this.logger.info(`successfully subscribed for bot: ${this.botName}. Mode: ${this.botSubscribeMode.type}.`);
     } else {
       this.subscribeToWebHook();
     }
   }
 
   stop(): void {
-    if (this.timer) {
-      clearInterval(this.timer);
+    if (this.updatesData?.timer) {
+      clearInterval(this.updatesData.timer);
     } else {
       this.unSubscribeFromWebhook();
     }
@@ -97,28 +121,54 @@ export abstract class BotModule extends Module {
     throw Error('not implemnented');
   }
 
-  protected subscribeGetUpdates(): void {
-    this.timer = setTimeout(
+  protected subscribeGetUpdates(lastUpdate?: Update): void {
+    const subscribe = (timeout: number): Timer => setTimeout(
       this.getAndProcessUpdates.bind(this),
-      (this.botSubscribeMode as GetUpdatesMode).timeoutAsSec * 1000,
+      timeout,
     );
+
+    const isFirstSubsribe = !this.updatesData_;
+    if (isFirstSubsribe) {
+      this.updatesData_ = {
+        timer: subscribe(this.updatesConfig.activeModeTimout),
+        mode: 'activeMode',
+        atLastUpdate: Date.now(),
+      };
+      return;
+    }
+    if (lastUpdate) {
+      this.updatesData.newUpdateId = lastUpdate.update_id + 1;
+      this.updatesData.atLastUpdate = Date.now();
+    }
+    if (this.updatesData.mode === 'activeMode' && !lastUpdate) {
+      const timeShift = Date.now() - this.updatesData.atLastUpdate;
+      const needToPassive = timeShift > this.updatesConfig.timeoutToPassive;
+      if (needToPassive) {
+        this.updatesData.mode = 'passiveMode';
+      }
+    } else if (this.updatesData.mode === 'passiveMode' && lastUpdate) {
+      this.updatesData.mode = 'activeMode';
+    }
+    const timeout = this.updatesData.mode === 'activeMode'
+      ? this.updatesConfig.activeModeTimout
+      : this.updatesConfig.passiveModeTimeout;
+    this.updatesData.timer = subscribe(timeout);
   }
 
   protected async getAndProcessUpdates(): Promise<void> {
     const updates = await this.getUpdates();
     if (updates.length > 0) {
       const updatesByUsers = this.getUpdatesByUsers(updates);
-      this.processUpdates(updatesByUsers);
+      await this.processUpdates(updatesByUsers);
       const lastUpdate = updates[updates.length - 1];
-      this.newUpdateId = lastUpdate.update_id + 1;
-    }
-    this.subscribeGetUpdates();
+      this.subscribeGetUpdates(lastUpdate);
+    } else this.subscribeGetUpdates();
   }
 
   protected async getUpdates(): Promise<Update[]> {
     const body: ApiMethodsParams<'getUpdates'> = {
       method: 'getUpdates',
-      offset: this.newUpdateId || undefined,
+      offset: this.updatesData.newUpdateId,
       allowed_updates: ['message', 'callback_query'],
     };
     try {
