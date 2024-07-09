@@ -28,7 +28,7 @@ export function getJwtConfig(config?: Partial<JwtConfig>): JwtConfig {
   };
 }
 
-export function getServerConfig(config?: ServerConfig): Required<ServerConfig> {
+export function getServerConfig(config?: Partial<ServerConfig>): ServerConfig {
   const port = isNaN(Number(process.env.PORT)) ? undefined : Number(process.env.PORT);
   return {
     port: port ?? config?.port ?? defaultServerConfig.port,

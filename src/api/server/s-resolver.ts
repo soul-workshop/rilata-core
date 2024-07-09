@@ -36,8 +36,8 @@ export class ServerResolver<RES extends ServerResolves<DTO>> {
     return this.resolves;
   }
 
-  getServerConfig(): Required<ServerConfig> {
-    return defaultServerConfig;
+  getServerConfig(): ServerConfig {
+    return this.resolves.serverConfig;
   }
 
   getJwtDecoder(): RES['jwtDecoder'] {

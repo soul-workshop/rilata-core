@@ -28,9 +28,9 @@ export type GetServerResolves<SR extends GeneralServerResolver> =
   SR extends ServerResolver<infer T> ? T : never
 
 export type ServerConfig = {
-  hostname?: string, // default localhost
-  port?: number, // default 3000
-  loggerModes?: Array<keyof typeof loggerModes> | 'all' | 'off' // default 'all'
+  hostname: string,
+  port: number,
+  loggerModes: Array<keyof typeof loggerModes> | 'all' | 'off'
 }
 
 export type JwtConfig = {
