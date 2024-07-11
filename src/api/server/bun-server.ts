@@ -56,9 +56,9 @@ export abstract class BunServer extends RilataServer {
   }
 
   run(): void {
-    const { port, hostname } = this.resolver.getServerConfig();
-    this.port = port;
-    this.hostname = hostname;
+    const { localPort, localHost } = this.resolver.getServerConfig();
+    this.port = localPort;
+    this.hostname = localHost;
     this.fetch = this.fetch.bind(this);
     this.server = Bun.serve(this as unknown as Serve<unknown>);
     this.logger.info(`Http server runned by address: ${this.hostname}:${this.port}`);

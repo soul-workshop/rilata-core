@@ -2,7 +2,7 @@ import { getEnvLogMode } from '#core/logger/logger-modes.js';
 import { OneServerBus } from '../../../src/api-infra/bus/one-server-bus.js';
 import { JwtCreatorImpl } from '../../../src/api-infra/jwt/jwt-creator.js';
 import { JwtVerifierImpl } from '../../../src/api-infra/jwt/jwt-verifier.js';
-import { defaultJwtConfig, getServerConfig } from '../../../src/api/server/configs.js';
+import { defaultJwtConfig, getPublicHost, getPublicPort, getServerConfig } from '#api/server/configs.js';
 import { BusServerResolves } from '../../../src/api/server/s-resolves.js';
 import { ServerStarter } from '../../../src/api/server/server-starter.js';
 import { ModuleConstructors } from '../../../src/api/server/types.js';
@@ -37,6 +37,8 @@ class BusRunServerStarter extends ServerStarter<AllServerModules> {
       jwtVerifier: new JwtVerifierImpl(jwtSecret, defaultJwtConfig),
       jwtCreator: new JwtCreatorImpl(jwtSecret, defaultJwtConfig),
       serverConfig: getServerConfig(),
+      publicHost: getPublicHost('localhost'),
+      publicPort: getPublicPort(3000),
       bus: new OneServerBus(),
     };
     super(ServerCtor, ServerResolverCtor, { ...defaultResolves, ...resolves }, ModuleCtors);

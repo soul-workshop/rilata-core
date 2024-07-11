@@ -3,7 +3,6 @@ import { DTO } from '../../domain/dto.js';
 import { RilataServer } from './server.js';
 import { ServerResolves } from './s-resolves.js';
 import { ServerConfig } from './types.js';
-import { defaultServerConfig } from './configs.js';
 
 export class ServerResolver<RES extends ServerResolves<DTO>> {
   protected server!: RilataServer;
@@ -38,6 +37,14 @@ export class ServerResolver<RES extends ServerResolves<DTO>> {
 
   getServerConfig(): ServerConfig {
     return this.resolves.serverConfig;
+  }
+
+  getPublicHost(): string {
+    return this.resolves.publicHost;
+  }
+
+  getPublicPort(): number {
+    return this.resolves.publicPort;
   }
 
   getJwtDecoder(): RES['jwtDecoder'] {

@@ -2,8 +2,8 @@ import { getEnvLogMode } from '#core/logger/logger-modes.js';
 import { JwtConfig, RunMode, ServerConfig } from './types.js';
 
 export const defaultServerConfig: Required<ServerConfig> = {
-  hostname: 'localhost',
-  port: 3000,
+  localHost: 'localhost',
+  localPort: 3000,
   loggerModes: 'all',
 };
 
@@ -13,11 +13,23 @@ export const defaultJwtConfig: JwtConfig = {
   jwtRefreshLifetimeAsHour: 24 * 3,
 };
 
-export function getJwtSecretKey(): string {
-  function throwErr(): never {
-    throw Error('not found jwt secret key in env.JWT_SECRET');
-  }
-  return process.env.JWT_SECRET ?? throwErr();
+export const defaultPublicPort = 80;
+
+function throwErr(errStr: string): never {
+  throw Error(errStr);
+}
+
+export function getJwtSecretKey(key?: string): string {
+  return process.env.JWT_SECRET ?? key ?? throwErr('not found jwt secret key in env.JWT_SECRET');
+}
+
+export function getPublicHost(host?: string): string {
+  return process.env.PUBLIC_HOST ?? host ?? throwErr('not found public host name in env.PUBPLIC_HOST');
+}
+
+export function getPublicPort(port?: number): number {
+  const publicHost = Number(process.env.PUBLIC_PORT);
+  return isNaN(publicHost) ? publicHost : (port ?? 80);
 }
 
 export function getJwtConfig(config?: Partial<JwtConfig>): JwtConfig {
@@ -29,10 +41,11 @@ export function getJwtConfig(config?: Partial<JwtConfig>): JwtConfig {
 }
 
 export function getServerConfig(config?: Partial<ServerConfig>): ServerConfig {
-  const port = isNaN(Number(process.env.PORT)) ? undefined : Number(process.env.PORT);
+  let envPort: number | undefined = Number(process.env.LOCAL_PORT);
+  envPort = isNaN(envPort) ? undefined : envPort;
   return {
-    port: port ?? config?.port ?? defaultServerConfig.port,
-    hostname: process.env.HOST ?? config?.hostname ?? defaultServerConfig.hostname,
+    localPort: envPort ?? config?.localPort ?? defaultServerConfig.localPort,
+    localHost: process.env.LOCAL_HOST ?? config?.localHost ?? defaultServerConfig.localHost,
     loggerModes: getEnvLogMode() ?? config?.loggerModes ?? defaultServerConfig.loggerModes,
   };
 }

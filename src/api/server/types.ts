@@ -28,8 +28,8 @@ export type GetServerResolves<SR extends GeneralServerResolver> =
   SR extends ServerResolver<infer T> ? T : never
 
 export type ServerConfig = {
-  hostname: string,
-  port: number,
+  localHost: string,
+  localPort: number,
   loggerModes: Array<keyof typeof loggerModes> | 'all' | 'off'
 }
 

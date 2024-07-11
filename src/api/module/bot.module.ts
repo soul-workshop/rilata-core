@@ -92,10 +92,13 @@ export abstract class BotModule extends Module {
 
   protected subscribeToUpdates(): void {
     if (this.botSubscribeMode.type === 'getUpdates') {
-      // eslint-disable-next-line max-len
-      this.updatesConfig_ = this.moduleResolver.getModuleResolves().botSubscribeMode as GetUpdatesMode;
-      this.subscribeGetUpdates();
-      this.logger.info(`successfully subscribed for bot: ${this.botName}. Mode: ${this.botSubscribeMode.type}.`);
+      const resolves = this.moduleResolver.getModuleResolves();
+      this.unSubscribeFromWebhook().then(() => {
+        this.moduleResolver.getLogger().info('successfully webhook unsubscribed for bot');
+        this.updatesConfig_ = resolves.botSubscribeMode as GetUpdatesMode;
+        this.subscribeGetUpdates();
+        this.logger.info(`successfully subscribed for bot: ${this.botName}. Mode: ${this.botSubscribeMode.type}.`);
+      });
     } else {
       this.subscribeToWebHook();
     }
@@ -110,15 +113,29 @@ export abstract class BotModule extends Module {
   }
 
   protected async subscribeToWebHook(): Promise<void> {
-    const data: ApiMethodsParams<'setWebhook'> = {
+    const resolves = this.moduleResolver.getServerResolver().getServerResolves();
+    const { publicPort, publicHost, logger } = resolves;
+    const port = publicPort === 80 ? '' : `:${publicPort}`;
+    const host = `${publicHost}${port}`;
+    const { botName } = this.moduleResolver.getModuleResolves();
+    const params: ApiMethodsParams<'setWebhook'> = {
       method: 'setWebhook',
-      url: 'смотри в избранных в телеге, чтобы настроить через ngrok',
+      url: `https://${host}/${botName}`,
     };
-    throw Error('not implemnented');
+
+    const controller = this.getModuleController();
+    const response = await controller.postRequest(params);
+    if (!response.ok) {
+      throw logger.error('Failed to subscribe to telegram webhook');
+    }
   }
 
   protected async unSubscribeFromWebhook(): Promise<void> {
-    throw Error('not implemnented');
+    const controller = this.getModuleController();
+    const response = await controller.postRequest({ method: 'deleteWebhook' });
+    if (!response.ok) {
+      throw new Error('Failed to unsubscribe from webhook');
+    }
   }
 
   protected subscribeGetUpdates(lastUpdate?: Update): void {
@@ -130,7 +147,7 @@ export abstract class BotModule extends Module {
     const isFirstSubsribe = !this.updatesData_;
     if (isFirstSubsribe) {
       this.updatesData_ = {
-        timer: subscribe(this.updatesConfig.activeModeTimout),
+        timer: subscribe(0),
         mode: 'activeMode',
         atLastUpdate: Date.now(),
       };

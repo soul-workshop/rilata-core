@@ -8,7 +8,7 @@ import { Constructor } from '#core/types.js';
 import { DTO } from '#domain/dto.js';
 import { Service } from '#api/service/service.js';
 import { GeneralModuleResolver } from '#api/module/types.js';
-import { BotModuleController } from '#api/http.index.js';
+import { BotModuleController } from '#api/controller/bot.m-controller.js';
 
 export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
   protected abstract stateCtors: Constructor<BotState>[];

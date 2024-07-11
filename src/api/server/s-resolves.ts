@@ -13,6 +13,8 @@ export type ServerResolves<JWT_P extends DTO> = {
   jwtVerifier: JwtVerifier<JWT_P>,
   jwtCreator: JwtCreator<JWT_P>,
   serverConfig: ServerConfig,
+  publicHost: string,
+  publicPort: number,
 }
 
 export type BusServerResolves<JWT_P extends DTO> = ServerResolves<JWT_P> & {

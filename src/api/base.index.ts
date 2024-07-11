@@ -20,7 +20,7 @@ export * from './module/module.js';
 export * from './module/web.module.js';
 export * from './module/bot.module.js';
 export type {
-  GeneralBotModuleResolves, GeneralBotModuleResolver,
+  GeneralBotModuleResolves, GeneralBotModuleResolver, GetUpdatesMode, WebhookMode, BotSubscribeMode,
 } from './module/bot-types.js';
 export type {
   GetModule, ModuleType, GetModuleResolves, GeneralModuleResolver,
