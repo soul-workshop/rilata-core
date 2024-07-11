@@ -116,14 +116,19 @@ export abstract class BotModule extends Module {
     const resolves = this.moduleResolver.getServerResolver().getServerResolves();
     const { publicPort, publicHost, logger } = resolves;
     const port = publicPort === 80 ? '' : `:${publicPort}`;
+    const telegramPorts = [88, 443, 8443];
+    if (port !== '' && telegramPorts.includes(Number(port))) {
+      throw this.moduleResolver.getLogger().error(
+        `telegram webhooks supported only ${telegramPorts} ports`,
+      );
+    }
     const host = `${publicHost}${port}`;
-    const { botName } = this.moduleResolver.getModuleResolves();
+    const controller = this.getModuleController();
     const params: ApiMethodsParams<'setWebhook'> = {
       method: 'setWebhook',
-      url: `https://${host}/${botName}`,
+      url: `https://${host}${controller.getUrls()[0]}`,
     };
 
-    const controller = this.getModuleController();
     const response = await controller.postRequest(params);
     if (!response.ok) {
       throw logger.error('Failed to subscribe to telegram webhook');

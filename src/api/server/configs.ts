@@ -28,8 +28,8 @@ export function getPublicHost(host?: string): string {
 }
 
 export function getPublicPort(port?: number): number {
-  const publicHost = Number(process.env.PUBLIC_PORT);
-  return isNaN(publicHost) ? publicHost : (port ?? 80);
+  const publicPort = Number(process.env.PUBLIC_PORT);
+  return isNaN(publicPort) ? (port ?? 80) : publicPort;
 }
 
 export function getJwtConfig(config?: Partial<JwtConfig>): JwtConfig {
