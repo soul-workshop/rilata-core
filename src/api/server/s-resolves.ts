@@ -15,6 +15,7 @@ export type ServerResolves<JWT_P extends DTO> = {
   serverConfig: ServerConfig,
   publicHost: string,
   publicPort: number,
+  httpsPorts: number[],
 }
 
 export type BusServerResolves<JWT_P extends DTO> = ServerResolves<JWT_P> & {

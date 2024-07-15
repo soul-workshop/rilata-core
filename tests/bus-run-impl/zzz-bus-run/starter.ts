@@ -39,6 +39,7 @@ class BusRunServerStarter extends ServerStarter<AllServerModules> {
       serverConfig: getServerConfig(),
       publicHost: getPublicHost('localhost'),
       publicPort: getPublicPort(3000),
+      httpsPorts: [443, 8443],
       bus: new OneServerBus(),
     };
     super(ServerCtor, ServerResolverCtor, { ...defaultResolves, ...resolves }, ModuleCtors);

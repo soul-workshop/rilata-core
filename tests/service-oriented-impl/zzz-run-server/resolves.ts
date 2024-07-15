@@ -18,4 +18,5 @@ export const serverResolves: ServerResolves<UserJwtPayload> = {
   jwtVerifier: new JwtVerifierImpl(jwtSecretKey, defaultJwtConfig),
   jwtCreator: new JwtCreatorImpl(jwtSecretKey, defaultJwtConfig),
   serverConfig: getServerConfig(),
+  httpsPorts: [443, 8443],
 };

@@ -47,6 +47,23 @@ export class ServerResolver<RES extends ServerResolves<DTO>> {
     return this.resolves.publicPort;
   }
 
+  getPublicHttpUrl(): string {
+    const port = this.getPublicPort() === 80 ? '' : this.getPublicPort();
+    return `http://${this.getPublicHost()}${port}`;
+  }
+
+  getPublicHttspUrl(): string {
+    const port = this.getPublicPort() === 443 ? '' : this.getPublicPort();
+    return `https://${this.getPublicHost()}${port}`;
+  }
+
+  getPublicUrl(): string {
+    const { httpsPorts } = this.resolves;
+    return httpsPorts.includes(this.getPublicPort())
+      ? this.getPublicHttspUrl()
+      : this.getPublicHttpUrl();
+  }
+
   getJwtDecoder(): RES['jwtDecoder'] {
     return this.resolves.jwtDecoder;
   }
