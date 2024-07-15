@@ -48,12 +48,12 @@ export class ServerResolver<RES extends ServerResolves<DTO>> {
   }
 
   getPublicHttpUrl(): string {
-    const port = this.getPublicPort() === 80 ? '' : this.getPublicPort();
+    const port = this.getPublicPort() === 80 ? '' : `:${this.getPublicPort()}`;
     return `http://${this.getPublicHost()}${port}`;
   }
 
   getPublicHttspUrl(): string {
-    const port = this.getPublicPort() === 443 ? '' : this.getPublicPort();
+    const port = this.getPublicPort() === 443 ? '' : `:${this.getPublicPort()}`;
     return `https://${this.getPublicHost()}${port}`;
   }
 

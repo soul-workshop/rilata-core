@@ -117,7 +117,7 @@ export abstract class BotModule extends Module {
     const controller = this.getModuleController();
     const params: ApiMethodsParams<'setWebhook'> = {
       method: 'setWebhook',
-      url: `https://${host}${controller.getUrls()[0]}`,
+      url: `${host}${controller.getUrls()[0]}`,
     };
 
     const response = await controller.postRequest(params);
