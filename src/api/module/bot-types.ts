@@ -11,6 +11,7 @@ export type GeneralBotModuleResolver = BotModuleResolver<
 
 export type GetUpdatesMode = {
   type: 'getUpdates',
+  unsubscribeWebhook: boolean,
   timeoutToPassive: number, // время между запросами getUpdates для режима passive
   activeModeTimout: number, // время между запросами getUpdates для режима active
   passiveModeTimeout: number, // время неактивности для перехода в passive

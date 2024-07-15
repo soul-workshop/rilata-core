@@ -136,6 +136,9 @@ export abstract class BotModule extends Module {
   }
 
   protected async unSubscribeFromWebhook(): Promise<void> {
+    const subscribeMode = this.moduleResolver.getModuleResolves().botSubscribeMode;
+    if (subscribeMode.type === 'getUpdates' && !subscribeMode.unsubscribeWebhook) return;
+
     const controller = this.getModuleController();
     const response = await controller.postRequest({ method: 'deleteWebhook' });
     if (!response.ok) {
