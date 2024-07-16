@@ -40,10 +40,11 @@ export abstract class BotModule extends Module {
     moduleResolver: ModuleResolver<GeneralServerResolver, GeneralBotModuleResolves>,
     serverResolver: GeneralServerResolver,
   ): void {
-    const { botToken } = this.moduleResolver.getModuleResolves();
+    const { botToken } = moduleResolver.getModuleResolves();
     this.moduleController = new BotModuleController(botToken);
     super.init(moduleResolver, serverResolver);
     this.subscribeToUpdates();
+    this.service.init(moduleResolver);
   }
 
   getSubscribeMode(): BotSubscribeMode {
@@ -79,6 +80,10 @@ export abstract class BotModule extends Module {
 
   getServices(): BotDialogueService[] {
     return [this.service];
+  }
+
+  getService(): BotDialogueService {
+    return this.service;
   }
 
   protected subscribeToUpdates(): void {
