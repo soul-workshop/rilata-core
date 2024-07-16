@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { Update } from '@grammyjs/types';
 import { BotState } from './state.js';
-import { ApiMethodNames, ApiMethodsParams, BotReplyMessage, DialogueContext, SendMessage } from './types.js';
+import { ApiMethodNames, ApiMethodsParams, BotReplyMessage, DialogueContext, GeneralBotMiddleware, SendMessage } from './types.js';
 import { BotDialogueRepository } from './dialogue-repo.js';
 import { updateUtils } from './utils/update.ts';
 import { Constructor } from '#core/types.js';
@@ -13,7 +13,11 @@ import { BotModuleController } from '#api/controller/bot.m-controller.js';
 export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
   protected abstract stateCtors: Constructor<BotState>[];
 
+  protected abstract middlewareCtors: Constructor<GeneralBotMiddleware>[];
+
   protected states!: BotState[];
+
+  protected middlewares!: GeneralBotMiddleware[];
 
   protected _moduleResolver!: GeneralModuleResolver;
 
@@ -25,38 +29,33 @@ export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
     this._moduleResolver = resolver;
     this.states = this.stateCtors.map((Ctor) => new Ctor());
     this.states.forEach((state) => state.init(this._moduleResolver, this));
+    this.middlewares = this.middlewareCtors.map((Ctor) => new Ctor());
+    this.middlewares.forEach((m) => m.init(this._moduleResolver, this));
   }
 
   async execute(update: Update): Promise<BotReplyMessage> {
     try {
-      const telegramId = updateUtils.getChatId(update);
-      const dialogue = this.getContext(telegramId);
-      const state = dialogue
-        ? this.getState(dialogue.stateName)
-        : this.getState('botStart');
+      // eslint-disable-next-line no-restricted-syntax
+      for (const middleware of this.middlewares) {
+        // eslint-disable-next-line no-await-in-loop
+        const result = await middleware.process(update);
+        if (result) return result;
+      }
 
-      return state.execute(update);
+      const telegramId = updateUtils.getChatId(update);
+      const context = this.findContext(telegramId);
+      const stateName = context ? context.stateName : 'botStart';
+
+      return this.getState(stateName).execute(update);
     } catch (e) {
-      const chatId = updateUtils.getChatId(update);
-      const context = this.getContext(chatId);
-      this.moduleResolver.getLogger().error(
-        `Произошла ошибка. Err: ${(e as Error).message}`,
-        { update, context },
-        e as Error,
-      );
-      const msg: SendMessage = {
-        method: 'sendMessage',
-        chat_id: chatId,
-        text: 'К сожалению произошла непредвиденная ошибка. Попробуйте еще раз. Если ошибка будет повторяться, то рекомендуем завершить текущий диалог (возможно через команду /cancel) и начать диалог заново.',
-      };
-      return msg;
+      return this.processCatch(update, e as Error);
     }
   }
 
-  async sendByBot(promise: Promise<ApiMethodsParams<ApiMethodNames>>): Promise<void> {
+  async sendByBot(promise: Promise<ApiMethodsParams<ApiMethodNames>>): Promise<Response> {
     const params = await promise;
     const controller = this.moduleResolver.getModule().getModuleController() as BotModuleController;
-    controller.postRequest(params);
+    return controller.postRequest(params);
   }
 
   getState<S extends BotState>(stateName: S['stateName']): S {
@@ -67,10 +66,24 @@ export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
     return state as S;
   }
 
-  protected getContext(telegramId: string): DialogueContext<DTO, string> | undefined {
+  findContext<C extends DialogueContext<DTO, string>>(telegramId: string): C | undefined {
     const dialogueRepo = BotDialogueRepository.instance<
       false, DialogueContext<DTO, string>
     >(this.moduleResolver);
-    return dialogueRepo.findActive(telegramId);
+    return dialogueRepo.findActive(telegramId) as C;
+  }
+
+  protected processCatch(update: Update, err: Error): BotReplyMessage {
+    const chatId = updateUtils.getChatId(update);
+    const context = this.findContext(chatId);
+    this.moduleResolver.getLogger().error(
+      err.message, { update, context }, err,
+    );
+    const msg: SendMessage = {
+      method: 'sendMessage',
+      chat_id: chatId,
+      text: 'К сожалению произошла непредвиденная ошибка. Попробуйте еще раз. Если ошибка будет повторяться, то рекомендуем завершить текущий диалог через команду /cancel и начать тест заново.',
+    };
+    return msg;
   }
 }
