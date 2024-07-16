@@ -1,9 +1,9 @@
-import { Module } from '../../../src/app/module/module';
-import { ModuleType } from '../../../src/app/module/types';
-import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/app/service/types';
-import { GetingFullCompanyService } from './services/get-full-company/service';
+import { WebModule } from '#api/module/web.module.js';
+import { ModuleType } from '../../../src/api/module/types.js';
+import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/api/service/types.js';
+import { GetingFullCompanyService } from './services/get-full-company/service.js';
 
-export class FrontProxyModule extends Module {
+export class FrontProxyModule extends WebModule {
   moduleType: ModuleType = 'read-module' as const;
 
   moduleName = 'FrontProxyModule' as const;

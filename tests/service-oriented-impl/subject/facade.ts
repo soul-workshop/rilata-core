@@ -1,16 +1,19 @@
-import { Caller, DomainUser } from '../../../src/app/controller/types';
-import { GeneralModuleResolver } from '../../../src/app/module/types';
-import { Facadable } from '../../../src/app/resolve/facadable';
-import { ServiceResult } from '../../../src/app/service/types';
-import { AddPersonRequestDodAttrs, AddPersonServiceParams } from './services/person/add-person/s-params';
-import { GetPersonByIinServiceParams } from './services/person/get-by-iin/s-params';
+import { Caller, DomainUser } from '../../../src/api/controller/types.js';
+import { GeneralModuleResolver } from '../../../src/api/module/types.js';
+import { Facadable } from '../../../src/api/resolve/facadable.js';
+import { FullServiceResult } from '../../../src/api/service/types.js';
+import { AddPersonRequestDodAttrs } from './services/person/add-person/s-params.js';
+import { AddingPersonService } from './services/person/add-person/service.js';
+import { GetingPersonByIinService } from './services/person/get-by-iin/service.js';
 
 export interface SubjectFacade {
   init(resolver: GeneralModuleResolver): void
-  getPersonByIin(iin: string, caller: Caller): Promise<ServiceResult<GetPersonByIinServiceParams>>
+  getPersonByIin(
+    iin: string, caller: Caller
+  ): Promise<FullServiceResult<GetingPersonByIinService>>
   addPerson(
     input: AddPersonRequestDodAttrs, caller: DomainUser
-  ): Promise<ServiceResult<AddPersonServiceParams>>
+  ): Promise<FullServiceResult<AddingPersonService>>
 }
 
 export const SubjectFacade = {

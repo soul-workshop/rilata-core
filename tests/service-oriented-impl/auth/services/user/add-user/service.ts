@@ -1,11 +1,11 @@
-import { CommandService } from '../../../../../../src/app/service/concrete-service/command.service';
-import { UowTransactionStrategy } from '../../../../../../src/app/service/transaction-strategy/uow.strategy';
-import { ServiceResult } from '../../../../../../src/app/service/types';
-import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
-import { UserRepository, UserRepositoryRecord } from '../../../domain-object/user/repo';
-import { AuthModuleResolver } from '../../../resolver';
-import { AddUserRequestDod, AddUserServiceParams } from './s-params';
-import { addUserValidator } from './v-map';
+import { CommandService } from '../../../../../../src/api/service/concrete-service/command.service.js';
+import { UowTransactionStrategy } from '../../../../../../src/api/service/transaction-strategy/uow.strategy.js';
+import { ServiceResult } from '../../../../../../src/api/service/types.js';
+import { uuidUtility } from '../../../../../../src/core/utils/uuid/uuid-utility.js';
+import { UserRepository, UserRepositoryRecord } from '../../../domain-object/user/repo.js';
+import { AuthModuleResolver } from '../../../resolver.js';
+import { AddUserRequestDod, AddUserServiceParams } from './s-params.js';
+import { addUserValidator } from './v-map.js';
 
 export class AddingUserService extends CommandService<
   AddUserServiceParams, AuthModuleResolver
@@ -14,7 +14,7 @@ export class AddingUserService extends CommandService<
 
   serviceName = 'AddingUserService' as const;
 
-  inputDodName = 'addUser' as const;
+  handleName = 'addUser' as const;
 
   aRootName = 'UserAR' as const;
 

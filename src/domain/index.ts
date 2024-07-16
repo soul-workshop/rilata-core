@@ -1,10 +1,17 @@
-export * from './dto';
-export * from './locale';
-export * from './domain-data/domain-types';
-export * from './domain-object/types';
-export * from './domain-object/domain-object';
-export * from './domain-object/aggregate-root';
-export * from './domain-object/aggregate-helper';
-export * from './domain-object/aggregate-factory';
-export * from './domain-object/role/role';
-export * from './domain-object/role/group-role';
+export type { DTO } from './dto.js';
+export type { Locale, LocaleHint } from './locale.js';
+export type {
+  ARDT, DodType, ErrorDod, EventDod, ErrorType,
+  DomainMeta, RequestDod, SimpleARDT, DomainAttrs,
+  GeneralARDT, GeneralArParams, GeneralErrorDod, GeneralEventDod,
+  GeneralRequestDod, AggregateRootParams,
+} from './domain-data/domain-types.js';
+export type {
+  GeneralAR, GetARParams, RoleAttrs, GroupRoleAttrs,
+} from './domain-object/types.js';
+export * from './domain-object/domain-object.js';
+export * from './domain-object/aggregate-root.js';
+export * from './domain-object/aggregate-helper.js';
+export * from './domain-object/aggregate-factory.js';
+export * from './domain-object/role/role.js';
+export * from './domain-object/role/group-role.js';

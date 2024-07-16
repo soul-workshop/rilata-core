@@ -1,9 +1,9 @@
 /* eslint-disable no-use-before-define */
-import { Caller } from '../../app/controller/types';
-import { ExcludeDeepDotNotationAttrs, GetDtoKeysByDotNotation } from '../../common/type-functions';
-import { UuidType } from '../../common/types';
-import { DTO } from '../dto';
-import { Locale } from '../locale';
+import { Caller } from '../../api/controller/types.js';
+import { ExcludeDeepDotNotationAttrs, GetDtoKeysByDotNotation } from '../../core/type-functions.js';
+import { UuidType } from '../../core/types.js';
+import { DTO } from '../dto.js';
+import { Locale } from '../locale.js';
 
 // ++++++++++ Domain Object Data - DOD ++++++++++
 
@@ -69,6 +69,15 @@ export type GeneralErrorDod = ErrorDod<string, Locale, ErrorType>;
 export type SimpleARDT = {
   attrs: DTO,
   meta: DomainMeta<string, string>,
+}
+
+export type InputDod = {
+  meta: {
+    name: string,
+    domainType: 'event' | 'request',
+    requestId: UuidType,
+  },
+  attrs: DTO,
 }
 
 export type EventDod<

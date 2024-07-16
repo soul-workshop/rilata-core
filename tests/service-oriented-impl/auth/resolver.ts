@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { EventRepository } from '../../../src/app/database/event.repository';
-import { ModuleResolver } from '../../../src/app/module/m-resolver';
-import { GeneralServerResolver } from '../../../src/app/server/types';
-import { UserRepository } from './domain-object/user/repo';
-import { AuthResolves } from './resolves';
+import { EventRepository } from '../../../src/api/database/event.repository.js';
+import { ModuleResolver } from '../../../src/api/module/m-resolver.js';
+import { GeneralServerResolver } from '../../../src/api/server/types.js';
+import { UserRepository } from './domain-object/user/repo.js';
+import { AuthResolves } from './resolves.js';
 
 export class AuthModuleResolver extends ModuleResolver<
   GeneralServerResolver, AuthResolves

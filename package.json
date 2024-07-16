@@ -1,37 +1,49 @@
 {
   "name": "rilata",
-  "version": "0.0.10",
-  "description": "",
-  "author": "GIS Expert",
-  "license": "ISC",
+  "version": "0.3.6",
+  "description": "Для тех кто хочет разрабатывать сложные приложения 'правильно'.",
+  "author": "NurGeo",
+  "license": "MIT",
   "private": false,
-  "repository": "https://github.com/craftyard/rilata-core.git",
+  "repository": "https://github.com/nurgeo/rilata.git",
+  "type": "module",
   "scripts": {
-    "tslint": "bun tsc",
-    "lint": "bun eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    "tslint": "bun tsc --noEmit -p ./tsconfig.json",
+    "lint": "bun eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "all:tests": "LOG_MODE=off bun test"
   },
   "dependencies": {
-    "email-validator": "^2.0.4"
+    "email-validator": "^2.0.4",
+    "uuidv7": "LiosK/uuidv7"
   },
   "exports": {
-    "./utils": "./src/common/utils/index.ts",
-    "./common": "./src/common/index.ts",
+    "./utils": "./src/core/utils/index.ts",
+    "./api-utils": "./src/core/utils/api-index.ts",
+    "./core": "./src/core/index.ts",
     "./domain": "./src/domain/index.ts",
     "./validator": "./src/domain/validator/index.ts",
-    "./db": "./src/app/db.index.ts",
-    "./base": "./src/app/base.index.ts",
-    "./http": "./src/app/http.index.ts",
-    "./bus": "./src/app/bus.index.ts"
+    "./api-db": "./src/api/db.index.ts",
+    "./api-base": "./src/api/base.index.ts",
+    "./api-http": "./src/api/http.index.ts",
+    "./api-bus": "./src/api/bus.index.ts",
+    "./api-bot": "./src/api/bot/index.ts",
+    "./api-bun-db": "./src/api-infra/repo/bun-sqlite/index.ts",
+    "./api-bus-impl": "./src/api-infra/bus/index.ts",
+    "./ui-http": "./src/ui/index.ts",
+    "./api-fixtures": "./tests/fixtures/index.ts"
+  },
+  "imports": {
+    "#*": "./src/*"
   },
   "devDependencies": {
-    "bun-types": "^1.0.25",
+    "@types/bun": "latest",
+    "@grammyjs/types": "grammyjs/types",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "eslint": "^8.7.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^26.0.0",
-    "nurgeo-project-configs": "github:NurGeo/project-config",
-    "typescript": "~4.8.2"
+    "eslint-plugin-import": "^2.29.1",
+    "typescript": "^5.0.0"
   }
 }

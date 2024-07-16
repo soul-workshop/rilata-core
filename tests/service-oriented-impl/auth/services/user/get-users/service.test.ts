@@ -1,25 +1,25 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { TestDatabase } from '../../../../../../src/app/database/test.database';
-import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
-import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
-import { UserRepositoryImpl } from '../../../../zz-infra/repositories/auth-module/user';
-import { serverStarter } from '../../../../zzz-run-server/starter';
-import { AuthModule } from '../../../module';
-import { GetUsersRequestDod } from './s-params';
-import { GetingUsersService } from './service';
+import { TestDatabase } from '../../../../../../src/api/database/test.database.js';
+import { dodUtility } from '../../../../../../src/core/utils/dod/dod-utility.js';
+import { requestStoreMock } from '../../../../../fixtures/request-store-mock.js';
+import { UserRepositoryImpl } from '../../../../zz-infra/repositories/auth-module/user.js';
+import { serverStarter } from '../../../../zzz-run-server/starter.js';
+import { AuthModule } from '../../../module.js';
+import { GetUsersRequestDod } from './s-params.js';
+import { GetingUsersService } from './service.js';
 
 describe('get users service test', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start(['AuthModule']);
   const module = testSever.getModule<AuthModule>('AuthModule');
   const resolver = module.getModuleResolver();
-  setAndGetTestStoreDispatcher({
+  requestStoreMock({
     requestId,
     moduleResolver: resolver,
-  }).getStoreOrExepction();
-  const sut = module.getServiceByInputDodName<GetingUsersService>('getUsers');
+  });
+  const sut = module.getService<GetingUsersService>('getUsers');
 
   beforeEach(async () => {
     const db = resolver.getDatabase() as unknown as TestDatabase<true>;

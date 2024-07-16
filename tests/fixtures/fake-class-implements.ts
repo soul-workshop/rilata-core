@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { storeDispatcher } from '../../src/app/async-store/store-dispatcher';
-import { DelivererToBus } from '../../src/app/bus/deliverer-to-bus';
-import { DeliveryBusMessage, DeliveryEvent } from '../../src/app/bus/types';
-import { BusMessageRepository } from '../../src/app/database/bus-message.repository';
-import { EventRepository } from '../../src/app/database/event.repository';
-import { TestDatabase } from '../../src/app/database/test.database';
-import { TestRepository } from '../../src/app/database/test.repository';
-import { TestBatchRecords } from '../../src/app/database/types';
-import { GeneralModuleResolver } from '../../src/app/module/types';
-import { failure } from '../../src/common/result/failure';
-import { success } from '../../src/common/result/success';
-import { Result } from '../../src/common/result/types';
-import { UuidType } from '../../src/common/types';
-import { dtoUtility } from '../../src/common/utils/dto/dto-utility';
-import { uuidUtility } from '../../src/common/utils/uuid/uuid-utility';
-import { GeneralArParams, GeneralEventDod } from '../../src/domain/domain-data/domain-types';
-import { DTO } from '../../src/domain/dto';
+import { DelivererToBus } from '../../src/api/bus/deliverer-to-bus.js';
+import { DeliveryBusMessage, DeliveryEvent } from '../../src/api/bus/types.js';
+import { BusMessageRepository } from '../../src/api/database/bus-message.repository.js';
+import { EventRepository } from '../../src/api/database/event.repository.js';
+import { TestDatabase } from '../../src/api/database/test.database.js';
+import { TestRepository } from '../../src/api/database/test.repository.js';
+import { TestBatchRecords } from '../../src/api/database/types.js';
+import { GeneralModuleResolver } from '../../src/api/module/types.js';
+import { requestStoreDispatcher } from '../../src/api/request-store/request-store-dispatcher.js';
+import { failure } from '../../src/core/result/failure.js';
+import { success } from '../../src/core/result/success.js';
+import { Result } from '../../src/core/result/types.js';
+import { UuidType } from '../../src/core/types.js';
+import { dtoUtility } from '../../src/core/utils/dto/dto-utility.js';
+import { uuidUtility } from '../../src/core/utils/uuid/uuid-utility.js';
+import { GeneralArParams, GeneralEventDod } from '../../src/domain/domain-data/domain-types.js';
+import { DTO } from '../../src/domain/dto.js';
 
 export namespace FakeClassImplements {
   export class TestMemoryDatabase implements TestDatabase<true> {
@@ -237,8 +237,12 @@ export namespace FakeClassImplements {
     }
 
     protected getTransactionId(): TransactionId | undefined {
-      const store = storeDispatcher.getThreadStore()?.getStore();
-      return store?.unitOfWorkId;
+      try {
+        const payload = requestStoreDispatcher.getPayload();
+        return payload?.unitOfWorkId;
+      } catch (e) {
+        return undefined;
+      }
     }
 
     protected deleteTransaction(transactionId: TransactionId): void {

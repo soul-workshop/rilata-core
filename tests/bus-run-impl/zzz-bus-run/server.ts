@@ -1,12 +1,19 @@
-import { Controller } from '../../../src/app/controller/controller';
-import { Middleware } from '../../../src/app/middleware/middleware';
-import { InjectCallerMiddleware } from '../../../src/app/middleware/prepared/inject-caller';
-import { BusBunServer } from '../../../src/app/server/bus-server';
+import { Afterware } from '#api/middle-after-ware/afterware.js';
+import { GeneralServerResolver } from '#api/server/types.js';
+import { Controller } from '../../../src/api/controller/controller.js';
+import { LogResponseAfterware } from '../../../src/api/middle-after-ware/afterwares/log-request.js';
+import { Middleware } from '../../../src/api/middle-after-ware/middleware.js';
+import { InjectCallerMiddleware } from '../../../src/api/middle-after-ware/middlewares/inject-caller.js';
+import { BusBunServer } from '../../../src/api/server/bus-server.js';
 
 export class BusRunServer extends BusBunServer {
-  protected middlewares: Middleware[] = [
+  protected middlewares: Middleware<GeneralServerResolver>[] = [
     new InjectCallerMiddleware(),
   ];
 
-  protected controllers: Controller[] = [];
+  protected afterwares: Afterware<GeneralServerResolver>[] = [
+    new LogResponseAfterware(),
+  ];
+
+  protected serverControllers: Controller<GeneralServerResolver>[] = [];
 }

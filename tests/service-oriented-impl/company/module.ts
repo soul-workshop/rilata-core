@@ -1,10 +1,10 @@
-import { Module } from '../../../src/app/module/module';
-import { ModuleType } from '../../../src/app/module/types';
-import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/app/service/types';
-import { GetingCompanyService } from './services/get-company/service';
-import { RegisteringCompanyService } from './services/register-company/service';
+import { WebModule } from '#api/module/web.module.js';
+import { ModuleType } from '../../../src/api/module/types.js';
+import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/api/service/types.js';
+import { GetingCompanyService } from './services/get-company/service.js';
+import { RegisteringCompanyService } from './services/register-company/service.js';
 
-export class CompanyModule extends Module {
+export class CompanyModule extends WebModule {
   moduleName = 'CompanyModule' as const;
 
   moduleType: ModuleType = 'common-module' as const;

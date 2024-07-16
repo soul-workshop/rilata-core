@@ -1,11 +1,8 @@
-import { Logger } from '../../common/logger/logger';
-import { DTO } from '../dto';
-import { GeneralArParams } from '../index';
-import { AggregateRoot } from './aggregate-root';
+import { GeneralArParams } from '#domain/domain-data/domain-types.js';
+import { DTO } from '../dto.js';
+import { AggregateRoot } from './aggregate-root.js';
 
 export abstract class AggregateFactory<PARAMS extends GeneralArParams> {
-  constructor(protected logger: Logger) {}
-
   /** создать экземпляр агрегата по событию */
   abstract create(command: DTO, ...attrs: unknown[]): AggregateRoot<PARAMS>
 

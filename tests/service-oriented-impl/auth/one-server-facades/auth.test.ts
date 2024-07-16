@@ -1,9 +1,10 @@
 import { describe, expect, test } from 'bun:test';
-import { DomainUser } from '../../../../src/app/controller/types';
-import { uuidUtility } from '../../../../src/common/utils/uuid/uuid-utility';
-import { CompanyModule } from '../../company/module';
-import { serverStarter } from '../../zzz-run-server/starter';
-import { AuthFacade } from '../facade';
+import { DomainUser } from '../../../../src/api/controller/types.js';
+import { uuidUtility } from '../../../../src/core/utils/uuid/uuid-utility.js';
+import { CompanyModule } from '../../company/module.js';
+import { serverStarter } from '../../zzz-run-server/starter.js';
+import { AuthFacade } from '../facade.js';
+import { AddUserOut } from '../services/user/add-user/s-params.js';
 
 describe('auth facade tests', async () => {
   const server = serverStarter.start(['CompanyModule', 'AuthModule']);
@@ -15,12 +16,13 @@ describe('auth facade tests', async () => {
     const sut = AuthFacade.instance(companyResolver);
     const result = await sut.addUser('135135135135', domainUser);
     expect(result.isSuccess()).toBe(true);
-    expect(uuidUtility.isValidValue(result.value.userId)).toBe(true);
+    const userValue = result.value as AddUserOut;
+    expect(uuidUtility.isValidValue(userValue.userId)).toBe(true);
 
-    const getUsersResult = await sut.getUsers([result.value.userId], domainUser);
+    const getUsersResult = await sut.getUsers([userValue.userId], domainUser);
     expect(getUsersResult.value).toEqual([
       {
-        userId: result.value.userId,
+        userId: userValue.userId,
         personIin: '135135135135',
       },
     ]);

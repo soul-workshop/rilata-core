@@ -1,27 +1,27 @@
 import {
   beforeEach, describe, expect, spyOn, test,
 } from 'bun:test';
-import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
-import { uuidUtility } from '../../../../../../src/common/utils/uuid/uuid-utility';
-import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
-import { serverStarter } from '../../../../zzz-run-server/starter';
-import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures';
-import { UserRepository } from '../../../domain-object/user/repo';
-import { AuthModule } from '../../../module';
-import { AddUserRequestDod, AddUserOut } from './s-params';
-import { AddingUserService } from './service';
-import { TestDatabase } from '../../../../../../src/app/database/test.database';
-import { EventRepository } from '../../../../../../src/app/database/event.repository';
+import { dodUtility } from '../../../../../../src/core/utils/dod/dod-utility.js';
+import { uuidUtility } from '../../../../../../src/core/utils/uuid/uuid-utility.js';
+import { serverStarter } from '../../../../zzz-run-server/starter.js';
+import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures.js';
+import { UserRepository } from '../../../domain-object/user/repo.js';
+import { AuthModule } from '../../../module.js';
+import { AddUserRequestDod, AddUserOut } from './s-params.js';
+import { AddingUserService } from './service.js';
+import { TestDatabase } from '../../../../../../src/api/database/test.database.js';
+import { EventRepository } from '../../../../../../src/api/database/event.repository.js';
+import { requestStoreMock } from '../../../../../fixtures/request-store-mock.js';
 
 describe('add user service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start(['AuthModule']);
   const module = testSever.getModule<AuthModule>('AuthModule');
   const resolver = module.getModuleResolver();
-  setAndGetTestStoreDispatcher({
+  requestStoreMock({
     requestId,
     moduleResolver: resolver,
-  }).getStoreOrExepction();
+  });
 
   beforeEach(async () => {
     const db = resolver.getDatabase() as unknown as TestDatabase<true>;
@@ -35,7 +35,7 @@ describe('add user service tests', async () => {
       { personIin: '111333555777' },
       requestId,
     );
-    const sut = module.getServiceByInputDodName<AddingUserService>('addUser');
+    const sut = module.getService<AddingUserService>('addUser');
     const result = await sut.execute(inputDod);
     expect(result.isSuccess()).toBe(true);
     const userAr = result.value as AddUserOut;
@@ -63,7 +63,7 @@ describe('add user service tests', async () => {
 
     const repoAddUserMock = spyOn(UserRepository.instance(resolver), 'addUser');
     randomUuidMock.mockClear();
-    const sut = module.getServiceByInputDodName<AddingUserService>('addUser');
+    const sut = module.getService<AddingUserService>('addUser');
     const result = await sut.execute(inputDod);
 
     expect(result.isSuccess()).toBe(true);

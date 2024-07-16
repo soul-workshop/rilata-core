@@ -1,9 +1,9 @@
-import { Repositoriable } from '../../../../../src/app/resolve/repositoriable';
-import { Result } from '../../../../../src/common/result/types';
-import { UuidType } from '../../../../../src/common/types';
-import { SubjectModuleResolver } from '../../resolver';
-import { PersonAR } from './a-root';
-import { PersonDoesntExistByIdError, PersonDoesntExistByIinError, PersonAlreadyExistsError } from './repo-errors';
+import { Repositoriable } from '../../../../../src/api/resolve/repositoriable.js';
+import { Result } from '../../../../../src/core/result/types.js';
+import { UuidType } from '../../../../../src/core/types.js';
+import { SubjectModuleResolver } from '../../resolver.js';
+import { PersonAR } from './a-root.js';
+import { PersonDoesntExistByIdError, PersonDoesntExistByIinError, PersonAlreadyExistsError } from './repo-errors.js';
 
 export interface PersonRepository {
   init(resolver: SubjectModuleResolver): void

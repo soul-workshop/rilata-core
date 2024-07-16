@@ -1,6 +1,6 @@
-import { UserId } from '../../common/types';
-import { GeneralArParams } from '../index';
-import { AggregateRoot } from './aggregate-root';
+import { GeneralArParams } from '#domain/domain-data/domain-types.js';
+import { UserId } from '../../core/types.js';
+import { AggregateRoot } from './aggregate-root.js';
 
 export type GeneralAR = AggregateRoot<GeneralArParams>;
 

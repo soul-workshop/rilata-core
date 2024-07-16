@@ -1,27 +1,28 @@
-import { describe, test, expect } from 'bun:test';
-import { BunServer } from '../../../../src/app/server/bun-server';
-import { AuthModule } from '../../auth/module';
-import { CompanyModule } from '../../company/module';
-import { GetCompanyRequestDod } from '../../company/services/get-company/s.params';
-import { SubjectModule } from '../../subject/module';
-import { GetPersonByIinRequestDod } from '../../subject/services/person/get-by-iin/s-params';
-import { serverStarter } from '../starter';
-import { ServiceModulesFixtures } from '../server-fixtures';
-import { TestDatabase } from '../../../../src/app/database/test.database';
-import { dodUtility } from '../../../../src/common/utils/index';
+import { describe, test, expect, spyOn } from 'bun:test';
+import { BunServer } from '../../../../src/api/server/bun-server.js';
+import { AuthModule } from '../../auth/module.js';
+import { CompanyModule } from '../../company/module.js';
+import { GetCompanyRequestDod } from '../../company/services/get-company/s.params.js';
+import { SubjectModule } from '../../subject/module.js';
+import { GetPersonByIinRequestDod } from '../../subject/services/person/get-by-iin/s-params.js';
+import { serverStarter } from '../starter.js';
+import { ServiceModulesFixtures } from '../server-fixtures.js';
+import { TestDatabase } from '../../../../src/api/database/test.database.js';
+import { dodUtility } from '#core/utils/dod/dod-utility.js';
 
 describe('process http requests by server class', async () => {
   const sut = serverStarter.start('all') as BunServer;
   const serverResolver = sut.getServerResolver();
 
-  [
+  const promises = [
     sut.getModule<SubjectModule>('SubjectModule'),
     sut.getModule<CompanyModule>('CompanyModule'),
     sut.getModule<AuthModule>('AuthModule'),
-  ].forEach((module) => {
+  ].map((module) => {
     const db = module.getModuleResolver().getDatabase() as unknown as TestDatabase<true>;
-    db.addBatch(ServiceModulesFixtures.repoFixtures);
+    return db.addBatch(ServiceModulesFixtures.repoFixtures);
   });
+  await Promise.all(promises);
 
   describe('module http request tests', () => {
     const authToken = serverResolver.getJwtCreator().createToken(
@@ -35,7 +36,7 @@ describe('process http requests by server class', async () => {
         { iin: '123123123123' },
       );
 
-      const req = new Request(new URL('http://0.0.0.0:3000/api/subject-module/'), {
+      const req = new Request(new URL('http://1.0.0.0:3000/api/subject-module/'), {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -168,6 +169,7 @@ describe('process http requests by server class', async () => {
         },
         body: JSON.stringify(inputDto),
       });
+
       const resp = await sut.fetch(req);
       expect(await resp.json()).toEqual({
         httpStatus: 400,
@@ -175,7 +177,7 @@ describe('process http requests by server class', async () => {
           locale: {
             hint: {},
             name: 'Bad request',
-            text: 'Полезная нагрузка запроса не является объектом requestDod',
+            text: 'Полезная нагрузка запроса не является объектом inputDod',
           },
           meta: {
             domainType: 'error',
@@ -195,7 +197,7 @@ describe('process http requests by server class', async () => {
       });
 
       const resp = await sut.fetch(req);
-      expect(await resp.text()).toBe('bun test implement service');
+      expect(await resp.text()).toBe('another server contoller implement');
     });
   });
 });

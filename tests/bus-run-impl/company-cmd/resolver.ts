@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CompanyCmdRepository } from './domain-object/company/repo';
-import { CompanyCmdResolves } from './resolves';
-import { DelivererToBus } from '../../../src/app/bus/deliverer-to-bus';
-import { TimeoutCallbackDelivererToBus } from '../../../src/infra/deliverer-to-bus.ts/timeout-callback-impl';
-import { Bus } from '../../../src/app/bus/bus';
-import { BusMessageRepository } from '../../../src/app/database/bus-message.repository';
-import { EventRepository } from '../../../src/app/database/event.repository';
-import { ModuleResolver } from '../../../src/app/module/m-resolver';
-import { BusRunServerResolver } from '../zzz-bus-run/s-resolver';
-import { BusModuleResolver } from '../../../src/app/module/bus.m-resolver';
-import { CompanyCmdModule } from './module';
+import { CompanyCmdRepository } from './domain-object/company/repo.js';
+import { CompanyCmdResolves } from './resolves.js';
+import { DelivererToBus } from '../../../src/api/bus/deliverer-to-bus.js';
+import { Bus } from '../../../src/api/bus/bus.js';
+import { BusMessageRepository } from '../../../src/api/database/bus-message.repository.js';
+import { EventRepository } from '../../../src/api/database/event.repository.js';
+import { ModuleResolver } from '../../../src/api/module/m-resolver.js';
+import { BusRunServerResolver } from '../zzz-bus-run/s-resolver.js';
+import { BusModuleResolver } from '../../../src/api/module/bus.m-resolver.js';
+import { CompanyCmdModule } from './module.js';
+import { TimeoutCallbackDelivererToBus } from '../../../src/api-infra/deliverer-to-bus/timeout-callback-impl.js';
 
 export class CompanyCmdModuleResolver extends ModuleResolver<
   BusRunServerResolver, CompanyCmdResolves

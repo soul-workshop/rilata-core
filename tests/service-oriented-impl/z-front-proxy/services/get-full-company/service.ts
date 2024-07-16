@@ -1,17 +1,16 @@
-import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
-import { DomainUser } from '../../../../../src/app/controller/types';
-import { QueryService } from '../../../../../src/app/service/concrete-service/query.service';
-import { ServiceResult } from '../../../../../src/app/service/types';
-import { failure } from '../../../../../src/common/result/failure';
-import { success } from '../../../../../src/common/result/success';
-import { UserId, UuidType } from '../../../../../src/common/types';
-import { AuthFacade } from '../../../auth/facade';
-import { CompanyFacade } from '../../../company/facade';
-import { SubjectFacade } from '../../../subject/facade';
-import { FullUser } from '../../domain-data/full-company/params';
-import { FrontendProxyModuleResolver } from '../../resolver';
-import { GetFullCompanyRequestDod, GetFullCompanyServiceParams } from './s-params';
-import { getFullCompanyValidator } from './v-map';
+import { DomainUser } from '../../../../../src/api/controller/types.js';
+import { requestStoreDispatcher } from '../../../../../src/api/request-store/request-store-dispatcher.js';
+import { QueryService } from '../../../../../src/api/service/concrete-service/query.service.js';
+import { ServiceResult } from '../../../../../src/api/service/types.js';
+import { success } from '../../../../../src/core/result/success.js';
+import { UserId, UuidType } from '../../../../../src/core/types.js';
+import { AuthFacade } from '../../../auth/facade.js';
+import { CompanyFacade } from '../../../company/facade.js';
+import { SubjectFacade } from '../../../subject/facade.js';
+import { FullUser } from '../../domain-data/full-company/params.js';
+import { FrontendProxyModuleResolver } from '../../resolver.js';
+import { GetFullCompanyRequestDod, GetFullCompanyServiceParams } from './s-params.js';
+import { getFullCompanyValidator } from './v-map.js';
 
 export class GetingFullCompanyService extends QueryService<
   GetFullCompanyServiceParams, FrontendProxyModuleResolver
@@ -20,7 +19,7 @@ export class GetingFullCompanyService extends QueryService<
 
   serviceName = 'GetingFullCompanyService' as const;
 
-  inputDodName = 'GetFullCompanyRequestDod' as const;
+  handleName = 'GetFullCompanyRequestDod' as const;
 
   aRootName = 'FullCompany' as const;
 
@@ -31,7 +30,7 @@ export class GetingFullCompanyService extends QueryService<
   async runDomain(
     input: GetFullCompanyRequestDod,
   ): Promise<ServiceResult<GetFullCompanyServiceParams>> {
-    const store = storeDispatcher.getStoreOrExepction();
+    const store = requestStoreDispatcher.getPayload();
     const { caller } = store;
     let domainUser: DomainUser;
     if (caller.type === 'DomainUser') {
@@ -40,7 +39,8 @@ export class GetingFullCompanyService extends QueryService<
       domainUser = caller.user;
     } else throw this.logger.error('supported only domain user caller');
 
-    return this.getFullCompany(input.attrs.id, domainUser);
+    // eslint-disable-next-line max-len
+    return this.getFullCompany(input.attrs.id, domainUser) as Promise<ServiceResult<GetFullCompanyServiceParams>>;
   }
 
   protected async getFullCompany(
@@ -48,7 +48,9 @@ export class GetingFullCompanyService extends QueryService<
   ): Promise<ServiceResult<GetFullCompanyServiceParams>> {
     const companyFacade = CompanyFacade.instance(this.moduleResolver);
     const companyResult = await companyFacade.getCompany(companyId, domainUser);
-    if (companyResult.isFailure()) return failure(companyResult.value);
+    if (companyResult.isFailure()) {
+      return companyResult.value as unknown as ServiceResult<GetFullCompanyServiceParams>;
+    }
     const companyAttrs = companyResult.value;
     const employees = await this.getFullUsers(companyAttrs.employees, domainUser);
     return success({
@@ -60,6 +62,9 @@ export class GetingFullCompanyService extends QueryService<
   protected async getFullUsers(userIds: UserId[], domainUser: DomainUser): Promise<FullUser[]> {
     const authFacade = AuthFacade.instance(this.moduleResolver);
     const usersResult = await authFacade.getUsers(userIds, domainUser);
+    if (usersResult.isFailure()) {
+      throw this.logger.error('метод getUsers не должен возвращать failure');
+    }
     const users = usersResult.value;
     const subjectFacade = SubjectFacade.instance(this.moduleResolver);
     const personResults = await Promise.all(users.map(

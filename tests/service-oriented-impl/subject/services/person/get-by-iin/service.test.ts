@@ -1,25 +1,25 @@
 import {
   beforeEach, describe, expect, test,
 } from 'bun:test';
-import { setAndGetTestStoreDispatcher } from '../../../../../fixtures/test-thread-store-mock';
-import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures';
-import { SubjectModule } from '../../../module';
-import { dodUtility } from '../../../../../../src/common/utils/dod/dod-utility';
-import { GetPersonByIinRequestDod, GetPersonByIinOut } from './s-params';
-import { GetingPersonByIinService } from './service';
-import { PersonDoesntExistByIinError } from '../../../domain-object/person/repo-errors';
-import { serverStarter } from '../../../../zzz-run-server/starter';
-import { TestDatabase } from '../../../../../../src/app/database/test.database';
+import { ServiceModulesFixtures } from '../../../../zzz-run-server/server-fixtures.js';
+import { SubjectModule } from '../../../module.js';
+import { dodUtility } from '../../../../../../src/core/utils/dod/dod-utility.js';
+import { GetPersonByIinRequestDod, GetPersonByIinOut } from './s-params.js';
+import { GetingPersonByIinService } from './service.js';
+import { PersonDoesntExistByIinError } from '../../../domain-object/person/repo-errors.js';
+import { serverStarter } from '../../../../zzz-run-server/starter.js';
+import { TestDatabase } from '../../../../../../src/api/database/test.database.js';
+import { requestStoreMock } from '../../../../../fixtures/request-store-mock.js';
 
 describe('get person by iin service tests', async () => {
   const requestId = 'c22fd027-a94b-4728-90eb-f6d4f96992c2';
   const testSever = serverStarter.start('all');
   const module = testSever.getModule<SubjectModule>('SubjectModule');
   const resolver = module.getModuleResolver();
-  setAndGetTestStoreDispatcher({
+  requestStoreMock({
     requestId,
     moduleResolver: resolver,
-  }).getStoreOrExepction();
+  });
 
   beforeEach(async () => {
     const db = resolver.getDatabase() as unknown as TestDatabase<true>;
@@ -34,7 +34,7 @@ describe('get person by iin service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByInputDodName<GetingPersonByIinService>('getPersonByIin');
+    const sut = module.getService<GetingPersonByIinService>('getPersonByIin');
     const result = await sut.execute(validRequestDod);
     expect(result.isSuccess()).toBe(true);
     const person = result.value as GetPersonByIinOut;
@@ -57,7 +57,7 @@ describe('get person by iin service tests', async () => {
       requestId,
     );
 
-    const sut = module.getServiceByInputDodName<GetingPersonByIinService>('getPersonByIin');
+    const sut = module.getService<GetingPersonByIinService>('getPersonByIin');
     const result = await sut.execute(validRequestDod);
     expect(result.isFailure()).toBe(true);
     const person = result.value as PersonDoesntExistByIinError;

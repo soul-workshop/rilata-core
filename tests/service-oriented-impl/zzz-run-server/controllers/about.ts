@@ -1,8 +1,9 @@
-import { Controller } from '../../../../src/app/controller/controller';
+import { GeneralServerResolver } from '#api/server/types.js';
+import { Controller } from '../../../../src/api/controller/controller.js';
 
-export class AboutController implements Controller {
+export class AboutController extends Controller<GeneralServerResolver> {
   async execute(req: Request): Promise<Response> {
-    return new Response('bun test implement service');
+    return new Response('another server contoller implement', { status: 200 });
   }
 
   getUrls(): string[] {

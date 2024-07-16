@@ -1,4 +1,4 @@
-## [Rilata](https://github.com/craftyard/rilata-core)
+## [Rilata](https://github.com/nurgeo/rilata)
 
 **Краткое описание:** 
 Фреймворк, который хочет предоставить вам всю необходимую базу, чтобы вы могли создавать сложные приложения.
@@ -46,10 +46,10 @@
 
 ## Установка
 **Для изучения фреймворка**
-`git clone https://github.com/craftyard/rilata-core/`
+`git clone https://github.com/nurgeo/rilata/`
 
 **Чтобы добавить как зависимость к своему проекту**
-`bun add craftyard/rilata-core`
+`bun add nurgeo/rilata`
 
 **Требования:**
 - bun;
@@ -61,17 +61,34 @@
 ## Быстрый старт
 
 **Попробовать:**
-- Склонировать репозиторий: `git clone https://github.com/craftyard/rilata-core/`;
-- Перейти в папку с проектом: `cd rilata-core`;
-- Выполнить команду запуска: `bun run -f ./tests/service-oriented-impl/zzz-run-server/main.ts`;
+- Склонировать репозиторий: `git clone https://github.com/nurgeo/rilata/`;
+- Перейти в папку с проектом: `cd rilata`;
+- Выполнить команду запуска: `bun run ./tests/service-oriented-impl/zzz-run-server/main.ts -f`;
     - опция `-f`: при запуске тестового сервера БД заполняется начальными записями;
 - Выполнить каким либо способом post запрос с токеном авторизации и заполненным телом, например:  
-```
+```bash
 curl -X POST \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MzZlNzQ2My1iMjRkLTRlN2ItYmFkOS0yYmQyZWQ4MDExZmQiLCJleHAiOjI1MjY4NTIzNTUzMDIsInR5cCI6ImFjY2VzcyJ9.Fj0xoztJyN52K9prR8w1Jo0B_7rImJ6e2RsCnAARfR8" \
   -H "Content-Type: application/json" \
   -d '{ "meta": { "name": "getPersonByIin", "requestId": "dea2d31a-1179-4a68-a139-f3b6c8dd5aa0", "domainType": "request" }, "attrs": { "iin": "123123123123" } }' \
   localhost:3000/api/subject-module/
+```
+
+Должны получить ответ:
+```json
+{
+  "httpStatus": 200,
+  "success": true,
+  "payload": {
+    "id": "b433034e-8090-4c7d-8738-8cb78bbc6792",
+    "firstName": "Bill",
+    "lastName": "Geits",
+    "iin": "123123123123",
+    "contacts": { "emails": [
+        { "type": "corporate", "email": "bill@microsoft.com" }
+    ]}
+  }
+}
 ```
 
 **Примеры для изучений:**

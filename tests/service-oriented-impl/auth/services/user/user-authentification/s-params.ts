@@ -1,9 +1,9 @@
-import { JwtDecodeErrors } from '../../../../../../src/app/jwt/jwt-errors';
-import { QueryServiceParams } from '../../../../../../src/app/service/types';
-import { UuidType } from '../../../../../../src/common/types';
-import { RequestDod } from '../../../../../../src/domain/domain-data/domain-types';
-import { UserParams } from '../../../domain-data/user/params';
-import { UserDoesNotExistByLoginError } from '../../../domain-object/user/repo-errors';
+import { QueryServiceParams } from '../../../../../../src/api/service/types.js';
+import { JwtDecodeErrors } from '../../../../../../src/core/jwt/jwt-errors.js';
+import { UuidType } from '../../../../../../src/core/types.js';
+import { RequestDod } from '../../../../../../src/domain/domain-data/domain-types.js';
+import { UserParams } from '../../../domain-data/user/params.js';
+import { UserDoesNotExistByLoginError } from '../../../domain-object/user/repo-errors.js';
 
 export type UserAuthentificationRequestAttrs = {
   login: string,

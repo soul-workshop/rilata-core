@@ -1,10 +1,10 @@
-import { Module } from '../../../src/app/module/module';
-import { ModuleType } from '../../../src/app/module/types';
-import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/app/service/types';
-import { AddingUserService } from './services/user/add-user/service';
-import { GetingUsersService } from './services/user/get-users/service';
+import { WebModule } from '#api/module/web.module.js';
+import { ModuleType } from '../../../src/api/module/types.js';
+import { GeneralCommandService, GeneralEventService, GeneraQueryService } from '../../../src/api/service/types.js';
+import { AddingUserService } from './services/user/add-user/service.js';
+import { GetingUsersService } from './services/user/get-users/service.js';
 
-export class AuthModule extends Module {
+export class AuthModule extends WebModule {
   moduleName = 'AuthModule' as const;
 
   moduleType: ModuleType = 'common-module' as const;

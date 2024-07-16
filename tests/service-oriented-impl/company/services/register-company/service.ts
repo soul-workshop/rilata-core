@@ -1,28 +1,28 @@
-import { storeDispatcher } from '../../../../../src/app/async-store/store-dispatcher';
-import { DomainUser } from '../../../../../src/app/controller/types';
-import { ValidationError } from '../../../../../src/app/service/error-types';
-import { CommandService } from '../../../../../src/app/service/concrete-service/command.service';
-import { InputDodValidator, ServiceResult } from '../../../../../src/app/service/types';
-import { failure } from '../../../../../src/common/result/failure';
-import { success } from '../../../../../src/common/result/success';
-import { Result } from '../../../../../src/common/result/types';
-import { UuidType } from '../../../../../src/common/types';
-import { dodUtility } from '../../../../../src/common/utils/dod/dod-utility';
-import { dtoUtility } from '../../../../../src/common/utils/dto/dto-utility';
-import { AuthFacade } from '../../../auth/facade';
-import { PersonAlreadyExistsError, PersonDoesntExistByIinError } from '../../../subject/domain-object/person/repo-errors';
-import { SubjectFacade } from '../../../subject/facade';
-import { RegisterCompanyDomainCommand } from '../../domain-data/company/register-company/a-params';
-import { CompanyARFactory } from '../../domain-object/company/factory';
-import { CompanyRepository } from '../../domain-object/company/repo';
-import { CompanyAlreadyExistError } from '../../domain-object/company/repo-errors';
-import { CompanyModuleResolver } from '../../resolver';
+import { DomainUser } from '../../../../../src/api/controller/types.js';
+import { ServiceBaseErrors, ValidationError } from '../../../../../src/api/service/error-types.js';
+import { CommandService } from '../../../../../src/api/service/concrete-service/command.service.js';
+import { InputDodValidator, ServiceResult } from '../../../../../src/api/service/types.js';
+import { failure } from '../../../../../src/core/result/failure.js';
+import { success } from '../../../../../src/core/result/success.js';
+import { Result } from '../../../../../src/core/result/types.js';
+import { UuidType } from '../../../../../src/core/types.js';
+import { dodUtility } from '../../../../../src/core/utils/dod/dod-utility.js';
+import { dtoUtility } from '../../../../../src/core/utils/dto/dto-utility.js';
+import { AuthFacade } from '../../../auth/facade.js';
+import { PersonAlreadyExistsError, PersonDoesntExistByIinError } from '../../../subject/domain-object/person/repo-errors.js';
+import { SubjectFacade } from '../../../subject/facade.js';
+import { RegisterCompanyDomainCommand } from '../../domain-data/company/register-company/a-params.js';
+import { CompanyARFactory } from '../../domain-object/company/factory.js';
+import { CompanyRepository } from '../../domain-object/company/repo.js';
+import { CompanyAlreadyExistError } from '../../domain-object/company/repo-errors.js';
+import { CompanyModuleResolver } from '../../resolver.js';
 import {
   CompanyRegisteredServiceParams, RegisterCompanyOut, RegisterCompanyRequestDod,
   RegisterCompanyRequestDodAttrs,
-} from './s.params';
-import { RegisterCompanyValidator } from './v.map';
-import { UowTransactionStrategy } from '../../../../../src/app/service/transaction-strategy/uow.strategy';
+} from './s.params.js';
+import { RegisterCompanyValidator } from './v.map.js';
+import { UowTransactionStrategy } from '../../../../../src/api/service/transaction-strategy/uow.strategy.js';
+import { requestStoreDispatcher } from '../../../../../src/api/request-store/request-store-dispatcher.js';
 
 export class RegisteringCompanyService extends CommandService<
   CompanyRegisteredServiceParams, CompanyModuleResolver
@@ -31,7 +31,7 @@ export class RegisteringCompanyService extends CommandService<
 
   serviceName = 'RegisteringCompanyService' as const;
 
-  inputDodName = 'registerCompany' as const;
+  handleName = 'registerCompany' as const;
 
   aRootName = 'CompanyAR' as const;
 
@@ -44,7 +44,7 @@ export class RegisteringCompanyService extends CommandService<
   async runDomain(
     input: RegisterCompanyRequestDod,
   ): Promise<ServiceResult<CompanyRegisteredServiceParams>> {
-    const { caller } = storeDispatcher.getStoreOrExepction();
+    const { caller } = requestStoreDispatcher.getPayload();
     if (caller.type !== 'DomainUser') {
       throw this.logger.error(`not supported called by call: ${caller.type}`);
     }
@@ -53,7 +53,9 @@ export class RegisteringCompanyService extends CommandService<
     if (existCompanyResult.isFailure()) return failure(existCompanyResult.value);
 
     const personResult = await this.processPerson(input.attrs, caller);
-    if (personResult.isFailure()) return failure(personResult.value);
+    if (personResult.isFailure()) {
+      return failure(personResult.value) as ServiceResult<CompanyRegisteredServiceParams>;
+    }
     const personIin = input.attrs.person.iin;
 
     const userResult = await this.addUser(personIin, caller);
@@ -78,14 +80,19 @@ export class RegisteringCompanyService extends CommandService<
   async processPerson(
     input: RegisterCompanyRequestDodAttrs,
     caller: DomainUser,
-  ): Promise<Result<PersonAlreadyExistsError | PersonDoesntExistByIinError, string>> {
+  ): Promise<Result<
+    ServiceBaseErrors | PersonAlreadyExistsError | PersonDoesntExistByIinError,
+    string
+  >> {
     const subjectFacade = SubjectFacade.instance(this.moduleResolver);
     if (input.person.type === 'newPerson') {
       const addPersonResult = await subjectFacade.addPerson(
         dtoUtility.excludeAttrs(input.person, 'type'),
         caller,
       );
-      if (addPersonResult.isFailure()) return failure(addPersonResult.value);
+      if (addPersonResult.isFailure()) {
+        return failure(addPersonResult.value);
+      }
       return success(addPersonResult.value.id);
     }
 
@@ -110,7 +117,7 @@ export class RegisteringCompanyService extends CommandService<
   protected async addCompany(
     input: RegisterCompanyRequestDodAttrs, userId: UuidType,
   ): Promise<Result<CompanyAlreadyExistError, RegisterCompanyOut>> {
-    const companyFactory = new CompanyARFactory(this.logger);
+    const companyFactory = new CompanyARFactory();
     const companyAttrs: RegisterCompanyDomainCommand = {
       ...input.company,
       employees: [userId],

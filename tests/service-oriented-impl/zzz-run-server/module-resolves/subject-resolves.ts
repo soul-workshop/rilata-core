@@ -1,6 +1,6 @@
-import { FakeClassImplements } from '../../../fixtures/fake-class-implements';
-import { SubjectResolves } from '../../subject/resolves';
-import { PersonRepositoryImpl } from '../../zz-infra/repositories/subject-module/person';
+import { FakeClassImplements } from '../../../fixtures/fake-class-implements.js';
+import { SubjectResolves } from '../../subject/resolves.js';
+import { PersonRepositoryImpl } from '../../zz-infra/repositories/subject-module/person.js';
 
 let db: FakeClassImplements.TestMemoryDatabase;
 
@@ -14,6 +14,7 @@ export function getSubjectResolves(): SubjectResolves {
   if (!subjectResolves) {
     subjectResolves = {
       moduleName: 'SubjectModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/subject-module/'],
       db,
       eventRepo: new FakeClassImplements.TestEventRepository(db),

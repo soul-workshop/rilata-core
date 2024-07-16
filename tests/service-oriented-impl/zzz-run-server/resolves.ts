@@ -1,24 +1,22 @@
-import { ServerResolves } from '../../../src/app/server/s-resolves';
-import { JwtConfig } from '../../../src/app/server/types';
-import { ConsoleLogger } from '../../../src/common/logger/console-logger';
-import { getLoggerMode } from '../../../src/common/logger/logger-modes';
-import { JwtCreatorImpl } from '../../../src/infra/jwt/jwt-creator';
-import { JwtVerifierImpl } from '../../../src/infra/jwt/jwt-verifier';
-import { UserJwtPayload } from '../../service-oriented-impl/auth/services/user/user-authentification/s-params';
-import { JwtDecoderImpl } from '../../service-oriented-impl/zz-infra/jwt/decoder';
+import { getEnvLogMode } from '#core/logger/logger-modes.js';
+import { JwtCreatorImpl } from '../../../src/api-infra/jwt/jwt-creator.js';
+import { JwtVerifierImpl } from '../../../src/api-infra/jwt/jwt-verifier.js';
+import { defaultJwtConfig, getPublicHost, getPublicPort, getServerConfig } from '../../../src/api/server/configs.js';
+import { ServerResolves } from '../../../src/api/server/s-resolves.js';
+import { ConsoleLogger } from '../../../src/core/logger/console-logger.js';
+import { UserJwtPayload } from '../../service-oriented-impl/auth/services/user/user-authentification/s-params.js';
+import { JwtDecoderImpl } from '../../service-oriented-impl/zz-infra/jwt/decoder.js';
 
 const jwtSecretKey = 'your-256-bit-secret';
-const jwtConfig: JwtConfig = {
-  algorithm: 'HS256',
-  jwtLifetimeAsHour: 24,
-  jwtRefreshLifetimeAsHour: 24 * 3,
-};
 
 export const serverResolves: ServerResolves<UserJwtPayload> = {
-  logger: new ConsoleLogger(getLoggerMode()),
+  logger: new ConsoleLogger(getEnvLogMode() ?? 'all'),
   runMode: 'test',
+  publicHost: getPublicHost('localhost'),
+  publicPort: getPublicPort(3000),
   jwtDecoder: new JwtDecoderImpl(),
-  jwtVerifier: new JwtVerifierImpl(jwtSecretKey, jwtConfig),
-  jwtCreator: new JwtCreatorImpl(jwtSecretKey, jwtConfig),
-  serverConfig: {}, // default serverConfig,
+  jwtVerifier: new JwtVerifierImpl(jwtSecretKey, defaultJwtConfig),
+  jwtCreator: new JwtCreatorImpl(jwtSecretKey, defaultJwtConfig),
+  serverConfig: getServerConfig(),
+  httpsPorts: [443, 8443],
 };

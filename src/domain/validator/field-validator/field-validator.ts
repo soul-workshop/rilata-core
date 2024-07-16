@@ -1,26 +1,27 @@
-import { failure } from '../../../common/result/failure';
-import { success } from '../../../common/result/success';
-import { AssertionException } from '../../../common/exeptions';
-import { DTO } from '../../dto';
-import { CannotBeEmptyArrayAssertionRule } from '../../validator/rules/assert-rules/cannot-be-empty-array.a-rule';
-import { CannotBeNullableAssertionRule } from '../../validator/rules/assert-rules/cannot-be-nullable.a-rule';
-import { MaxArrayElementsCountAssertionRule } from '../../validator/rules/assert-rules/max-array-elements-count.a-rule';
-import { MinArrayElementsCountAssertionRule } from '../../validator/rules/assert-rules/min-array-elements-count.a-rule';
-import { CanBeNullableRule } from '../../validator/rules/nullable-rules/can-be-nullable.n-rule';
-import { IsArrayTypeRule } from '../../validator/rules/type-rules/is-array-type.t-rule';
-import { IsBooleanTypeRule } from '../../validator/rules/type-rules/is-boolean-type.t-rule';
-import { IsDTOTypeRule } from '../../validator/rules/type-rules/is-dto-type.t-rule';
-import { IsNumberTypeRule } from '../../validator/rules/type-rules/is-number-type.t-rule';
-import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-type.t-rule';
-import { GeneralValidationRule, LiteralDataType, RuleError } from '../../validator/rules/types';
-import { ValidationRule } from '../../validator/rules/validation-rule';
-import { CannotBeInfinityRule } from '../rules/assert-rules/cannot-be-infinity.a-rule';
-import { CannotBeNanRule } from '../rules/assert-rules/cannot-be-nan.a-rule';
+import { failure } from '../../../core/result/failure.js';
+import { success } from '../../../core/result/success.js';
+import { AssertionException } from '../../../core/exeptions.js';
+import { DTO } from '../../dto.js';
+import { CannotBeEmptyArrayAssertionRule } from '../../validator/rules/assert-rules/cannot-be-empty-array.a-rule.js';
+import { CannotBeNullableAssertionRule } from '../../validator/rules/assert-rules/cannot-be-nullable.a-rule.js';
+import { MaxArrayElementsCountAssertionRule } from '../../validator/rules/assert-rules/max-array-elements-count.a-rule.js';
+import { MinArrayElementsCountAssertionRule } from '../../validator/rules/assert-rules/min-array-elements-count.a-rule.js';
+import { CanBeNullableRule } from '../../validator/rules/nullable-rules/can-be-nullable.n-rule.js';
+import { IsArrayTypeRule } from '../../validator/rules/type-rules/is-array-type.t-rule.js';
+import { IsBooleanTypeRule } from '../../validator/rules/type-rules/is-boolean-type.t-rule.js';
+import { IsDTOTypeRule } from '../../validator/rules/type-rules/is-dto-type.t-rule.js';
+import { IsNumberTypeRule } from '../../validator/rules/type-rules/is-number-type.t-rule.js';
+import { IsStringTypeRule } from '../../validator/rules/type-rules/is-string-type.t-rule.js';
+import { GeneralValidationRule, LiteralDataType, RuleError } from '../../validator/rules/types.js';
+import { ValidationRule } from '../../validator/rules/validation-rule.js';
+import { CannotBeInfinityRule } from '../rules/assert-rules/cannot-be-infinity.a-rule.js';
+import { CannotBeNanRule } from '../rules/assert-rules/cannot-be-nan.a-rule.js';
 import {
   GetArrayConfig, GetFieldValidatorDataType,
   RulesValidatedAnswer, RuleErrors, FieldResult, FullFieldResult,
   ArrayFieldResult, ArrayFieldErrors, FieldErrors,
-} from './types';
+} from './types.js';
+import { domainStoreDispatcher } from '#core/domain-store/domain-store-dispatcher.js';
 
 export abstract class FieldValidator<
   NAME extends string,
@@ -46,7 +47,7 @@ export abstract class FieldValidator<
         || (
           min !== undefined && max !== undefined && min > max
         )
-      ) throw new AssertionException(`not valid arrayConfig: min=${min}, max=${max}`);
+      ) this.throwError(`not valid arrayConfig: min=${min}, max=${max}`);
     }
   }
 
@@ -60,17 +61,13 @@ export abstract class FieldValidator<
     return validationResult;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected complexValidate(value: unknown): FullFieldResult {
     return success(undefined);
   }
 
   /** проверка массива данных */
   protected validateArray(unknownValue: unknown): ArrayFieldResult {
-    function unknownValueToArray(): unknown[] {
-      if (Array.isArray(unknownValue)) return unknownValue;
-      throw new AssertionException('array assertion rules not missed a mistake');
-    }
-
     const nullableAnswer = this.validateNullableValue(unknownValue);
     if (nullableAnswer.break) {
       return nullableAnswer.isValidValue
@@ -85,7 +82,10 @@ export abstract class FieldValidator<
       );
     }
 
-    const values = unknownValueToArray();
+    if (Array.isArray(unknownValue) === false) {
+      this.throwError('array assertion rules not missed a mistake');
+    }
+    const values = unknownValue as unknown[];
     const arrErrors: ArrayFieldErrors = {};
     for (let i = 0; i < values.length; i += 1) {
       const itemResult = this.validateValue(values[i]);
@@ -119,7 +119,7 @@ export abstract class FieldValidator<
 
   /** возвращает правила проверки типов и утверждений для массива */
   protected getArrayAssertionRules(): ValidationRule<'assert', unknown>[] {
-    if (!this.arrayConfig.isArray) throw new AssertionException('wrong call this method');
+    if (!this.arrayConfig.isArray) this.throwError('wrong call this method');
     const assertionRules = [new IsArrayTypeRule()];
     if (this.arrayConfig.mustBeFilled) assertionRules.push(new CannotBeEmptyArrayAssertionRule());
     if (this.arrayConfig.maxElementsCount !== undefined) {
@@ -170,5 +170,14 @@ export abstract class FieldValidator<
 
   protected getArrayFailResult(errors: RuleErrors | FieldErrors): FieldResult {
     return failure({ [FieldValidator.ARRAY_WHOLE_VALUE_VALIDATION_ERROR_KEY]: errors });
+  }
+
+  protected throwError(errStr: string): never {
+    try {
+      const { logger } = domainStoreDispatcher.getPayload();
+      throw logger.error(errStr);
+    } catch (e) {
+      throw new AssertionException(errStr);
+    }
   }
 }

@@ -1,7 +1,7 @@
-import { FakeClassImplements } from '../../../fixtures/fake-class-implements';
-import { CompanyReadRepository } from '../../company-read/domain/company/repo';
-import { CompanyReadResolves } from '../../company-read/resolves';
-import { CompanyReadRepositoryImpl } from '../../zz-infra/repositories/company-read';
+import { FakeClassImplements } from '../../../fixtures/fake-class-implements.js';
+import { CompanyReadRepository } from '../../company-read/domain/company/repo.js';
+import { CompanyReadResolves } from '../../company-read/resolves.js';
+import { CompanyReadRepositoryImpl } from '../../zz-infra/repositories/company-read.js';
 
 let isResolved = false;
 
@@ -20,6 +20,7 @@ export function getCompanyReadResolves(): CompanyReadResolves {
     companyRepo = new CompanyReadRepositoryImpl(db);
     companyResolves = {
       moduleName: 'CompanyReadModule',
+      modulePath: import.meta.dir,
       moduleUrls: ['/api/company-read-module/'],
       db,
       eventRepo,
