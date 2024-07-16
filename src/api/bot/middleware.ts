@@ -1,16 +1,16 @@
 import { Update } from '@grammyjs/types';
 import { BotReplyMessage, DialogueContext } from './types.ts';
 import { MaybePromise } from '#core/types.js';
-import { BotDialogueRouter } from './dialogue-router.ts';
-import { GeneralModuleResolver } from '#api/base.index.js';
 import { DTO } from '#domain/dto.js';
+import { BotDialogueService } from './dialogue-service.ts';
+import { GeneralModuleResolver } from '#api/module/types.js';
 
 export abstract class BotMiddleware<C extends DialogueContext<DTO, string>> {
   protected resolver!: GeneralModuleResolver;
 
-  protected router!: BotDialogueRouter;
+  protected router!: BotDialogueService;
 
-  init(resolver: GeneralModuleResolver, router: BotDialogueRouter): void {
+  init(resolver: GeneralModuleResolver, router: BotDialogueService): void {
     this.resolver = resolver;
     this.router = router;
   }

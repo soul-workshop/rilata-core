@@ -1,4 +1,4 @@
-export { BotDialogueRouter } from './dialogue-router.js';
+export { BotDialogueService } from './dialogue-service.js';
 export { BotMiddleware } from './middleware.js';
 export { BotDialogueRepository } from './dialogue-repo.js';
 export { BotState } from './state.js';

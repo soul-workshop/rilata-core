@@ -10,7 +10,7 @@ import { Service } from '#api/service/service.js';
 import { GeneralModuleResolver } from '#api/module/types.js';
 import { BotModuleController } from '#api/controller/bot.m-controller.js';
 
-export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
+export abstract class BotDialogueService extends Service<GeneralModuleResolver> {
   protected abstract stateCtors: Constructor<BotState>[];
 
   protected abstract middlewareCtors: Constructor<GeneralBotMiddleware>[];
@@ -19,18 +19,12 @@ export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
 
   protected middlewares!: GeneralBotMiddleware[];
 
-  protected _moduleResolver!: GeneralModuleResolver;
-
-  get moduleResolver(): GeneralModuleResolver {
-    return this._moduleResolver;
-  }
-
   init(resolver: GeneralModuleResolver): void {
-    this._moduleResolver = resolver;
+    super.init(resolver);
     this.states = this.stateCtors.map((Ctor) => new Ctor());
-    this.states.forEach((state) => state.init(this._moduleResolver, this));
+    this.states.forEach((state) => state.init(this.moduleResolver, this));
     this.middlewares = this.middlewareCtors.map((Ctor) => new Ctor());
-    this.middlewares.forEach((m) => m.init(this._moduleResolver, this));
+    this.middlewares.forEach((m) => m.init(this.moduleResolver, this));
   }
 
   async execute(update: Update): Promise<BotReplyMessage> {
