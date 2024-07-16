@@ -44,7 +44,7 @@ export abstract class BotDialogueRouter extends Service<GeneralModuleResolver> {
 
       const telegramId = updateUtils.getChatId(update);
       const context = this.findContext(telegramId);
-      const stateName = context ? context.stateName : 'botStart';
+      const stateName = context ? context.stateName : 'initialState';
 
       return this.getState(stateName).execute(update);
     } catch (e) {
